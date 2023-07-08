@@ -1,0 +1,64 @@
+import { API_URL } from "@/context/config"
+
+export async function getInstalaciones(uuid:string){
+    const res = await fetch(`${API_URL}/instalacion/admin/instalaciones/${uuid}/`,{
+        cache:'no-store',
+    })
+    if (!res.ok) {
+        // This will activate the closest `error.js` Error Boundary
+        throw new Error('Failed to fetch data')
+      }
+     
+    //   console.log(res)
+      return res.json()
+}
+
+export async function getInstalacion(uuid:string){
+    const res = await fetch(`${API_URL}/instalacion/admin/${uuid}/`,{
+        cache:'no-store',
+    })
+    if (!res.ok) {
+        // This will activate the closest `error.js` Error Boundary
+        throw new Error('Failed to fetch data')
+      }
+     
+      console.log(res)
+      return res.json()
+}
+
+export async function getInstalacionDayHorario(instalacionId:number,dayWeek:number){
+    const res = await fetch(`${API_URL}/instalacion/admin/horario/${instalacionId}/${dayWeek}/`)
+    if (!res.ok) {
+        // This will activate the closest `error.js` Error Boundary
+        throw new Error('Failed to fetch data')
+      }
+     
+      console.log(res)
+      return res.json()
+}
+
+export async function createCupoInstalacion(cupo:Cupo,uuid:string) {
+    const res = await fetch(`../../api/cupo`,{
+      method:"POST",
+      body:JSON.stringify(cupo)
+    })
+
+    if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error('Failed to fetch data')
+    }
+    return res.json()
+}
+
+export async function updateCupoInstalacion(id:number,precio:number,available:boolean) {
+  const res = await fetch(`../../api/cupo`,{
+    method:"PUT",
+    body:JSON.stringify({id,precio,available})
+  })
+
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error('Failed to fetch data')
+  }
+  return res.json()
+}

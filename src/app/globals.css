@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components{
+  .button {
+    @apply py-2 border-[1px] text-white  bg-primary hover:bg-white
+    active:ring-blue-300 active:ring-2 px-3 text-sm font-medium hover:text-primary cursor-pointer rounded-md
+  }
+  .button-inv {
+    @apply py-2 border-[1px] hover:text-white  hover:bg-primary bg-white border-primary
+    active:ring-blue-300 active:ring-2 px-3 text-sm font-medium text-primary cursor-pointer rounded-md
+  }
+  .title {
+    @apply text-lg font-medium
+  }
+  .subtitle {
+    @apply text-sm font-medium
+  }
+  .tab {
+    @apply  border-b-2 px-4 py-2 font-medium outline-none text-sm
+  }
+  .tab-enabled {
+    @apply border-b-primary text-primary
+  }
+  .card {
+    @apply p-2 border-[1px] shadow-md rounded-md cursor-pointer hover:opacity-70
+  }
+  .label {
+    @apply font-medium text-sm
+  }
+  .help-text{
+    @apply text-xs text-gray-500
+  }
+  .input {
+    @apply border-[1px] rounded-lg rounded-b-lg   p-2 h-10 w-full border-gray-400 mt-1 text-sm
+    text-gray-900 focus:outline-blue-600
+  }
+  .rowTable {
+    @apply text-xs px-2 py-2
+  }
+  .headerTable {
+    @apply text-xs px-2 py-2 
+  }
+}
+
+/* :root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+} */
+
+/* body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+} */
+/* body { margin: 0; padding: 0; } */
+
+
+
