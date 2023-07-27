@@ -16,16 +16,21 @@ const Login = () =>{
       email:"jorge@gmail.com",
       password:"12ab34cd56ef"
     })
-    const [showPassword,setShowPassword] = useState(false)
     const {email,password} = formData
     const onChange = (e:ChangeEvent<HTMLInputElement>)=>{
     //   dispatch(authActions.setErrrorLogin(undefined))
       setFormData({ ...formData, [e.target.name]: e.target.value });
     }
     const onSubmit = async(e:FormEvent<HTMLFormElement>) =>{
+      try{
+
         e.preventDefault()
-      dispatch(login(email,password))
-      window.location.assign("http://localhost:3000/establecimiento/48cadbda-2c81-46de-88a7-ca760d399828/instalaciones")
+        dispatch(login(email,password))
+        window.location.assign("/admin/establecimientos")
+      }catch(err){
+        console.log(err)
+      }
+      // window.location.assign("http://localhost:3000/establecimiento/1469058c-6084-4e1e-a191-de1d5fa3b9c5/instalaciones")
     }  
   
 

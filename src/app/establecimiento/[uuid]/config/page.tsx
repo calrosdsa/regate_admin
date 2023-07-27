@@ -75,7 +75,8 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 open={openMap} close={()=>setOpenMap(false)}
                 lng={Number(data?.establecimiento.longitud)}
                 lat={Number(data?.establecimiento.latitud)}
-                direccion={data?.establecimiento.address}
+                address={data?.establecimiento.address}
+                setAddress={(e)=>{}}
                 />
             }
         </div>

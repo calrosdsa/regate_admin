@@ -10,7 +10,7 @@ const EditComponent =  ({label,content}:{
     const [value,setValue] = useState(content)
     return(
         <div>
-             <div className=" flex justify-between items-center space-x-5 border-b-[1px] pb-3">
+             <div className=" flex justify-between items-center space-x-5 divider">
                 <div className="grid">
                     <span className="label">{label}</span>
                     <span className="text-sm">{content}</span>

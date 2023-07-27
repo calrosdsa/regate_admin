@@ -2,7 +2,8 @@
 const nextConfig = {
     env:{
         API_URL: process.env.API_URL,
-        MB_API_KEY: process.env.MB_API_KEY
+        MB_API_KEY: process.env.MB_API_KEY,
+        API_URL_MESSAGE: process.env.API_URL_MESSAGE
     },
     images:{
         remotePatterns: [

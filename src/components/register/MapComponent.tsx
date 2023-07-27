@@ -9,17 +9,18 @@ import Input from 'postcss/lib/input';
 import InputWithIcon from '../util/input/InputWithIcon';
 
 
-export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,direccion}:{
+export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,address,setAddress}:{
     open:boolean
     close:()=>void
     loaded:boolean
     setLoaded:(b:boolean)=>void
     lng:number
     lat:number
-    direccion:string
+    address:string
+    setAddress:(e:string)=>void
 })=>{
-    const [place,setPlace] = useState<Place | null>(null)
-    const [adress,setAdress] = useState(direccion)
+    // const [place,setPlace] = useState<Place | null>(null)
+    const [adress,setAdress] = useState(address)
     const onChange = (e:ChangeEvent<HTMLInputElement>)=>{
         setAdress(e.target.value)
     }
@@ -27,7 +28,7 @@ export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,direccion}:{
         try{
             const data:Place =await getPlaces(lng,lat)
             setAdress(data.features[0].place_name)
-            setPlace(data)
+            // setPlace(data)
             console.log(data)
         }catch(e){
             console.log(e)
@@ -37,7 +38,7 @@ export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,direccion}:{
     useEffect(()=>{
         if(loaded){
             mapboxgl.accessToken = MB_API_KEY;
-            const map = new mapboxgl.Map({
+            const map = new mapboxgl.Map({  
             container: 'map', // container ID
             style: 'mapbox://styles/mapbox/streets-v12', // style URL
             center: [lng,lat], // starting position [lng, lat]
@@ -49,6 +50,7 @@ export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,direccion}:{
         //         mapboxgl: mapboxgl
         //     })
         // );
+        map.addControl(new mapboxgl.NavigationControl());
         const marker = new mapboxgl.Marker({
             color: "#fa3232",
              draggable: true
@@ -133,7 +135,12 @@ export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,direccion}:{
                 )
             }}
             />
-            <button className='button'>Guardar Locacion</button>
+            <button onClick={()=>{
+              if(adress != ""){
+                setAddress(adress)
+                close()
+              }
+            }} className='button'>Guardar Locacion</button>
             </div>
         {/* } */}
                      

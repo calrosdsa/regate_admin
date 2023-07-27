@@ -1,10 +1,7 @@
-import { NextApiRequest,NextApiResponse } from "next";
-import axios from "axios";
-import cookie from 'cookie';
-import { getCookies, getCookie, setCookie, deleteCookie } from 'cookies-next';
 import { NextResponse } from "next/server";
 import { cookies } from 'next/headers'; // Import cookies
-import { API_URL } from "@/context/config";
+import { API_URL_MESSAGE } from "@/context/config";
+
 export async function GET(request:Request,
     { params }: { params: { uuid: string } }) {
    const nextCookies = cookies(); // Get cookies object
@@ -15,7 +12,7 @@ export async function GET(request:Request,
   }
   try{
     //   const body:Cupo = await request.json()
-      const res = await fetch(`${API_URL}/empresa/establecimiento/${params.uuid}/`,
+      const res = await fetch(`${API_URL_MESSAGE}/conversations/${params.uuid}/`,
       {
          headers:{
          'Authorization':`Bearer ${token}`

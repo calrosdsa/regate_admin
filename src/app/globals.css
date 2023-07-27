@@ -12,7 +12,7 @@
     active:ring-blue-300 active:ring-2 px-3 text-sm font-medium text-primary cursor-pointer rounded-md
   }
   .title {
-    @apply text-lg font-medium
+    @apply text-base font-medium
   }
   .subtitle {
     @apply text-sm font-medium
@@ -36,11 +36,24 @@
     @apply border-[1px] rounded-lg rounded-b-lg   p-2 h-10 w-full border-gray-400 mt-1 text-sm
     text-gray-900 focus:outline-blue-600
   }
+  .textarea {
+    @apply border-[1px] rounded-lg rounded-b-lg   p-2  w-full border-gray-400 mt-1 text-sm
+    text-gray-900 focus:outline-blue-600
+  }
   .rowTable {
     @apply text-xs px-2 py-2
   }
   .headerTable {
     @apply text-xs px-2 py-2 
+  }
+  .divider {
+    @apply border-b-[1px] border-gray-400
+  }
+  .divider-up {
+    @apply border-t-[1px]  border-gray-400
+  }
+  .default-card {
+    @apply hover:bg-gray-200 cursor-pointer
   }
 }
 

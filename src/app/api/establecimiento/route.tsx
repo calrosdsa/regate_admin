@@ -9,13 +9,13 @@ export async function GET(request:Request,
     { params }: { params: { uuid: string } }) {
    const nextCookies = cookies(); // Get cookies object
    const token = nextCookies.get('access_token')?.value
-   console.log(token)
+//    console.log(token)
    if(token == undefined){
     return NextResponse.json("Usuario no authorizado",{status:401})
   }
   try{
     //   const body:Cupo = await request.json()
-      const res = await fetch(`${API_URL}/empresa/establecimiento/${params.uuid}/`,
+      const res = await fetch(`${API_URL}/empresa/establecimientos/`,
       {
          headers:{
          'Authorization':`Bearer ${token}`
