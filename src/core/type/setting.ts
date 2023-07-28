@@ -1,8 +1,8 @@
 type SettingEstablecimiento = {
     uuid:string
     establecimiento_id:number
-    paid_type:number[]
-    payment_for_reservation:number
+    paid_type?:number[]
+    payment_for_reservation?:number
     horario_interval:HorarioInterval[]
 }
 

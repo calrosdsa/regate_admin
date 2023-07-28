@@ -35,11 +35,11 @@ const DialogLayout = ({open,close,children,title =""}:{
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-lg bg-white p-3
+                <Dialog.Panel className="transform overflow-hidden rounded-lg bg-white p-3
                  text-left align-middle shadow-xl transition-all">
                   <Dialog.Title
                     as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900 flex justify-between items-center"
+                    className="text-lg font-medium leading-6 text-gray-900 flex justify-between items-center space-x-12"
                   >
                     <span>{title}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"

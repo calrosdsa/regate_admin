@@ -1,8 +1,7 @@
 import './globals.css'
+import '../style/index.css'
 import { Inter } from 'next/font/google'
 import { Providers } from './provider'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import LoaderDialog from '@/components/util/loaders/LoaderDialog';
 import { useAppDispatch, useAppSelector } from '@/context/reduxHooks';
 const inter = Inter({ subsets: ['latin'] })

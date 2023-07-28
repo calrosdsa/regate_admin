@@ -9,7 +9,7 @@ import Input from 'postcss/lib/input';
 import InputWithIcon from '../util/input/InputWithIcon';
 
 
-export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,address,setAddress}:{
+export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,address,setAddress,setLngAndLat}:{
     open:boolean
     close:()=>void
     loaded:boolean
@@ -18,6 +18,7 @@ export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,address,setAdd
     lat:number
     address:string
     setAddress:(e:string)=>void
+    setLngAndLat:(lng:number,latitud:number)=>void
 })=>{
     // const [place,setPlace] = useState<Place | null>(null)
     const [adress,setAdress] = useState(address)
@@ -28,6 +29,7 @@ export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,address,setAdd
         try{
             const data:Place =await getPlaces(lng,lat)
             setAdress(data.features[0].place_name)
+            setLngAndLat(lng,lat)
             // setPlace(data)
             console.log(data)
         }catch(e){

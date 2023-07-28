@@ -1,4 +1,6 @@
 import Image from "next/image"
+import { ToastContainer } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function CreateEstablecmientoLayout({
     children, // will be a page or nested layout
@@ -6,7 +8,11 @@ export default function CreateEstablecmientoLayout({
     children: React.ReactNode
   }) {
     return (
-      <section className="xl:grid xl:grid-cols-2 w-full">
+      <>
+          <ToastContainer
+      position='bottom-center'
+      />
+      <div className="xl:grid xl:grid-cols-2 w-full">
         {/* Include shared UI here e.g. a header or sidebar */}
         <div>
         <img
@@ -20,6 +26,7 @@ export default function CreateEstablecmientoLayout({
         <div className=" relative w-full">
         {children}
         </div>
-      </section>
+      </div>
+        </>
     )
   }

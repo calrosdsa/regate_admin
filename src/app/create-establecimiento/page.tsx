@@ -1,23 +1,24 @@
 "use client"
 import ButtonSubmit from "@/components/util/button/ButtonSubmit";
-import InputWithIcon from "@/components/util/input/InputWithIcon";
-import InputPassword from "@/components/util/input/InputPassword";
-import { login } from "@/context/actions/account-actions";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
-import axios from "axios";
-import Image from "next/image";
 import { ChangeEvent, FormEvent, useState } from "react";
 import InputWithMaxLength from "@/components/util/input/InputWithMaxLength";
 import TextAreaWithMaxLength from "@/components/util/input/TextAreaWithMaxLength";
 import { MapComponent } from "@/components/register/MapComponent";
 import UploadImage from "@/components/util/input/UploadImage";
+import { CreateEstablecimiento } from "@/core/repository/establecimiento";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css';
+
 const Login = () =>{
     const [openMap,setOpenMap] = useState(false)
     const dispatch = useAppDispatch()
     const loaded = useAppSelector(state=>state.ui.loaded)
 
-    const uiState = useAppSelector(state=>state.ui)
+    // const uiState = useAppSelector(state=>state.ui)
+    const [loading,setLoading] = useState(false)
     // const authtate = useAppSelector(state=>state.auth)
     const [formData,setFormData ] = useState({
       email:"",
@@ -34,13 +35,30 @@ const Login = () =>{
     //   dispatch(authActions.setErrrorLogin(undefined))
       setFormData({ ...formData, [e.target.name]: e.target.value });
     }
+ 
     const onSubmit = async(e:FormEvent<HTMLFormElement>) =>{
       try{
-
         e.preventDefault()
+        setLoading(true)
+        const form = new FormData()
+        form.append("name",name)
+        form.append("description",description)
+        form.append("address",address)
+        form.append("longitud",longitud.toString())
+        form.append("latitud",latitud.toString())
+        form.append("phone_number",phone_number)
+        form.append("email",email)
+        if(photo != undefined){ 
+          form.append("photo",photo)
+        }
+        const data = await CreateEstablecimiento(form)
+        setLoading(false)
+        toast.success("Se ha creado un nuevo establecimiento")
+        console.log(data)
         // dispatch(login(email,name))
-        window.location.assign("/admin/establecimientos")
       }catch(err){
+        toast.error("Un error a ocurrido")
+        setLoading(false  )
         console.log(err)
       }
       // window.location.assign("http://localhost:3000/establecimiento/1469058c-6084-4e1e-a191-de1d5fa3b9c5/instalaciones")
@@ -49,11 +67,15 @@ const Login = () =>{
 
     return(
       <>
-        <div className=' absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2/3 overflow-auto h-[100vh] pb-20'>
-          <form action="">
+        <ToastContainer
+    position='bottom-center'
+    />
+        <div className=' absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2/3 overflow-auto h-[100vh] '>
+          <form onSubmit={onSubmit}>
 
           <UploadImage
           setFile={setPhoto}
+          src=""
           />
 
           <InputWithMaxLength
@@ -100,9 +122,9 @@ const Login = () =>{
             <span className="help-text">Ubicación*</span>
             <div className="flex input justify-between cursor-pointer" 
             onClick={()=>setOpenMap(true)}>
-              <input type="text" required={true}  className=" outline-none w-full"
-               value={address} 
-               />
+              <input type="text" required={true}  className=" outline-none w-full cursor-pointer"
+               value={address} onChange={(e)=>{}}
+              />
               {/* <span className=" truncate "></span> */}
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
   <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -110,7 +132,7 @@ const Login = () =>{
             </svg>
             </div>
           </div>
-        <span className="help-text absolute right-1">{`${address.length}/50`}</span>
+        {/* <span className="help-text absolute right-1">{`${address.length}/50`}</span> */}
         </div>
 
         
@@ -139,11 +161,17 @@ const Login = () =>{
                     ...formData,address:e
                   })
                 }}
+                setLngAndLat={(lng,lat)=>{
+                  setFormData({
+                    ...formData,longitud:lng,
+                    latitud:lat
+                  })
+                }}
                 />
             }
 
             <ButtonSubmit
-            loading={false}
+            loading={loading}
             title="Crear Establecimiento"
             />
 
@@ -153,9 +181,9 @@ const Login = () =>{
             <textarea  className="textarea" rows={5} />
           </div> */}
     </div>
-          <div className="absolute bottom-1 divider-up w-full p-2 flex justify-end z-20 bg-gray-200">
+          {/* <div className="absolute bottom-1 divider-up w-full p-2 flex justify-end z-20 bg-gray-200">
             <button className="button">Continuar</button>
-          </div>
+          </div> */}
             </>
     )
 }

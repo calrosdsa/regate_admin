@@ -7,7 +7,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useAppSelector } from '@/context/reduxHooks';
 import LoaderDialog from '@/components/util/loaders/LoaderDialog';
 
-const inter = Inter({ subsets: ['latin'] })
 
 
 export default function RootLayout({

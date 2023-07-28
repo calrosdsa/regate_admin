@@ -17,6 +17,15 @@ type Establecimiento = {
     portada:string
 }
 
+// type EstablecimientoPayload={
+//     email: string;
+//     name: string;
+//     phone_number: string;
+//     description: string;
+//     address: string;
+//     longitud: number;
+//     latitud: number;
+// }
 
 type Place = {
     features:Feature[]

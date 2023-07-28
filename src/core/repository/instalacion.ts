@@ -1,9 +1,7 @@
 import { API_URL } from "@/context/config"
 
 export async function getInstalaciones(uuid:string){
-    const res = await fetch(`${API_URL}/instalacion/admin/instalaciones/${uuid}/`,{
-        cache:'no-store',
-    })
+    const res = await fetch(`${API_URL}/instalacion/admin/instalaciones/${uuid}/`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')
@@ -14,9 +12,7 @@ export async function getInstalaciones(uuid:string){
 }
 
 export async function getInstalacion(uuid:string){
-    const res = await fetch(`${API_URL}/instalacion/admin/${uuid}/`,{
-        cache:'no-store',
-    })
+    const res = await fetch(`${API_URL}/instalacion/admin/${uuid}/`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')

@@ -53,8 +53,8 @@ const Page = ()=>{
         <div className="h-screen ">
             <div className="grid grid-cols-8 gap-x-3">
             <div className="flex flex-col col-span-2 p-2 border-[1px] shadow-lg h-screen overflow-auto">
-                <button className="button-inv w-min whitespace-nowrap">Crear Instalacion</button>
-            <h2 className="title">Instalaciones</h2>
+                <button className="button-inv w-min whitespace-nowrap">Crear Cancha</button>
+            <h2 className="title py-2">Cancha</h2>
                 <div className="grid gap-y-2">
                 {instalaciones.map((item)=>{
                     return(

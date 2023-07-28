@@ -58,7 +58,7 @@ const AddHorarioIntervalDialog = ({open,close,intervalHorario,setting_id,appendI
         open={showDialogConfirmation}
         close={()=>setShowDialogConfirmation(false)}
         performAction={addInterval}
-        />
+        />  
         }
         <DialogLayout open={open} close={close} title="Añadir rango de hora para la reserva">
             <div>

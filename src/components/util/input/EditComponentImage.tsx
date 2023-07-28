@@ -6,15 +6,16 @@ import CommonImage from "../image/CommonImage"
 
 const EditComponentImage =  ({label,src}:{
     label:string
-    src:string
+    src:string | null
 }) =>{
     const [show,setShow] = useState(false)
-    const [value,setValue] = useState(src)
+    const [value,setValue] = useState<string | null>(src)
     return(
         <div>
            <div className="flex justify-between space-x-5 items-center">
             <div className="grid gap-y-2">
             <span className="label">{label}</span>
+            {src != null &&
             <CommonImage
             src={src}
             h={200}
@@ -22,6 +23,7 @@ const EditComponentImage =  ({label,src}:{
             className="rounded-lg w-56 h-40"
             // alt={label}
             />
+            }
             </div>
             <span className=" underline font-medium cursor-pointer">Edit</span>
             </div>
@@ -34,7 +36,7 @@ const EditComponentImage =  ({label,src}:{
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
             >
-              <textarea  className="input mt-4" value={value} onChange={(e)=>setValue(e.target.value)}/>
+              <textarea  className="input mt-4" value={value != null ? value : ""} onChange={(e)=>setValue(e.target.value)}/>
             </Transition>
         </div>
     )
