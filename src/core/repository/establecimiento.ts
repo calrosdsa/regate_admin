@@ -1,7 +1,7 @@
 import { API_URL, MB_API_KEY } from "@/context/config"
 
 
-export async function getEstablecimientos() {
+export async function GetEstablecimientos() {
   const res = await fetch("../../api/establecimiento")
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
@@ -64,14 +64,21 @@ export async function UpdateEstablecimientoPhoto(data:FormData) {
   const res = await fetch(`../../api/establecimiento/update/photo`,{
     method:"POST",
     body:data,
-    // headers:{
-      // 'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
-      // 'Content-Type': 'multipart/form-data'
-    // }
   })
 
   if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
+    throw new Error('Failed to fetch data')
+  }
+  return res.json()
+}
+
+export async function UpdateEstablecimientoAddress(data:string) {
+  const res = await fetch(`../../api/establecimiento/update/address`,{
+    method:"POST",
+    body:data,
+  })
+
+  if (!res.ok) {
     throw new Error('Failed to fetch data')
   }
   return res.json()

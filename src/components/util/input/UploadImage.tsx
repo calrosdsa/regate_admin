@@ -35,7 +35,7 @@ const UploadImage = ({setFile,src,save}:{
             />
             </div>
             <div className="grid gap-y-2">
-            <label htmlFor="file" className="button h-10">
+            <label htmlFor="file" className="button ">
                 Upload Image
             <input id="file" className="hidden" type="file" onChange={uploadImage}/>
             </label>

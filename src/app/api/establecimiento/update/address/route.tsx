@@ -7,18 +7,16 @@ import { cookies } from 'next/headers'; // Import cookies
 
 
 export async function POST(request:Request) {
-  const { searchParams } = new URL(request.url)
-  const id = searchParams.get('establecimiento_id')
-  const nextCookies = cookies(); // Get cookies object
-  const token = nextCookies.get('access_token')?.value
-  if(token == undefined){
+    const nextCookies = cookies(); // Get cookies object
+    const token = nextCookies.get('access_token')?.value
+    if(token == undefined){
         return NextResponse.json("Usuario no authorizado",{status:401})
       }
     // console.log("TOKEN",token)
   try{
       const body = await request.json()
-    //   console.log(body.get("name"))
-      const res = await fetch(`${API_URL}/empresa/establecimiento/update/?establecimiento_id=${id}`,{
+      console.log("BODDYYYY",body)
+      const res = await fetch(`${API_URL}/empresa/establecimiento/update-address/`,{
             method:'POST',
             body:JSON.stringify(body),
             headers:{
@@ -27,7 +25,7 @@ export async function POST(request:Request) {
             }
         })
         const data = await res.json()
-        // console.log("RESPONSE",res.)
+        console.log("RESPONSE",data)
       return NextResponse.json(data,{status:res.status})
    }catch(err){
       console.log(err)

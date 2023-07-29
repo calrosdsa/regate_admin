@@ -5,7 +5,7 @@ import '../../../../style/mapbox.css'
 import { MapComponent } from '@/components/register/MapComponent';
 import { useAppDispatch, useAppSelector } from '@/context/reduxHooks';
 import { uiActions } from '@/context/slices/uiSlice';
-import { UpdateEstablecimiento, UpdateEstablecimientoPhoto, getEstablecimiento } from '@/core/repository/establecimiento';
+import { UpdateEstablecimiento, UpdateEstablecimientoAddress, UpdateEstablecimientoPhoto, getEstablecimiento } from '@/core/repository/establecimiento';
 import EditComponent from '@/components/util/input/EditComponent';
 import EditComponentImage from '@/components/util/input/EditComponentImage';
 import { PaidType } from '@/core/type/enums';
@@ -131,15 +131,46 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                     }
                 })
                 setLoading(false)
+                setOpenMap(false)
                 toast.success("¡Los cambios realizados han sido guardados exitosamente!")
             }catch(err){
                 setLoading(false)
                 console.log(err)
                 toast.error("¡Los cambios realizados han sido guardados exitosamente!")
-
             }
-            
         }
+    }
+    const updateAddress = async(lng:string,lat:string,address:string,setLoading:(bool:boolean)=>void) =>{
+        if(data?.establecimiento != undefined){
+            try{
+                setLoading(true)
+                const req = JSON.stringify({ 
+                    longitud:lng.toString(),
+                    latitud:lat.toString(),
+                    address,
+                    id:data.establecimiento.id
+                 })
+                console.log("PAYLOAD",req)
+                const res = await UpdateEstablecimientoAddress(req)
+                console.log(res)
+                setData({
+                    ...data,
+                    establecimiento:{
+                        ...data.establecimiento,
+                        address:address,
+                        longitud:lng,
+                        latitud:lat
+                    }
+                })
+                setOpenMap(false)
+                setLoading(false)
+                toast.success("¡Los cambios realizados han sido guardados exitosamente!")
+        }catch(err){
+            setLoading(false)
+            console.log(err)
+            toast.error("¡Los cambios realizados han sido guardados exitosamente!")
+        }
+    }
     }
 
     useEffect(()=>{
@@ -192,8 +223,14 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 lng={Number(data?.establecimiento.longitud)}
                 lat={Number(data?.establecimiento.latitud)}
                 address={data?.establecimiento.address}
-                setAddress={(e)=>{}}
-                setLngAndLat={(lng,lat)=>{}}
+                setAddress={(e)=>{
+                    console.log("ADDRESS ----",e)
+                    setData({...data,establecimiento:{
+                        ...data.establecimiento,
+                        address:e
+                    }})
+                }}
+                update={(lng,lat,address,setLoading)=>updateAddress(lng,lat,address,setLoading)}
                 />
             }
         </div>

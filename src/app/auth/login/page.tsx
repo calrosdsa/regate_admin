@@ -26,7 +26,7 @@ const Login = () =>{
 
         e.preventDefault()
         dispatch(login(email,password))
-        window.location.assign("/admin/establecimientos")
+        // window.location.assign("/admin/establecimientos")
       }catch(err){
         console.log(err)
       }

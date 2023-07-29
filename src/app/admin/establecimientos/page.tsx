@@ -1,31 +1,41 @@
 "use client"
 
-import { getEstablecimientos } from "@/core/repository/establecimiento"
+import { GetEstablecimientos } from "@/core/repository/establecimiento"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 
+interface EstablecimientoData {
+    description:string
+    is_open:boolean
+    name:string
+    id:number
+    photo:string
+    uuid:string
+}
+  export default function Page(){
+    const [establecimientos,setEstablecimientos] = useState<EstablecimientoData[]>([])
+    const getDataEstablecimientos = async()=>{
+        try{
 
-
-
-
-  export default async function Page(){
-    const [establecimientos,setEstablecimientos] = useState<Establecimiento[]>([])
-    const getData = async()=>{
-            const data:Establecimiento[] = await getEstablecimientos()
+            const data:EstablecimientoData[] = await GetEstablecimientos()
             console.log("RESPONSE",data)
             setEstablecimientos(data)
+        }catch(err){
+            console.log("ERROR",err)
+        }
             // setReservas(data)
     }
 
     useEffect(()=>{
-        getData()
+        getDataEstablecimientos()
     },[])
     // const data:Establecimiento[] = await getData()
 
     return (
         <div className="w-full  xl:w-10/12 mx-auto">
             
-         <button className="button">Crear Establecimiento</button>   
+         <Link href={"/create-establecimiento"}
+          className="button">Crear Establecimiento</Link>   
          <div className="h-4"/>
     <table className="w-full text-sm text-left text-gray-500 ">
         <thead className="text-xs text-gray-700 uppercase bg-gray-100  ">

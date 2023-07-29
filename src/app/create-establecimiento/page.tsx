@@ -161,10 +161,11 @@ const Login = () =>{
                     ...formData,address:e
                   })
                 }}
-                setLngAndLat={(lng,lat)=>{
+                update={(lng,lat,address,setLoading)=>{
                   setFormData({
-                    ...formData,longitud:lng,
-                    latitud:lat
+                    ...formData,
+                    longitud:Number(lng),
+                    latitud:Number(lat)
                   })
                 }}
                 />

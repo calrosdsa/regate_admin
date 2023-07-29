@@ -7,9 +7,10 @@ import { MB_API_KEY } from '@/context/config';
 import { getPlaces } from '@/core/repository/establecimiento';
 import Input from 'postcss/lib/input';
 import InputWithIcon from '../util/input/InputWithIcon';
+import ButtonWithLoader from '../util/button/ButtonWithLoader';
 
 
-export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,address,setAddress,setLngAndLat}:{
+export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,address,setAddress,update}:{
     open:boolean
     close:()=>void
     loaded:boolean
@@ -18,10 +19,13 @@ export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,address,setAdd
     lat:number
     address:string
     setAddress:(e:string)=>void
-    setLngAndLat:(lng:number,latitud:number)=>void
+    update:(lng:string,lat:string,address:string,setLoading:(bool:boolean)=>void)=>void
 })=>{
     // const [place,setPlace] = useState<Place | null>(null)
     const [adress,setAdress] = useState(address)
+    const [longitud,setLongitud] = useState(lng.toString())
+    const [latitud,setLatitud] = useState(lat.toString())
+    const [loading,setLoading] = useState(false)
     const onChange = (e:ChangeEvent<HTMLInputElement>)=>{
         setAdress(e.target.value)
     }
@@ -29,7 +33,9 @@ export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,address,setAdd
         try{
             const data:Place =await getPlaces(lng,lat)
             setAdress(data.features[0].place_name)
-            setLngAndLat(lng,lat)
+            setAddress(data.features[0].place_name)
+            setLatitud(lat)
+            setLongitud(lng)
             // setPlace(data)
             console.log(data)
         }catch(e){
@@ -137,12 +143,15 @@ export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,address,setAdd
                 )
             }}
             />
-            <button onClick={()=>{
-              if(adress != ""){
-                setAddress(adress)
-                close()
-              }
-            }} className='button'>Guardar Locacion</button>
+            <ButtonWithLoader
+              title='Guardar Ubicación'
+              loading={loading}
+              onClick={()=>{
+                if(adress != ""){
+                  update(longitud,latitud,adress,(bool:boolean)=>setLoading(bool))
+                }
+              }}
+            />
             </div>
         {/* } */}
                      
