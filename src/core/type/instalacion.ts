@@ -13,7 +13,8 @@ type Instalacion = {
     establecimiento_id:number
     category_id:number
     category_name:number
-    portada:string
+    portada?:string
+    max_cupos:number
 }
 
 type Cupo = {

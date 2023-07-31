@@ -30,17 +30,11 @@ export async function getPlaces(lng:string,lat:string){
 }
 
 export async function CreateEstablecimiento(data:FormData) {
-  const res = await fetch(`../../api/establecimiento/create`,{
+  const res = await fetch(`../../api/establecimiento`,{
     method:"POST",
     body:data,
-    // headers:{
-      // 'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
-      // 'Content-Type': 'multipart/form-data'
-    // }
   })
-
   if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch data')
   }
   return res.json()

@@ -22,6 +22,17 @@ export async function GetRules(){
       return res.json()
 }
 
+export async function GetCategories(){
+  const res = await fetch(`${API_URL}/label/categories/`)
+  if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error('Failed to fetch data')
+    }
+   
+  //   console.log(res)
+    return res.json()
+}
+
 export async function GetAmenitiesEstablecimiento(id:number){
     const res = await fetch(`${API_URL}/label/establecimiento/amenities/${id}/`)
     if (!res.ok) {

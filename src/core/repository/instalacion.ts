@@ -1,5 +1,40 @@
 import { API_URL } from "@/context/config"
 
+
+export async function UpdateInstalacion(data:string,id:number) {
+  const res = await fetch(`../../api/establecimiento/instalacion?instalacion_id=${id}`,{
+    method:"PUT",
+    body:data,
+  })
+  if (!res.ok) {
+    throw new Error('Failed to fetch data')
+  }
+  return res.json()
+}
+
+export async function UpdateInstalacionPhoto(data:FormData) {
+  const res = await fetch(`../../api/establecimiento/instalacion/photo`,{
+    method:"PUT",
+    body:data,
+  })
+  if (!res.ok) {
+    throw new Error('Failed to fetch data')
+  }
+  return res.json()
+}
+
+
+export async function CreateInstalacion(data:FormData) {
+  const res = await fetch(`../../api/establecimiento/instalacion`,{
+    method:"POST",
+    body:data,
+  })
+  if (!res.ok) {
+    throw new Error('Failed to fetch data')
+  }
+  return res.json()
+}
+
 export async function getInstalaciones(uuid:string){
     const res = await fetch(`${API_URL}/instalacion/admin/instalaciones/${uuid}/`)
     if (!res.ok) {

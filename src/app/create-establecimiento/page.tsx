@@ -101,6 +101,7 @@ const Login = () =>{
           }}
           max={50}
           label="Email"
+          type="email"
           />
          
          <InputWithMaxLength
@@ -112,6 +113,7 @@ const Login = () =>{
             }
           }}
           max={20}
+          type="tel"
           label="Número de Telefono"
           />
 

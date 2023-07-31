@@ -58,11 +58,13 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         try{
             dispatch(uiActions.setLoaderDialog(true))
             const res:Label[] = await GetRules()
+            console.log(res)
             const newRules = res.filter(item=>!rulesEstablecimiento.map(it=>it.id).includes(item.id))
             setRules(newRules)
             setOpenAddRuleDialog(true)
             dispatch(uiActions.setLoaderDialog(false))
         }catch(err){
+            console.log(err)
             dispatch(uiActions.setLoaderDialog(false))
         }
     }
@@ -147,6 +149,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 const req = JSON.stringify({ 
                     longitud:lng.toString(),
                     latitud:lat.toString(),
+                    uuid:params.uuid,
                     address,
                     id:data.establecimiento.id
                  })
@@ -191,11 +194,13 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             <EditComponent
             label='Número de Telefono'
             content={data?.establecimiento.phone_number}
+            type='tel'
             edit={(addLoader,removeLoader,e)=>updateEstablecimiento("phone_number",e,addLoader,removeLoader)}
             />
 
             <EditComponent
             label='Email'
+            type='email'
             content={data?.establecimiento.email}
             edit={(addLoader,removeLoader,e)=>updateEstablecimiento("email",e,addLoader,removeLoader)}
             />
@@ -322,7 +327,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
        setNewRulesEstablecimiento={(e)=>setRulesEstablecimiento(e)}
        />
        }
-       {(openAddRuleDialog && rulesEstablecimiento.length != 0 && data?.establecimiento != undefined) &&
+       {(openAddRuleDialog && data?.establecimiento != undefined) &&
        <AddRuleDialog
        rules={rules}
        open={openAddRuleDialog}

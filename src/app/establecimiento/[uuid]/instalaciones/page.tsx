@@ -1,7 +1,9 @@
 "use client"
-import HorarioWeek from "@/components/instalacion/HorarioWeek";
-import InstalacionCard from "@/components/instalacion/InstalacionCard";
-import InstalacionDetail from "@/components/instalacion/InstalacionDetail";
+import CreateInstalacion from "@/components/establecimiento/instalacion/CreateInstalacion";
+import HorarioWeek from "@/components/establecimiento/instalacion/HorarioWeek";
+import InstalacionCard from "@/components/establecimiento/instalacion/InstalacionCard";
+import InstalacionDetail from "@/components/establecimiento/instalacion/InstalacionDetail";
+import CreateInstalacionDialog from "@/components/establecimiento/instalacion/dialog/CreateInstalacionDialog";
 import ReservaList from "@/components/reservas/ReservaList";
 import { API_URL } from "@/context/config";
 import { getInstalacion, getInstalaciones } from "@/core/repository/instalacion";
@@ -13,12 +15,11 @@ import { useParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
 
-const Page = ()=>{
-    const params = useParams()
+const Page = ({ params }: { params: { uuid: string } })=>{
     const [instalaciones,setInstalaciones] = useState<Instalacion[]>([])
     const [instalacion,setInstalacion] = useState<Instalacion | null>(null)
     const [reservas,setReservas] = useState<Reserva[]>([])
-    // const data:Instalacion[] = await getInstalaciones(params.uuid)
+    const [openCreateInstalacion,setOpenCreateInstalacion] = useState(false)
     const getReservas = async()=>{
         if(instalacion != null) {
             const data:Reserva[] = await getInstalacionReservas(instalacion?.id)
@@ -35,6 +36,7 @@ const Page = ()=>{
         }
     }
     const getInstalacionData = async(uuid:string) => {
+        console.log(uuid)
         const instalacion:Instalacion = await getInstalacion(uuid)
         setInstalacion(instalacion)
     }
@@ -43,17 +45,26 @@ const Page = ()=>{
         getData()
     },[])
 
-    useEffect(()=>{
-        if(instalacion != null){
-            getReservas()
-        }
-    },[instalacion])
+    // useEffect(()=>{
+    //     if(instalacion != null){
+    //         getReservas()
+    //     }
+    // },[instalacion])
     
     return(
+        <>
+        {openCreateInstalacion&&
+        <CreateInstalacionDialog
+        uuid={params.uuid}
+        close={()=>setOpenCreateInstalacion(false)}
+        open={openCreateInstalacion}
+        addInstalacion={(e:Instalacion)=>setInstalaciones([...instalaciones,e])}
+        />
+        }
         <div className="h-screen ">
             <div className="grid grid-cols-8 gap-x-3">
             <div className="flex flex-col col-span-2 p-2 border-[1px] shadow-lg h-screen overflow-auto">
-                <button className="button-inv w-min whitespace-nowrap">Crear Cancha</button>
+                <button onClick={()=>setOpenCreateInstalacion(true)} className="button-inv w-min whitespace-nowrap">Crear Cancha</button>
             <h2 className="title py-2">Cancha</h2>
                 <div className="grid gap-y-2">
                 {instalaciones.map((item)=>{
@@ -79,7 +90,13 @@ const Page = ()=>{
                     </Tab.List>
                     <Tab.Panels className={"p-2"}>
                         <Tab.Panel className={"mx-auto flex justify-center w-3/4"}>
-                            <InstalacionDetail instalacion={instalacion}/>
+                            <InstalacionDetail 
+                            uuid={params.uuid}
+                            instalacion={instalacion}
+                            update={(name,value)=>{
+                                setInstalacion({...instalacion,[name]:value})
+                            }}
+                            />
                         </Tab.Panel>
                         <Tab.Panel>
                             <HorarioWeek
@@ -99,9 +116,9 @@ const Page = ()=>{
         <Instalacion instalacionUuid={uuid} />
              </Suspense> */}
             </div>
-        
             </div>
         </div>
+    </>
     )
 }
 
@@ -111,10 +128,10 @@ export default Page;
 async function Instalacion({instalacionUuid }: { instalacionUuid:string }) {
     // Wait for the instalacion promise to resolve
     const instalacion = await getInstalacion(instalacionUuid)
-   
+    
     return (
       <ul>
         {JSON.stringify(instalacion)}
       </ul>
     )
-  }
+}

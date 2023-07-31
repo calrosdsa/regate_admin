@@ -3,9 +3,11 @@ import { useState } from "react"
 import ButtonWithLoader from "../button/ButtonWithLoader"
 
 
-const EditComponent =  ({label,content,edit}:{
+const EditComponent =  ({label,content,edit,type="text",isTextArea=false}:{
     label:string
     content:string
+    type?:string
+    isTextArea?:boolean
     edit:(addLoader:()=>void,removeLoader:()=>void,value:string)=>void
 }) =>{
     const [show,setShow] = useState(false)
@@ -29,7 +31,15 @@ const EditComponent =  ({label,content,edit}:{
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
             >
-              <textarea  className="input mt-4" value={value} onChange={(e)=>setValue(e.target.value)}/>
+
+            {isTextArea ?
+                <textarea  className="textarea mt-4" value={value} onChange={(e)=>setValue(e.target.value)}
+                rows={5}/> 
+                :
+                <input type={type} className="input mt-4" value={value} onChange={(e)=>setValue(e.target.value)}/>
+            }
+
+
               <ButtonWithLoader
               onClick={()=>edit(()=>setLoading(true),()=>{
                 setLoading(false)

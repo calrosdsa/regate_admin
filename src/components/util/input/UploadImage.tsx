@@ -3,10 +3,11 @@ import { ChangeEvent, useEffect, useState } from "react";
 import CommonImage from "../image/CommonImage";
 import ButtonWithLoader from "../button/ButtonWithLoader";
 
-const UploadImage = ({setFile,src,save}:{
+const UploadImage = ({setFile,src,save,id="file"}:{
     setFile:(e:File)=>void
-    src:string
+    src?:string
     save?:(setLoading:(e:boolean)=>void)=>void
+    id?:string
 }) => {
     const [loading,setLoading] = useState(false)
     const [source,setSource] = useState("/images/img-default.png")
@@ -20,7 +21,9 @@ const UploadImage = ({setFile,src,save}:{
     }
     useEffect(()=>{
         if(src != "" && src != null){
-            setSource(src)
+            setSource(src as string)
+        }else{
+            setSource("/images/img-default.png")
         }
     },[src])
     return(
@@ -30,14 +33,14 @@ const UploadImage = ({setFile,src,save}:{
             src={source}
             w={250}
             h={200}
-            className="w-full h-44 rounded object-cover"
+            className="w-44 h-44 rounded object-cover"
             // alt={""}
             />
             </div>
             <div className="grid gap-y-2">
-            <label htmlFor="file" className="button ">
+            <label htmlFor={id} className="button ">
                 Upload Image
-            <input id="file" className="hidden" type="file" onChange={uploadImage}/>
+            <input id={id} className="hidden" type="file" onChange={uploadImage}/>
             </label>
             {save != undefined &&
             <ButtonWithLoader
