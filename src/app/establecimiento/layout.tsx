@@ -23,7 +23,9 @@ export default function RootLayout({
         {/* <SideBar/> */}
       <LoaderDialog open={loaderDialog}/>
     <div className='flex'>
+      <div className='hidden lg:block'>
     <SideBarEstablecimiento/>
+      </div>
          <div className=' w-full h-screen overflow-auto  '>
     
          {children}

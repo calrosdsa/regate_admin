@@ -12,9 +12,10 @@ type Instalacion = {
     description:string
     establecimiento_id:number
     category_id:number
-    category_name:number
+    category_name:string
     portada?:string
     max_cupos:number
+    estado:number
 }
 
 type Cupo = {

@@ -7,3 +7,9 @@ export const enum PaidType {
     DEFERRED_PAYMENT,
     UPFRONT_PAYMENT,
 }
+
+
+export const enum EstadoVisibility {
+    DISABLED,
+    ENABLED,
+}

@@ -6,7 +6,7 @@ interface Props{
 const InstalacionCard = ({instalacion}:Props) =>{
 
     return(
-        <div className="h-28 w-full cursor-pointer border-[1px] relative rounded-lg">
+        <div className="h-28 w-[200px] md:w-full cursor-pointer border-[1px] relative rounded-lg">
             {(instalacion.portada == null || instalacion.portada == "") ?
             <Image
             src="/images/img-default.png"

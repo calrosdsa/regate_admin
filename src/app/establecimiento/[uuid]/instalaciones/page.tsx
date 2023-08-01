@@ -62,11 +62,11 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         />
         }
         <div className="h-screen ">
-            <div className="grid grid-cols-8 gap-x-3">
-            <div className="flex flex-col col-span-2 p-2 border-[1px] shadow-lg h-screen overflow-auto">
+            <div className="md:grid md:grid-cols-8 gap-x-3">
+            <div className="flex flex-col w-full col-span-2 p-2 border-[1px] shadow-lg md:h-screen overflow-auto ">
                 <button onClick={()=>setOpenCreateInstalacion(true)} className="button-inv w-min whitespace-nowrap">Crear Cancha</button>
             <h2 className="title py-2">Cancha</h2>
-                <div className="grid gap-y-2">
+                <div className="flex md:gap-y-2 w-fulll overflow-auto md:grid ">
                 {instalaciones.map((item)=>{
                     return(
                         <div key={item.uuid} onClick={()=>getInstalacionData(item.uuid)}>
@@ -89,7 +89,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                         onClick={()=>getReservas()}>Reservas</Tab>
                     </Tab.List>
                     <Tab.Panels className={"p-2"}>
-                        <Tab.Panel className={"mx-auto flex justify-center w-3/4"}>
+                        <Tab.Panel className={"mx-auto flex justify-center w-full sm:w-3/4"}>
                             <InstalacionDetail 
                             uuid={params.uuid}
                             instalacion={instalacion}

@@ -8,6 +8,11 @@ import { useEffect, useState } from "react"
 import ButtonWithLoader from "@/components/util/button/ButtonWithLoader"
 import { Transition } from "@headlessui/react"
 import { GetCategories } from "@/core/repository/labels"
+import EditComponentSelect from "@/components/util/input/EditComponentSelect"
+import { Tooltip } from 'react-tooltip';
+import { estadoVisibility } from "@/core/util/data"
+import { EstadoVisibility } from "@/core/type/enums"
+
 
 const InstalacionDetail = ({instalacion,update,uuid}:{
     instalacion:Instalacion
@@ -19,6 +24,11 @@ const InstalacionDetail = ({instalacion,update,uuid}:{
     const [photo,setPhoto] = useState<File | undefined>(undefined)
     const [ categories,setCategories ] = useState<Label[]>([])
     const [loadingUpdate,setLoadingUpdate] = useState(false)
+
+    // const itemsSelected:SelectItem[] = categories.map(item=>{
+    //     return( {value:item.name,name:item.id.toString()} )
+    // })
+
     const getCategories = async() =>{
         try{
             const res:Label[] = await GetCategories()
@@ -84,7 +94,7 @@ const InstalacionDetail = ({instalacion,update,uuid}:{
                 isTextArea={true}
                 content={instalacion.description}
                 edit={(addLoader,removeLoader,value)=>{
-                    updateInstalacion("name",value,addLoader,removeLoader)
+                    updateInstalacion("description",value,addLoader,removeLoader)
                 }}
                 />
             <EditComponent
@@ -96,61 +106,40 @@ const InstalacionDetail = ({instalacion,update,uuid}:{
                 type="tel"
                 />
 
+            <EditComponentSelect
+            label="Categoria"
+            items={categories.map(item=>{
+                return( {name:item.name,value:item.id.toString()} )
+            })}
+            getItems={getCategories}
+            currentSelected={ {name:instalacion.category_name,value:instalacion.category_id.toString()}}
+            updateSelect={async(value,addLoader,removeLoader,currentName)=>{
+                await updateInstalacion("category_id",value,addLoader,removeLoader)
+                update("category_name",currentName)
+            }}
+            /> 
 
-            <div>
-             <div className=" flex justify-between items-center space-x-5 py-3 divider">
-                <div className="grid">
-                    <span className="label">Categoria</span>
-                    <span className="text-sm">{instalacion.category_name}</span>
-                </div>
-                <span onClick={getCategories} className=" underline font-medium cursor-pointer">Edit</span>
-            </div>
 
-            <Transition
-            show={show}
-            enter="transition ease-out duration-100"
-            enterFrom="transform opacity-0 scale-95"
-            enterTo="transform opacity-100 scale-100"
-            leave="transition ease-in duration-75"
-            leaveFrom="transform opacity-100 scale-100"
-            leaveTo="transform opacity-0 scale-95"
-            >
-          <select name="" id="" className="input" value={category} onChange={(e)=>{
-            setCategory(Number(e.target.value))
-            }}>
-            {categories.map((item)=>{
-                return(
-                    <option key={item.id} value={item.id}>{item.name}</option>
-                    )
-                })}
-          </select>
+            <EditComponentSelect
+            label="Visibilidad"
+            items={estadoVisibility}
+            getItems={()=>{}}
+            currentSelected={{name:estadoVisibility.find(item=>item.value == instalacion.estado.toString())
+                ?.name as string,value:instalacion.estado.toString()}}
+            updateSelect={async(value,addLoader,removeLoader,currentName)=>{
+                await updateInstalacion("estado",value,addLoader,removeLoader)
+                // update("estado",currentName)
+            }}
+            contentToolTip={
+                    <div className="grid">
+                        <span>Habilitado: Sera visible en la aplicación </span>
+                        <span>Deshabilitado: No sera visible en la aplicacion</span>
+                    </div>
+            }
+            tooltipId="estado-cancha"
+            />   
 
-            <ButtonWithLoader
-              onClick={async()=>{
-                await updateInstalacion("category_id",category?.toString(),()=>setLoadingUpdate(true),()=>{
-                    setLoadingUpdate(false)
-                    setShow(false)
-                })
-                const name = categories.find(item=>item.id == category)?.name
-                if(name != undefined){
-                    update("category_name",name)
-                }
-              }}
-              title="Guardar"
-              loading={loadingUpdate}
-            />
-              {/* <button onClick={()=>edit(()=>setLoading(true),()=>setLoading(false),value)} */}
-               {/* className=" button">Guardar Cambios</button> */}
-            </Transition>
-
-            </div>
-            {/* <div className=" flex justify-between space-x-5 items-center">
-                <div className="grid">
-                    <span className="label">Descripcion</span>
-                    <p className="help-text">{instalacion.description}</p>
-                </div>
-                <span className=" underline font-medium cursor-pointer">Edit</span>
-            </div> */}
+            
 
 
             <UploadImage
