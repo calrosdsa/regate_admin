@@ -20,6 +20,7 @@
     "cookies-next": "^2.1.1",
     "eslint": "8.42.0",
     "eslint-config-next": "13.4.4",
+    "firebase": "^10.3.1",
     "moment": "^2.29.4",
     "next": "13.4.4",
     "postcss": "8.4.24",

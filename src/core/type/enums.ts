@@ -13,3 +13,9 @@ export const enum EstadoVisibility {
     DISABLED,
     ENABLED,
 }
+
+
+export const enum UserRol {
+    CLIENT_USER_ROL,
+    ADMIN_USER_ROL
+}

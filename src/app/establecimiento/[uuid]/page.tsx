@@ -94,7 +94,7 @@ const Page= ()=>{
 //   };
 
     return(
-      <div className="flex flex-col lg:grid  lg:grid-cols-6 gap-3 p-4">
+      <div className="flex flex-col lg:grid  lg:grid-cols-6 gap-3 p-4 h-screen">
       <GooglePlacesAutocomplete
       apiKey="AIzaSyB2350gB-GpLOYJkrM-HZO4Ysj_7Rm9ebw"
   

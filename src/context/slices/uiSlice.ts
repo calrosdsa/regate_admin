@@ -7,7 +7,8 @@ const uiState:UiState=  {
     loading:false,
     innerLoading:false,
     loaded:false,
-    loaderDialog:false
+    loaderDialog:false,
+    openSidebar:false
 }
 
 
@@ -23,6 +24,9 @@ const uiSlice = createSlice({
         },
         setLoaderDialog(state,action:PayloadAction<boolean>){
             state.loaderDialog = action.payload
+        },
+        openSidebar(state,action:PayloadAction<boolean>){
+            state.openSidebar = action.payload
         }
     }
 })

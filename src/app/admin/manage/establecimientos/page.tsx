@@ -4,14 +4,7 @@ import { GetEstablecimientos } from "@/core/repository/establecimiento"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 
-interface EstablecimientoData {
-    description:string
-    is_open:boolean
-    name:string
-    id:number
-    photo:string
-    uuid:string
-}
+    
   export default function Page(){
     const [establecimientos,setEstablecimientos] = useState<EstablecimientoData[]>([])
     const getDataEstablecimientos = async()=>{
@@ -33,10 +26,13 @@ interface EstablecimientoData {
 
     return (
         <div className="w-full  xl:w-10/12 mx-auto">
-            
+            <div className="mt-2">
          <Link href={"/create-establecimiento"}
           className="button">Crear Establecimiento</Link>   
+          </div>
          <div className="h-4"/>
+
+         <div className="w-full overflow-x-auto">
     <table className="w-full text-sm text-left text-gray-500 ">
         <thead className="text-xs text-gray-700 uppercase bg-gray-100  ">
             <tr>
@@ -66,6 +62,7 @@ interface EstablecimientoData {
            
         </tbody>
     </table>
+         </div>
 
         </div>
     )

@@ -15,6 +15,7 @@ module.exports = {
       colors:{
         'facebook': '#039be5',
         'primary':'#0406ee',
+        'hoverPrimary':'#1b03c3',
         'teclu2':'#e50108',
         'secondary':'F2BE22',
       }

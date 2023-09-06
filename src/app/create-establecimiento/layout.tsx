@@ -14,7 +14,7 @@ export default function CreateEstablecmientoLayout({
       />
       <div className="xl:grid xl:grid-cols-2 w-full">
         {/* Include shared UI here e.g. a header or sidebar */}
-        <div>
+        <div className="hidden xl:block">
         <img
         src={"/images/background.jpg"}
         alt="backgroun-image"
@@ -23,7 +23,8 @@ export default function CreateEstablecmientoLayout({
         // priority
         />   
         </div>
-        <div className=" relative w-full">
+
+        <div className=" relative w-full h-screen">
         {children}
         </div>
       </div>

@@ -18,6 +18,11 @@ type ConversationMessage = {
     reply?:Reply 
 }
 
+type PaginationConversationMessage = {
+    results:ConversationMessage[]
+    nextPage:number
+}
+
 type Reply = {
     id:number
 	sender_id:number

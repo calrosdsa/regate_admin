@@ -6,9 +6,9 @@ export default function AuthLayout({
     children: React.ReactNode
   }) {
     return (
-      <section className="xl:grid xl:grid-cols-2">
+      <div className="grid xl:grid xl:grid-cols-2">
         {/* Include shared UI here e.g. a header or sidebar */}
-        <div>
+        <div className="hidden xl:block">
         <img
         src={"/images/background.jpg"}
         alt="backgroun-image"
@@ -17,9 +17,9 @@ export default function AuthLayout({
         // priority
         />   
         </div>
-        <div className="grid place-content-center">
+        <div className="grid place-content-center h-screen">
         {children}
         </div>
-      </section>
+      </div>
     )
   }

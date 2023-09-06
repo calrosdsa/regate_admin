@@ -1,7 +1,3 @@
-import { NextApiRequest,NextApiResponse } from "next";
-import axios from "axios";
-import cookie from 'cookie';
-import { getCookies, getCookie, setCookie, deleteCookie } from 'cookies-next';
 import { NextResponse } from "next/server";
 import { cookies } from 'next/headers'; // Import cookies
 import { API_URL } from "@/context/config";

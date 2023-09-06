@@ -57,6 +57,18 @@ export async function getInstalacion(uuid:string){
       return res.json()
 }
 
+export async function getInstalacionById(id:number){
+  const res = await fetch(`${API_URL}/instalacion/${id}/`)
+  if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error('Failed to fetch data')
+    }
+   
+    console.log(res)
+    return res.json()
+}
+
+
 export async function getInstalacionDayHorario(instalacionId:number,dayWeek:number){
     const res = await fetch(`${API_URL}/instalacion/admin/horario/${instalacionId}/${dayWeek}/`)
     if (!res.ok) {

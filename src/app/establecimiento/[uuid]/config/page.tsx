@@ -184,7 +184,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
        <div className='grid xl:grid-cols-2 gap-2 h-screen'>
         {/* <button onClick={()=>setOpenMap(true)}>Open Map</button> */}
         {data?.establecimiento != null &&
-        <div className='p-4 flex flex-col space-y-6'>
+        <div className='p-4 flex flex-col space-y-6 xl:overflow-auto'>
             <span className="text-xl py-2 font-medium">Establecimiento Info</span>
             <EditComponent
             label='Nombre'
@@ -242,7 +242,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         }
 
         {data?.setting_establecimiento != undefined &&
-            <div className='p-4 flex flex-col gap-y-4 overflow-auto'>
+            <div className='p-4 flex flex-col gap-y-4 xl:overflow-auto'>
             <span className="text-xl py-2 font-medium">Establecimiento Ajustes</span>
             <span className='label'>Metodo de pago</span>
             <div className='flex flex-wrap gap-3'>   

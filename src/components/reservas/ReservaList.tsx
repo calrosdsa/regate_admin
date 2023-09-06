@@ -1,13 +1,20 @@
 import moment from "moment";
 import CommonImage from "../util/image/CommonImage";
+import { getFullName } from "@/core/util";
+import Loading from "../util/loaders/Loading";
 
 
-const ReservaList = ({reservas}:{
+const ReservaList = ({reservas,loading}:{
     reservas:Reserva[]
+    loading:boolean
 }) =>{
-
+    
     return(
-        <div className="grid">
+        <div className={`grid relative ${loading && "h-20"}`}>
+            <Loading
+            loading={loading}
+            className="absolute top-12 left-1/2 -translate-x-1/2"
+            />
              <table className="w-full shadow-xl">
         <thead className=" bg-gray-200 text-left">
             <tr>
@@ -30,14 +37,14 @@ const ReservaList = ({reservas}:{
         {reservas.map((item,index)=>{
                 return(
                     <tr key={item.id} className={`${index % 2 && "bg-gray-100"}`}>
-                        <td className="flex space-x-2 items-center rowTable">
+                        <td className="flex space-x-2 items-center rowTable w-40x xl:w-full">
                         <CommonImage
                         src={item.profile_photo || "/images/profile.png"}
                         h={30}
                         w={30}
                         className="rounded-full"
                         />
-                        <span className="rowTable">{item.nombre + " "+ item.apellido || ""}</span>
+                        <span className="rowTable truncate ">{getFullName(item.nombre,item.apellido)}</span>
                         </td>
                         <td className="rowTable">{item.total_price}</td>
                         <td className="rowTable">{item.paid}</td>
@@ -47,6 +54,8 @@ const ReservaList = ({reservas}:{
                     </tr>
                 )
             })}
+           
+          
             {/* {data.map((item)=>{
                 return(
             <tr className="bg-white border-b">

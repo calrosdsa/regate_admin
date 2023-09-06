@@ -13,20 +13,17 @@ const dayWeek:Horario[] = [
     {dayName:"Viernes",dayWeek:DayWeek.Viernes},
     {dayName:"Sabado",dayWeek:DayWeek.Sabado}
 ]
-const HorarioWeek = ({instalacionId}:{
+const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay}:{
     instalacionId:number
+    selectedDay:number | null
+    cupos:Cupo[]
+    getHorarioDay:(day:number)=>void
 }) =>{
-    const [cupos,setCupos] = useState<Cupo[]>([])
-    const [selectedDay,setSelectedDay] = useState<number | null>(null)
-    const currentDay = new Date().getDay()
+    // const [cupos,setCupos] = useState<Cupo[]>([])
+    // const [selectedDay,setSelectedDay] = useState<number | null>(null)
     const [editHorarioDialog,setEditHorarioDialog] = useState(false)
     const [cupo,setCupo] = useState<Cupo | undefined>(undefined)
 
-    const getHorarioDay = async(day:number)=>{
-        const res:Cupo[] =  await getInstalacionDayHorario(instalacionId,day)
-        setCupos(res)
-        setSelectedDay(day)
-    }
 
     const openEditDialog = (cupo?:Cupo)=>{
         setCupo(cupo)
@@ -35,12 +32,12 @@ const HorarioWeek = ({instalacionId}:{
     }
    
 
-    useEffect(()=>{
-        if(currentDay != undefined){
-            getHorarioDay(currentDay)
-        }
-        console.log(currentDay)
-    },[instalacionId])
+    // useEffect(()=>{
+    //     if(currentDay != undefined){
+    //         getHorarioDay(currentDay)
+    //     }
+    //     console.log(currentDay)
+    // },[instalacionId])
 
 
     return(

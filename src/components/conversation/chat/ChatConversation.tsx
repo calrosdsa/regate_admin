@@ -1,6 +1,7 @@
 import { API_URL_MESSAGE } from "@/context/config";
 import { GetMessages } from "@/core/repository/conversation";
 import { formatterShorTime, getRandomInt } from "@/core/util";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 const ChatConversation = ({conversation}:{
@@ -10,20 +11,30 @@ const ChatConversation = ({conversation}:{
     const [messageContent,setMessageContent] = useState("")
     const connection = useRef<WebSocket>();
     const refEl = useRef<HTMLDivElement>(null)
+    const searchParams = useSearchParams()
+    const id = searchParams.get("id") || conversation.conversation_id.toString()
     const [page,setPage] = useState(1)
     const [hideButton,setHideButton] = useState(false)
     const getMessages = async(page:number) => {
-        const res:ConversationMessage[] = await GetMessages(conversation.conversation_id,page)
-        if(res.length < 20){
-            console.log("SIZE ",res.length)
+        const res:PaginationConversationMessage = await GetMessages(Number(id),page)
+        if(res.results.length < 20){
+            console.log("SIZE ",res.results.length)
             setHideButton(true)
         }
-        setMessages([...messages,...res])
+        if(page == 1){
+            setMessages(res.results)
+        }else{
+            setMessages([...messages,...res.results])
+        }
         
     }
+    useEffect(()=>{
+        if(id != null){
+            getMessages(1)
+        }
+    },[searchParams])
 
     const sendMessage = ()=>{
-        // console.log(typeof images)
         try{
             if(messageContent=="") return
             const data:ConversationMessage = {
@@ -41,7 +52,9 @@ const ChatConversation = ({conversation}:{
         }
     }
     useEffect(()=>{
-        getMessages(page)
+        if(page >1){
+            getMessages(page)
+        }
     },[page])
 
     useEffect(()=>{
@@ -49,9 +62,8 @@ const ChatConversation = ({conversation}:{
       },[messages])
 
     useEffect(()=>{
-        // new IntersectionObserver()
         console.log("getting new connection")
-        connection.current = new WebSocket(`ws://localhost:9091/v1/ws/conversation/?id=${conversation.conversation_id}`);
+        connection.current = new WebSocket(`ws://localhost:9091/v1/ws/conversation/?id=${id}`);
         connection.current.onopen = () => {
         }
         connection.current.onclose = () => {
@@ -69,7 +81,7 @@ const ChatConversation = ({conversation}:{
             connection.current?.close();
         }
             // })
-    },[])
+    },[searchParams])
 
     return(
         <div className="h-screen ">
@@ -108,10 +120,16 @@ const ChatConversation = ({conversation}:{
                 }
 
                 </div>
-            <div className="flex space-x-2 items-center bg-gray-200 p-2 shadow-md">
-                <input value={messageContent} type="text" className="input" onChange={(e)=>setMessageContent(e.target.value)}/>
+            <div className="flex space-x-2 items-center bg-gray-200 px-2 p-1 shadow-md">
+                <input value={messageContent} type="text" className="input" 
+                onKeyDown={(e)=>{
+                    if(e.key == "Enter"){
+                        sendMessage()
+                    }
+                }}
+                onChange={(e)=>setMessageContent(e.target.value)}/>
                 <button onClick={()=>sendMessage()}
-                className="bg-primary rounded-full w-10 h-10 flex justify-center items-center">
+                className="bg-primary rounded-full w-10 h-10 flex justify-center items-center ">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} 
                 stroke="currentColor" className="w-6 h-6 text-white">
     <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />

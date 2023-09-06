@@ -23,6 +23,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/establecimiento/[uuid]/config/page.tsx", "src/components/register/MapComponent.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/establecimiento/[uuid]/config/page.tsx", "src/components/register/MapComponent.tsx", "public/firebase-messaging-sw.js"],
   "exclude": ["node_modules"]
 }

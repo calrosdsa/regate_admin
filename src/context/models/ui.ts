@@ -6,6 +6,7 @@ type UiState = {
     innerLoading:boolean
     loaded:boolean
     loaderDialog:boolean
+    openSidebar:boolean
 }
 
 

@@ -9,7 +9,7 @@ interface Props{
 const ButtonWithLoader = ({loading,title,className="",onClick,disabled=false}:Props) =>{
 
     return(
-        <div className={`relative ${className} mt-4`}>
+        <div className={`relative ${className}`}>
         {/* <input type="submit" className='hidden' id="submitRegister"/> */}
         <button disabled={disabled} className='border-[1px] font-semibold  cursor-pointer flex flex-grow justify-center items-center
        w-full bg-primary text-gray-50 hover:bg-opacity-80 rounded-lg h-10' onClick={onClick}

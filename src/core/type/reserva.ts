@@ -7,3 +7,8 @@ interface Reserva extends Profile {
     end_date:string
     created_at:string
 }
+
+type ReservaDataFilter = {
+    uuid:string
+    query:string
+}
