@@ -3,14 +3,16 @@ import { API_URL } from "@/context/config";
 import { cookies } from 'next/headers'; // Import cookies
 
 export async function POST(request:Request) {
-    const nextCookies = cookies(); // Get cookies object
-    const token = nextCookies.get('access_token')?.value
-    if(token == undefined){
+   const { searchParams } = new URL(request.url)
+   const page = searchParams.get('page')
+   const nextCookies = cookies(); // Get cookies object
+   const token = nextCookies.get('access_token')?.value
+   if(token == undefined){
       return NextResponse.json("Usuario no authorizado",{status:401})
     }
   try{
       const body = await request.json()
-      const res = await fetch(`${API_URL}/admin/reservas-establecimiento/`,
+      const res = await fetch(`${API_URL}/admin/reservas-establecimiento/?page=${page}`,
       {
          method:"post",
          body:JSON.stringify(body),

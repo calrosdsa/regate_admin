@@ -4,17 +4,16 @@ import InputWithIcon from "@/components/util/input/InputWithIcon";
 import InputPassword from "@/components/util/input/InputPassword";
 import { login } from "@/context/actions/account-actions";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
-import { uiActions } from "@/context/slices/uiSlice";
-import axios from "axios";
 import Image from "next/image";
 import { ChangeEvent, FormEvent, useState } from "react";
+import Link from "next/link";
 const Login = () =>{
     const dispatch = useAppDispatch()
     const uiState = useAppSelector(state=>state.ui)
     // const authtate = useAppSelector(state=>state.auth)
     const [formData,setFormData ] = useState({
-      email:"jorge@gmail.com",
-      password:"12ab34cd56ef"
+      email:"",
+      password:""
     })
     const {email,password} = formData
     const onChange = (e:ChangeEvent<HTMLInputElement>)=>{
@@ -23,9 +22,8 @@ const Login = () =>{
     }
     const onSubmit = async(e:FormEvent<HTMLFormElement>) =>{
       try{
-
         e.preventDefault()
-        dispatch(login(email,password))
+        dispatch(login(email.trim(),password.trim()))
         // window.location.assign("/admin/establecimientos")
       }catch(err){
         console.log(err)
@@ -44,8 +42,8 @@ const Login = () =>{
             priority 
             alt={'teclu-mobility'}/>
        </div>
-    <form onSubmit={onSubmit} className="flex flex-col gap-4">
-  <div>
+    <form onSubmit={onSubmit} className="flex flex-col gap-4 ">
+  <div className="">
   <InputWithIcon
    label='Email'
    value={email}
@@ -70,6 +68,8 @@ const Login = () =>{
    className='pt-2'
    />
   </div>
+  <Link href={`/auth/forgot-password`} className="labelText flex justify-end text-gray-600 cursor-pointer">¿Olvidaste tu contraseña?</Link>
+
   <ButtonSubmit
   title='Submit'
   loading={uiState.innerLoading}

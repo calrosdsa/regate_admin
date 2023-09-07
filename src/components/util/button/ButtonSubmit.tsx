@@ -8,7 +8,7 @@ interface Props{
 const ButtonSubmit = ({loading,title,className=""}:Props) =>{
 
     return(
-        <div className={`relative ${className} mt-4`}>
+        <div className={`relative ${className} mt-3`}>
         <input type="submit" className='hidden' id="submitRegister"/>
         <label className='border-[1px] font-semibold  cursor-pointer flex flex-grow justify-center items-center
        w-full bg-primary text-gray-50 hover:bg-opacity-80 rounded-lg h-11'

@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '@/context/reduxHooks'
 import { uiActions } from '@/context/slices/uiSlice'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
+import { getUser } from '@/context/actions/account-actions'
 
 // const inter = Inter({ subsets: ['latin'] })
 
@@ -24,6 +25,7 @@ export default function RootLayout({
 
   useEffect(()=>{
     dispatch(uiActions.openSidebar(false))
+    dispatch(getUser())
   },[pathName])
 
   return (
@@ -45,8 +47,9 @@ export default function RootLayout({
         <MobileSidebar
         open={uiState.openSidebar}
         setOpen={()=>dispatch(uiActions.openSidebar(false))}
-        children={<SideBar/>}
-        />
+        >
+        <SideBar/>
+        </MobileSidebar>
       </div>
 
          <div className='px-2 w-full overflow-auto pt-14 xl:pt-0'>

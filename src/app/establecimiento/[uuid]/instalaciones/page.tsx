@@ -8,8 +8,11 @@ import ReservaList from "@/components/reservas/ReservaList";
 import { API_URL } from "@/context/config";
 import { getInstalacion, getInstalacionDayHorario, getInstalaciones } from "@/core/repository/instalacion";
 import { getInstalacionReservas } from "@/core/repository/reservas";
+import { Order } from "@/core/type/enums";
 import { classNames } from "@/core/util";
+import { appendSerachParams } from "@/core/util/routes";
 import { Tab } from "@headlessui/react";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import Link from "next/link";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -32,15 +35,15 @@ const Page = ({ params }: { params: { uuid: string } })=>{
 
 
     const [openCreateInstalacion,setOpenCreateInstalacion] = useState(false)
-    const appendSerachParams = (key:string,value:string)=>{
-        current.set(key,value);
-        const search = current.toString();
-        const query = search ? `?${search}` : "";
-        router.push(`${pathname}${query}`);
-    }
+    // const appendSerachParams = (key:string,value:string,router:AppRouterInstance,current:URLSearchParams)=>{
+    //     current.set(key,value);
+    //     const search = current.toString();
+    //     const query = search ? `?${search}` : "";
+    //     router.push(`${pathname}${query}`);
+    // }
     const getReservas = async(id:number,forceLoad:boolean = false)=>{
         if(reservas.length > 0 && !forceLoad) return
-        appendSerachParams("tabIndex","2")
+        appendSerachParams("tabIndex","2",router,current,pathname)
         try{
             setReservas([])
             setLoadingReservas(true)
@@ -57,7 +60,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
 
     const getHorariosDay = async(day:number,id:number) =>{
         try{
-                appendSerachParams("tabIndex","1")
+                appendSerachParams("tabIndex","1",router,current,pathname)
                 const res:Cupo[] =  await getInstalacionDayHorario(id,day)
                 setCupos(res)
                 setSelectedDay(day)
@@ -81,7 +84,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         // console.log(uuid)
         const res:Instalacion = await getInstalacion(uuid)
         setInstalacion(res)
-        appendSerachParams("id",res.uuid)
+        appendSerachParams("id",res.uuid,router,current,pathname)
         if(tabIndex!= null){
             if(tabIndex == "2"){
                 console.log(tabIndex,"TABINDEX")
@@ -139,7 +142,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                         <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
                         onClick={()=>{
                             if(cupos.length>0) {
-                                appendSerachParams("tabIndex","1")
+                                appendSerachParams("tabIndex","1",router,current,pathname)
                                 return
                             }
                             getHorariosDay(currentDay,instalacion.id)
@@ -169,6 +172,8 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                             <ReservaList
                             loading={loadingReservas}
                             reservas={reservas}
+                            // order={Order.DESC}
+                            changeOrder={()=>{}}
                             />
                         </Tab.Panel>
                     </Tab.Panels>
@@ -186,15 +191,3 @@ const Page = ({ params }: { params: { uuid: string } })=>{
 }
 
 export default Page;
-
-
-async function Instalacion({instalacionUuid }: { instalacionUuid:string }) {
-    // Wait for the instalacion promise to resolve
-    const instalacion = await getInstalacion(instalacionUuid)
-    
-    return (
-      <ul>
-        {JSON.stringify(instalacion)}
-      </ul>
-    )
-}

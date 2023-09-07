@@ -10,6 +10,7 @@ import MobileSidebar from '@/components/util/sidebar/MobileSidebar';
 import { uiActions } from '@/context/slices/uiSlice';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
+import { getUser } from '@/context/actions/account-actions';
 
 
 
@@ -24,6 +25,7 @@ export default function RootLayout({
   const uiState = useAppSelector(state=>state.ui)
   useEffect(()=>{
     dispatch(uiActions.openSidebar(false))
+    dispatch(getUser())
   },[pathName])
   return (
     <>
@@ -42,8 +44,9 @@ export default function RootLayout({
         <MobileSidebar
         open={uiState.openSidebar}
         setOpen={()=>dispatch(uiActions.openSidebar(false))}
-        children={<SideBarEstablecimiento/>}
-        />
+        >
+        <SideBarEstablecimiento/>
+        </MobileSidebar>
       </div>
 
          <div className=' xl:pt-0 w-full overflow-auto '>

@@ -19,3 +19,13 @@ export const enum UserRol {
     CLIENT_USER_ROL,
     ADMIN_USER_ROL
 }
+
+export const enum Order {
+    DESC,
+    ASC,
+}
+
+export const enum OrderQueue {
+    CREATED = 1,
+    RESERVA_CREATED
+}

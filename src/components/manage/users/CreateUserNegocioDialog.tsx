@@ -5,7 +5,6 @@ import ButtonSubmit from '@/components/util/button/ButtonSubmit'
 import { useAppDispatch, useAppSelector } from '@/context/reduxHooks'
 import { toast } from 'react-toastify'
 import DialogHeader from '@/components/util/dialog/DialogHeader'
-import Input from '@/components/util/input/Input'
 import { UserRol } from '@/core/type/enums'
 import { getEstablecimientos } from '@/context/actions/account-actions'
 import Image from 'next/image'
@@ -13,6 +12,8 @@ import Loading from '@/components/util/loaders/Loading'
 import { CreateUser } from '@/core/repository/manage'
 import ButtonWithLoader from '@/components/util/button/ButtonWithLoader'
 import { GetEstablecimientos } from '@/core/repository/establecimiento'
+import { uiActions } from '@/context/slices/uiSlice'
+import InputWithIcon from '@/components/util/input/InputWithIcon'
 
  interface Props{
    openModal:boolean,
@@ -43,17 +44,20 @@ const CreateUserNegocioDialog:React.FC<Props>=({
     // const loading = useAppSelector(state=>state.ui.loading)
     const [formData,setFormData]=useState<Data>({
         username:"Daniel Miranda",
-        email:"daniel@yopmail.com",
+        email:"jorgemiranda0180@gmail.com",
         rol:undefined
     })
     const {username,email,rol} = formData
     const [establecimientos,setEstablecimientos] = useState<EstablecimientoData[]>([])
     const getDataEstablecimientos = async()=>{
         try{
+            dispatch(uiActions.setInnerLoading(true))
             const data:EstablecimientoData[] = await GetEstablecimientos()
+            dispatch(uiActions.setInnerLoading(false))
             console.log("RESPONSE",data)
             setEstablecimientos(data)
         }catch(err){
+            dispatch(uiActions.setInnerLoading(false))
             console.log("ERROR",err)
         }
             // setReservas(data)
@@ -109,7 +113,7 @@ const CreateUserNegocioDialog:React.FC<Props>=({
       setLaoding(true)
       if(rol == UserRol.CLIENT_USER_ROL){
         if(establecimientos.length == 0){
-          getEstablecimientos()
+          getDataEstablecimientos()
         }
         setCurrentTab(Tab.ESTABLECIMIENTOS)
         setLaoding(false)
@@ -166,7 +170,7 @@ const CreateUserNegocioDialog:React.FC<Props>=({
             />
             {Tab.MAIN == currentTab &&
             <form className='p-2' onSubmit={onSubmit}>
-                <Input
+                <InputWithIcon
                 value={username}
                 onChange={onChange}
                 name='username'
@@ -180,7 +184,7 @@ const CreateUserNegocioDialog:React.FC<Props>=({
                     )
                 }}
                 />
-                <Input
+                <InputWithIcon
                 value={email}
                 onChange={onChange}
                 name='email'

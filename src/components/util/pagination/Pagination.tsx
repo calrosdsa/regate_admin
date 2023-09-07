@@ -4,15 +4,16 @@ import { useEffect, useState } from 'react';
 
 interface Props{
     currentPage:number
+    pageSize:number
     setPage:(num:number)=>void
     totalCount:number
     onPrev:()=>void
     onNext:()=>void
 }
-const Pagination = ({currentPage,setPage,totalCount,onNext,onPrev}:Props) => {
+const Pagination = ({currentPage,setPage,totalCount,pageSize,onNext,onPrev}:Props) => {
    
     const siblingCount =1;
-    const pageSize =1
+    // const pageSize =1
     const paginationRange = usePagination({
         currentPage,
         totalCount,

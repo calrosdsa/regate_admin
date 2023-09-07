@@ -11,4 +11,19 @@ interface Reserva extends Profile {
 type ReservaDataFilter = {
     uuid:string
     query:string
+    order:number
+    order_queue:number
+}
+
+
+type ReservaPaginationResponse = {
+    results:Reserva[]
+    next_page:number
+    count:number
+    page_size:number
+}
+
+type ReservaOrder = {
+    order:number
+    queue:number
 }

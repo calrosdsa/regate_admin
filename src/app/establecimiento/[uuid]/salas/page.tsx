@@ -118,7 +118,7 @@ export default function Page({ params }: { params: { uuid: string } }){
                                 <div className="h-56">
 
                                 {instalacion != null &&
-                                <div className="w-full sm:w-96 mx-auto relative">
+                                <div className="w-full sm:w-96 relative">
                                     <CommonImage
                                     src={instalacion.portada}
                                     h={300}

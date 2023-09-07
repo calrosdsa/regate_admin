@@ -1,10 +1,10 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { UiState } from "../models/ui";
 
-const user = localStorage.getItem("user")
-const userD:User | null =user != null? JSON.parse(user) :null
+// const user = localStorage.getItem("user")
+// const userD:User | null =user != null? JSON.parse(user) :null
 const accountState:AccountState =  {
-    user:userD,
+    user:null,
     establecimientos:[]
 }
 

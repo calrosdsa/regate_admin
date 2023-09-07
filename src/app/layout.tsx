@@ -10,6 +10,7 @@ import { useEffect } from 'react'
 // import { firebaseConfig } from '@/core/util/firebase-messaging-sw.js'
 import { initializeApp } from 'firebase/app'
 import { firebaseConfig } from '@/core/util/firebase'
+import { getUser } from '@/context/actions/account-actions'
 // import { messaging } from '@/core/util/firebase'
 
 export const metadata = {
@@ -54,6 +55,7 @@ export default function RootLayout({
   //     // navigator.serviceWorker.register('/firebase-messaging-sw.js')
   //     requestPermission()
   //   },[])
+  
 
   return (
     <html lang="en">

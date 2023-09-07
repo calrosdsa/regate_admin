@@ -2,11 +2,14 @@ import moment from "moment";
 import CommonImage from "../util/image/CommonImage";
 import { getFullName } from "@/core/util";
 import Loading from "../util/loaders/Loading";
+import { Order, OrderQueue } from "@/core/type/enums";
 
 
-const ReservaList = ({reservas,loading}:{
+const ReservaList = ({reservas,loading,order,changeOrder}:{
     reservas:Reserva[]
     loading:boolean
+    changeOrder:(order:ReservaOrder)=>void
+    order?:ReservaOrder
 }) =>{
     
     return(
@@ -16,9 +19,9 @@ const ReservaList = ({reservas,loading}:{
             className="absolute top-12 left-1/2 -translate-x-1/2"
             />
              <table className="w-full shadow-xl">
-        <thead className=" bg-gray-200 text-left">
+        <thead className=" bg-gray-200 text-left noselect">
             <tr>
-                <th className="headerTable">
+                <th className="headerTable w-72">
                     Usuario
                 </th>
                 <th className="headerTable">
@@ -27,17 +30,50 @@ const ReservaList = ({reservas,loading}:{
                 <th className="headerTable">
                     Precio pagado
                 </th>
-                <th className=" headerTable">
-                  Rango de Hora
+                <th className=" headerTable  cursor-pointer" onClick={()=>{
+                    if(order == undefined) return
+                    changeOrder({
+                        ...order,
+                        queue:OrderQueue.RESERVA_CREATED
+                    })
+                    }}>
+                    <div className="flex space-x-2 items-center">
+                  <span>Fecha de la reserva</span>
+                  {order?.queue == OrderQueue.RESERVA_CREATED ?
+                  order?.order == Order.DESC ?
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true" className="h-5 w-5"><path d="M4 5h8l-4 6-4-6z"></path></svg>
+                  :
+                  <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path d="M4 11h8L8 5l-4 6z"></path></svg>
+                    :
+                    <svg className="h-5 w-5 opacity-40" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path  d="M4 5h8l-4 6-4-6z"></path></svg>
+                }
+                </div>
                 </th>
-                <th className="headerTable">Creado el</th>
+                <th className="headerTable flex space-x-2 items-center cursor-pointer" onClick={()=>{
+                    if(order == undefined) return
+                    changeOrder({
+                        ...order,
+                        queue:OrderQueue.CREATED
+                    })
+                    }}>
+                    <span>Fecha de creación</span>
+                    {order?.queue == OrderQueue.CREATED ?
+                    order?.order == Order.DESC ?
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true" className="h-5 w-5"><path d="M4 5h8l-4 6-4-6z"></path></svg>
+                    :
+                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path d="M4 11h8L8 5l-4 6z"></path></svg>
+                    :
+                    <svg className="h-5 w-5 opacity-40" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path  d="M4 5h8l-4 6-4-6z"></path></svg>
+                }
+                {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path  d="M4 5h8l-4 6-4-6z"></path></svg> */}
+                </th>
             </tr>
         </thead>
         <tbody>
         {reservas.map((item,index)=>{
                 return(
                     <tr key={item.id} className={`${index % 2 && "bg-gray-100"}`}>
-                        <td className="flex space-x-2 items-center rowTable w-40x xl:w-full">
+                        <td className="flex space-x-2 items-center rowTable ">
                         <CommonImage
                         src={item.profile_photo || "/images/profile.png"}
                         h={30}
