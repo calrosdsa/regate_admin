@@ -160,7 +160,6 @@ export default function Page({params}:{params:{uuid:string}}){
         
 
             </div>
-
             <div className="pt-2 pb-4 sm:flex md:justify-between md:items-center grid gap-2 relative">
                 <div className="flex space-x-2 items-center">
                 <SearchInput
@@ -172,10 +171,15 @@ export default function Page({params}:{params:{uuid:string}}){
                     const filter  = {...filterData,query:""}
                     setFilterData(filter)
                     getReservas(filter,1)
+                    if(paginationProps == undefined) return
+                    setPaginationProps({
+                        ...paginationProps,
+                        count:0
+                    })
                 }}
                 onEnter={(query)=>searchQuery(query)}
                 />
-                {(paginationProps != undefined && paginationProps.count != reservasCount) &&
+                {(paginationProps != undefined && paginationProps.count > 0 && query != "") &&
                 <span>{paginationProps.count} {paginationProps.count > 1 ? "coincidencias":"coincidencia"}</span>
                 }
                 </div>

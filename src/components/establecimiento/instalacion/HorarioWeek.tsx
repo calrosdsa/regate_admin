@@ -49,17 +49,20 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay}:{
         cupo={cupo}
         />
         }
-        <div className="flex space-x-3 overflow-auto pb-4">
+        <div className="mt-2">
+
+        <div className="flex w-full space-x-3 overflow-auto pb-4 relative">
+
             <div className="h-5"/>
             {dayWeek.map((item)=>{
                 return(
                     <div key={item.dayWeek} onClick={()=>getHorarioDay(item.dayWeek)}
                      className={`${selectedDay == item.dayWeek ? 'button':'button-inv'}`}>
-
                         {item.dayName}
                     </div>
                 )
             })}
+
         </div>
         <div className="grid grid-cols-2 xl:grid-cols-4 gap-2">
             {cupos.map((item,index)=>{
@@ -78,6 +81,7 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay}:{
                     </div>
                 )
             })}
+        </div>
         </div>
         </>
     )

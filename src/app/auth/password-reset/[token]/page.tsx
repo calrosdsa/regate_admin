@@ -3,7 +3,7 @@ import ButtonSubmit from "@/components/util/button/ButtonSubmit"
 import InputPassword from "@/components/util/input/InputPassword"
 import InputWithIcon from "@/components/util/input/InputWithIcon"
 import { API_URL } from "@/context/config"
-import { VerifyToken } from "@/core/repository/account"
+import { ResetPassword, VerifyToken } from "@/core/repository/account"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -11,10 +11,8 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 
 
 export default function Page({params} : { params:{token:string}}){
-    // const dispatch = useAppDispatch()
-    // const uiState = useAppSelector(state=>state.ui)
-    // const authtate = useAppSelector(state=>state.auth)
     const router = useRouter()
+    const [loading,setLoading] = useState(false)
     const [formData,setFormData ] = useState({
       password:"",
       confirmPassword:""
@@ -42,9 +40,15 @@ export default function Page({params} : { params:{token:string}}){
     const onSubmit = async(e:FormEvent<HTMLFormElement>) =>{
       try{
         e.preventDefault()
-        // dispatch(login(email.trim(),password.trim()))
-        // window.location.assign("/admin/establecimientos")
+        setLoading(true)
+        const data = {
+          password:password
+        }
+        await ResetPassword(data,params.token)
+        router.push("/auth/login")
+        setLoading(false)
       }catch(err){
+        setLoading(false)
         console.log(err)
       }
       // window.location.assign("http://localhost:3000/establecimiento/1469058c-6084-4e1e-a191-de1d5fa3b9c5/instalaciones")
@@ -78,7 +82,7 @@ export default function Page({params} : { params:{token:string}}){
         <InputPassword
         label='Confirmar contraseña'
         password={confirmPassword}
-        name='confirm_password'
+        name='confirmPassword'
         onChange={onChange}
     //    error={authtate.errorLogin?.password}
         className='pt-2'
@@ -88,7 +92,7 @@ export default function Page({params} : { params:{token:string}}){
   
     <ButtonSubmit
     title='Submit'
-    loading={false}
+    loading={loading}
     /> 
   
      

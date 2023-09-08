@@ -11,7 +11,7 @@ export default function AuthLayout({
     return (
       <>
       <ToastContainer/>
-      <div className="grid xl:grid xl:grid-cols-2">
+      <div className="grid xl:grid xl:grid-cols-2 max-w-[1700px]  mx-auto">
         {/* Include shared UI here e.g. a header or sidebar */}
         <div className="hidden xl:block">
         <img

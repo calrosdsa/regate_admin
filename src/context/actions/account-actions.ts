@@ -27,6 +27,7 @@ export const getUser  = () :ThunkAction<void,RootState,undefined,AnyAction> =>{
 export const login = (email:string,password:string) :ThunkAction<void,RootState,undefined,AnyAction> =>{
     return async(dispatch)=>{
         try{
+            console.log(password,email)
             dispatch(uiActions.setInnerLoading(true))
             const res = await fetch(`../api`,{
                  method:"POST",

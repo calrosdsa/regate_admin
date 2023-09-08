@@ -17,10 +17,13 @@ export async function POST(request:Request) {
    // const body = await request.json()
    // const res = await axios.post("http://localhost:9090/v1/account/admin/login/",body)
    // const data = res.data
-   const { email,password } = await request.json();
+   const body = await request.json();
    const res = await fetch(`${API_URL}/account/admin/login/`,{
       method:"post",
-      body:new URLSearchParams({email:email,password:password}),
+      body:JSON.stringify(body),
+      headers:{
+            "Content-Type":"application/json"
+      }
   }
    )
    console.log(res.status,"ESTATUS")

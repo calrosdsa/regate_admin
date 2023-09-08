@@ -33,7 +33,7 @@ const Login = () =>{
   
 
     return(
-        <div className='sm:w-[400px] bg-gray-50 p-2 py-10 rounded-lg'>
+        <div className='sm:w-[400px] bg-gray-100 shadow-md p-2 py-10 rounded-lg'>
       <div className=' grid place-content-center mb-10'>
       <Image
             src="/images/logo.png"
@@ -65,7 +65,7 @@ const Login = () =>{
    name='password'
    onChange={onChange}
 //    error={authtate.errorLogin?.password}
-   className='pt-2'
+   className=''
    />
   </div>
   <Link href={`/auth/forgot-password`} className="labelText flex justify-end text-gray-600 cursor-pointer">¿Olvidaste tu contraseña?</Link>

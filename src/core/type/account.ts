@@ -26,3 +26,7 @@ type AccountState = {
     user:User | null
     establecimientos:EstablecimientoUser[]
 }
+
+type PasswordRequest = {
+    password:string
+}

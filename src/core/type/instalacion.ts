@@ -27,3 +27,18 @@ type Cupo = {
     instalacion_id:number
     establecimiento_id:number
 }
+
+
+type CupoReserva = {
+    precio:number
+    precio_reserva:number | null
+    time:string
+    color:string
+    reserva_id:number | null
+}
+
+type CupoReservaRequest = {
+    instalacion_id:number
+    date:string
+    day_week:number
+}
