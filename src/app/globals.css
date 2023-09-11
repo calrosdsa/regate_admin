@@ -11,6 +11,10 @@
     @apply py-[6px] border-[1px] hover:text-white  hover:bg-primary bg-white border-primary
     active:ring-blue-300 active:ring-2 px-3 text-sm font-medium text-primary cursor-pointer rounded-md
   }
+  .button-disabled {
+    @apply py-2 border-[1px] text-white  bg-primary opacity-50 cursor-not-allowed
+    px-3 text-sm font-medium   rounded-md
+  }
   .smallButton {
     @apply   flex space-x-1 py-1 border-[1px] border-gray-300 items-center bg-white hover:bg-gray-200 
     active:ring-blue-300 active:ring-2 px-3
@@ -61,6 +65,9 @@
   }
   .default-card {
     @apply hover:bg-gray-200 cursor-pointer
+  }
+  .disabled {
+    @apply opacity-50 cursor-not-allowed pointer-events-none
   }
 }
 

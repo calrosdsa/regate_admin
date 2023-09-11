@@ -29,6 +29,7 @@ type Cupo = {
 }
 
 
+
 type CupoReserva = {
     precio:number
     precio_reserva:number | null
@@ -36,6 +37,8 @@ type CupoReserva = {
     color:string
     reserva_id:number | null
 }
+
+
 
 type CupoReservaRequest = {
     instalacion_id:number

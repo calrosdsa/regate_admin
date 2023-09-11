@@ -1,6 +1,7 @@
+import { Tooltip } from "react-tooltip"
 
 
-export const Tooltip = ({title,helpText}:{
+export const TooltipIcon = ({title,helpText}:{
     title:string
     helpText:string
 }) =>{
@@ -21,4 +22,29 @@ export const Tooltip = ({title,helpText}:{
     </div>
     </div>
     )
+}
+
+export const TooltipContainer = ({helpText,children="",className,disabled=false}:{
+  helpText:string
+  className?:string
+  disabled?:boolean
+  children:React.ReactNode
+}) =>{
+
+  return (
+    <>
+    {disabled ?
+    <>
+    {children}
+    </>
+    :
+    <div title={helpText}>
+    {children}     
+  </div>
+      }
+    </>
+  // <Tooltip anchorSelect=".my-anchor-element" place="top">
+  //   Hello world 
+  // </Tooltip>
+  )
 }

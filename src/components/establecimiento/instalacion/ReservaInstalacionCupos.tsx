@@ -2,9 +2,12 @@ import { groupByToMap } from "@/core/util";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
-const ReservaInstalacionCupos = ({cupos,loading}:{
+const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCupo,selectedCupos}:{
     cupos:CupoReserva[]
+    selectedCupos:CupoReserva[]
     loading:boolean
+    selecReservaCupo:(e:CupoReserva)=>void
+    getReservaDetail:(id:number)=>void
 }) =>{ 
     const [newCupos,setNewCupos]= useState<CupoReserva[]>([])
     const colors = ["bg-yellow-500","bg-green-500","bg-blue-500","bg-red-500","bg-cyan-500",
@@ -31,7 +34,7 @@ const ReservaInstalacionCupos = ({cupos,loading}:{
                     }
                     return item
                 }))
-                console.log(updateItems,"ARRAY ")
+                // console.log(updateItems,"ARRAY ")
                 setNewCupos(updateItems)
             }else{
                 setNewCupos(items)
@@ -52,9 +55,22 @@ const ReservaInstalacionCupos = ({cupos,loading}:{
     
         <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-2 ">
             {newCupos.map((item,idx)=>{
+                const isSelected = selectedCupos.map(item=>item.time).includes(item.time)
+                // console.log(moment().utcOffset(0, true).toISOString(),'MOMENT UTC')
+                const isAfter = moment.utc(item.time).isBefore(moment().utcOffset(0, true).toISOString())
+                // console.log(isAfter,item.time)
+                // const disabled = r
                 return(
-                    <div key={idx} onClick={()=>{}}
-                    className={`card grid grid-cols-2 ${item.color}
+                    <div key={idx} onClick={()=>{
+                        if(item.reserva_id != null){
+                            getReservaDetail(item.reserva_id)
+                        }else {
+                            selecReservaCupo(item)
+                        }
+                    }}
+                    className={`card grid grid-cols-2 ${isSelected && "bg-gray-900 text-white"}
+                    ${isAfter && "disabled"}
+                    ${item.color}
                     ${item.precio_reserva != null && "text-white"}`}>
                         <div className="grid">
                         <span className="label">Hora</span>

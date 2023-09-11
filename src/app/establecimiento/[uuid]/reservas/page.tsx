@@ -1,5 +1,6 @@
 "use client"
 import ReservaList from "@/components/reservas/ReservaList";
+import CreateReservaDialog from "@/components/reservas/dialog/CreateReservaDialog";
 import SearchInput from "@/components/util/input/SearchInput";
 import Pagination from "@/components/util/pagination/Pagination";
 import { getEstablecimientoReservas, getEstablecimientoReservasCount } from "@/core/repository/reservas";
@@ -12,11 +13,10 @@ import { useEffect, useState } from "react";
 export default function Page({params}:{params:{uuid:string}}){
     const searchParams = useSearchParams();
     const page = searchParams.get("page")
+    const totalCount = searchParams.get("totalCount")
+
     const current = new URLSearchParams(Array.from(searchParams.entries()))
-    // const pathname = usePathname();
-    // const router = useRouter()
     const [reservas ,setReservas ] = useState<Reserva[]>([])
-    // const [page,setPage] = useState(1)
     const [query,setQuery] = useState("")
     const [filterData,setFilterData] = useState<ReservaDataFilter>({
         uuid:params.uuid,
@@ -31,21 +31,18 @@ export default function Page({params}:{params:{uuid:string}}){
         order:Order.DESC,
         queue:OrderQueue.CREATED
     })
-
     const appendSerachParams = (key:string,value:string)=>{
         current.set(key,value);
         const search = current.toString();
         const url  = window.location.pathname + '?' + search;
         history.pushState(null,'',url)
-        // const query = search ? `?${search}` : "";
-
-        // router.push(`${pathname}${query}`);
     }
 
     const getReservasCount = async()=>{
         try{
             const res:number = await getEstablecimientoReservasCount(params.uuid)
             setReservasCount(res)
+            appendSerachParams("totalCount",`${res}`)
         }catch(err){
             console.log(err)
         }
@@ -75,12 +72,20 @@ export default function Page({params}:{params:{uuid:string}}){
             setReservas([])
             setLoading(true)
             const res:ReservaPaginationResponse =await getEstablecimientoReservas(data,page)
+            console.log(res)
             setPaginationProps({
                 pageSize:res.page_size,
                 count:res.count > 0 ? res.count : 0,
                 nextPage:res.next_page,
                 currentPage:page
             })
+            if(data.query != ""){
+                setReservasCount(res.count)
+            }else{
+                if(totalCount != null){
+                    setReservasCount(Number(totalCount))
+                }
+            }
             setReservas(res.results)
             setLoading(false)
         }catch(err){
@@ -121,17 +126,6 @@ export default function Page({params}:{params:{uuid:string}}){
         }
     }
 
-    // useEffect(()=>{
-    //     if(paginationProps != undefined){
-    //         if(reservasCount != undefined && query == "") {
-    //         setPaginationProps({
-    //                 ...paginationProps,
-    //                 count:reservasCount
-    //             })
-    //         }
-    //     }
-    // },[paginationProps])
-
     useEffect(()=>{
         getReservasCount()
         if(page != null){
@@ -142,12 +136,13 @@ export default function Page({params}:{params:{uuid:string}}){
     },[])
 
     return(
+        <>
         <div className="p-2 overflow-auto h-screen">
             <div className="pt-10 xl:pt-2">
                 <span className="text-xl">Reservas({reservasCount})</span>
 
-            <div className="flex space-x-4">
-            <div className="pt-2 pb-2">
+            <div className="flex space-x-3 py-2">
+          
                 <button className="button-inv" disabled={loading}  onClick={()=>{
                     setQuery("")
                     getReservas(filterData,1)
@@ -156,8 +151,14 @@ export default function Page({params}:{params:{uuid:string}}){
   <path fillRule="evenodd" d="M4.755 10.059a7.5 7.5 0 0112.548-3.364l1.903 1.903h-3.183a.75.75 0 100 1.5h4.992a.75.75 0 00.75-.75V4.356a.75.75 0 00-1.5 0v3.18l-1.9-1.9A9 9 0 003.306 9.67a.75.75 0 101.45.388zm15.408 3.352a.75.75 0 00-.919.53 7.5 7.5 0 01-12.548 3.364l-1.902-1.903h3.183a.75.75 0 000-1.5H2.984a.75.75 0 00-.75.75v4.992a.75.75 0 001.5 0v-3.18l1.9 1.9a9 9 0 0015.059-4.035.75.75 0 00-.53-.918z" clipRule="evenodd" />
                  </svg>
                 </button>
-            </div>
-        
+                
+                {/* <button className="button-inv flex space-x-1" disabled={loading}  onClick={()=>setCreateReservaDialog(true)}>
+                        <span>Crear Reserva</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+  <path d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z" />
+                        </svg>
+                </button>
+     */}
 
             </div>
             <div className="pt-2 pb-4 sm:flex md:justify-between md:items-center grid gap-2 relative">
@@ -195,7 +196,7 @@ export default function Page({params}:{params:{uuid:string}}){
                             currentPage:page
                         })
                     }}
-                    totalCount={paginationProps.count}
+                    totalCount={reservasCount || 0}
                     pageSize={paginationProps.pageSize}
                     onPrev={onPrev}
                     onNext={onNext}
@@ -242,5 +243,7 @@ export default function Page({params}:{params:{uuid:string}}){
             </div>
             {/* {JSON.stringify(reservas)} */}
         </div>
+       
+        </>
     )
 }

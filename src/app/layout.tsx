@@ -11,6 +11,8 @@ import { useEffect } from 'react'
 import { initializeApp } from 'firebase/app'
 import { firebaseConfig } from '@/core/util/firebase'
 import { getUser } from '@/context/actions/account-actions'
+import moment from 'moment'
+import 'moment/locale/es'
 // import { messaging } from '@/core/util/firebase'
 
 export const metadata = {
@@ -55,6 +57,9 @@ export default function RootLayout({
   //     // navigator.serviceWorker.register('/firebase-messaging-sw.js')
   //     requestPermission()
   //   },[])
+  useEffect(()=>{
+    moment.locale("es")
+  },[])
   
 
   return (

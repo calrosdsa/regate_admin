@@ -1,5 +1,6 @@
 
 type Profile = {
+    profile_id:number
     nombre:string,
     apellido?:string
     profile_photo?:string

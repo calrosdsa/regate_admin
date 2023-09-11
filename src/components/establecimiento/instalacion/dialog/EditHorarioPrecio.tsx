@@ -5,7 +5,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import DialogLayout from '@/components/util/dialog/DialogLayout'
 import InputWithIcon from '@/components/util/input/InputWithIcon'
 import ButtonSubmit from '@/components/util/button/ButtonSubmit'
-import { Tooltip } from '@/components/util/tooltips/Tooltip'
+import { TooltipIcon } from '@/components/util/tooltips/Tooltip'
 import { createCupoInstalacion, updateCupoInstalacion } from '@/core/repository/instalacion'
 import { useParams } from 'next/navigation'
 import moment from 'moment'
@@ -53,7 +53,7 @@ export const EditHorarioPrecio = ({open,close,cupo}:{
         <form onSubmit={onSubmit}>
             <div className='grid grid-cols-2 gap-3'>
             <div>
-            <Tooltip
+            <TooltipIcon
             title='Precio'
             helpText='Asigna un precio acorde a la hora y la disponibilidad'
             />
@@ -71,7 +71,7 @@ export const EditHorarioPrecio = ({open,close,cupo}:{
             </div>
 
             <div>
-            <Tooltip
+            <TooltipIcon
             title='Habilitar'
             helpText='Asigna un precio acorde a la hora y la disponibilidad'
             />
