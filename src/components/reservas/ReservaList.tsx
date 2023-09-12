@@ -13,7 +13,7 @@ const ReservaList = ({reservas,loading,order,changeOrder}:{
 }) =>{
     
     return(
-        <div className={`grid relative ${loading && "h-20"}`}>
+        <div className={`relative ${loading && "h-20"}`}>
             <Loading
             loading={loading}
             className="absolute top-12 left-1/2 -translate-x-1/2"

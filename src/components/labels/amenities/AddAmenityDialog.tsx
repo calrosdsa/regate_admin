@@ -58,7 +58,9 @@ const AddAmenityDialog = ({amenities,close,open,establecimientoId,setNewAmenitie
         performAction={saveChanges}
         />
         }
-        <DialogLayout open={open} close={close} title="Agregar comodidades">
+        <DialogLayout
+        className="max-w-lg"
+         open={open} close={close} title="Agregar comodidades">
             <div className="py-2 max-w-xl">
                 <div className="gap-2 flex overflow-auto max-w-xl flex-wrap " >
                     {amenities.map((item)=>{
@@ -68,7 +70,7 @@ const AddAmenityDialog = ({amenities,close,open,establecimientoId,setNewAmenitie
                     
                 </div>
 
-                <div className="w-full justify-end pt-2">
+                <div className="w-full justify-end pt-2 ">
                 <button onClick={()=>setShowDialogConfirmation(true)}
                 className="button" disabled={ids.length == 0}>
                     Añadir

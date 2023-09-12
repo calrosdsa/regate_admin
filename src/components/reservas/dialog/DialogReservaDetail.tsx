@@ -12,8 +12,11 @@ const DialogReservaDetail = ({open,close,reserva}:{
 
     return(
         <>
-     <DialogLayout open={open} close={close}>
+     <DialogLayout
+     className="max-w-lg"
+      open={open} close={close}>
         <div className='rounded-lg bg-white overflow-auto'>
+        {reserva.nombre != undefined &&
         <div className="flex space-x-2 items-center  ">
                         <CommonImage
                         src={reserva.profile_photo || "/images/profile.png"}
@@ -23,6 +26,7 @@ const DialogReservaDetail = ({open,close,reserva}:{
                         />
                         <span className="text-sm truncate ">{getFullName(reserva.nombre,reserva.apellido)}</span>
                         </div>
+                    }
             
                        
 

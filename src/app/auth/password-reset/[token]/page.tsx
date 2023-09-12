@@ -8,6 +8,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
+import { toast } from "react-toastify"
 
 
 export default function Page({params} : { params:{token:string}}){
@@ -45,7 +46,9 @@ export default function Page({params} : { params:{token:string}}){
           password:password
         }
         await ResetPassword(data,params.token)
+        toast.success("Nueva contraseña establecida correctamente.")
         router.push("/auth/login")
+
         setLoading(false)
       }catch(err){
         setLoading(false)

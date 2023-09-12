@@ -8,21 +8,14 @@ import CreateReservaDialog from "@/components/reservas/dialog/CreateReservaDialo
 import DialogReservaDetail from "@/components/reservas/dialog/DialogReservaDetail";
 import Loading from "@/components/util/loaders/Loading";
 import { TooltipIcon, TooltipContainer } from "@/components/util/tooltips/Tooltip";
-import { API_URL } from "@/context/config";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
 import { GetCupoReservaInstalciones, getInstalacion, getInstalacionDayHorario, getInstalaciones } from "@/core/repository/instalacion";
 import { GetReservaDetail, getInstalacionReservas } from "@/core/repository/reservas";
-import { Order } from "@/core/type/enums";
-import { classNames } from "@/core/util";
-import useDebounce from "@/core/util/hooks/useDebounce";
 import { appendSerachParams } from "@/core/util/routes";
 import { Tab } from "@headlessui/react";
-import { spawn } from "child_process";
-import moment from "moment";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
-import { Tooltip } from "react-tooltip";
 // import { Tooltip } from 'react-tooltipp
 
 const Page = ({ params }: { params: { uuid: string } })=>{
@@ -35,7 +28,6 @@ const Page = ({ params }: { params: { uuid: string } })=>{
     const dispatch = useAppDispatch()
     const pathname = usePathname();
     const router = useRouter()
-    const uiState = useAppSelector(state=>state.ui)
     const [createReservaDialog,setCreateReservaDialog] = useState(false)
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [loadingReservas,setLoadingReservas] = useState(false)
@@ -82,6 +74,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         try{
             dispatch(uiActions.setLoaderDialog(true))
             const res = await GetReservaDetail(id)
+            console.log(res)
             setReservaDetail(res)
             dispatch(uiActions.setLoaderDialog(false))
         }catch(err){
@@ -126,6 +119,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         }
     }
 
+    
     const selectReservaCupo = (cupo:CupoReserva) => {
         console.log(cupo)
         if(selectedCupos.map((item=>item.time)).includes(cupo.time)){
@@ -202,8 +196,10 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                             if(cuposReservas.length>0) {
                                 appendSerachParams("tabIndex","2",router,current,pathname)
                                 return
+                            }else{
+                                appendSerachParams("tabIndex","2",router,current,pathname)
+                                getCuposReservaInstalacion(instalacion.id)
                             }
-                            getCuposReservaInstalacion(instalacion.id)
                             }}>Reservas</Tab>
                     </Tab.List>
                     <Tab.Panels className={"p-2"}>
@@ -252,7 +248,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                                 disabled={selectedCupos.length != 0}
                                 >
                                     <button
-                                     className={`items-center justify-center h-10 w-32 flex space-x-1 whitespace-nowrap
+                                     className={`items-center justify-center h-10 w-36 flex space-x-1 whitespace-nowrap
                                      ${selectedCupos.length == 0 ? "button-disabled":"button"}`}
                                      disabled={selectedCupos.length == 0} onClick={()=>setCreateReservaDialog(true)}>
                                         <span>Crear Reserva</span>
@@ -315,6 +311,8 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         close={()=>setCreateReservaDialog(false)}
         reservaCupos={selectedCupos}
         instalacion={instalacion}
+        refresh={()=>getCuposReservaInstalacion(instalacion.id)}
+        uuid={params.uuid}
         />
         }
     </>

@@ -2,16 +2,22 @@ import { Dialog, Transition } from "@headlessui/react"
 import {  Fragment, ReactNode } from 'react'
 
 
-const DialogLayout = ({open,close,children,title =""}:{
+const DialogLayout = ({open,close,children,title ="",className="",allowClose=false}:{
     open:boolean
+    allowClose?:boolean
     close:()=>void
     children:ReactNode
+    className?:string
     title?:string
 }) =>{
 
     return(
         <Transition appear show={open} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={()=>close()}>
+        <Dialog as="div" className="relative z-10" onClose={()=>{
+          if(allowClose){
+            close()
+          }
+        }}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -35,8 +41,8 @@ const DialogLayout = ({open,close,children,title =""}:{
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="transform overflow-hidden rounded-lg bg-white p-3
-                 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className={`transform overflow-hidden rounded-lg bg-white p-2
+                 text-left align-middle shadow-xl transition-all w-full ${className}`}>
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900 flex justify-between items-center space-x-12"

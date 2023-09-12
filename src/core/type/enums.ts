@@ -29,3 +29,9 @@ export const enum OrderQueue {
     CREATED = 1,
     RESERVA_CREATED
 }
+
+export const enum UserEstado {
+    ENABLED,
+    DISABLED,
+    DELETED
+}

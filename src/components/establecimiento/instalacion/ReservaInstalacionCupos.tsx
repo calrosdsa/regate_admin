@@ -10,41 +10,51 @@ const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCup
     getReservaDetail:(id:number)=>void
 }) =>{ 
     const [newCupos,setNewCupos]= useState<CupoReserva[]>([])
-    const colors = ["bg-yellow-500","bg-green-500","bg-blue-500","bg-red-500","bg-cyan-500",
+    const colors = ["bg-yellow-500","bg-green-500","bg-blue-500","bg-red-500",
     "bg-cyan-500", "bg-orange-500", "bg-sky-500", "bg-lime-500",
-    "bg-emerald-500", "bg-teal-500", "bg-sky-500", "bg-indigo-500", "bg-violet-500","bg-fuchsia-600", "bg-purple-500",
-    "bg-pink-500","bg-rose-500","bg-slate-500" ,"bg-gray-500"]
+    "bg-emerald-500", "bg-teal-500", "bg-indigo-500", "bg-violet-500","bg-fuchsia-600", "bg-purple-500",
+    "bg-pink-500","bg-rose-500","bg-slate-500" ,"bg-gray-500","bg-amber-500",
+    "bg-yellow-800","bg-green-800","bg-blue-800","bg-red-800",
+    "bg-cyan-800", "bg-orange-800", "bg-sky-800", "bg-lime-800",
+    "bg-emerald-800", "bg-teal-800", "bg-indigo-800", "bg-violet-800","bg-fuchsia-600", "bg-purple-800",
+    "bg-pink-800","bg-rose-800","bg-slate-800" ,"bg-gray-800","bg-amber-800"
+]
 
-    const getRamdomColor = (prevColor:string):string => {
-        const newArrayOfColors = colors.filter(color=>color != prevColor)
-        return newArrayOfColors[Math.floor(Math.random()*newArrayOfColors.length)]
+    const getRamdomColor = (prevColors:string[]):string => {
+        if(prevColors.length >= colors.length){
+            return colors[Math.floor(Math.random()*colors.length)] 
+        }else{
+            const newArrayOfColors = colors.filter(color=>!prevColors.includes(color))
+            return newArrayOfColors[Math.floor(Math.random()*newArrayOfColors.length)]
+        }
     }
 
     const foo = () =>{
         const d = groupByToMap<CupoReserva,number | null>(cupos,(item)=>item.reserva_id)
-        let prevColor:string = ""
+        let prevColors:string[] = []
          d.forEach((items,key)=>{
-
             if(key != null){
-                const randomColor = getRamdomColor(prevColor)
-                prevColor =  randomColor
-                const updateItems =  cupos.map((item=>{
+                const randomColor = getRamdomColor(prevColors)
+                prevColors =  [...prevColors,randomColor]
+                const updateItems =  items.map((item=>{
                     if(items.map(item=>item.reserva_id).includes(item.reserva_id)){
                         item.color = randomColor
                     }
                     return item
                 }))
-                // console.log(updateItems,"ARRAY ")
-                setNewCupos(updateItems)
+                setNewCupos(v =>[...v,...updateItems])
             }else{
-                setNewCupos(items)
+                setNewCupos(v=>[...v,...items])
             }
         })
     }
     useEffect(()=>{
-    if(cupos.length > 0){
-        foo()
-    }
+        if(cupos.length != 0){
+            setNewCupos([])
+        }
+        if(cupos.length > 0){
+            foo()
+        }
     },[cupos])
     useEffect(()=>{
         if(loading){
@@ -54,7 +64,9 @@ const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCup
     return(
     
         <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-2 ">
-            {newCupos.map((item,idx)=>{
+            {newCupos.sort((left,right)=>{
+                return moment.utc(left.time).diff(moment.utc(right.time))
+            }).map((item,idx)=>{
                 const isSelected = selectedCupos.map(item=>item.time).includes(item.time)
                 // console.log(moment().utcOffset(0, true).toISOString(),'MOMENT UTC')
                 const isAfter = moment.utc(item.time).isBefore(moment().utcOffset(0, true).toISOString())
@@ -65,6 +77,7 @@ const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCup
                         if(item.reserva_id != null){
                             getReservaDetail(item.reserva_id)
                         }else {
+                            if(isAfter) return
                             selecReservaCupo(item)
                         }
                     }}

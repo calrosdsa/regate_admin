@@ -9,7 +9,9 @@ const CreateInstalacionDialog = ({open,close,uuid,addInstalacion}:{
     addInstalacion:(value:Instalacion)=>void
 }) => {
     return(
-        <DialogLayout open={open} close={close}>
+        <DialogLayout
+        className="max-w-lg"
+         open={open} close={close}>
             <CreateInstalacionComponent
             uuid={uuid}
             addInstalacion={addInstalacion}

@@ -67,7 +67,7 @@
     @apply hover:bg-gray-200 cursor-pointer
   }
   .disabled {
-    @apply opacity-50 cursor-not-allowed pointer-events-none
+    @apply opacity-50 
   }
 }
 

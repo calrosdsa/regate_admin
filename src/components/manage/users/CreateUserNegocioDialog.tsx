@@ -14,10 +14,12 @@ import ButtonWithLoader from '@/components/util/button/ButtonWithLoader'
 import { GetEstablecimientos } from '@/core/repository/establecimiento'
 import { uiActions } from '@/context/slices/uiSlice'
 import InputWithIcon from '@/components/util/input/InputWithIcon'
+import { unexpectedError } from '@/context/config'
 
  interface Props{
-   openModal:boolean,
-   closeModal:()=>void,
+   openModal:boolean
+   closeModal:()=>void
+   refreshUsers:()=>void
  }
 
  type Data = {
@@ -32,7 +34,7 @@ import InputWithIcon from '@/components/util/input/InputWithIcon'
  }
 
 const CreateUserNegocioDialog:React.FC<Props>=({
-  openModal,closeModal,
+  openModal,closeModal,refreshUsers,
 })=> {
     // const [openDialogConfirm,setOpenDialogConfirm] = useState(false)
     const dispatch = useAppDispatch()
@@ -45,7 +47,7 @@ const CreateUserNegocioDialog:React.FC<Props>=({
     const [formData,setFormData]=useState<Data>({
         username:"Daniel Miranda",
         email:"jorgemiranda0180@gmail.com",
-        rol:undefined
+        rol:UserRol.CLIENT_USER_ROL
     })
     const {username,email,rol} = formData
     const [establecimientos,setEstablecimientos] = useState<EstablecimientoData[]>([])
@@ -71,7 +73,8 @@ const CreateUserNegocioDialog:React.FC<Props>=({
     if(establecimiento != undefined) {
       const currentEstablecimiento:EstablecimientoUser = {
         uuid:establecimiento.uuid,
-        name:establecimiento.name
+        name:establecimiento.name,
+        id:establecimiento.id,
       }
       if(establecimientosIds.map(item=>item.uuid).includes(currentEstablecimiento.uuid)){
         const newIds = establecimientosIds.filter(item=>item.uuid != currentEstablecimiento.uuid)
@@ -92,12 +95,16 @@ const CreateUserNegocioDialog:React.FC<Props>=({
         establecimientos:establecimientosIds
     }
     const res:Response = await CreateUser(request)
+    const data = await res.json()
     switch(res.status){
       case 400:
-        console.log(res.json())
+        console.log(data)
+        toast.error(data.message)
         break;
       case 200:  
-        console.log(res.json())
+        refreshUsers()
+        toast.success("Se ha agragado un nuevo usuario")
+        closeModal()
         break;
     }
     setLaoding(false)
@@ -126,7 +133,9 @@ const CreateUserNegocioDialog:React.FC<Props>=({
           establecimientos:[]
       }
       const res = await CreateUser(request)
-      console.log(res)
+      refreshUsers()
+      toast.success("Se ha agragado un nuevo usuario")
+      closeModal()
       setLaoding(false)
     }catch(err){
       console.log(err)
@@ -323,7 +332,7 @@ const CreateUserNegocioDialog:React.FC<Props>=({
                 loading={loading}
                 title='Crear usuario'
                 onClick={()=>createUser()}
-                className='w-32'
+                className='w-32 button '
                 />
                 {/* <button className='button' onClick={()=>createUser()}>Crear usuario</button> */}
               </div>

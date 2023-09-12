@@ -16,3 +16,12 @@ export async function CreateUser(body:CreateUserRequest) {
     })
     return res
 } 
+
+export async function UpdateUserEstado(body:string) {
+  const res = await fetch("../../api/admin/manage/user/update-estado",{
+    method:"POST",
+    body:body
+  })
+  return res
+} 
+

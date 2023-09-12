@@ -10,6 +10,9 @@ import { uiActions } from '@/context/slices/uiSlice'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 import { getUser } from '@/context/actions/account-actions'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+import LoaderDialog from '@/components/util/loaders/LoaderDialog'
 
 // const inter = Inter({ subsets: ['latin'] })
 
@@ -37,7 +40,12 @@ export default function RootLayout({
     //     </div>
     //     </body>
     // </html>
-    <div className='flex'>
+    <>
+     <ToastContainer
+    position='bottom-center'
+    />
+      <LoaderDialog open={uiState.loaderDialog}/>
+    <div className='flex max-w-[1750px] mx-auto'>
 
       <div className=' hidden xl:block'>
     <SideBar/>
@@ -66,5 +74,6 @@ export default function RootLayout({
          </div>
 
     </div>
+    </>
   )
 }

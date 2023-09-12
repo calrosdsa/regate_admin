@@ -68,7 +68,7 @@ export default function Page({ params }: { params: { uuid: string } }){
 
         <div className="flex flex-col xl:grid xl:grid-cols-7 h-full gap-2 w-full">
 
-            <div className=" col-span-2 bg-white  rounded-lg shadow-lg p-2 overflow-x-auto relative h-40 xl:h-full">
+            <div className=" col-span-2 bg-white  rounded-lg shadow-lg p-2 relative h-56 xl:h-full">
                 <div className="flex justify-between items-center border-b-2 pb-2">
                 <span className="headline">Salas</span>
                 </div>
@@ -79,7 +79,8 @@ export default function Page({ params }: { params: { uuid: string } }){
               <div className="flex overflow-x-auto xl:grid xl:overflow-hidden">
                 {salas.map((item,idx)=>{
                     return(
-                        <div onClick={()=>selectSala(item)} className={`hover:bg-gray-200 w-[500px] xl:w-full p-2 flex justify-between cursor-pointer items-center border-b-[1px]
+                        <div onClick={()=>selectSala(item)} className={`hover:bg-gray-200 w-[500px] xl:w-full p-2
+                        flex justify-between cursor-pointer items-center border-b-[1px]
                         ${currentSala?.id == item.id && "bg-gray-200"}`} key={idx}>
                             <div className="grid">
                                 <span className="subtitle ">{item.titulo}</span>
@@ -97,10 +98,7 @@ export default function Page({ params }: { params: { uuid: string } }){
                         </div>
                     )
                 })}
-
             </div>
-            
-            
             </div>
 
 

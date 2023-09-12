@@ -1,7 +1,7 @@
 
 type Profile = {
     profile_id:number
-    nombre:string,
+    nombre?:string,
     apellido?:string
     profile_photo?:string
 }
@@ -13,6 +13,7 @@ type User  = {
     empresa_id:number
     estado:number
     phone:string
+    last_login:string | null
     rol?:number
     user_id:string
     username:string

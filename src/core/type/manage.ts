@@ -7,5 +7,11 @@ type CreateUserRequest = {
 
 type EstablecimientoUser = {
     uuid:string
+    id:number
     name:string
+}
+
+type UpdateUserRequest = {
+    estado:number
+    uuid:string
 }

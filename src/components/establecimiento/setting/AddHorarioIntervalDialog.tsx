@@ -60,7 +60,9 @@ const AddHorarioIntervalDialog = ({open,close,intervalHorario,setting_id,appendI
         performAction={addInterval}
         />  
         }
-        <DialogLayout open={open} close={close} title="Añadir rango de hora para la reserva">
+        <DialogLayout
+        className="max-w-lg"
+         open={open} close={close} title="Añadir rango de hora para la reserva">
             <div>
             <div className="grid gap-3 grid-cols-2 py-5">
             {newInterval.map((item)=>{

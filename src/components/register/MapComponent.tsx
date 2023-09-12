@@ -1,6 +1,5 @@
 import Script from 'next/script';
 import '../../style/mapbox.css'
-import DialogLayout from '../util/dialog/DialogLayout';
 import { ChangeEvent, Fragment, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { MB_API_KEY } from '@/context/config';
