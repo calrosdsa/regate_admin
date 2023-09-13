@@ -1,7 +1,7 @@
 import { API_URL } from "@/context/config"
 
 export async function GetAmenities(){
-    const res = await fetch(`${API_URL}/label/amenities/`)
+    const res = await fetch(`../../api/labels/amenities`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')
@@ -12,7 +12,7 @@ export async function GetAmenities(){
 }
 
 export async function GetRules(){
-    const res = await fetch(`${API_URL}/label/rules/`)
+    const res = await fetch(`../../api/labels/rules`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')
@@ -23,7 +23,7 @@ export async function GetRules(){
 }
 
 export async function GetCategories(){
-  const res = await fetch(`${API_URL}/label/categories/`)
+  const res = await fetch(`../../api/labels/amenities`)
   if (!res.ok) {
       // This will activate the closest `error.js` Error Boundary
       throw new Error('Failed to fetch data')
@@ -34,25 +34,27 @@ export async function GetCategories(){
 }
 
 export async function GetAmenitiesEstablecimiento(id:number){
-    const res = await fetch(`${API_URL}/label/establecimiento/amenities/${id}/`)
-    if (!res.ok) {
-        // This will activate the closest `error.js` Error Boundary
-        throw new Error('Failed to fetch data')
-      }
-     
-    //   console.log(res)
-      return res.json()
+  const res = await fetch(`../../api/establecimiento/amenities/?id=${id}`)
+  if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error('Failed to fetch data')
+    }
+   
+  //   console.log(res)
+    return res.json()
 }
+
 export async function GetRulesEstablecimiento(id:number){
-    const res = await fetch(`${API_URL}/label/establecimiento/rules/${id}/`)
-    if (!res.ok) {
-        // This will activate the closest `error.js` Error Boundary
-        throw new Error('Failed to fetch data')
-      }
-     
-    //   console.log(res)
-      return res.json()
+  const res = await fetch(`../../api/establecimiento/rules/?id=${id}`)
+  if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error('Failed to fetch data')
+    }
+   
+  //   console.log(res)
+    return res.json()
 }
+
 
 export async function AddAmenities(data:LabelRequest){
     const res = await fetch(`../../api/establecimiento/amenities/add`,{

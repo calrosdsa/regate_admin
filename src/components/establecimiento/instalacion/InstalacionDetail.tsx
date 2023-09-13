@@ -146,6 +146,7 @@ const InstalacionDetail = ({instalacion,update,uuid}:{
           setFile={setPhoto}
           src={instalacion.portada}
           save={uploadImage}
+          width="w-full"
           id={instalacion.name}
           />
            

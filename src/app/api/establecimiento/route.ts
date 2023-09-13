@@ -3,6 +3,8 @@ import { cookies } from 'next/headers'; // Import cookies
 import { API_URL } from "@/context/config";
 export async function GET(request:Request,
     { params }: { params: { uuid: string } }) {
+   // const { searchParams } = new URL(request.url)
+   // const uuid = searchParams.get('uuid')
    const nextCookies = cookies(); // Get cookies object
    const token = nextCookies.get('access_token')?.value
 //    console.log(token)
@@ -11,11 +13,11 @@ export async function GET(request:Request,
   }
   try{
     //   const body:Cupo = await request.json()
-      const res = await fetch(`${API_URL}/empresa/establecimientos/`,
-      {
+      const res = await fetch(`${API_URL}/empresa/establecimientos/`,{
          headers:{
-         'Authorization':`Bearer ${token}`
-      }})
+            'Authorization':`Bearer ${token}`
+         }
+      })
       const data =await res.json()
       // console.log(data)
       return NextResponse.json(data,{status:200})

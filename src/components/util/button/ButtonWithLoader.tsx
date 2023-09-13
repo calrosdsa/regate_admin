@@ -11,7 +11,7 @@ const ButtonWithLoader = ({loading,title,className="",onClick,disabled=false}:Pr
     return(
       <>
         {/* <input type="submit" className='hidden' id="submitRegister"/> */}
-        <button disabled={disabled} className={`buttton flex justify-center h-10 ${className}`} onClick={onClick}
+        <button disabled={disabled} className={`button flex justify-center h-10 ${className}`} onClick={onClick}
          >
        {loading?
           <svg aria-hidden="true" className="w-6 h-6 text-gray-200 animate-spin 

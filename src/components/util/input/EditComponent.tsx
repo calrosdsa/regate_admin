@@ -33,10 +33,19 @@ const EditComponent =  ({label,content,edit,type="text",isTextArea=false}:{
             >
 
             {isTextArea ?
-                <textarea  className="textarea mt-4" value={value} onChange={(e)=>setValue(e.target.value)}
+                <textarea autoFocus className="textarea mt-4" value={value} onChange={(e)=>setValue(e.target.value)}
                 rows={5}/> 
                 :
-                <input type={type} className="input mt-4" value={value} onChange={(e)=>setValue(e.target.value)}/>
+                <input autoFocus type={type} className="input mt-4" value={value} onChange={(e)=>setValue(e.target.value)}
+                onKeyDown={(e)=>{
+                    if(e.key == "Enter"){
+                        edit(()=>setLoading(true),()=>{
+                setLoading(false)
+                setShow(false)
+            },value)
+                    }
+                }}
+                />
             }
 
 
@@ -47,6 +56,7 @@ const EditComponent =  ({label,content,edit,type="text",isTextArea=false}:{
             },value)}
               title="Guardar"
               loading={loading}
+              className="mt-2 w-full"
               />
               {/* <button onClick={()=>edit(()=>setLoading(true),()=>setLoading(false),value)} */}
                {/* className=" button">Guardar Cambios</button> */}

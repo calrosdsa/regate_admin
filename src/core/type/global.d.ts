@@ -1,7 +1,5 @@
 declare global {
     export interface Mapbox {
-        mapboxgl:{
-            
-        }        
+        mapboxgl:any 
     }
 }

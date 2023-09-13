@@ -8,6 +8,7 @@ import { accountActions } from "../slices/accountSlice"
 import { adminRoutes, rootEstablecimiento } from "@/core/util/routes"
 import { toast } from "react-toastify"
 import { redirectToLogin } from "."
+import { unexpectedError } from "../config"
 
 
 export const getUser  = () :ThunkAction<void,RootState,undefined,AnyAction> =>{
@@ -90,10 +91,13 @@ export const login = (email:string,password:string) :ThunkAction<void,RootState,
                     console.log(data)
                     toast.error(data.message)
                     break;
-
+                default:
+                    toast.error(unexpectedError)
+                    console.log("FAIL")
             }
             dispatch(uiActions.setInnerLoading(false))
         }catch(e){
+            toast.error(unexpectedError)
             dispatch(uiActions.setInnerLoading(false))
             console.log(e)
         }

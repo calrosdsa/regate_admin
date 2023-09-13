@@ -4,7 +4,7 @@
 
 @layer components{
   .button {
-    @apply py-2 border-[1px] text-white  bg-primary hover:bg-hoverPrimary
+    @apply py-2 border-[1px] text-white  bg-primary hover:bg-hoverPrimary 
     active:ring-blue-300 active:ring-2 px-3 text-sm font-medium  cursor-pointer rounded-md
   }
   .button-inv {
@@ -68,6 +68,9 @@
   }
   .disabled {
     @apply opacity-50 
+  }
+  .record {
+    @apply hover:bg-gray-200 p-2 cursor-pointer border-b-[1px]
   }
 }
 

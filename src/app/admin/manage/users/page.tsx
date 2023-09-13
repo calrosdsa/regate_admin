@@ -5,9 +5,11 @@ import UserOptionDialog from "@/components/manage/users/UserOptionDialog"
 import Loading from "@/components/util/loaders/Loading"
 import { useAppDispatch } from "@/context/reduxHooks"
 import { uiActions } from "@/context/slices/uiSlice"
+import { GetEstablecimientosUserByUuid } from "@/core/repository/account"
 import { GetUsersEmpresa, UpdateUserEstado } from "@/core/repository/manage"
 import { UserEstado, UserRol } from "@/core/type/enums"
 import { appendSerachParams } from "@/core/util/routes"
+import moment from "moment"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
@@ -24,6 +26,8 @@ export default function Page(){
     const [currentUser,setCurrentUser] = useState<User | null>(null)
     const [openDialogCreateUser,setOpenDialogCreateUser] = useState(false)
     const [openUserOptionDialog,setOpenUserOptionDialog] = useState(false)
+    const [currentUserEstablecimientos,setCurrentUserEstablecimientos] = useState<EstablecimientoUser[]>([])
+    const [loadingEstablecimientos,setLoadingEstablecimientos] = useState(false)
 
     const getUsersEmpresa = async() => {
         try{
@@ -34,10 +38,10 @@ export default function Page(){
                 if(uuid != null){
                     const user = res.find(item=>item.user_id == uuid)
                     if (user != undefined){
-                    setCurrentUser(user)
+                    selectUser(user)
                     }
                 }else{
-                    setCurrentUser(res[0])
+                    selectUser(res[0])
                 }
             }
             setLoadingUsers(false)
@@ -46,9 +50,24 @@ export default function Page(){
         }
     }
 
-    const selectUser = (user:User) =>{
-        appendSerachParams("uuid",user.user_id,router,current,pathname)
-        setCurrentUser(user)
+    const selectUser = async(user:User) =>{
+        try{
+            setCurrentUserEstablecimientos([])
+            appendSerachParams("uuid",user.user_id,router,current,pathname)
+            setCurrentUser(user)
+            const dataRequest = {
+                uuid:user.user_id,
+                empresa_id:user.empresa_id,
+                rol:user.rol
+            }
+            setLoadingEstablecimientos(true)
+            const establecimintosUser:EstablecimientoUser[] = await GetEstablecimientosUserByUuid(JSON.stringify(dataRequest))
+            setCurrentUserEstablecimientos(establecimintosUser)
+            setLoadingEstablecimientos(false)
+        }catch(err){
+            setLoadingEstablecimientos(false)
+            console.log(err)
+        }
     }
 
     useEffect(()=>{
@@ -74,6 +93,13 @@ export default function Page(){
                     setCurrentUser({...currentUser,
                         estado:e
                     })
+                    const updateUsers= users.map((item)=>{
+                        if(item.user_id == currentUser.user_id){
+                            item.estado = e
+                        }
+                        return item
+                    })
+                    setUsers(updateUsers)
             }
             setOpenUserOptionDialog(false)
             // getUsersEmpresa()
@@ -96,7 +122,7 @@ export default function Page(){
     }
         <div className="">
 
-        <div className="px-2 h-screen pt-10 xl:pt-0">
+        <div className="px-2 h-screen xl:pt-0">
 
         <div className="grid xl:grid-cols-8 h-full gap-2">
             <div className=" col-span-3 bg-white  rounded-lg shadow-lg p-2 overflow-auto relative">
@@ -150,9 +176,12 @@ export default function Page(){
                 {/* {loading && <Loader className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"/> } */}
 
                     {currentUser != null &&
-                <div className="flex justify-between items-center px-2">
+                    <div>
 
                     <div className="grid w-full">
+
+                <div className="flex justify-between items-center px-2 border-b-[1px] pb-2">
+                    <div className="grid">
                         <span className="font-medium text-lg w-10/12 truncate">{currentUser.username}</span>
                         <span className="text-xs">{currentUser.email}</span>
                         {currentUser.estado == UserEstado.DISABLED &&
@@ -164,8 +193,14 @@ export default function Page(){
                         <span className="text-xs font-medium">Acceso del usuario deshabilitado.</span>
                         </div>
                         }
-                    </div>
-                    
+                        {currentUser.last_login != null &&
+                        <div className=" flex justify-between items-center space-x-4">
+                            <span className="text-xs font-medium">Ultimo inicio de session</span>
+                            <span className="text-xs font-semibold">{moment(currentUser.last_login).utc().format('lll')}</span>
+                        </div>
+                        }
+
+                        </div>
                     <div className=" rounded-full hover:bg-gray-200 cursor-pointer flex justify-center"
                     onClick={()=>setOpenUserOptionDialog(true)}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
@@ -173,7 +208,27 @@ export default function Page(){
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
                     </svg>
                         </div>
-            
+                </div>
+
+                      
+
+                    </div>
+                    
+
+                <div className="title p-2 mt-4">Complejos administrados por este usuario.</div>
+                <div className="mt-2">
+                <Loading
+              loading={loadingEstablecimientos}
+              className='pt-2 flex w-full justify-center'
+              />
+                {currentUserEstablecimientos.map((item)=>{
+                    return(
+                        <div className="record" key={item.id}>
+                            <span>{item.name}</span>
+                        </div>
+                    )
+                })}
+                    </div>
                 </div>
                 }
 

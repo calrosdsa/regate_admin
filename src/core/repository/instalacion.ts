@@ -36,7 +36,7 @@ export async function CreateInstalacion(data:FormData) {
 }
 
 export async function getInstalaciones(uuid:string){
-    const res = await fetch(`${API_URL}/instalacion/admin/instalaciones/${uuid}/`)
+    const res = await fetch(`../../api/establecimiento/instalacion/list?uuid=${uuid}`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')
@@ -47,7 +47,7 @@ export async function getInstalaciones(uuid:string){
 }
 
 export async function getInstalacion(uuid:string){
-    const res = await fetch(`${API_URL}/instalacion/admin/${uuid}/`)
+    const res = await fetch(`../../api/establecimiento/instalacion?uuid=${uuid}`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')
@@ -57,8 +57,9 @@ export async function getInstalacion(uuid:string){
       return res.json()
 }
 
+
 export async function getInstalacionById(id:number){
-  const res = await fetch(`${API_URL}/instalacion/${id}/`)
+  const res = await fetch(`../../api/establecimiento/instalacion/${id}`)
   if (!res.ok) {
       // This will activate the closest `error.js` Error Boundary
       throw new Error('Failed to fetch data')
@@ -69,14 +70,14 @@ export async function getInstalacionById(id:number){
 }
 
 
+
 export async function getInstalacionDayHorario(instalacionId:number,dayWeek:number){
-    const res = await fetch(`${API_URL}/instalacion/admin/horario/${instalacionId}/${dayWeek}/`)
+  const res = await fetch(`../../api/establecimiento/instalacion/horario?instalacionId=${instalacionId}&dayWeek=${dayWeek}`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')
       }
-     
-      console.log(res)
+      // console.log(res)
       return res.json()
 }
 

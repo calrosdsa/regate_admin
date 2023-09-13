@@ -57,7 +57,6 @@ import { useEffect, useState } from "react"
                     Nombre del Establecimiento
                 </th>
                 <th scope="col" className="px-6 py-3 ">
-                    Color
                 </th>
                
             </tr>

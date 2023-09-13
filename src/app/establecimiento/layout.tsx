@@ -49,7 +49,7 @@ export default function RootLayout({
         </MobileSidebar>
       </div>
 
-         <div className=' xl:pt-0 w-full overflow-auto '>
+         <div className=' px-2 w-full overflow-auto pt-14 xl:pt-0 '>
           <div className='xl:hidden'>
           <button type="button" className="absolute top-2 left-2 " onClick={()=>dispatch(uiActions.openSidebar(true))}>
             <span className="sr-only">Open sidebar</span>

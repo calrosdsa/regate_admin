@@ -3,9 +3,11 @@ import { ChangeEvent, useEffect, useState } from "react";
 import CommonImage from "../image/CommonImage";
 import ButtonWithLoader from "../button/ButtonWithLoader";
 
-const UploadImage = ({setFile,src,save,id="file"}:{
+const UploadImage = ({setFile,src,save,id="file",width="w-44",height="h-44"}:{
     setFile:(e:File)=>void
     src?:string
+    width?:string
+    height?:string
     save?:(setLoading:(e:boolean)=>void)=>void
     id?:string
 }) => {
@@ -27,18 +29,18 @@ const UploadImage = ({setFile,src,save,id="file"}:{
         }
     },[src])
     return(
-        <div className="grid grid-cols-2  place-items-center  h-52">
+        <div className="grid sm:grid-cols-2  place-items-center ">
             <div className="w-full h-44">
             <CommonImage
-            src={source}
+            src={source.includes("https") ? `${source}?${Date.now()}` : source}
             w={250}
             h={200}
-            className="w-44 h-44 rounded object-cover"
+            className={`${width} ${height} rounded object-cover`}
             // alt={""}
             />
             </div>
-            <div className="grid gap-y-2">
-            <label htmlFor={id} className="button ">
+            <div className="flex justify-between w-full mt-2 sm:w-max sm:grid sm:gap-y-2">
+            <label htmlFor={id} className="button h-10">
                 Upload Image
             <input id={id} className="hidden" type="file" onChange={uploadImage}/>
             </label>
@@ -46,6 +48,7 @@ const UploadImage = ({setFile,src,save,id="file"}:{
             <ButtonWithLoader
             onClick={()=>save((e)=>setLoading(e))}
             title="Guardar"
+            className=""
             loading={loading}
             />
             }

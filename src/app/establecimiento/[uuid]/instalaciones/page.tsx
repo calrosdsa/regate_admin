@@ -8,6 +8,7 @@ import CreateReservaDialog from "@/components/reservas/dialog/CreateReservaDialo
 import DialogReservaDetail from "@/components/reservas/dialog/DialogReservaDetail";
 import Loading from "@/components/util/loaders/Loading";
 import { TooltipIcon, TooltipContainer } from "@/components/util/tooltips/Tooltip";
+import { unexpectedError } from "@/context/config";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
 import { GetCupoReservaInstalciones, getInstalacion, getInstalacionDayHorario, getInstalaciones } from "@/core/repository/instalacion";
@@ -16,6 +17,7 @@ import { appendSerachParams } from "@/core/util/routes";
 import { Tab } from "@headlessui/react";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 // import { Tooltip } from 'react-tooltipp
 
 const Page = ({ params }: { params: { uuid: string } })=>{
@@ -31,6 +33,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
     const [createReservaDialog,setCreateReservaDialog] = useState(false)
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [loadingReservas,setLoadingReservas] = useState(false)
+    const [loadingInstalaciones,setLoadingInstalaciones] = useState(false)
     const [instalaciones,setInstalaciones] = useState<Instalacion[]>([])
     const [instalacion,setInstalacion] = useState<Instalacion | null>(null)
     const [reservaDetail,setReservaDetail] = useState<Reserva | null>(null)
@@ -93,14 +96,21 @@ const Page = ({ params }: { params: { uuid: string } })=>{
     }
 
     const getData = async()=>{
-        const instalaciones:Instalacion[] = await getInstalaciones(params.uuid)
-        setInstalaciones(instalaciones)
-        if(instalaciones.length > 0){
-            if(instalacionId != null){
-                getInstalacionData(instalacionId)
-            }else{
-                getInstalacionData(instalaciones[0].uuid)
-            }
+        try{
+            setLoadingInstalaciones(true)
+                const instalaciones:Instalacion[] = await getInstalaciones(params.uuid)
+                setInstalaciones(instalaciones)
+                if(instalaciones.length > 0){
+                    if(instalacionId != null){
+                        getInstalacionData(instalacionId)
+                    }else{
+                        getInstalacionData(instalaciones[0].uuid)
+                    }
+                }
+                setLoadingInstalaciones(false)
+        }catch(err){
+            setLoadingInstalaciones(false)
+            toast.error(unexpectedError)
         }
     }
     const getInstalacionData = async(uuid:string) => {
@@ -159,16 +169,34 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         addInstalacion={(e:Instalacion)=>setInstalaciones([...instalaciones,e])}
         />
         }
-        <div className="px-1 h-screen pt-10 xl:pt-0 w-full">
+        <div className="px-1 h-screen  w-full">
             <div className="md:grid md:grid-cols-8 gap-x-3">
                 
             <div className="flex flex-col w-full col-span-2 p-2 border-[1px] shadow-lg md:h-screen overflow-auto ">
-                <button onClick={()=>setOpenCreateInstalacion(true)} className="button-inv w-min whitespace-nowrap">Crear Cancha</button>
+                <div className="flex justify-between">
+                <button onClick={()=>setOpenCreateInstalacion(true)} className="button-inv w-min h-10 whitespace-nowrap">Crear Cancha</button>
+
+                <button className="button w-min h-10" disabled={loadingInstalaciones} onClick={()=>{
+                    setInstalaciones([])
+                    getData()
+                    }}>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                <path fillRule="evenodd" d="M4.755 10.059a7.5 7.5 0 0112.548-3.364l1.903 1.903h-3.183a.75.75 0 100 1.5h4.992a.75.75 0 00.75-.75V4.356a.75.75 0 00-1.5 0v3.18l-1.9-1.9A9 9 0 003.306 9.67a.75.75 0 101.45.388zm15.408 3.352a.75.75 0 00-.919.53 7.5 7.5 0 01-12.548 3.364l-1.902-1.903h3.183a.75.75 0 000-1.5H2.984a.75.75 0 00-.75.75v4.992a.75.75 0 001.5 0v-3.18l1.9 1.9a9 9 0 0015.059-4.035.75.75 0 00-.53-.918z" clipRule="evenodd" />
+                                </svg>
+                                </button>
+
+                </div>
             <h2 className="title py-2">Cancha</h2>
                 <div className="flex md:gap-y-2 w-fulll overflow-auto md:grid ">
+                    <Loading
+                    loading={loadingInstalaciones}
+                    className="flex justify-center mb-2"
+                    />
                 {instalaciones.map((item)=>{
                     return(
-                        <div key={item.uuid} onClick={()=>getInstalacionData(item.uuid)}>
+                        <div key={item.uuid} 
+                        className={`hover:bg-gray-200 p-1 rounded-lg ${instalacion?.id == item.id && "bg-gray-200"}`}
+                        onClick={()=>getInstalacionData(item.uuid)}>
                         <InstalacionCard
                         instalacion={item}
                         />
@@ -182,7 +210,8 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                 <div>
                      <Tab.Group defaultIndex={tabIndex != null ? Number(tabIndex):0}>
                     <Tab.List>
-                        <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}>Info</Tab>
+                        <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
+                        onClick={()=>appendSerachParams("tabIndex","0",router,current,pathname)}>Info</Tab>
                         <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
                         onClick={()=>{
                             if(cupos.length>0) {

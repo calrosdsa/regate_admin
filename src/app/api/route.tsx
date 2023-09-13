@@ -17,6 +17,7 @@ export async function POST(request:Request) {
       )
       console.log(res.status,"ESTATUS")
       const data =await res.json()
+      console.log(data)
       if(res.status == 200){
             //  console.log(data)
             const oneDay = 24 * 60 * 60 * 1000
@@ -36,11 +37,12 @@ export async function POST(request:Request) {
             //     },
             //     status:200
             //  })
-            } else {
+      } else {
             return NextResponse.json(data,{status:res.status})
-            }
+      }
       }catch(e){
-      console.log(e)
-      return NextResponse.json("NO data")
+            console.log(e)
+      console.log("error")
+      return NextResponse.json("NO data",{status:500})
       }
 }

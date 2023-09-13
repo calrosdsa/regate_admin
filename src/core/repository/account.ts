@@ -1,7 +1,9 @@
-import { API_URL } from "@/context/config"
 
-export async function GetEstablecimientosUser() {
-    const res = await fetch("../../api/account/establecimientos")
+export async function GetEstablecimientosUserByUuid(data:string) {
+    const res = await fetch("../../api/admin/manage/user/establecimientos",{
+      method:"post",
+      body:data
+    })
     if (!res.ok) {
       // This will activate the closest `error.js` Error Boundary
       throw new Error('Failed to fetch data')
@@ -10,23 +12,19 @@ export async function GetEstablecimientosUser() {
   }
 
   export async function SendResetPasswordEmail(mail:string) {
-    const res = await fetch(`${API_URL}/account/admin/sned-reset-password/${mail}/`)
+    const res = await fetch(`../../api/account/auth/send-reset-password?mail=${mail}`)
     return res
   }
 
-  export async function VerifyToken() {
-    const res = await fetch(`${API_URL}/account/admin/verify-token/`)  
+  export async function VerifyToken(token:string) {
+    const res = await fetch(`../../api/account/auth/verify-token?token=${token}`)  
     return res
   }
-
+  
   export async function ResetPassword(d:PasswordRequest,token:string) {
-    const res = await fetch(`${API_URL}/account/admin/reset-password/`,{
+    const res = await fetch(`../../api/account/auth/reset-password?token=${token}`,{
       method:"POST",
       body:JSON.stringify(d),
-      headers:{
-        "Content-Type":"application/json",
-        "Authorization":`Bearer ${token}`
-      }
     })
     if (!res.ok) {
       // This will activate the closest `error.js` Error Boundary

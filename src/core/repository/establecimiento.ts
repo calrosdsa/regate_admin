@@ -1,8 +1,12 @@
+import { redirectToLogin } from "@/context/actions"
 import { API_URL, MB_API_KEY } from "@/context/config"
 
 
 export async function GetEstablecimientos() {
   const res = await fetch("../../api/establecimiento")
+  if(res.status == 401) {
+    redirectToLogin()
+  }
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch data')
@@ -34,19 +38,23 @@ export async function CreateEstablecimiento(data:FormData) {
     method:"POST",
     body:data,
   })
+  if(res.status == 401) {
+    redirectToLogin()
+  }
   if (!res.ok) {
     throw new Error('Failed to fetch data')
   }
   return res.json()
 }
 
-
 export async function UpdateEstablecimiento(data:string,id:number) {
   const res = await fetch(`../../api/establecimiento/update?establecimiento_id=${id}`,{
     method:"POST",
     body:data,
   })
-
+  if(res.status == 401) {
+    redirectToLogin()
+  }
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch data')
@@ -59,7 +67,9 @@ export async function UpdateEstablecimientoPhoto(data:FormData) {
     method:"POST",
     body:data,
   })
-
+  if(res.status == 401) {
+    redirectToLogin()
+  }
   if (!res.ok) {
     throw new Error('Failed to fetch data')
   }
@@ -71,9 +81,12 @@ export async function UpdateEstablecimientoAddress(data:string) {
     method:"POST",
     body:data,
   })
-
+  if(res.status == 401) {
+    redirectToLogin()
+  }
   if (!res.ok) {
     throw new Error('Failed to fetch data')
   }
   return res.json()
 }
+

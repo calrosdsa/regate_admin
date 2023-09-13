@@ -37,7 +37,7 @@ const ConfirmationDialog = ({open,close,title,description,descartar=close,perfor
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-xs transform overflow-hidden rounded-lg bg-white 
+                <Dialog.Panel className="w-full max-w-xs  transform overflow-hidden rounded-lg bg-white 
                  text-left align-middle shadow-xl transition-all">
                   <Dialog.Title
                     as="h3"
@@ -50,7 +50,7 @@ const ConfirmationDialog = ({open,close,title,description,descartar=close,perfor
              </svg>
 
                      </Dialog.Title>
-              <span className='px-2'>{description}</span>
+              <p className='px-2 pb-1'>{description}</p>
                    <div className='grid grid-cols-2 place-items-center border-t-[1px] text-lg'>
                        <span  onClick={()=>descartar()}
                         className='cursor-pointer hover:bg-gray-200 w-full rounded-bl-lg justify-center border-r-[1px] flex p-2'>Descartar</span>
@@ -59,7 +59,8 @@ const ConfirmationDialog = ({open,close,title,description,descartar=close,perfor
                           performAction()}
                         }
                       } 
-                       className='cursor-pointer rounded-br-lg hover:bg-gray-200 w-full justify-center flex p-2'>Continuar</span>
+                       className='cursor-pointer rounded-br-lg hover:bg-gray-200 w-full justify-center flex p-2
+                       '>Continuar</span>
                    </div>
                    </Dialog.Panel>
           </Transition.Child>

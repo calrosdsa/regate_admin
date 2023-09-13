@@ -74,6 +74,7 @@ const EditComponentSelect = ({items,currentSelected,getItems,updateSelect,toolti
                     }
               }}
               title="Guardar"
+              className="mt-2 w-full"
               loading={loading}
             />
               {/* <button onClick={()=>edit(()=>setLoading(true),()=>setLoading(false),value)} */}

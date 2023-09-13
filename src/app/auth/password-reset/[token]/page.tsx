@@ -24,11 +24,7 @@ export default function Page({params} : { params:{token:string}}){
       setFormData({ ...formData, [e.target.name]: e.target.value });
     }
     const verifyEmail = async()=>{
-      const res = await fetch(`${API_URL}/account/admin/verify-token/`,{
-        headers:{
-          'Authorization':`Bearer ${params.token}`
-        }
-      })  
+      const res =await VerifyToken(params.token)
       console.log(res.status,"STATUS")
       if(res.status == 401){
           router.push("/auth/forgot-password")

@@ -1,7 +1,7 @@
 "use client"
 import CommonImage from "@/components/util/image/CommonImage"
 import Loading from "@/components/util/loaders/Loading"
-import { getInstalacion, getInstalacionById } from "@/core/repository/instalacion"
+import { getInstalacionById } from "@/core/repository/instalacion"
 import { GetEstablecimientoSalas } from "@/core/repository/sala"
 import moment from "moment"
 import Image from "next/image"
@@ -64,13 +64,21 @@ export default function Page({ params }: { params: { uuid: string } }){
     },[])
 
     return (
-        <div className="px-2 h-screen pt-10 xl:pt-0 w-full">
+        <div className="px-2 h-screen w-full">
 
         <div className="flex flex-col xl:grid xl:grid-cols-7 h-full gap-2 w-full">
 
             <div className=" col-span-2 bg-white  rounded-lg shadow-lg p-2 relative h-56 xl:h-full">
                 <div className="flex justify-between items-center border-b-2 pb-2">
                 <span className="headline">Salas</span>
+                <button className="button w-min h-10" disabled={loading} onClick={()=>{
+                    setSalas([])
+                    getSalas()
+                    }}>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                <path fillRule="evenodd" d="M4.755 10.059a7.5 7.5 0 0112.548-3.364l1.903 1.903h-3.183a.75.75 0 100 1.5h4.992a.75.75 0 00.75-.75V4.356a.75.75 0 00-1.5 0v3.18l-1.9-1.9A9 9 0 003.306 9.67a.75.75 0 101.45.388zm15.408 3.352a.75.75 0 00-.919.53 7.5 7.5 0 01-12.548 3.364l-1.902-1.903h3.183a.75.75 0 000-1.5H2.984a.75.75 0 00-.75.75v4.992a.75.75 0 001.5 0v-3.18l1.9 1.9a9 9 0 0015.059-4.035.75.75 0 00-.53-.918z" clipRule="evenodd" />
+                                </svg>
+                                </button>
                 </div>
                 <Loading
               loading={loading}
@@ -108,10 +116,10 @@ export default function Page({ params }: { params: { uuid: string } }){
                 <div className="flex w-full md:w-2/3 md:mx-auto justify-between items-center px-2 ">
                     {currentSala != null &&
                          <div className="flex flex-col w-full">
-                                <span className="title ">{currentSala.titulo}</span>
+                                <span className="title line-clamp-1 ">{currentSala.titulo}</span>
                                 <span className="h-5"/>
                                 <span className="label">Descripcion de la sala</span>
-                                <p className="text-xs py-2 h-16">{currentSala.descripcion}</p>
+                                <p className="text-xs py-2">{currentSala.descripcion}</p>
 
                                 <div className="h-56">
 
@@ -123,11 +131,12 @@ export default function Page({ params }: { params: { uuid: string } }){
                                     w={300}
                                     className="w-full sm:w-96 object-cover rounded-lg h-40 sm:h-48"
                                     />
-                                    <div className="flex justify-between items-center py-2">
+                                    <div className="flex justify-between space-x-4 items-center py-2">
                                     <Link href={`/establecimiento/${params.uuid}/instalaciones?id=${instalacion.uuid}`}
-                                    className="underline font-semibold cursor-pointer">{instalacion.name}</Link>
+                                    className="underline font-semibold cursor-pointer text-sm
+                                 line-clamp-1">{instalacion.name}</Link>
 
-                                    <div className="flex space-x-2 items-center border-[1px] p-1 rounded-lg cursor-default">
+                                    <div className="flex w-40 space-x-2 items-center border-[1px] p-1 rounded-lg cursor-default">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
                                     className="w-3 h-3">
        <path fillRule="evenodd" d="M5.25 2.25a3 3 0 00-3 3v4.318a3 3 0 00.879 2.121l9.58 9.581c.92.92 2.39 1.186 3.548.428a18.849 18.849 0 005.441-5.44c.758-1.16.492-2.629-.428-3.548l-9.58-9.581a3 3 0 00-2.122-.879H5.25zM6.375 7.5a1.125 1.125 0 100-2.25 1.125 1.125 0 000 2.25z" clipRule="evenodd" />

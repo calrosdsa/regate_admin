@@ -22,9 +22,18 @@ import AddRuleDialog from '@/components/labels/rules/AddRuleDialog';
 import DeleteRuleDialog from '@/components/labels/rules/DeleteRuleDialog';
 import { toast } from 'react-toastify';
 import UploadImage from '@/components/util/input/UploadImage';
+import { UpdateSettings } from '@/core/repository/setting';
+import UpdatePayMethodDialog from '@/components/establecimiento/setting/UpdatePayMethodDialog';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { appendSerachParams } from '@/core/util/routes';
 
 const Page = ({ params }: { params: { uuid: string } }) =>{
     const [openMap,setOpenMap] = useState(false)
+    const searchParams = useSearchParams();
+    const current = new URLSearchParams(Array.from(searchParams.entries()))
+    const pathname = usePathname()
+    const router = useRouter()
+    const map = searchParams.get("map")
     const [data,setData] = useState<EstablecimientoDetail | null>(null)
     const [openAddIntervalDialog,setOpenAddIntervalDialog] = useState(false)
     const [openDeleteIntervalDialog,setOpenDeleteIntervalDialog] = useState(false)
@@ -36,6 +45,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
     const [openDeleteAmenityDialog,setOpenDeleteAmenityDialog] = useState(false)
     const [openAddRuleDialog,setOpenAddRuleDialog] = useState(false)
     const [openDeleteRuleDialog,setOpenDeleteRuleDialog] = useState(false)
+    const [openUpdateMethodDialog,setOpenUpdateMethodDialog] = useState(false)
     const [photo,setPhoto] = useState<File | undefined>(undefined)
     
     // const {establecimiento,setting_establecimiento} = data as EstablecimientoDetail
@@ -116,6 +126,30 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         }
     }
 
+    const updateSettings = async(name:string,value:string,addLoader:()=>void,removeLoader:()=>void) =>{
+        if(data?.establecimiento.id != null){   
+            try{
+                addLoader()
+                const req = JSON.stringify({[name]:value})
+                console.log(JSON.stringify(req))
+                const res = await UpdateSettings(req,data?.establecimiento.id)
+                console.log(res)
+                setData({
+                    ...data,
+                    setting_establecimiento:{
+                        ...data.setting_establecimiento,
+                        [name]:value
+                    }
+                })
+                removeLoader()
+                toast.success("¡Los cambios realizados han sido guardados exitosamente!")
+            }catch(err){
+                removeLoader()
+                toast.error("¡Los cambios realizados han sido guardados exitosamente!")
+            }
+        }
+    }
+
     const uploadImage = async(setLoading:(e:boolean)=>void) =>{
         if(photo != undefined && data?.establecimiento != undefined){
             try{
@@ -179,6 +213,16 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
     useEffect(()=>{
         getEstablecimientoDetail()
     },[])
+    useEffect(()=>{
+        window.addEventListener("popstate",()=>{
+                    setOpenMap(false)
+        });
+    return () => {
+        window.removeEventListener("popstate", (e)=>{
+            console.log("Remove listener")
+        });
+    };
+    },[])
     return(
        <>
        <div className='grid xl:grid-cols-2 gap-2 h-screen'>
@@ -210,13 +254,17 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                     <span className="label">Ubicación</span>
                     <span className="text-sm">{data?.establecimiento.address}</span>
                 </div>
-                <span onClick={()=>setOpenMap(true)} className=" underline font-medium cursor-pointer">Edit</span>
+                <span onClick={()=>{
+                    setOpenMap(true)
+                    appendSerachParams("map","1",router,current,pathname)
+                    }} className=" underline font-medium cursor-pointer">Edit</span>
             </div>
 
             <UploadImage
             setFile={(e)=>setPhoto(e)}
             src={data?.establecimiento.photo}
             save={(setLoading)=>uploadImage(setLoading)}
+            width="w-full"
             />
        
             {openMap&&
@@ -252,7 +300,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                     <span key={item} className='card w-min whitespace-nowrap'>{getPaymentMethod(item)}</span>
                 )
             })}
-             <div  onClick={()=> setOpenAddIntervalDialog(true)} className='card flex space-x-1 items-center bg-primary text-white'>
+             <div  onClick={()=> setOpenUpdateMethodDialog(true)} className='card flex space-x-1 items-center bg-primary text-white'>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
   <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
             </svg>
@@ -264,8 +312,8 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             data?.setting_establecimiento.paid_type.includes(PaidType.DEFERRED_PAYMENT) &&
                 <EditComponent
                 label='Porcentaje para recervar una cancha'
-                content={`${data?.setting_establecimiento.payment_for_reservation}%`}
-                edit={(e)=>{}}
+                content={`${data?.setting_establecimiento.payment_for_reservation}`}
+                edit={(addLoader,removeLoader,e)=>updateSettings("payment_for_reservation",e,addLoader,removeLoader)}
                 />
             }
 
@@ -379,6 +427,22 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
          setting_establecimiento:{
              ...data?.setting_establecimiento,
              horario_interval:d
+        }})}
+        />
+    }
+
+       {(openUpdateMethodDialog && data?.setting_establecimiento != undefined) &&
+        <UpdatePayMethodDialog
+        open={openUpdateMethodDialog}
+        close={()=>setOpenUpdateMethodDialog(false)}
+        establecimiento_id={data.establecimiento.id}
+        currentMethods={data.setting_establecimiento.paid_type}
+        // intervalHorario={data?.setting_establecimiento.horario_interval}
+        update={(d)=>setData({
+         ...data,
+         setting_establecimiento:{
+             ...data?.setting_establecimiento,
+             paid_type:d
         }})}
         />
     }
