@@ -9,20 +9,28 @@ import { TooltipIcon } from '@/components/util/tooltips/Tooltip'
 import { createCupoInstalacion, updateCupoInstalacion } from '@/core/repository/instalacion'
 import { useParams } from 'next/navigation'
 import moment from 'moment'
+import { useAppDispatch } from '@/context/reduxHooks'
+import { uiActions } from '@/context/slices/uiSlice'
 
 export const EditHorarioPrecio = ({open,close,cupo}:{
     open:boolean
     close:()=>void
     cupo:Cupo | undefined
 }) => {
+    // const dispatch = useAppDispatch()
+    const [loading,setLoading] = useState(false)
     const [price,setPrice] = useState<string>(cupo?.price?.toString()|| "")
     const [available,setAvailable] = useState<boolean>(cupo?.available || false)
     const params = useParams()
 
     const onSubmit = async(e:FormEvent<HTMLFormElement>) =>{
+      try{
+
         e.preventDefault()
         // console.log("CUPO",cupo)
         if(cupo != undefined){
+          setLoading(true)
+          // dispatch(uiActions.setLoaderDialog(true))
           const precio = Number(price)
             const cupoRequest = cupo
             cupoRequest.price = precio
@@ -41,6 +49,9 @@ export const EditHorarioPrecio = ({open,close,cupo}:{
               console.log(res)
               close()
             }
+          }
+        }catch(err){
+          setLoading(false)
         }
     }
 
@@ -49,7 +60,9 @@ export const EditHorarioPrecio = ({open,close,cupo}:{
     }
 
   return (
-    <DialogLayout open={open} close={close}>
+    <DialogLayout
+    className=' max-w-lg'
+     open={open} close={close}>
         <form onSubmit={onSubmit}>
             <div className='grid grid-cols-2 gap-3'>
             <div>
@@ -88,7 +101,7 @@ export const EditHorarioPrecio = ({open,close,cupo}:{
 
               <div className="mt-4">
                 <ButtonSubmit
-                loading={false}
+                loading={loading}
                 title='Submit'
                 />
               </div>

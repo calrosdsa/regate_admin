@@ -44,7 +44,7 @@ export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,address,setAdd
 
     useEffect(()=>{
       // if(mapboxgl != undefined) return
-
+      // let mapboxgl:any = undefined
         if(loaded){
             mapboxgl.accessToken = MB_API_KEY;
             const map = new mapboxgl.Map({  
