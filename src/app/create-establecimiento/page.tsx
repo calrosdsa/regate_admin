@@ -11,21 +11,23 @@ import { CreateEstablecimiento } from "@/core/repository/establecimiento";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
+import { Router } from "next/router";
+import { useRouter } from "next/navigation";
 
 const Login = () =>{
+    const router = useRouter()
     const [openMap,setOpenMap] = useState(false)
     const dispatch = useAppDispatch()
     const loaded = useAppSelector(state=>state.ui.loaded)
-
     // const uiState = useAppSelector(state=>state.ui)
     const [loading,setLoading] = useState(false)
     // const authtate = useAppSelector(state=>state.auth)
     const [formData,setFormData ] = useState({
-      email:"",
-      name:"",
-      phone_number:"",
-      description:"",
-      address:"",
+      email:"12312@o232131",
+      name:"eweqweq",
+      phone_number:"312312",
+      description:"31231",
+      address:"21312",
       longitud: -63.18102600200848,
       latitud:-17.783844868238027,
     })
@@ -52,8 +54,11 @@ const Login = () =>{
           form.append("photo",photo)
         }
         const data = await CreateEstablecimiento(form)
+        // console.log(data)
+        router.push(`/establecimiento/${data.uuid}/config`)
         setLoading(false)
         toast.success("Se ha creado un nuevo establecimiento")
+        
         console.log(data)
         // dispatch(login(email,name))
       }catch(err){
@@ -76,6 +81,7 @@ const Login = () =>{
 
           <UploadImage
           setFile={setPhoto}
+          width="w-full"
           src=""
           />
 
@@ -155,7 +161,8 @@ const Login = () =>{
                 <MapComponent 
                 loaded={loaded} 
                 setLoaded={(b:boolean)=>dispatch(uiActions.setLoaded(b))}
-                open={openMap} close={()=>setOpenMap(false)}
+                open={openMap}
+                close={()=>setOpenMap(false)}
                 lng={longitud}
                 lat={latitud}
                 address={address}
@@ -165,18 +172,23 @@ const Login = () =>{
                   })
                 }}
                 update={(lng,lat,address,setLoading)=>{
+                  setLoading(true)
                   setFormData({
                     ...formData,
                     longitud:Number(lng),
-                    latitud:Number(lat)
+                    latitud:Number(lat),
+                    address:address
                   })
+                  setLoading(false)
+                  setOpenMap(false)
                 }}
                 />
             }
-
+            <div className="h-2"/>
             <ButtonSubmit
             loading={loading}
             title="Crear Establecimiento"
+            className=""
             />
 
       </form>

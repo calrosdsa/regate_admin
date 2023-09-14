@@ -23,7 +23,7 @@ export async function GetRules(){
 }
 
 export async function GetCategories(){
-  const res = await fetch(`../../api/labels/amenities`)
+  const res = await fetch(`../../api/labels/categories`)
   if (!res.ok) {
       // This will activate the closest `error.js` Error Boundary
       throw new Error('Failed to fetch data')
