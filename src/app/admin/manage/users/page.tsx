@@ -2,6 +2,9 @@
 
 import CreateUserNegocioDialog from "@/components/manage/users/CreateUserNegocioDialog"
 import UserOptionDialog from "@/components/manage/users/UserOptionDialog"
+import MenuLayout from "@/components/util/button/MenuLayout"
+import MenuOption from "@/components/util/button/MenuOption"
+import ConfirmationDialog from "@/components/util/dialog/ConfirmationDialog"
 import Loading from "@/components/util/loaders/Loading"
 import { useAppDispatch } from "@/context/reduxHooks"
 import { uiActions } from "@/context/slices/uiSlice"
@@ -28,6 +31,24 @@ export default function Page(){
     const [openUserOptionDialog,setOpenUserOptionDialog] = useState(false)
     const [currentUserEstablecimientos,setCurrentUserEstablecimientos] = useState<EstablecimientoUser[]>([])
     const [loadingEstablecimientos,setLoadingEstablecimientos] = useState(false)
+    const [openConfirmationDialog,setOpenConfirmationDialog] = useState(false)
+    const [currentUserEstado,setCurrentUserEstado] = useState<UserEstado | null>(null)
+    const selectUserEstado = (estado:UserEstado) => {
+        setCurrentUserEstado(estado)
+        setOpenConfirmationDialog(true)
+    }
+    const getMessage = (estado:UserEstado | null,user:User) =>{
+        switch(estado){
+            case UserEstado.ENABLED:
+                return `La cuenta del usuario ${user.username} será habilitada.`
+            case UserEstado.DISABLED:
+                return `La cuenta del usuario ${user.username} será deshabilitada.`
+            case UserEstado.DELETED:
+                return `La cuenta del usuario ${user.username} será eliminada`
+            default:
+                return ""
+        }
+    }
 
     const getUsersEmpresa = async() => {
         try{
@@ -180,7 +201,7 @@ export default function Page(){
 
                     <div className="grid w-full">
 
-                <div className="flex justify-between items-center px-2 border-b-[1px] pb-2">
+                <div className="flex justify-between items-center px-2 border-b-[1px] pb-2 w-full">
                     <div className="grid">
                         <span className="font-medium text-lg w-10/12 truncate">{currentUser.username}</span>
                         <span className="text-xs">{currentUser.email}</span>
@@ -201,17 +222,25 @@ export default function Page(){
                         }
 
                         </div>
-                    <div className=" rounded-full hover:bg-gray-200 cursor-pointer flex justify-center"
-                    onClick={()=>setOpenUserOptionDialog(true)}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
-                    className="w-8 h-8 p-1">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
-                    </svg>
-                        </div>
-                </div>
 
-                      
 
+                    <MenuLayout>
+                    {/* {(openUserOptionDialog && currentUser != null) && */}
+                    <UserOptionDialog
+                    // open={openUserOptionDialog}
+                    // close={()=>setOpenUserOptionDialog(false)}
+                    selectUserEstado={(e)=>selectUserEstado(e)}
+                    user={currentUser}
+                    />
+                    {/* } */}
+                    </MenuLayout>
+
+                    {/* <MenuOption
+                    openMenu={()=>setOpenUserOptionDialog(true)}
+                    /> */}
+
+
+                </div>                    
                     </div>
                     
 
@@ -238,12 +267,18 @@ export default function Page(){
         </div>
 
         </div>
-        {(openUserOptionDialog && currentUser != null) &&
-        <UserOptionDialog
-        open={openUserOptionDialog}
-        close={()=>setOpenUserOptionDialog(false)}
-        changeUserEstado={(e)=>changeUserEstado(e)}
-        user={currentUser}
+        
+        {(openConfirmationDialog&& currentUser != null) &&
+        <ConfirmationDialog
+        open={openConfirmationDialog}
+        description={`${getMessage(currentUserEstado,currentUser)}`}
+        close={()=>setOpenConfirmationDialog(false)}
+        performAction={()=>{
+            if(currentUserEstado != null){
+                changeUserEstado(currentUserEstado)
+            }
+            setOpenConfirmationDialog(false)
+        }}
         />
         }
     </>

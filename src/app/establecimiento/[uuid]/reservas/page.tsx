@@ -1,9 +1,12 @@
 "use client"
 import ReservaList from "@/components/reservas/ReservaList";
 import CreateReservaDialog from "@/components/reservas/dialog/CreateReservaDialog";
+import DialogReservaDetail from "@/components/reservas/dialog/DialogReservaDetail";
 import SearchInput from "@/components/util/input/SearchInput";
 import Pagination from "@/components/util/pagination/Pagination";
-import { getEstablecimientoReservas, getEstablecimientoReservasCount } from "@/core/repository/reservas";
+import { useAppDispatch } from "@/context/reduxHooks";
+import { uiActions } from "@/context/slices/uiSlice";
+import { GetReservaDetail, getEstablecimientoReservas, getEstablecimientoReservasCount } from "@/core/repository/reservas";
 import { Order, OrderQueue } from "@/core/type/enums";
 import { appendSerachParams } from "@/core/util/routes";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -14,10 +17,11 @@ export default function Page({params}:{params:{uuid:string}}){
     const searchParams = useSearchParams();
     const page = searchParams.get("page")
     const totalCount = searchParams.get("totalCount")
-
+    const dispatch = useAppDispatch()
     const current = new URLSearchParams(Array.from(searchParams.entries()))
     const [reservas ,setReservas ] = useState<Reserva[]>([])
     const [query,setQuery] = useState("")
+    const [reservaDetail,setReservaDetail] = useState<ReservaDetail | null>(null)
     const [filterData,setFilterData] = useState<ReservaDataFilter>({
         uuid:params.uuid,
         query:"",
@@ -27,6 +31,7 @@ export default function Page({params}:{params:{uuid:string}}){
     const [paginationProps,setPaginationProps] = useState<PaginationProps | undefined>(undefined)
     const [reservasCount,setReservasCount] = useState<number | undefined>(undefined)
     const [loading,setLoading] = useState(false)
+    const [openReservaDetailDialog,setOpenReservaDetailDialog] = useState(false)
     const [order,setOrder] = useState<ReservaOrder>({
         order:Order.DESC,
         queue:OrderQueue.CREATED
@@ -37,7 +42,17 @@ export default function Page({params}:{params:{uuid:string}}){
         const url  = window.location.pathname + '?' + search;
         history.pushState(null,'',url)
     }
-
+    const getReservaDetail = async(id:number) => {
+        try{
+            dispatch(uiActions.setLoaderDialog(true))
+            const res = await GetReservaDetail(id)
+            console.log(res)
+            setReservaDetail(res)
+            dispatch(uiActions.setLoaderDialog(false))
+        }catch(err){
+            dispatch(uiActions.setLoaderDialog(false))
+        }
+    }
     const getReservasCount = async()=>{
         try{
             const res:number = await getEstablecimientoReservasCount(params.uuid)
@@ -127,6 +142,12 @@ export default function Page({params}:{params:{uuid:string}}){
     }
 
     useEffect(()=>{
+        if(reservaDetail != null){
+            setOpenReservaDetailDialog(true)
+        }
+    },[reservaDetail])
+
+    useEffect(()=>{
         getReservasCount()
         if(page != null){
             getReservas(filterData,Number(page))
@@ -214,6 +235,7 @@ export default function Page({params}:{params:{uuid:string}}){
             reservas={reservas}
             loading={loading}
             order={order}
+            getReservaDetail={(id)=>getReservaDetail(id)}
             changeOrder={(order)=>{
                 if(order.order == Order.DESC){
                     setOrder({
@@ -243,7 +265,14 @@ export default function Page({params}:{params:{uuid:string}}){
             </div>
             {/* {JSON.stringify(reservas)} */}
         </div>
-       
+
+        {(openReservaDetailDialog && reservaDetail != null) &&
+        <DialogReservaDetail
+        open={openReservaDetailDialog}
+        close={()=>setOpenReservaDetailDialog(false)}
+        data={reservaDetail}
+        />
+        }
         </>
     )
 }

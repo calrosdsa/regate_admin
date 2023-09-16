@@ -35,7 +35,7 @@
     @apply border-b-primary text-primary
   }
   .card {
-    @apply p-2 border-[1px] shadow-md rounded-md cursor-pointer hover:opacity-70
+    @apply p-3 border-[1px] shadow-md rounded-md cursor-pointer hover:opacity-70
   }
   .label {
     @apply font-medium text-sm

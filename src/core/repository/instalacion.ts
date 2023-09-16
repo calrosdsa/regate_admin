@@ -46,7 +46,7 @@ export async function getInstalaciones(uuid:string){
       return res.json()
 }
 
-export async function getInstalacion(uuid:string){
+export async function GetInstalacion(uuid:string){
     const res = await fetch(`../../api/establecimiento/instalacion?uuid=${uuid}`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary

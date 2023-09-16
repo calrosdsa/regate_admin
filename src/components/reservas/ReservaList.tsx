@@ -5,9 +5,10 @@ import Loading from "../util/loaders/Loading";
 import { Order, OrderQueue } from "@/core/type/enums";
 
 
-const ReservaList = ({reservas,loading,order,changeOrder}:{
+const ReservaList = ({reservas,loading,order,changeOrder,getReservaDetail}:{
     reservas:Reserva[]
     loading:boolean
+    getReservaDetail:(id:number)=>void
     changeOrder:(order:ReservaOrder)=>void
     order?:ReservaOrder
 }) =>{
@@ -21,6 +22,8 @@ const ReservaList = ({reservas,loading,order,changeOrder}:{
              <table className="w-full shadow-xl">
         <thead className=" bg-gray-200 text-left noselect">
             <tr>
+                <th className="headerTable w-10">
+                </th>
                 <th className="headerTable w-72">
                     Usuario
                 </th>
@@ -67,12 +70,15 @@ const ReservaList = ({reservas,loading,order,changeOrder}:{
                 }
                 {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path  d="M4 5h8l-4 6-4-6z"></path></svg> */}
                 </th>
+                <th className="headerTable">
+                </th>
             </tr>
         </thead>
         <tbody>
         {reservas.map((item,index)=>{
                 return(
                     <tr key={item.id} className={`${index % 2 && "bg-gray-100"}`}>
+                        <td className="rowTable font-medium">{index + 1}.-</td>
                         <td className="flex space-x-2 items-center rowTable ">
                         <CommonImage
                         src={item.profile_photo || "/images/profile.png"}
@@ -87,6 +93,8 @@ const ReservaList = ({reservas,loading,order,changeOrder}:{
                         <td className="rowTable">{moment(item.start_date).utc().format('ll')} de
                          {moment(item.start_date).utc().format('LT')} a {moment(item.end_date).utc().format('LT')}</td>
                          <td className="rowTable">{moment(item.created_at).format("lll")}</td>
+                        <td onClick={()=>getReservaDetail(item.id)}
+                        className="rowTable font-medium underline text-primary cursor-pointer">Ver</td>
                     </tr>
                 )
             })}

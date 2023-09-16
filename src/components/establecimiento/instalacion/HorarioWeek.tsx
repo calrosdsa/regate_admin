@@ -3,6 +3,7 @@ import { DayWeek } from "@/core/type/enums";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { EditHorarioPrecio } from "./dialog/EditHorarioPrecio";
+import Loading from "@/components/util/loaders/Loading";
 
 const dayWeek:Horario[] = [
     {dayName:"Domingo",dayWeek:DayWeek.Domingo},
@@ -13,10 +14,11 @@ const dayWeek:Horario[] = [
     {dayName:"Viernes",dayWeek:DayWeek.Viernes},
     {dayName:"Sabado",dayWeek:DayWeek.Sabado}
 ]
-const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay}:{
+const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading}:{
     instalacionId:number
     selectedDay:number | null
     cupos:Cupo[]
+    loading:boolean
     getHorarioDay:(day:number)=>void
 }) =>{
     // const [cupos,setCupos] = useState<Cupo[]>([])
@@ -64,11 +66,21 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay}:{
             })}
 
         </div>
+        <Loading
+        loading={loading}
+        className="flex justify-center w-full"
+        />
         <div className="grid grid-cols-2 xl:grid-cols-4 gap-2">
             {cupos.map((item,index)=>{
                 return(
                     <div key={index} onClick={()=>openEditDialog(item)}
-                    className={`card grid grid-cols-2 ${item.available || ' opacity-50'}`}>
+                    className={`card grid grid-cols-2 ${item.available || ' opacity-50'} relative`}>
+                        {item.available &&
+                        <span className="absolute top-0 right-1 text-green-500 font-medium text-xs">Habilitado</span>
+                    }
+                    {item.available == false && item.price != undefined &&
+                        <span className="absolute top-0 right-1 text-red-500 font-medium text-xs">Deshabilitado</span>
+                    }
                         <div className="grid">
                         <span className="label">Hora</span>
                         <span className="text-sm">{item.time.slice(0,5)}</span>

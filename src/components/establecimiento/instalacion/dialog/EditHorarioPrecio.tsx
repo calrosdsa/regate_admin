@@ -69,6 +69,7 @@ export const EditHorarioPrecio = ({open,close,cupo}:{
             <TooltipIcon
             title='Precio'
             helpText='Asigna un precio acorde a la hora y la disponibilidad'
+            
             />
              <div className={`relative`}>
         <input id="password" type='telnet'
@@ -77,7 +78,7 @@ export const EditHorarioPrecio = ({open,close,cupo}:{
             value={price}
             // minLength={8}
             pattern='^[0-9]*$'
-            className=" input"
+            className="input z-0 "
              />
         </div>  
 
@@ -86,7 +87,8 @@ export const EditHorarioPrecio = ({open,close,cupo}:{
             <div>
             <TooltipIcon
             title='Habilitar'
-            helpText='Asigna un precio acorde a la hora y la disponibilidad'
+            helpText='Decide si quieres que se hagan reservas en esta hora'
+            tooltipId='tooltip2'
             />
 
             <select className='input' value={available.toString()} onChange={(e)=>{

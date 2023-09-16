@@ -10,6 +10,10 @@ interface Reserva extends Profile {
     created_at:string
 }
 
+type ReservaDetail = {
+    instalacion:Instalacion
+    reserva:Reserva
+}
 
 
 type ReservaDataFilter = {
@@ -30,4 +34,12 @@ type ReservaPaginationResponse = {
 type ReservaOrder = {
     order:number
     queue:number
+}
+
+type ReservaCancelRequest = {
+    reserva_id:number
+    content:string
+    establecimiento_id:number
+    profile_id:number
+    admin_id:string 
 }

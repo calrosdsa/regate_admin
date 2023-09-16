@@ -11,7 +11,7 @@ import { TooltipIcon, TooltipContainer } from "@/components/util/tooltips/Toolti
 import { unexpectedError } from "@/context/config";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
-import { GetCupoReservaInstalciones, getInstalacion, getInstalacionDayHorario, getInstalaciones } from "@/core/repository/instalacion";
+import { GetCupoReservaInstalciones, GetInstalacion, getInstalacionDayHorario, getInstalaciones } from "@/core/repository/instalacion";
 import { GetReservaDetail, getInstalacionReservas } from "@/core/repository/reservas";
 import { appendSerachParams } from "@/core/util/routes";
 import { Tab } from "@headlessui/react";
@@ -32,17 +32,19 @@ const Page = ({ params }: { params: { uuid: string } })=>{
     const router = useRouter()
     const [createReservaDialog,setCreateReservaDialog] = useState(false)
     const [startDate, setStartDate] = useState<Date | null>(null);
+    const [loadingInstalacion,setLoadingInstalacion] = useState(false)
     const [loadingReservas,setLoadingReservas] = useState(false)
     const [loadingInstalaciones,setLoadingInstalaciones] = useState(false)
     const [instalaciones,setInstalaciones] = useState<Instalacion[]>([])
     const [instalacion,setInstalacion] = useState<Instalacion | null>(null)
-    const [reservaDetail,setReservaDetail] = useState<Reserva | null>(null)
+    const [reservaDetail,setReservaDetail] = useState<ReservaDetail | null>(null)
     const [cupos,setCupos] = useState<Cupo[]>([])
     const [cuposReservas,setCuposReservas] = useState<CupoReserva[]>([])
     const [selectedDay,setSelectedDay] = useState<number | null>(null)
     const [openCreateInstalacion,setOpenCreateInstalacion] = useState(false)
     const [openReservaDetailDialog,setOpenReservaDetailDialog] = useState(false)
     const [selectedCupos,setSelectedCupos] = useState<CupoReserva[]>([])
+    const [loadingHorarios,setLoadingHorarios] = useState(false)
   
     const getCuposReservaInstalacion = async(instalacionId:number) => {
         try{
@@ -86,11 +88,15 @@ const Page = ({ params }: { params: { uuid: string } })=>{
     }
     const getHorariosDay = async(day:number,id:number) =>{
         try{
-                appendSerachParams("tabIndex","1",router,current,pathname)
-                const res:Cupo[] =  await getInstalacionDayHorario(id,day)
-                setCupos(res)
-                setSelectedDay(day)
+            setCupos([])
+            setLoadingHorarios(true)
+            appendSerachParams("tabIndex","1",router,current,pathname)
+            const res:Cupo[] =  await getInstalacionDayHorario(id,day)
+            setCupos(res)
+            setSelectedDay(day)
+            setLoadingHorarios(false)
         }catch(err){
+            setLoadingHorarios(false)
             console.log(err)
         }
     }
@@ -102,9 +108,9 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                 setInstalaciones(instalaciones)
                 if(instalaciones.length > 0){
                     if(instalacionId != null){
-                        getInstalacionData(instalacionId)
+                        getInstalacionData(instalacionId,instalaciones)
                     }else{
-                        getInstalacionData(instalaciones[0].uuid)
+                        getInstalacionData(instalaciones[0].uuid,instalaciones)
                     }
                 }
                 setLoadingInstalaciones(false)
@@ -113,19 +119,38 @@ const Page = ({ params }: { params: { uuid: string } })=>{
             toast.error(unexpectedError)
         }
     }
-    const getInstalacionData = async(uuid:string) => {
-        const res:Instalacion = await getInstalacion(uuid)
-        setInstalacion(res)
-        appendSerachParams("id",res.uuid,router,current,pathname)
+    const getInstalacionData = async(uuid:string,results:Instalacion[]) => {
+        const instalacion = results.find(item=>item.uuid == uuid)
+        if(instalacion == undefined) return
         if(tabIndex!= null){
             if(tabIndex == "2"){
                 console.log(tabIndex,"TABINDEX")
                 // getCupos(res.id,true)
-                getCuposReservaInstalacion(res.id)
+                setInstalacion(instalacion)
+                getCuposReservaInstalacion(instalacion.id)
             }else if(tabIndex == "1"){
                 console.log(tabIndex,"TABINDEX")
-                getHorariosDay(currentDay,res.id)
+                getHorariosDay(currentDay,instalacion.id)
+                setInstalacion(instalacion)
+            }else if(tabIndex == "0"){
+                getInstalacion(uuid)
             }
+        }else{
+           getInstalacion(uuid)
+        }
+    }
+
+    const getInstalacion=async(uuid:string) =>{
+        try{
+            setLoadingInstalacion(true)
+            const res:Instalacion = await GetInstalacion(uuid)
+            console.log(res)
+            setInstalacion(res)
+            appendSerachParams("id",res.uuid,router,current,pathname)
+            setLoadingInstalacion(false)
+        }catch(err){
+            console.log(err)
+            setLoadingInstalacion(false)
         }
     }
 
@@ -196,7 +221,10 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                     return(
                         <div key={item.uuid} 
                         className={`hover:bg-gray-200 p-1 rounded-lg ${instalacion?.id == item.id && "bg-gray-200"}`}
-                        onClick={()=>getInstalacionData(item.uuid)}>
+                        onClick={()=>{
+                            setInstalacion(null)
+                        getInstalacionData(item.uuid,instalaciones)
+                        }}>
                         <InstalacionCard
                         instalacion={item}
                         />
@@ -206,14 +234,20 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                     </div>
 
             <div className="flex flex-col col-start-3 col-span-full p-2 md:border-[1px] md:shadow-lg h-screen md:overflow-auto">
-                {instalacion!= null && 
+
                 <div>
                      <Tab.Group defaultIndex={tabIndex != null ? Number(tabIndex):0}>
                     <Tab.List>
                         <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
-                        onClick={()=>appendSerachParams("tabIndex","0",router,current,pathname)}>Info</Tab>
+                        onClick={()=>{
+                            if(instalacion == null) return
+                            setInstalacion(null)
+                            appendSerachParams("tabIndex","0",router,current,pathname)
+                            getInstalacion(instalacion.uuid)
+                            }}>Info</Tab>
                         <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
                         onClick={()=>{
+                            if(instalacion == null) return
                             if(cupos.length>0) {
                                 appendSerachParams("tabIndex","1",router,current,pathname)
                                 return
@@ -221,18 +255,25 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                             getHorariosDay(currentDay,instalacion.id)
                         }}>Horarios</Tab>
                         <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
-                        onClick={()=>{
-                            if(cuposReservas.length>0) {
-                                appendSerachParams("tabIndex","2",router,current,pathname)
-                                return
-                            }else{
-                                appendSerachParams("tabIndex","2",router,current,pathname)
-                                getCuposReservaInstalacion(instalacion.id)
-                            }
+                        onClick={()=>{      
+                            if(instalacion == null) return
+                            // if(ReservaInstalacionCupos.length >0 ){
+                            // appendSerachParams("tabIndex","2",router,current,pathname)
+                            //     return
+                            // }
+                            appendSerachParams("tabIndex","2",router,current,pathname)
+                            getCuposReservaInstalacion(instalacion.id)
                             }}>Reservas</Tab>
                     </Tab.List>
+
+
                     <Tab.Panels className={"p-2"}>
                         <Tab.Panel className={"mx-auto flex justify-center w-full sm:w-3/4"}>
+                            {/* {JSON.stringify(instalacion)} */}
+                            <Loading
+                            loading={loadingInstalacion}
+                            className="flex justify-center w-full mt-2"/>
+                    {instalacion != null && 
                             <InstalacionDetail 
                             uuid={params.uuid}
                             instalacion={instalacion}
@@ -240,15 +281,20 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                                 setInstalacion({...instalacion,[name]:value})
                             }}
                             />
+                        }
                         </Tab.Panel>
+                        {instalacion != null && 
                         <Tab.Panel>
                             <HorarioWeek
                             instalacionId={instalacion.id}
                             selectedDay={selectedDay}
                             cupos={cupos}
                             getHorarioDay={(day:number)=>getHorariosDay(day,instalacion.id)}
+                            loading={loadingHorarios}
                             />
                         </Tab.Panel>
+                        }
+                         {instalacion != null && 
                         <Tab.Panel>
                            <div>
                            <div className="flex gap-2 pt-2 pb-2 flex-wrap items-end">
@@ -286,14 +332,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                                     </svg>
                                     </button>
                                 </TooltipContainer>
-                                
-                               
-{/* 
-                        <button className="button-inv  h-10 whitespace-nowrap" disabled={loadingReservas} onClick={()=>{
-                                     getCuposReservaInstalacion(instalacion.id)
-                                    }}>
-                                Aplicar cambios
-                                </button> */}
+
                             </div>
                             <div className="pb-2">
                                 {startDate == null ?
@@ -316,10 +355,10 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                             />
                             </div>
                         </Tab.Panel>
+                        }
                     </Tab.Panels>
                     </Tab.Group>
                 </div>
-                }
             {/* <Suspense fallback={<div>Loading...</div>}>
         <Instalacion instalacionUuid={uuid} />
              </Suspense> */}
@@ -330,7 +369,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         <DialogReservaDetail
         open={openReservaDetailDialog}
         close={()=>setOpenReservaDetailDialog(false)}
-        reserva={reservaDetail}
+        data={reservaDetail}
         />
         }
 
