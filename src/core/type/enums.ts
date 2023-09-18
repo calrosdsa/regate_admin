@@ -35,3 +35,9 @@ export const enum UserEstado {
     DISABLED,
     DELETED
 }
+
+export const enum ReservaEstado {
+    Valid,
+    Expired,
+    Cancel
+}

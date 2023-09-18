@@ -3,28 +3,33 @@ import DialogLayout from "@/components/util/dialog/DialogLayout";
 import CommonImage from "@/components/util/image/CommonImage";
 import { getFullName } from "@/core/util";
 import moment from "moment";
-import {useState} from "react"
+import {useRef, useState} from "react"
 import CancelReservaDialog from "./CancelReservaDialog";
+import { getEstadoReserva } from "../ReservaList";
+import { ReservaEstado } from "@/core/type/enums";
 const DialogReservaDetail = ({open,close,data}:{
     open:boolean
     close:()=>void
     data:ReservaDetail
 }) => {
     const [cancelReservaDialog,setCancelReservaDialog] = useState(false)
+
     // const options: any | undefined = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
     return(
         <>
-        {cancelReservaDialog &&
-        <CancelReservaDialog
-        open={cancelReservaDialog}
-        close={()=>setCancelReservaDialog(false)}
-        />
-        }
+     {cancelReservaDialog &&
+     <CancelReservaDialog
+     open={cancelReservaDialog}
+     reserva={data.reserva}
+     close={()=>setCancelReservaDialog(false)}
+
+     />
+     }
      <DialogLayout
      className=" max-w-md sm:max-w-lg md:max-w-xl"
      title="Detalles de la Reserva"
-      open={open} close={close}>
+     open={open} close={close}>
 
         <div className='rounded-lg bg-white overflow-auto pt-2'>
 
@@ -68,10 +73,7 @@ const DialogReservaDetail = ({open,close,data}:{
                         />
                         <span className="text-sm truncate ">{getFullName(data.reserva.nombre,data.reserva.apellido)}</span>
                         </div>
-                    }
-            
-                       
-
+                    }                                
                          <div className=" my-4 ">
                                 <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
                                         <span className="label">Fecha y hora de la data</span>
@@ -81,7 +83,12 @@ const DialogReservaDetail = ({open,close,data}:{
                                     </div>
 
                                     <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
-                                        <span className="label">Precio de la data</span>
+                                        <span className="label">Estado de la reserva</span>
+                                        <span className="text-xs ">{getEstadoReserva(data.reserva.estado)}</span>
+                                    </div>
+
+                                    <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
+                                        <span className="label">Precio de la reserva</span>
                                         <span className="text-xs ">{data.reserva.total_price}</span>
                                     </div>
 
@@ -89,6 +96,7 @@ const DialogReservaDetail = ({open,close,data}:{
                                         <span className="label">Cantidad pagada</span>
                                         <span className="text-xs ">{data.reserva.paid}</span>
                                     </div>
+
 
                                     <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
                                         <span className="label">Hora en la que se hizo la reserva</span>
@@ -98,8 +106,16 @@ const DialogReservaDetail = ({open,close,data}:{
                                     </div>
                                 </div>
 
-                                <button onClick={()=>setCancelReservaDialog(true)}
-                                className="button">Cancelar reserva</button>
+                                <>
+                                {data.reserva.estado == ReservaEstado.Valid &&
+                                <div className={`button flex justify-center h-10 `}
+                                onClick={()=>setCancelReservaDialog(true)} >
+                                Cancelar reserva
+                                </div>
+                                }
+      </>
+                                {/* <button onClick={()=>setCancelReservaDialog(true)}
+                                className="button">Cancelar reserva</button> */}
 
          </div>   
      </DialogLayout>

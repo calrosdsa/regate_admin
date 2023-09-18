@@ -1,5 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react"
-import {  Fragment, ReactNode } from 'react'
+import {  Fragment, ReactNode, useRef } from 'react'
 
 
 const DialogLayout = ({open,close,children,title ="",className="",allowClose=false}:{
@@ -11,9 +11,11 @@ const DialogLayout = ({open,close,children,title ="",className="",allowClose=fal
     title?:string
 }) =>{
 
+
     return(
         <Transition appear show={open} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={()=>{
+        <Dialog
+        as="div" className="relative z-10" onClose={()=>{
           if(allowClose){
             close()
           }

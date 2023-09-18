@@ -6,7 +6,7 @@ interface Props{
     label?:string
     name:string
     type?:string
-    error?:string
+    error?:string 
     placeholder?:string
     icon?:()=>JSX.Element
     className?:string
@@ -16,7 +16,7 @@ const InputWithIcon = ({onChange,value,label,name,type="text",error,icon,classNa
   return(
     <div className={`relative mt-3 ${className}`}>
           {label != undefined &&
-        <label  className="labelText">{label}</label>
+        <label className="label">{label}</label>
       }
       {icon != undefined &&
         icon()
@@ -24,9 +24,10 @@ const InputWithIcon = ({onChange,value,label,name,type="text",error,icon,classNa
     <input name={name}  type={type}
       required
         onChange={onChange} 
+        autoFocus
         value={value}
         // minLength={8}
-        className={` border-[1px] rounded-lg  peer rounded-b-lg   p-2 h-10 w-full
+        className={` border-[1px] rounded-lg rounded-b-lg p-2 h-10 w-full
         border-gray-400 mt-1 text-sm text-gray-900 focus:outline-blue-600
         ${icon != undefined && "pl-7"}`}
         placeholder={placeholder} />

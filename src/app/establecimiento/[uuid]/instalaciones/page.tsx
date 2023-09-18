@@ -13,7 +13,6 @@ import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
 import { GetCupoReservaInstalciones, GetInstalacion, getInstalacionDayHorario, getInstalaciones } from "@/core/repository/instalacion";
 import { GetReservaDetail, getInstalacionReservas } from "@/core/repository/reservas";
-import { appendSerachParams } from "@/core/util/routes";
 import { Tab } from "@headlessui/react";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -45,6 +44,14 @@ const Page = ({ params }: { params: { uuid: string } })=>{
     const [openReservaDetailDialog,setOpenReservaDetailDialog] = useState(false)
     const [selectedCupos,setSelectedCupos] = useState<CupoReserva[]>([])
     const [loadingHorarios,setLoadingHorarios] = useState(false)
+
+    const appendSerachParams = (key:string,value:string)=>{
+        current.set(key,value);
+        const search = current.toString();
+        const query = search ? `?${search}` : "";
+        router.push(`${pathname}${query}`);
+    }
+    
   
     const getCuposReservaInstalacion = async(instalacionId:number) => {
         try{
@@ -90,7 +97,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         try{
             setCupos([])
             setLoadingHorarios(true)
-            appendSerachParams("tabIndex","1",router,current,pathname)
+            appendSerachParams("tabIndex","1")
             const res:Cupo[] =  await getInstalacionDayHorario(id,day)
             setCupos(res)
             setSelectedDay(day)
@@ -124,12 +131,12 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         if(instalacion == undefined) return
         if(tabIndex!= null){
             if(tabIndex == "2"){
-                console.log(tabIndex,"TABINDEX")
+                // console.log(tabIndex,"TABINDEX")
                 // getCupos(res.id,true)
                 setInstalacion(instalacion)
                 getCuposReservaInstalacion(instalacion.id)
             }else if(tabIndex == "1"){
-                console.log(tabIndex,"TABINDEX")
+                // console.log(tabIndex,"TABINDEX")
                 getHorariosDay(currentDay,instalacion.id)
                 setInstalacion(instalacion)
             }else if(tabIndex == "0"){
@@ -144,9 +151,9 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         try{
             setLoadingInstalacion(true)
             const res:Instalacion = await GetInstalacion(uuid)
-            console.log(res)
+            // console.log(res)
             setInstalacion(res)
-            appendSerachParams("id",res.uuid,router,current,pathname)
+            appendSerachParams("id",res.uuid)
             setLoadingInstalacion(false)
         }catch(err){
             console.log(err)
@@ -156,14 +163,14 @@ const Page = ({ params }: { params: { uuid: string } })=>{
 
     
     const selectReservaCupo = (cupo:CupoReserva) => {
-        console.log(cupo)
+        // console.log(cupo)
         if(selectedCupos.map((item=>item.time)).includes(cupo.time)){
             const newList = selectedCupos.filter(item=>item.time != cupo.time)
             setSelectedCupos(newList)
         }else{
             setSelectedCupos([...selectedCupos,cupo])
         }
-        console.log(selectedCupos)
+        // console.log(selectedCupos)
     }
 
     useEffect(()=>{
@@ -222,8 +229,8 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                         <div key={item.uuid} 
                         className={`hover:bg-gray-200 p-1 rounded-lg ${instalacion?.id == item.id && "bg-gray-200"}`}
                         onClick={()=>{
-                            setInstalacion(null)
-                        getInstalacionData(item.uuid,instalaciones)
+                        setInstalacion(null)
+                        getInstalacion(item.uuid)
                         }}>
                         <InstalacionCard
                         instalacion={item}
@@ -242,26 +249,26 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                         onClick={()=>{
                             if(instalacion == null) return
                             setInstalacion(null)
-                            appendSerachParams("tabIndex","0",router,current,pathname)
+                            appendSerachParams("tabIndex","0")
                             getInstalacion(instalacion.uuid)
                             }}>Info</Tab>
                         <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
                         onClick={()=>{
                             if(instalacion == null) return
-                            if(cupos.length>0) {
-                                appendSerachParams("tabIndex","1",router,current,pathname)
-                                return
-                            }
+                            // if(cupos.length>0) {
+                            //     appendSerachParams("tabIndex","1")
+                            //     return
+                            // }
                             getHorariosDay(currentDay,instalacion.id)
                         }}>Horarios</Tab>
                         <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
                         onClick={()=>{      
                             if(instalacion == null) return
                             // if(ReservaInstalacionCupos.length >0 ){
-                            // appendSerachParams("tabIndex","2",router,current,pathname)
+                            // appendSerachParams("tabIndex","2")
                             //     return
                             // }
-                            appendSerachParams("tabIndex","2",router,current,pathname)
+                            appendSerachParams("tabIndex","2")
                             getCuposReservaInstalacion(instalacion.id)
                             }}>Reservas</Tab>
                     </Tab.List>

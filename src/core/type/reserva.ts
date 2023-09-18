@@ -4,6 +4,7 @@ interface Reserva extends Profile {
     establecimiento_id:number
     instalacion_name:string
     paid:number
+    estado:number
     total_price:number
     start_date:string
     end_date:string
@@ -41,5 +42,5 @@ type ReservaCancelRequest = {
     content:string
     establecimiento_id:number
     profile_id:number
-    admin_id:string 
+    admin_id?:string 
 }

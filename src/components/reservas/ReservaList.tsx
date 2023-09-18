@@ -2,8 +2,18 @@ import moment from "moment";
 import CommonImage from "../util/image/CommonImage";
 import { getFullName } from "@/core/util";
 import Loading from "../util/loaders/Loading";
-import { Order, OrderQueue } from "@/core/type/enums";
+import { Order, OrderQueue, ReservaEstado } from "@/core/type/enums";
 
+export const getEstadoReserva = (estado:ReservaEstado)=>{
+    switch(estado){
+        case ReservaEstado.Valid:
+            return "-"
+        case ReservaEstado.Expired:
+            return "-"
+        case ReservaEstado.Cancel:
+            return "Cancelada"
+    }
+}
 
 const ReservaList = ({reservas,loading,order,changeOrder,getReservaDetail}:{
     reservas:Reserva[]
@@ -13,6 +23,7 @@ const ReservaList = ({reservas,loading,order,changeOrder,getReservaDetail}:{
     order?:ReservaOrder
 }) =>{
     
+
     return(
         <div className={`relative ${loading && "h-20"}`}>
             <Loading
@@ -32,6 +43,9 @@ const ReservaList = ({reservas,loading,order,changeOrder,getReservaDetail}:{
                 </th>
                 <th className="headerTable">
                     Precio pagado
+                </th>
+                <th className="headerTable">
+                    Estado
                 </th>
                 <th className=" headerTable  cursor-pointer" onClick={()=>{
                     if(order == undefined) return
@@ -90,6 +104,7 @@ const ReservaList = ({reservas,loading,order,changeOrder,getReservaDetail}:{
                         </td>
                         <td className="rowTable">{item.total_price}</td>
                         <td className="rowTable">{item.paid}</td>
+                        <td className="rowTable">{getEstadoReserva(item.estado)}</td>
                         <td className="rowTable">{moment(item.start_date).utc().format('ll')} de
                          {moment(item.start_date).utc().format('LT')} a {moment(item.end_date).utc().format('LT')}</td>
                          <td className="rowTable">{moment(item.created_at).format("lll")}</td>

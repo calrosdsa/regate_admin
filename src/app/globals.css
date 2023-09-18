@@ -38,7 +38,7 @@
     @apply p-3 border-[1px] shadow-md rounded-md cursor-pointer hover:opacity-70
   }
   .label {
-    @apply font-medium text-sm
+    @apply font-medium text-sm italic 
   }
   .help-text{
     @apply text-xs text-gray-500
