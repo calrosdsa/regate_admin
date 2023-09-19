@@ -186,6 +186,7 @@ export default function Page({params}:{params:{uuid:string}}){
             <div className="pt-2 pb-4 sm:flex md:justify-between md:items-center grid gap-2 relative">
                 <div className="flex space-x-2 items-center">
                 <SearchInput
+                className=" sm:w-64"
                 placeholder="Buscar por nombre"
                 onChange={onChange}
                 value={query}

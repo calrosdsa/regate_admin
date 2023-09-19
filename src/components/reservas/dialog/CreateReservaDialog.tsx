@@ -6,9 +6,12 @@ import InputWithIcon from "@/components/util/input/InputWithIcon";
 import { useAppSelector } from "@/context/reduxHooks";
 import { CreateReserva } from "@/core/repository/reservas";
 import { getFullName } from "@/core/util";
+import ReactCountryFlag from "react-country-flag"
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import SearchInput from "@/components/util/input/SearchInput";
+import SearchUserDialog from "./SearchUserDialog";
 
 type CupoR = {
     start_date:string
@@ -22,6 +25,7 @@ type CupoRequest = {
     end_time:string
     instalacion_id:number
     establecimiento_id:number
+    user_empresa:UserEmpresa
 }
 const CreateReservaDialog = ({open,close,instalacion,reservaCupos,refresh,uuid}:{
     open:boolean
@@ -34,12 +38,17 @@ const CreateReservaDialog = ({open,close,instalacion,reservaCupos,refresh,uuid}:
     const establecimientosUser = useAppSelector(state=>state.account.establecimientos)
     const [loading,setLoading] = useState(false)
     const [totalPrice,setTotalPrice] = useState(0)
+    const [userEmpresa,setUserEmpresa] = useState<null | UserEmpresa>(null)
     const [error,setError] = useState("")
+
+    const [openSearchUserDialog,setOpenSearchUserDialog] = useState(false)
     const [orderedCupo,setOrderedCupos] = useState<CupoReserva[]>([])
     const [formData,setFormData] = useState({
         paid:"",
+        name:"",
+        phone_number:"",
     })
-    const {paid} = formData
+    const {paid,name,phone_number} = formData
     const onChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         setFormData({...formData,
             [e.target.name]:e.target.value
@@ -62,13 +71,19 @@ const CreateReservaDialog = ({open,close,instalacion,reservaCupos,refresh,uuid}:
                     precio:item.precio
                 }
             })
+            
             const requestData:CupoRequest = {
                 cupos:cupos,
                 instalacion_id:instalacion.id,
                 total_price:totalPrice,
                 paid:Number(formData.paid),
                 end_time:moment(cupos[cupos.length - 1].start_date).utc().add(30,'minutes').toISOString(),
-                establecimiento_id:establecimientosUser.find(item=>item.uuid == uuid)?.id || 0
+                establecimiento_id:establecimientosUser.find(item=>item.uuid == uuid)?.id || 0,
+                user_empresa:{
+                    id:userEmpresa?.id || 0,
+                    phone_number:phone_number,
+                    name:name
+                }
             }
             console.log(requestData,"REQUEST DATA")
             const res = await CreateReserva(JSON.stringify(requestData))
@@ -102,6 +117,12 @@ const CreateReservaDialog = ({open,close,instalacion,reservaCupos,refresh,uuid}:
     },[])
     return(
         <>
+        {openSearchUserDialog &&
+        <SearchUserDialog
+        open={openSearchUserDialog}
+        close={()=>setOpenSearchUserDialog(false)}
+        />
+        }
      <DialogLayout
      className="max-w-lg"
       open={open} close={close} title="Crear reserva">
@@ -133,17 +154,42 @@ const CreateReservaDialog = ({open,close,instalacion,reservaCupos,refresh,uuid}:
                         }
                     </div>
             </div>
+              <div onClick={()=>setOpenSearchUserDialog(true)}
+                className="button flex space-x-2 mt-2 w-min whitespace-nowrap">
+                    <span>Agregar usuario ya registrado</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} 
+                    stroke="currentColor" className="w-5 h-5">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+            </svg>
+                    </div>
         <form onSubmit={onSubmit}>
             <InputWithIcon
             type="tel"
             label="Monto pagado"
             value={formData.paid}
             name="paid"
+            error={error}
+            onChange={onChange}
+            /> 
+            <InputWithIcon
+            type="tel"
+            label="Nombre Completo"
+            value={formData.name}
+            name="name"
+            error={error}
+            onChange={onChange}
+            />
+
+           <InputWithIcon
+            type="tel"
+            label="Número de teléfono."
+            value={formData.phone_number}
+            name="phone_number"
             className="mb-5"
             error={error}
             onChange={onChange}
-            
             />
+             
             <ButtonSubmit
             loading={loading}
             title="Crear Reserva"

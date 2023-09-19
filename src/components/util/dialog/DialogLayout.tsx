@@ -2,13 +2,14 @@ import { Dialog, Transition } from "@headlessui/react"
 import {  Fragment, ReactNode, useRef } from 'react'
 
 
-const DialogLayout = ({open,close,children,title ="",className="",allowClose=false}:{
+const DialogLayout = ({open,close,children,title ="",className="",allowClose=false,allowFullScreen=false}:{
     open:boolean
     allowClose?:boolean
     close:()=>void
     children:ReactNode
     className?:string
     title?:string
+    allowFullScreen?:boolean
 }) =>{
 
 
@@ -33,7 +34,7 @@ const DialogLayout = ({open,close,children,title ="",className="",allowClose=fal
           </Transition.Child>
     
           <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <div className={`flex min-h-full items-center justify-center ${!allowFullScreen && "p-4"} text-center`}>
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -42,9 +43,9 @@ const DialogLayout = ({open,close,children,title ="",className="",allowClose=fal
                 leave="ease-in duration-200"
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
-              >
+                >
                 <Dialog.Panel className={`transform overflow-hidden rounded-lg bg-white p-2
-                 text-left align-middle shadow-xl transition-all w-full ${className}`}>
+                text-left align-middle shadow-xl transition-all w-full ${className} ${allowFullScreen && "h-screen"}`}>
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900 flex justify-between items-center space-x-12"
