@@ -45,7 +45,7 @@ const DialogLayout = ({open,close,children,title ="",className="",allowClose=fal
                 leaveTo="opacity-0 scale-95"
                 >
                 <Dialog.Panel className={`transform overflow-hidden rounded-lg bg-white p-2
-                text-left align-middle shadow-xl transition-all w-full ${className} ${allowFullScreen && "h-screen"}`}>
+                text-left align-middle shadow-xl transition-all w-full ${className} ${allowFullScreen && "h-screen sm:h-full"}`}>
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900 flex justify-between items-center space-x-12"

@@ -1,10 +1,17 @@
 "use client"
+import ChartDropMenu from '@/components/dashboard/chart/ChartDropMenu';
 import AgeChart from '@/components/dashboard/chart/AgeChart';
 import CommonBarChart from '@/components/dashboard/chart/CommonBarChart';
 import CommonPieChart from '@/components/dashboard/chart/CommonPieChart';
 import { GenderChart } from '@/components/dashboard/chart/GenderChart';
 import LineChartConnectNulls from '@/components/dashboard/chart/LineChartConnectNulls';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import { useAppDispatch, useAppSelector } from '@/context/reduxHooks';
+import { TypeOfChart, TypeOfDate } from '@/core/type/enums';
+import { chartActions } from '@/context/slices/chartSlice';
+import { useEffect } from 'react';
+import { getChartData, getReservasHoursData } from '@/context/actions/chart-actions';
+import { FilterChartData } from '@/core/type/chart';
 // import ReactMapboxGl, { Layer, Feature, Marker } from 'react-mapbox-gl';
 const data1 = [
   { name: "Masculino", pv: 24 },
@@ -75,30 +82,37 @@ const data3 = [
  
 ];
 const Page= ()=>{
-//     const [coordinates, setCoordinates] = useState({
-//         lng:-0.22591277493100392,
-//         lat:51.55246509997406
-//     });
-    
-// const Map = ReactMapboxGl({
-//     accessToken:
-//       'pk.eyJ1Ijoiam1pcmFuZGEyMSIsImEiOiJjbGl0Y3YyeDEwMm1rM2ZwaXJ6eGs0MnNwIn0.rURAi6PkFGac0TBkM4QE-A'
-//   });
-//   const handleMapClick = (map:any, event:any) => {
-//     console.log(map)
-//     const { lngLat } = event;
-//     console.log(lngLat.lng)
-//     console.log(lngLat.lat)
-//     setCoordinates(lngLat);
-//     // setClickedCoordinates(lngLat);
-//   };
+  const dispatch = useAppDispatch()
+  const chartState = useAppSelector(state=>state.chart)
+  const dataR = [
+    {name:"13/10/2022",value:10},
+    {name:"13/10/2022",value:50},
+    {name:"13/10/2022",value:150},
+    {name:"13/10/2022",value:30},
+    {name:"13/10/2022",value:110},
+    {name:"13/10/2022",value:20},
+    {name:"13/10/2022",value:50},
+  ]
 
+  useEffect(()=>{
+    
+// {
+//     "establecimiento_id":1,
+//     "start_date":"2023-09-02 23:00:00",
+//     "end_date":"2023-09-22 23:00:00",
+//     "type_date":1
+// }
+    const filterData:FilterChartData = {
+      type_date:TypeOfDate.day,
+      start_date:"2023-08-22 00:00:00",
+      end_date:"2023-09-22 00:00:00",
+      establecimiento_id:1
+    }
+    dispatch(getChartData(filterData))
+  },[])
     return(
       <div className="flex flex-col lg:grid  lg:grid-cols-6 gap-3 p-4 pt-10 xl:pt-4 h-screen">
-      <GooglePlacesAutocomplete
-      apiKey="AIzaSyB2350gB-GpLOYJkrM-HZO4Ysj_7Rm9ebw"
-  
-    />
+     
       <div className='relative col-start-1 col-span-2 border-[1px] border-gray-500 rounded-lg p-2'>
       <div className='flex justify-between pb-4'>
         <div className="grid">
@@ -114,10 +128,20 @@ const Page= ()=>{
         </div>
         <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-7xl text-gray-400 font-semibold">120</span>
       </div>
-    <LineChartConnectNulls
-    title="Visit count"
-    subtitle="Total visits for the last 30 days"
+      <ChartDropMenu
+      title="Visit count"
+      subtitle="Total visits for the last 30 days"
+      typeOfChart={TypeOfChart.line}
+      setData={()=>{
+        dispatch(chartActions.setData(dataR))
+      }}
+      >
+    <LineChartConnectNulls    
+    data={chartState.response?.reserva_count_hours || []}
+    loading={chartState.loading}
+    fontSize={12}
     />
+    </ChartDropMenu>
         <GenderChart
         data={data1} xKey="name" yKey="pv"
         title="Gender"
@@ -135,7 +159,7 @@ const Page= ()=>{
             <span className='title'>New vs repeat</span>
             <span className=" text-xs">Total visitors for the last 30 days</span>
         </div>
-        <CommonBarChart data={data}/>
+        {/* <CommonBarChart data={data}/> */}
 </div>
 
 <div className='col-start-3 col-span-2 border-[1px] border-gray-500 rounded-lg p-2'>
@@ -143,7 +167,7 @@ const Page= ()=>{
             <span className='title'>Connection method</span>
             <span className=" text-xs">Total visitors for the last 30 days</span>
         </div>
-        <CommonPieChart/>
+        {/* <CommonPieChart/> */}
 </div>
 
 <div className='col-start-5 col-span-2 border-[1px] border-gray-500 rounded-lg p-2'>
@@ -151,13 +175,13 @@ const Page= ()=>{
             <span className='title'>Hour of day</span>
             <span className=" text-xs">Total visitors for the last 30 days</span>
         </div>
-        <CommonBarChart data={data3}
+        {/* <CommonBarChart data={data3}
         angle={310}
         minTickGap={-25}
         fontSize={12}
         marginBottom={25}
         tickMargin={20}
-        />
+        /> */}
 </div>
     </div>
     )

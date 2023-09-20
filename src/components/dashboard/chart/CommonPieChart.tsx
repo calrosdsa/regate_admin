@@ -1,16 +1,7 @@
+import Loader from '@/components/util/loaders/Loader';
 import React, { PureComponent } from 'react';
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie } from 'recharts';
+import { BarChart, Bar, Cell, Tooltip, Legend, ResponsiveContainer, PieChart, Pie } from 'recharts';
 
-const data = [
-  {
-    name: 'Facebook',
-    value: 4000,
-  },
-  {
-    name: 'Registration Form',
-    value: 3000,
-  },
-];
 
 
 const RADIAN = Math.PI / 180;
@@ -26,9 +17,16 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   );
 };
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-const CommonPieChart = () =>{
+interface Props {
+  data:any[]
+  loading:boolean
+}
+const CommonPieChart = ({data,loading}:Props) =>{
     return(
         <ResponsiveContainer width="100%" height={300}>
+          {loading?
+          <Loader/>
+          :
         <PieChart>
           <Pie
             data={data}
@@ -47,6 +45,7 @@ const CommonPieChart = () =>{
             <Tooltip />
             <Legend/>
         </PieChart>
+       }
       </ResponsiveContainer>
     )
 }

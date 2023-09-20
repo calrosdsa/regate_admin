@@ -42,3 +42,18 @@ export const enum ReservaEstado {
     Cancel
 }
 
+export enum TypeOfChart {
+    line,
+    bar,
+    spline,
+    pie,
+    stack
+}
+
+export enum TypeOfDate {
+    hour,
+    day,
+    week,
+    month,
+    year,
+}

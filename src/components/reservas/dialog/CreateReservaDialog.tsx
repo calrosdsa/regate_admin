@@ -121,9 +121,19 @@ const CreateReservaDialog = ({open,close,instalacion,reservaCupos,refresh,uuid}:
         <SearchUserDialog
         open={openSearchUserDialog}
         close={()=>setOpenSearchUserDialog(false)}
+        selectUserEmpresa={(user)=>{
+            setFormData({
+                ...formData,
+                name:user.name,
+                phone_number:user.phone_number  
+            })
+            setUserEmpresa(user)
+            setOpenSearchUserDialog(false)
+        }}
         />
         }
      <DialogLayout
+     allowFullScreen={true}
      className="max-w-lg"
       open={open} close={close} title="Crear reserva">
         <div className='rounded-lg bg-white overflow-auto max-w-xl'>
