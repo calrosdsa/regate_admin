@@ -90,6 +90,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 // import { formatterMediumDate } from '../../../utils/helpers/formatter';
 import { Dna } from 'react-loader-spinner';
 import Loader from '@/components/util/loaders/Loader';
+import { renderLegend } from './CommonBarChart';
 // import Loader from '../../Loader';
 
 
@@ -97,45 +98,30 @@ interface Props{
   data:any[]
   loading:boolean
   angle?:number
+  keyName?:string
+    keyValue?:string
   tickMargin?:number
   minTickGap?:number
   fontSize?:number
   marginBottom?:number
+  CustomToolTip:({ active, payload, label }: any) => React.JSX.Element | null
+
+  showLegend?:boolean
+  legendLabels?:string[]
+  keyValue2?:string
 }
-const CustomYAxisTick = ({x,y,payload}:any)=>{
-      // const { x, y, payload } = this.props;
-      return (<g transform={`translate(${0},${y})`}>
-          <text x={0} y={0}
-              textAnchor="start"
-              fill="#666">{payload.value}</text>
-      </g>)
-}
-const LineChartConnectNulls = ({data,loading,
-  angle,tickMargin,minTickGap,fontSize,marginBottom=10}:Props) => {
-    const CustomizedTooltip = ({ active, payload, label }:any) => {
-        // console.log(active, payload, label);
-      
-        if (active) {
-          return (
-            <>
-                {(payload != null && payload.length > 0) &&
-            <div className="p-2 border-2 rounded-lg bg-white  border-gray-600 max-w-[150px]">
-                <span className='text-primary font-medium'>{payload[0].payload.value} casos</span>
-                <span> creados el {payload[0].payload.name}</span>
-                </div>
-              }
-              </>
-          );
-        }
-      
-        return null;
-      };
+
+
+const LineChartConnectNulls = ({data,keyName='name',keyValue='value',loading,CustomToolTip,
+  angle,tickMargin,minTickGap,fontSize,marginBottom=10,showLegend = false,legendLabels=[],
+keyValue2}:Props) => {
+    
 
     return(
         <>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={300} className={"relative"}>
         {loading ?
-       <Loader/>
+       <Loader className=' absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'/>
         :
           <LineChart
             width={500}
@@ -144,18 +130,25 @@ const LineChartConnectNulls = ({data,loading,
             margin={{
               top: 10,
               right: 10,
-              left: 0,
+              left: -30,
               bottom: marginBottom,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" angle={angle}  tickMargin={tickMargin} minTickGap={minTickGap} axisLine={false}
-            style={{fontSize:fontSize}} />
-            <YAxis />
+            <XAxis dataKey={keyName} angle={angle}  tickMargin={tickMargin} minTickGap={minTickGap} axisLine={false}
+            style={{fontSize:fontSize}} /> 
+            <YAxis  style={{fontSize:fontSize}}/>
             {/* <Tooltip/> */}
-            <Tooltip content={<CustomizedTooltip/>}/>
+            <Tooltip content={<CustomToolTip/>}/>
 
-            <Line connectNulls type="monotone" dataKey="value" stroke="#8884d8" fill="#8884d8" />
+            {showLegend &&
+            <Legend content={(props)=>renderLegend(props,legendLabels)} />
+          }  
+
+            <Line  connectNulls  type="monotone" dataKey={keyValue} stroke="#8884d8" fill="#8884d8" />
+            {keyValue2 != undefined &&
+            <Line  connectNulls  type="monotone" dataKey={keyValue2} stroke="#82ca9d" fill="#82ca9d" />
+            }
           </LineChart>
             }
         </ResponsiveContainer>

@@ -16,7 +16,8 @@ const chartState:ChartState=  {
         uuid:undefined
     },
     response:undefined,
-    loading:false
+    loading:false,
+    allowedCharts:[]
 }
 
 
@@ -39,6 +40,9 @@ const chartSlice = createSlice({
         },
         setChartLoading(state,action:PayloadAction<boolean>){
             state.loading = action.payload
+        },
+        setAllowedCharts(state,action:PayloadAction<TypeOfDate[]>){
+            state.allowedCharts = action.payload
         }
         // openSidebar(state,action:PayloadAction<boolean>){
         //     state.openSidebar = action.payload

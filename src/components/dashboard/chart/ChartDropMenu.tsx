@@ -3,16 +3,24 @@ import MenuLayout from "../../util/button/MenuLayout";
 import { useState } from "react";
 import ChartDialog from "./ChartDialog";
 import { TypeOfChart } from "@/core/type/enums";
+import { FilterChartData } from "@/core/type/chart";
 
 const ChartDropMenu = ({
-    children,title,subtitle,typeOfChart,setData
+    children,title,subtitle,setTypeOfChart,setData,className = "",CustomToolTip,getNewData,
+    showLegend=false,legendLabels=[],singleColor=false,keyValue2
 }:{
     children:React.ReactNode
     title:string
     subtitle:string
-    typeOfChart:TypeOfChart
+    setTypeOfChart:()=>void
+    getNewData:(data:FilterChartData)=>void
     setData:()=>void
-
+    className?:string
+    CustomToolTip:({ active, payload, label }: any) => React.JSX.Element | null
+    singleColor?:boolean
+    showLegend?:boolean
+    legendLabels?:string[]
+    keyValue2?:string
 }) => {
     const [openChartDialog,setOpenChartDialog] = useState(false)
     function classNames(...classes:any) {
@@ -24,9 +32,15 @@ const ChartDropMenu = ({
         <ChartDialog
         open={openChartDialog}
         close={()=>setOpenChartDialog(false)}
+        CustomToolTip={CustomToolTip}
+        getNewData={getNewData}
+        keyValue2={keyValue2}
+        singleColor={singleColor}
+        legendLabels={legendLabels}
+        showLegend={showLegend}
         />
         }
-        <div className="col-start-3 col-span-full border-[1px] border-gray-500 rounded-lg p-2">
+        <div className={`${className} border-[1px] border-gray-500 rounded-lg p-2`}>
              <div className='flex justify-between'>
             <div className='grid pb-4'>
                 <span className='title'>{title}</span>
@@ -38,6 +52,7 @@ const ChartDropMenu = ({
                 <button
                 onClick={()=>{
                     setOpenChartDialog(true)
+                    setTypeOfChart()
                     setData()
                 }}
                 className={classNames(

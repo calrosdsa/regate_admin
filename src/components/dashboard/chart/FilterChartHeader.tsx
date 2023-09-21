@@ -6,23 +6,33 @@ import { Menu, Popover } from "@headlessui/react";
 import { useState } from "react";
 import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
 
-const FilterChartHeader = ({hideHeader,setTypeOfDate,setHideHeader,close,applyTypeChart,filterData}:{
+const FilterChartHeader = ({hideHeader,setTypeOfDate,setHideHeader,close,applyTypeChart,filterData,
+chartType,getNewData,allowedCharts}:{
     close:()=>void
     hideHeader:boolean
     setHideHeader:(bool:boolean)=>void
+    getNewData:(data:FilterChartData)=>void
+    chartType:TypeOfChart
     filterData:FilterChartData
+    allowedCharts:TypeOfDate[]
     setTypeOfDate:(type_date:TypeOfDate)=>void
     applyTypeChart:(typeOfChart:TypeOfChart)=>void
 }) =>{
-    const [typeChart,setTypeChart] = useState(TypeOfChart.line)
+    const [typeChart,setTypeChart] = useState(chartType)
     const [value, setValue] = useState<DateValueType>({
         startDate: new Date(),
         endDate: new Date()
     });
     
-    const handleValueChange = (newValue:DateValueType) => {
-        console.log("newValue:", newValue);
-        setValue(newValue);
+    const handleValueChange = (value:DateValueType) => {
+        console.log("value:", value);
+        const data:FilterChartData = {
+          ...filterData,
+          start_date:value?.startDate?.toString(),
+          end_date:value?.endDate?.toString(),
+        }
+        getNewData(data)
+        setValue(value);
     };
 
     return(
@@ -53,9 +63,9 @@ const FilterChartHeader = ({hideHeader,setTypeOfDate,setHideHeader,close,applyTy
               </div>
 
               <div className="flex overflow-auto pb-3 space-x-3 p-2">
-                <div>
+                <div className=" ">
               <Datepicker value={value} onChange={handleValueChange} 
-                        showFooter={true}
+                        // showFooter={true}
                         containerClassName={"w-full"}
                         i18n="es"
                         configs={{
@@ -69,35 +79,42 @@ const FilterChartHeader = ({hideHeader,setTypeOfDate,setHideHeader,close,applyTy
                         }}
                         inputClassName={"w-[220px] smallButton outline-none text-sm p-2"}
                         toggleClassName={"hidden"}
-                        // toggleIcon={(toggle)=>{
-                        //     return(
-                        //         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
-                        // className="w-5 h-5 fixed inset-0 top-[104px] left-7">
-                        // <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />
-                        // </svg>
-                        //     )
-                        // }}
+                    
                         showShortcuts={true}
                         primaryColor="indigo"
                         />
                         </div>
               <div className="flex w-full">
+              {allowedCharts.includes(TypeOfDate.hour) &&
+                <button onClick={()=>setTypeOfDate(TypeOfDate.hour)}
+                 className={`smallButton px-2 ${TypeOfDate.hour == filterData.type_date && "border-primary text-primary"}`}>
+                    Hora
+                </button>
+                }
+                {allowedCharts.includes(TypeOfDate.day) &&
                 <button onClick={()=>setTypeOfDate(TypeOfDate.day)}
                  className={`smallButton px-2 ${TypeOfDate.day == filterData.type_date && "border-primary text-primary"}`}>
                     Day
                 </button>
+                }
+                {allowedCharts.includes(TypeOfDate.week) &&
                 <button onClick={()=>setTypeOfDate(TypeOfDate.week)}
                 className={`smallButton px-2 ${TypeOfDate.week == filterData.type_date && "border-primary text-primary"}`}>
                     Week
                 </button>
+                }
+                {allowedCharts.includes(TypeOfDate.month) &&
                 <button onClick={()=>setTypeOfDate(TypeOfDate.month)}
                 className={`smallButton px-2 ${TypeOfDate.month == filterData.type_date && "border-primary text-primary"}`}>
                     Month
                 </button>
+                }
+                {allowedCharts.includes(TypeOfDate.year) &&
                 <button onClick={()=>setTypeOfDate(TypeOfDate.year)}
                 className={`smallButton px-2 ${TypeOfDate.year == filterData.type_date && "border-primary text-primary"}`}>
                     Year
                 </button>
+                }
             </div>
 
             

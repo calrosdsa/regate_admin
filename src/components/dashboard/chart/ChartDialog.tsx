@@ -11,15 +11,25 @@ import CommonBarChart from "./CommonBarChart";
 import LineChartConnectNulls from "./LineChartConnectNulls";
 import StackedBarChart from "./StackedBarChart";
 import { chartActions } from "@/context/slices/chartSlice";
+import { FilterChartData } from "@/core/type/chart";
 
-const ChartDialog = ({open,close}:{
+const ChartDialog = ({open,close,CustomToolTip,getNewData,showLegend,legendLabels,singleColor,
+keyValue2}:{
     open:boolean
     close:()=>void
+    getNewData:(data:FilterChartData)=>void
+    CustomToolTip:({ active, payload, label }: any) => React.JSX.Element | null
+    singleColor:boolean
+    showLegend:boolean
+    legendLabels:string[]
+    keyValue2?:string
 }) =>{
     const dispatch = useAppDispatch()
     const [typeDate,setTypeDate] = useState(TypeOfDate.day)
     const [hideHeader,setHideHeader] = useState(false)
     const chartState = useAppSelector(state=>state.chart)
+
+    
     return(
         <>
         <Transition appear show={open} as={Fragment}>
@@ -40,14 +50,22 @@ const ChartDialog = ({open,close}:{
              ${hideHeader ? "mt-2" : "mt-20" }`}>
                             <FilterChartHeader
                             hideHeader={hideHeader}
+                            chartType={chartState.typeOfChart}
                             filterData={chartState.filterData}
+                            allowedCharts={chartState.allowedCharts}
                             close={close}
                             setTypeOfDate={(type_date)=>{
-                                dispatch(chartActions.setFilterData({
+                                const data = {
                                     ...chartState.filterData,
                                     type_date:type_date
-                                  }))    
+                                }
+                                getNewData(data)
+                                // dispatch(chartActions.setFilterData({
+                                //     ...chartState.filterData,
+                                //     type_date:type_date
+                                // }))    
                             }}
+                            getNewData={getNewData}
                             setHideHeader={(bool)=>setHideHeader(bool)}
                             applyTypeChart={(type:TypeOfChart)=>dispatch(chartActions.setTypeOfChart(type))}
                             />
@@ -60,6 +78,12 @@ const ChartDialog = ({open,close}:{
                     data={chartState.data}
                     loading={chartState.loading}
                     barSize={80}
+                    CustomToolTip={CustomToolTip}
+
+                    keyValue2={keyValue2}
+                    singleColor={singleColor}
+                    legendLabels={legendLabels}
+                    showLegend={showLegend}
                     //  angle={310}
                     //  minTickGap={-20}
                     fontSize={12}
@@ -71,6 +95,11 @@ const ChartDialog = ({open,close}:{
                     <LineChartConnectNulls
                     data={chartState.data}
                     loading={chartState.loading}
+                    CustomToolTip={CustomToolTip}
+
+                    keyValue2={keyValue2}
+                    legendLabels={legendLabels}
+                    showLegend={showLegend}
                     // barSize={80}
                     //  angle={310}
                     //  minTickGap={-20}
