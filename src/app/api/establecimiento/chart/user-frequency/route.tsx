@@ -15,7 +15,7 @@ export async function POST(request:Request) {
     // console.log("TOKEN",token)
   try{
       const body = await request.json()
-      const res = await fetch(`${API_URL}/chart/average-amount/`,{
+      const res = await fetch(`${API_URL}/chart/user-frequency/`,{
             method:'POST',
             body:JSON.stringify(body),
             headers:{
@@ -24,7 +24,7 @@ export async function POST(request:Request) {
             }
         })
         const data = await res.json()
-        // console.log("RESPONSE",data)
+        console.log("RESPONSE",data)
       return NextResponse.json(data,{status:res.status})
    }catch(err){
       console.log(err)

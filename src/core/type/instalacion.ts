@@ -36,6 +36,10 @@ type CupoReserva = {
     time:string
     color:string
     reserva_id:number | null
+    available:boolean
+    nombre:string
+    apellido:string
+    profile_id:number
 }
 
 

@@ -2,7 +2,7 @@ import { AnyAction, ThunkAction } from "@reduxjs/toolkit"
 import { RootState } from "../store"
 import { chartActions } from "../slices/chartSlice"
 import { ChartDataResponse, FilterChartData, NameValueData } from "@/core/type/chart"
-import { GetChartData, GetReservaAmount, GetReservasHoursAverage, GetReservasHoursData } from "@/core/repository/chart"
+import { GetChartData, GetReservaAmount, GetReservaAmountAverage, GetReservaAverageAmountBase, GetReservasHoursAverage, GetReservasHoursData, GetUserFrequency } from "@/core/repository/chart"
 import moment from "moment"
 import { TypeOfDate } from "@/core/type/enums"
 
@@ -14,7 +14,7 @@ export const getReservasAmountData  = (data:FilterChartData) :ThunkAction<void,R
             console.log(res)
             const newResevasAmount = res.map(item=>{
                 item = {
-                  name:moment(item.name).format("ll"),
+                  name:moment(item.name).utc().format("ll"),
                   value:item.value,
                   value2:item.value2
                 }
@@ -87,7 +87,7 @@ export const getReservasHoursData  = (data:FilterChartData) :ThunkAction<void,Ro
             const res:NameValueData[] = await GetReservasHoursData(data)
             const newResevasCountHours = res.map(item=>{
                 item = {
-                  name:moment(item.name).format("ll"),
+                  name:moment(item.name).utc().format("ll"),
                   value:(item.value/2)
                 }
                 return item
@@ -101,6 +101,105 @@ export const getReservasHoursData  = (data:FilterChartData) :ThunkAction<void,Ro
     }
 }
 
+export const getReservasAverageAmount  = (data:FilterChartData) :ThunkAction<void,RootState,undefined,AnyAction> =>{
+    return async(dispatch)=>{
+        try{
+            dispatch(chartActions.setChartLoading(true))
+            const res:NameValueData[] = await GetReservaAmountAverage(data)
+            console.log(res)
+              let newReservaAverage:NameValueData[] = []
+            switch(data.type_date){
+                case TypeOfDate.hour:
+                newReservaAverage = res.map(item=>{
+                    item = {
+                        name:moment(hours[Number(item.name)].hour).utc().format("LT"),
+                        value:item.value,
+                        date:hours[Number(item.name)].hour.toUTCString(),
+                        value2:item.value2
+                    }
+                    return item
+                })
+                break;
+                case TypeOfDate.day:
+                    newReservaAverage = res.map(item=>{
+                        item = {
+                            name:days[Number(item.name)].day,
+                            value:item.value,
+                            value2:item.value2
+                        }
+                        return item
+                    })
+                    break;
+                    case TypeOfDate.month:
+                        newReservaAverage = res.map((item,idx)=>{
+                        // console.log(item.name,item.value,idx)
+                        item = {
+                            name:months[idx].month,
+                            value:item.value,
+                            value2:item.value2
+                        }
+                        // console.log(item.name,item.value,"//2")
+
+                        return item
+                      }) 
+                      newReservaAverage = newReservaAverage.filter(item=>item.name != "")
+                      console.log(newReservaAverage)
+                break;                               
+            }
+            dispatch(chartActions.setData(newReservaAverage))
+            dispatch(chartActions.setChartLoading(false))
+        }catch(err){
+            dispatch(chartActions.setChartLoading(false))
+            console.log(err)
+        }
+    }
+}
+
+
+
+export const getReservaCountHoursBase  = (data:FilterChartData) :ThunkAction<void,RootState,undefined,AnyAction> =>{
+    return async(dispatch)=>{
+        try{
+            dispatch(chartActions.setChartLoading(true))
+            const res:NameValueData[] = await GetReservasHoursAverage(data)
+            dispatch(chartActions.setData(res))
+            dispatch(chartActions.setChartLoading(false))
+        }catch(err){
+            dispatch(chartActions.setChartLoading(false))
+            console.log(err)
+        }
+    }
+}
+
+export const getReservaAverageAmountBase  = (data:FilterChartData) :ThunkAction<void,RootState,undefined,AnyAction> =>{
+    return async(dispatch)=>{
+        try{
+            dispatch(chartActions.setChartLoading(true))
+            const res:NameValueData[] = await GetReservaAverageAmountBase(data)
+            dispatch(chartActions.setData(res))
+            dispatch(chartActions.setChartLoading(false))
+        }catch(err){
+            dispatch(chartActions.setChartLoading(false))
+            console.log(err)
+        }
+    }
+}
+
+export const getReservaUserFrequency  = (data:FilterChartData) :ThunkAction<void,RootState,undefined,AnyAction> =>{
+    return async(dispatch)=>{
+        try{
+            dispatch(chartActions.setChartLoading(true))
+            const res:NameValueData[] = await GetUserFrequency(data)
+            dispatch(chartActions.setData(res))
+            dispatch(chartActions.setChartLoading(false))
+        }catch(err){
+            dispatch(chartActions.setChartLoading(false))
+            console.log(err)
+        }
+    }
+}
+
+
 export const getChartData  = (data:FilterChartData) :ThunkAction<void,RootState,undefined,AnyAction> =>{
     return async(dispatch)=>{
         try{
@@ -108,23 +207,24 @@ export const getChartData  = (data:FilterChartData) :ThunkAction<void,RootState,
             const res:ChartDataResponse = await GetChartData(data)
             const newResevasCountHours = res?.reserva_count_hours.map(item=>{
                 item = {
-                  name:moment(item.name).format("ll"),
+                  name:moment(item.name).utc().format("ll"),
                   value:(item.value/2)
                 }
                 return item
               })
               const newResevasAmount = res?.reserva_amount.map(item=>{
                 item = {
-                  name:moment(item.name).format("ll"),
+                  name:moment(item.name).utc().format("ll"),
                   value:item.value,
                   value2:item.value2
                 }
                 return item
               })
-              const newReservaDayAverage = res?.reserva_day_average.map(item=>{
+              const newReservaDayAverageAmount = res?.reserva_amount_average.map(item=>{
                 item = {
                     name:days[Number(item.name)].day,
-                    value:(item.value/2)
+                    value:item.value,
+                    value2:item.value2
                 }
                 return item
               })
@@ -139,9 +239,13 @@ export const getChartData  = (data:FilterChartData) :ThunkAction<void,RootState,
               console.log(res)
              const newResponse:ChartDataResponse = {
                 reserva_count_hours:newResevasCountHours,
-                reserva_day_average:newReservaDayAverage,
+                reserva_amount_average:newReservaDayAverageAmount,
+                // reserva_day_average:newReservaDayAverage,
                 reserva_hour_average:newReservaHourAverage,
-                reserva_amount:newResevasAmount
+                reserva_amount:newResevasAmount,
+                reserva_amount_base:res.reserva_amount_base,
+                reserva_count_hours_base:res.reserva_count_hours_base,
+                user_frequency:res.user_frequency
              } 
             dispatch(chartActions.setDataResponse(newResponse))
             dispatch(chartActions.setChartLoading(false))
@@ -180,7 +284,7 @@ const days = [
     {day:"Sábado",value:6},
 ]
 
-const hours = [
+export const hours = [
     {hour:new Date('2011-04-11T00:00:00Z'),value:0},
     {hour:new Date('2011-04-11T01:00:00Z'),value:1},
     {hour:new Date('2011-04-11T02:00:00Z'),value:2},

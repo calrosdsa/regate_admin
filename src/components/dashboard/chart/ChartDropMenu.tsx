@@ -1,13 +1,13 @@
 import { Menu } from "@headlessui/react";
 import MenuLayout from "../../util/button/MenuLayout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChartDialog from "./ChartDialog";
 import { TypeOfChart } from "@/core/type/enums";
 import { FilterChartData } from "@/core/type/chart";
 
 const ChartDropMenu = ({
     children,title,subtitle,setTypeOfChart,setData,className = "",CustomToolTip,getNewData,
-    showLegend=false,legendLabels=[],singleColor=false,keyValue2
+    showLegend=false,legendLabels=[],singleColor=false,keyValue2,closeDialog
 }:{
     children:React.ReactNode
     title:string
@@ -21,11 +21,17 @@ const ChartDropMenu = ({
     showLegend?:boolean
     legendLabels?:string[]
     keyValue2?:string
+    closeDialog:boolean
 }) => {
     const [openChartDialog,setOpenChartDialog] = useState(false)
     function classNames(...classes:any) {
         return classes.filter(Boolean).join(' ')
     }
+    useEffect(()=>{
+        if(closeDialog){
+            setOpenChartDialog(false)
+        }
+    },[closeDialog])
     return (
         <>
         {openChartDialog&&

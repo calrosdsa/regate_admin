@@ -25,7 +25,7 @@ keyValue2}:{
     keyValue2?:string
 }) =>{
     const dispatch = useAppDispatch()
-    const [typeDate,setTypeDate] = useState(TypeOfDate.day)
+    // const [typeDate,setTypeDate] = useState(TypeOfDate.day)
     const [hideHeader,setHideHeader] = useState(false)
     const chartState = useAppSelector(state=>state.chart)
 

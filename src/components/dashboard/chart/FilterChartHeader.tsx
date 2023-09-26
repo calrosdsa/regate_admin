@@ -20,8 +20,8 @@ chartType,getNewData,allowedCharts}:{
 }) =>{
     const [typeChart,setTypeChart] = useState(chartType)
     const [value, setValue] = useState<DateValueType>({
-        startDate: new Date(),
-        endDate: new Date()
+        startDate: new Date(filterData.start_date as string) || new Date(),
+        endDate: new Date(filterData.end_date as string) || new Date(),
     });
     
     const handleValueChange = (value:DateValueType) => {
@@ -39,7 +39,7 @@ chartType,getNewData,allowedCharts}:{
         <>
         <div className={`${hideHeader? "hidden" :
         "bg-white fixed top-0 w-full left-0  z-20 border-b-2 overflow-auto"}`}>
-            <div className='flex w-full justify-between items-center  p-2 space-x-6 pb-4'>
+            <div className='flex w-full justify-between items-center  p-2 space-x-6 pb-3'>
                   <div className='flex space-x-4'>
                       <span className='title border-r-[1px] whitespace-nowrap border-gray-400 pr-2'>Casos Count</span>
                       <span className=' whitespace-nowrap'>Casos Count</span>

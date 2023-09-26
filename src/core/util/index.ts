@@ -6,7 +6,7 @@ export function classNames(...classes:any) {
 
 
   export const getFullName = (nombre?:string,apellido?:string) => {
-    return `${nombre} ${apellido == null ? "":apellido}`
+    return `${(nombre == null || nombre == undefined) ? "" :nombre} ${(apellido == null || apellido == undefined) ? "":apellido}`
   }
 
   export const formatterShorTime = (date:string):String=>{

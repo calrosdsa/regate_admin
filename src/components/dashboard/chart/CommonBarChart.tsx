@@ -5,12 +5,11 @@ import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Resp
 
 const blues = [
   ["#457AA6"],
-  ["#457AA6", "#E3EBF2"],
-  ["#264F73", "#457AA6", "#9abbda", "#E3EBF2"], 
-  ["#264F73", "#457AA6", "#E3EBF2"],
-  ["#1A334A", "#264F73", "#457AA6", "#9abbda", "#E3EBF2"]
+  ["#457AA6", "#c7dae9"],
+  ["#264F73", "#457AA6", "#9abbda", "#c7dae9"], 
+  ["#264F73", "#457AA6", "#c7dae9"],
+  ["#1A334A", "#264F73", "#457AA6", "#9abbda", "#c7dae9"]
 ];
-
 const getColor = (length:number, index:number) => {
   if (length <= blues.length) {
     return blues[length - 1][index];
@@ -33,7 +32,7 @@ interface Props {
     showLegend?:boolean
     legendLabels?:string[]
     marginBottom?:number
-    CustomToolTip:({ active, payload, label }: any) => React.JSX.Element | null
+    CustomToolTip?:({ active, payload, label }: any) => React.JSX.Element | null
 }
 
 
@@ -45,7 +44,6 @@ export const renderLegend = (props:any,labels:string[]) => {
     <ul className='flex justify-center space-x-2 '>
       {
         payload.map((entry:any, index:any):any => {
-          console.log(props)
           return(
             <div key={`item-${index}`} className={`flex space-x-2 items-center`}>
             <span style={{
@@ -88,13 +86,17 @@ const CommonBarChart = ({data,keyName='name',keyValue='value',barSize,loading,si
           <YAxis 
           style={{fontSize:fontSize}}
           />
+          {CustomToolTip != undefined ?
           <Tooltip content={<CustomToolTip/>}/>
+          :
+          <Tooltip/>
+          }
 
           {showLegend &&
             <Legend content={(props)=>renderLegend(props,legendLabels)} />
           }  
 
-          <Bar barSize={barSize} dataKey={keyValue} stackId="a" fill="#8884d8" >
+          <Bar  barSize={barSize} dataKey={keyValue} stackId="a" fill="#8884d8" >
           {data.map((d, idx) => {
             return <Cell key={idx} fill={singleColor ? "#8884d8" : getColor(data.length, idx)} />;
           })}

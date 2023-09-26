@@ -23,9 +23,9 @@ interface Props {
 }
 const CommonPieChart = ({data,loading}:Props) =>{
     return(
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={300} className={`relative`}>
           {loading?
-          <Loader/>
+          <Loader className=' absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'/>
           :
         <PieChart>
           <Pie

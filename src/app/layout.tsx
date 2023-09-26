@@ -64,6 +64,11 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+              <link rel="manifest" href="/manifest/manifest.json" />
+              <link rel="apple-touch-icon" href="/manifest/icon-192x192.png" />
+              <meta name="theme-color" content="#042940" />
+      </head>
       <Providers>
       <body className='bg-gray-50'>
         {/* <button onClick={()=>getTokenFcm()}>

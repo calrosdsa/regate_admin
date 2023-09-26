@@ -23,10 +23,14 @@ export type FilterChartData = {
 }
 
 export type ChartDataResponse = {
-    reserva_day_average:NameValueData[]
+    // reserva_day_average:NameValueData[]
     reserva_hour_average:NameValueData[]
     reserva_count_hours:NameValueData[]
     reserva_amount:NameValueData[]
+    reserva_amount_base:NameValueData[]
+    reserva_count_hours_base:NameValueData[]
+    reserva_amount_average:NameValueData[]
+    user_frequency:NameValueData[]
 }
 
 export type ChartState = {
@@ -36,4 +40,5 @@ export type ChartState = {
     allowedCharts:TypeOfDate[]
     filterData:FilterChartData
     loading:boolean
+    closeDialog:boolean
 }

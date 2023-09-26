@@ -163,12 +163,12 @@ const Page = ({ params }: { params: { uuid: string } })=>{
 
     
     const selectReservaCupo = (cupo:CupoReserva) => {
-        // console.log(cupo)
+        console.log(cupo,"CUPO SELECTED")
         if(selectedCupos.map((item=>item.time)).includes(cupo.time)){
             const newList = selectedCupos.filter(item=>item.time != cupo.time)
             setSelectedCupos(newList)
         }else{
-            setSelectedCupos([...selectedCupos,cupo])
+            setSelectedCupos(v=>[...v,cupo])
         }
         // console.log(selectedCupos)
     }
@@ -201,8 +201,8 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         addInstalacion={(e:Instalacion)=>setInstalaciones([...instalaciones,e])}
         />
         }
-        <div className="px-1 h-screen  w-full">
-            <div className="md:grid md:grid-cols-8 gap-x-3">
+        <div className="px-1 h-full  w-full">
+            <div className="md:grid md:grid-cols-8 gap-x-3 xl:pt-0">
                 
             <div className="flex flex-col w-full col-span-2 p-2 border-[1px] shadow-lg md:h-screen overflow-auto ">
                 <div className="flex justify-between">
@@ -240,11 +240,11 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                         </div>
                     </div>
 
-            <div className="flex flex-col col-start-3 col-span-full p-2 md:border-[1px] md:shadow-lg h-screen md:overflow-auto">
+            <div className="flex flex-col col-start-3 col-span-full  md:border-[1px] md:shadow-lg h-screen md:overflow-auto">
 
                 <div>
                      <Tab.Group defaultIndex={tabIndex != null ? Number(tabIndex):0}>
-                    <Tab.List>
+                    <Tab.List className={" sticky top-0 bg-gray-50  w-full z-10 py-3"}>
                         <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
                         onClick={()=>{
                             if(instalacion == null) return
@@ -304,8 +304,11 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                          {instalacion != null && 
                         <Tab.Panel>
                            <div>
-                           <div className="flex gap-2 pt-2 pb-2 flex-wrap items-end">
-                                <button className="button w-min h-10" disabled={loadingReservas} onClick={()=>{
+
+                            <div className=" sticky top-[60px] bg-gray-50 w-full z-10 -mt-3">
+
+                           <div className="flex gap-2  pb-2 flex-wrap items-end ">
+                                <button className="button  w-min h-10" disabled={loadingReservas} onClick={()=>{
                                      getCuposReservaInstalacion(instalacion.id)
                                     }}>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
@@ -347,6 +350,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                                 :
                                 <span className="label">{startDate.toLocaleDateString("es-US", options)}</span>
                                 }
+                            </div>
                             </div>
 
                             <Loading

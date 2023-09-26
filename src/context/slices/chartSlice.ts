@@ -17,7 +17,8 @@ const chartState:ChartState=  {
     },
     response:undefined,
     loading:false,
-    allowedCharts:[]
+    allowedCharts:[],
+    closeDialog:false
 }
 
 
@@ -27,6 +28,9 @@ const chartSlice = createSlice({
     reducers:{
         setData(state,action:PayloadAction<NameValueData[]>){
             state.data = action.payload
+        },
+        setCloseDialog(state,action:PayloadAction<boolean>){
+            state.closeDialog= action.payload
         },
         setDataResponse(state,action:PayloadAction<ChartDataResponse>){
             state.response = action.payload
