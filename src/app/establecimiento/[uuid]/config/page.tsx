@@ -26,6 +26,7 @@ import { UpdateSettings } from '@/core/repository/setting';
 import UpdatePayMethodDialog from '@/components/establecimiento/setting/UpdatePayMethodDialog';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { appendSerachParams } from '@/core/util/routes';
+import { unexpectedError } from '@/context/config';
 
 const Page = ({ params }: { params: { uuid: string } }) =>{
     const [openMap,setOpenMap] = useState(false)
@@ -121,7 +122,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 toast.success("¡Los cambios realizados han sido guardados exitosamente!")
             }catch(err){
                 removeLoader()
-                toast.error("¡Los cambios realizados han sido guardados exitosamente!")
+                toast.error(unexpectedError)
             }
         }
     }

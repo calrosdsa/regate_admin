@@ -13,6 +13,7 @@ import { getUser } from '@/context/actions/account-actions'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import LoaderDialog from '@/components/util/loaders/LoaderDialog'
+import ButtonIcon from '@/components/util/button/ButtonIcon'
 
 // const inter = Inter({ subsets: ['latin'] })
 
@@ -61,7 +62,7 @@ export default function RootLayout({
       </div>
 
          <div className='px-2 w-full overflow-auto pt-14 xl:pt-0'>
-          <div className='xl:hidden'>
+          <div className='xl:hidden noSelect'>
           <button type="button" className="absolute top-2 left-2" onClick={()=>dispatch(uiActions.openSidebar(true))}>
             <span className="sr-only">Open sidebar</span>
             <svg className="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

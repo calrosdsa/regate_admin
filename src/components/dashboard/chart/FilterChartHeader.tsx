@@ -1,13 +1,14 @@
+import ButtonIcon from "@/components/util/button/ButtonIcon";
 import MenuLayout from "@/components/util/button/MenuLayout";
 import { chartActions } from "@/context/slices/chartSlice";
 import { FilterChartData } from "@/core/type/chart";
 import { TypeOfChart, TypeOfDate } from "@/core/type/enums";
 import { Menu, Popover } from "@headlessui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
 
 const FilterChartHeader = ({hideHeader,setTypeOfDate,setHideHeader,close,applyTypeChart,filterData,
-chartType,getNewData,allowedCharts}:{
+chartType,getNewData,allowedCharts,label}:{
     close:()=>void
     hideHeader:boolean
     setHideHeader:(bool:boolean)=>void
@@ -17,7 +18,9 @@ chartType,getNewData,allowedCharts}:{
     allowedCharts:TypeOfDate[]
     setTypeOfDate:(type_date:TypeOfDate)=>void
     applyTypeChart:(typeOfChart:TypeOfChart)=>void
+    label:string
 }) =>{
+    const [initialData,setInitialData ] = useState<FilterChartData | null>(null)
     const [typeChart,setTypeChart] = useState(chartType)
     const [value, setValue] = useState<DateValueType>({
         startDate: new Date(filterData.start_date as string) || new Date(),
@@ -35,21 +38,40 @@ chartType,getNewData,allowedCharts}:{
         setValue(value);
     };
 
+    const reset = () =>{
+      if(initialData != null){ 
+        const data:FilterChartData = {
+          ...initialData,
+        }
+        filterData = initialData
+        setValue({
+          startDate:new Date(filterData.start_date as string) || new Date(),
+          endDate:new Date(filterData.end_date as string) || new Date(),
+        })
+        getNewData(data)
+      }
+    }
+
+    useEffect(()=>{
+      setInitialData(filterData)
+    },[])
+
     return(
         <>
         <div className={`${hideHeader? "hidden" :
         "bg-white fixed top-0 w-full left-0  z-20 border-b-2 overflow-auto"}`}>
             <div className='flex w-full justify-between items-center  p-2 space-x-6 pb-3'>
+              {/* {JSON.stringify(filterData)} */}
                   <div className='flex space-x-4'>
-                      <span className='title border-r-[1px] whitespace-nowrap border-gray-400 pr-2'>Casos Count</span>
-                      <span className=' whitespace-nowrap'>Casos Count</span>
+                      <span className='title whitespace-nowrap border-gray-400 pr-2'>{label}</span>
+                      {/* <span className=' whitespace-nowrap'>Casos Count</span> */}
                   </div>
 
                   <div className='flex space-x-3'>
-                  <button onClick={()=>{}}  className='smallButton h-8 grid place-content-center text-primary border-primary
-                  hover:bg-primary hover:bg-opacity-20'>
-                      <span>Reset</span>
-                  </button>
+                    <button onClick={()=>{reset()}}  className='smallButton h-8 grid place-content-center text-primary border-primary
+                    hover:bg-primary hover:bg-opacity-20'>
+                        <span>Reset</span>
+                    </button>
                   <button onClick={()=>{
                     close()
                     //   closeModal()
@@ -63,6 +85,20 @@ chartType,getNewData,allowedCharts}:{
               </div>
 
               <div className="flex overflow-auto pb-3 space-x-3 p-2">
+
+                <div className="smallButton px-2" onClick={()=>{
+                   const data:FilterChartData = {
+                    ...filterData,
+                    start_date:value?.startDate?.toString(),
+                    end_date:value?.endDate?.toString(),
+                  }
+                  getNewData(data)
+                }}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-gray-600">
+  <path fillRule="evenodd" d="M15.312 11.424a5.5 5.5 0 01-9.201 2.466l-.312-.311h2.433a.75.75 0 000-1.5H3.989a.75.75 0 00-.75.75v4.242a.75.75 0 001.5 0v-2.43l.31.31a7 7 0 0011.712-3.138.75.75 0 00-1.449-.39zm1.23-3.723a.75.75 0 00.219-.53V2.929a.75.75 0 00-1.5 0V5.36l-.31-.31A7 7 0 003.239 8.188a.75.75 0 101.448.389A5.5 5.5 0 0113.89 6.11l.311.31h-2.432a.75.75 0 000 1.5h4.243a.75.75 0 00.53-.219z" clipRule="evenodd" />
+                 </svg>
+                </div>
+
                 <div className=" ">
               <Datepicker value={value} onChange={handleValueChange} 
                         // showFooter={true}

@@ -56,7 +56,7 @@ const EditComponent =  ({label,content,edit,type="text",isTextArea=false}:{
             },value)}
               title="Guardar"
               loading={loading}
-              className="mt-2 w-full"
+              className="mt-2 w-28"
               />
               {/* <button onClick={()=>edit(()=>setLoading(true),()=>setLoading(false),value)} */}
                {/* className=" button">Guardar Cambios</button> */}

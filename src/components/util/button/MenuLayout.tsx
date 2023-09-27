@@ -5,7 +5,7 @@ export default function MenuLayout({children}:{
     children:React.ReactNode
 }) {
   return (
-    <div className="">
+    <div className="h-7">
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="rounded-full hover:bg-gray-200 cursor-pointer flex justify-center">

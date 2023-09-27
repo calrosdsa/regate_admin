@@ -7,7 +7,8 @@ export const adminRoutes = {
     manage:{
         establecimientos:`${rootAdmin}/manage/establecimientos`,
         users:`${rootAdmin}/manage/users`
-    }
+    },
+    depositos:`${rootAdmin}/depositos`
 }
 
 

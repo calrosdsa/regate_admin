@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { cookies } from 'next/headers'; // Import cookies
 import { API_URL } from "@/context/config";
-export async function POST(request:Request) {
+
+export async function GET(request:Request) {
    const nextCookies = cookies(); // Get cookies object
    const token = nextCookies.get('access_token')?.value
 //    console.log(token)
@@ -9,23 +10,17 @@ export async function POST(request:Request) {
     return NextResponse.json("Usuario no authorizado",{status:401})
   }
   try{
-      const body = await request.json()
-      const res = await fetch(`${API_URL}/instalacion/admin/cupos-reservas/`,
+    //   const body:Cupo = await request.json()
+      const res = await fetch(`${API_URL}/admin/billing/banks/`,
       {
-        cache: 'no-store',
-        method:'POST',
-        body:JSON.stringify(body),
-        headers:{
-         'Authorization':`Bearer ${token}`,
-         'Content-Type':"application/json"
-        },
-    })
+         headers:{
+         'Authorization':`Bearer ${token}`
+      }})
       const data =await res.json()
       // console.log(data)
-      return NextResponse.json(data,{status:res.status})
+      return NextResponse.json(data,{status:200})
    }catch(err){
       // console.log(err)
       return NextResponse.json("Error Request",{status:500})
    }
 }
-

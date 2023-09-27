@@ -83,6 +83,7 @@ export async function getInstalacionDayHorario(instalacionId:number,dayWeek:numb
 
 export async function GetCupoReservaInstalciones(d:CupoReservaRequest){
   const res = await fetch(`../../api/establecimiento/instalacion/reserva-cupo`,{
+    cache: 'no-store',
     method:"POST",
     body:JSON.stringify(d)
   })

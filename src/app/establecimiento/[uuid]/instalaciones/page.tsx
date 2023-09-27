@@ -111,16 +111,16 @@ const Page = ({ params }: { params: { uuid: string } })=>{
     const getData = async()=>{
         try{
             setLoadingInstalaciones(true)
-                const instalaciones:Instalacion[] = await getInstalaciones(params.uuid)
-                setInstalaciones(instalaciones)
-                if(instalaciones.length > 0){
-                    if(instalacionId != null){
-                        getInstalacionData(instalacionId,instalaciones)
-                    }else{
-                        getInstalacionData(instalaciones[0].uuid,instalaciones)
-                    }
+            const instalaciones:Instalacion[] = await getInstalaciones(params.uuid)
+            setInstalaciones(instalaciones)
+            if(instalaciones.length > 0){
+                if(instalacionId != null){
+                    getInstalacionData(instalacionId,instalaciones)
+                }else{
+                    getInstalacionData(instalaciones[0].uuid,instalaciones)
                 }
-                setLoadingInstalaciones(false)
+            }
+            setLoadingInstalaciones(false)
         }catch(err){
             setLoadingInstalaciones(false)
             toast.error(unexpectedError)
@@ -131,7 +131,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         if(instalacion == undefined) return
         if(tabIndex!= null){
             if(tabIndex == "2"){
-                // console.log(tabIndex,"TABINDEX")
+                console.log("UPDATED INSTALACION RESERVAS")
                 // getCupos(res.id,true)
                 setInstalacion(instalacion)
                 getCuposReservaInstalacion(instalacion.id)
@@ -176,6 +176,16 @@ const Page = ({ params }: { params: { uuid: string } })=>{
     useEffect(()=>{
         getData()
     },[])
+
+    useEffect(()=>{
+        if(instalacion != null){
+            if(tabIndex == "2"){
+                getCuposReservaInstalacion(instalacion.id)
+
+            }
+            console.log("UPDATED")
+        }
+    },[instalacion])
 
     useEffect(()=>{
         console.log(startDate,"START DATE")
@@ -363,6 +373,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                             getReservaDetail={(id)=>getReservaDetail(id)}
                             selecReservaCupo={(e)=>selectReservaCupo(e)}
                             selectedCupos={selectedCupos}
+                            date={startDate || new Date()}
                             />
                             </div>
                         </Tab.Panel>

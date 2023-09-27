@@ -28,6 +28,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
   const now = moment(new Date()).utc()
   const accountState = useAppSelector(state=>state.account)
   const chartState = useAppSelector(state=>state.chart)
+  const lastDays = 7
 
 
   const SimpleToolTip = ({ active, payload, label }:any) => {
@@ -161,8 +162,8 @@ const Page= ({params}:{params:{uuid:string}})=>{
 
         
       <ChartDropMenu
-      title="Horas reservadas"
-      subtitle="Promedio de horas reservadas en los últimos 30 días"
+      title="Ingresos"
+      subtitle={`Ingresos recibidos en los últimos ${lastDays} días.`}
       className='col-start-1 col-span-3'
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
       CustomToolTip={CustomTooltipAvergeHoursStacked}
@@ -208,7 +209,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
 
       <ChartDropMenu
        title="Horas reservadas"
-       subtitle="Total de horas reservadas en los últimos 30 días"
+       subtitle={`Total de horas reservadas en los últimos ${lastDays} días`}
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
       CustomToolTip={CustomTooltip}
       className='col-start-4 col-span-full'
@@ -240,7 +241,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
 
     <ChartDropMenu
       title="Horas reservadas"
-      subtitle="Promedio de horas reservadas en los últimos 30 días"
+      subtitle={`Promedio de horas reservadas en los últimos ${lastDays} días`}
       className='col-start-1 col-span-2'
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
       CustomToolTip={CustomTooltipAvergeHoursStacked}
@@ -271,7 +272,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
 
     <ChartDropMenu
       title="Horas reservadas"
-      subtitle="Promedio de horas reservadas en los últimos 30 días"
+      subtitle={`Promedio de horas reservadas en los últimos ${lastDays} días`}
       className='col-start-3 col-span-4'
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
       CustomToolTip={CustomTooltipAvergeHours}
@@ -308,8 +309,8 @@ const Page= ({params}:{params:{uuid:string}})=>{
       </ChartDropMenu>
 
       <ChartDropMenu
-      title="Horas reservadas"
-      subtitle="Promedio de horas reservadas en los últimos 30 días"
+      title="Ingresos"
+      subtitle={`Promedio de ingresos  en los últimos ${lastDays} días`}
       className='col-start-1 col-span-2'
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
       CustomToolTip={CustomTooltipAvergeHoursStacked}
@@ -339,8 +340,8 @@ const Page= ({params}:{params:{uuid:string}})=>{
 
 
       <ChartDropMenu
-      title="Horas reservadas"
-      subtitle="Promedio de horas reservadas en los últimos 30 días"
+      title="Ingresos"
+      subtitle={`Ingresos en los últimos ${lastDays} días (días de la semana)`}
       className='col-start-3 col-span-2'
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
       CustomToolTip={CustomTooltipAvergeHoursStacked}
@@ -386,8 +387,8 @@ const Page= ({params}:{params:{uuid:string}})=>{
 
 
       <ChartDropMenu
-      title="Horas reservadas"
-      subtitle="Promedio de horas reservadas en los últimos 30 días"
+      title="Usuarios"
+      subtitle="Usuarios nuevos y usuarios repetidos"
       className='col-start-5 col-span-2'
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
       CustomToolTip={SimpleToolTip}

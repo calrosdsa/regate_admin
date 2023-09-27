@@ -14,7 +14,7 @@ import { chartActions } from "@/context/slices/chartSlice";
 import { FilterChartData } from "@/core/type/chart";
 
 const ChartDialog = ({open,close,CustomToolTip,getNewData,showLegend,legendLabels,singleColor,
-keyValue2}:{
+keyValue2,label}:{
     open:boolean
     close:()=>void
     getNewData:(data:FilterChartData)=>void
@@ -23,6 +23,7 @@ keyValue2}:{
     showLegend:boolean
     legendLabels:string[]
     keyValue2?:string
+    label:string
 }) =>{
     const dispatch = useAppDispatch()
     // const [typeDate,setTypeDate] = useState(TypeOfDate.day)
@@ -54,6 +55,7 @@ keyValue2}:{
                             filterData={chartState.filterData}
                             allowedCharts={chartState.allowedCharts}
                             close={close}
+                            label={label}
                             setTypeOfDate={(type_date)=>{
                                 const data = {
                                     ...chartState.filterData,
