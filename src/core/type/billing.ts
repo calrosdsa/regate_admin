@@ -8,10 +8,22 @@ type AccountBank = {
 
 type Deposito = {
     id:number
+    uuid:string
     gloss:string
     created_at:string
-    amount:number
+    income:number
+    currency_abb:string
+    tarifa:number
 }
+
+type DepositoPaginationResponse = {
+    results:Deposito[]
+    next_page:number
+    count:number
+    page_size:number
+}
+
+
 
 type Bank = {
     id:number

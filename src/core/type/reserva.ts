@@ -19,9 +19,9 @@ type ReservaDetail = {
 
 type ReservaDataFilter = {
     uuid:string
-    query:string
+    query?:string
     order:number
-    order_queue:number
+    order_queue?:number
 }
 
 

@@ -29,6 +29,8 @@ const DialogReservaDetail = ({open,close,data}:{
      <DialogLayout
      className=" max-w-md sm:max-w-lg md:max-w-xl"
      title="Detalles de la Reserva"
+     allowFullScreen={true}
+     allowClose={true}
      open={open} close={close}>
 
         <div className='rounded-lg bg-white overflow-auto pt-2'>

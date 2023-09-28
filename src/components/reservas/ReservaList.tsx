@@ -113,6 +113,8 @@ const ReservaList = ({reservas,loading,order,changeOrder,getReservaDetail}:{
                     </tr>
                 )
             })}
+
+            
            
           
             {/* {data.map((item)=>{

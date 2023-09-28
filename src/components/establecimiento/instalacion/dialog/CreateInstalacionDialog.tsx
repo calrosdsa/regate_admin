@@ -11,6 +11,7 @@ const CreateInstalacionDialog = ({open,close,uuid,addInstalacion}:{
     return(
         <DialogLayout
         className="max-w-lg"
+        allowFullScreen={true}
          open={open} close={close}>
             <CreateInstalacionComponent
             uuid={uuid}

@@ -4,7 +4,7 @@ import { API_URL } from "@/context/config";
 
 export async function GET(request:Request) {
    const { searchParams } = new URL(request.url)
-   const page = searchParams.get("page") 
+   const uuid = searchParams.get("uuid")
    const nextCookies = cookies(); // Get cookies object
    const token = nextCookies.get('access_token')?.value
 //    console.log(token)
@@ -13,7 +13,7 @@ export async function GET(request:Request) {
   }
   try{
     //   const body:Cupo = await request.json()
-      const res = await fetch(`${API_URL}/admin/billing/depositos/?page=${page}`,
+      const res = await fetch(`${API_URL}/admin/billing/${uuid}/deposito/`,
       {
          headers:{
          'Authorization':`Bearer ${token}`

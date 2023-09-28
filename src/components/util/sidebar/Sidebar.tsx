@@ -28,8 +28,13 @@ const SideBar = () =>{
 
 
          <li>
-            <Link href="/" className="flex items-center p-2 text-gray-900  dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
-               <svg aria-hidden="true" className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg>
+         <Link href={adminRoutes.dashboad.main} className={`${pathname == adminRoutes.dashboad.main && "bg-gray-200 dark:bg-gray-700"}
+                     flex items-center w-full p-2 text-gray-900 transition duration-75 group hover:bg-gray-200 dark:text-white
+                      dark:hover:bg-gray-700`}>
+               <svg aria-hidden="true" 
+                className={`w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white
+                ${pathname == adminRoutes.dashboad.main && " dark:text-white"}`}
+                fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg>
                <span className="ml-3">Dashboard</span>
             </Link>
          </li>
@@ -68,7 +73,8 @@ const SideBar = () =>{
 
          <li>
             <Link href={adminRoutes.depositos} className={`${pathname == adminRoutes.depositos && "bg-gray-200 dark:bg-gray-700"}
-                     flex items-center w-full p-2 text-gray-900 transition duration-75 group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700`}>
+                     flex items-center w-full p-2 text-gray-900 transition duration-75 group hover:bg-gray-200 dark:text-white
+                      dark:hover:bg-gray-700`}>
                {/* <svg aria-hidden="true" className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg> */}
                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
                className={`w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white

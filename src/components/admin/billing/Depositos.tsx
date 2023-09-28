@@ -1,6 +1,8 @@
 import Loading from "@/components/util/loaders/Loading"
 import { Order, OrderQueue } from "@/core/type/enums"
+import { adminRoutes } from "@/core/util/routes"
 import moment from "moment"
+import Link from "next/link"
 
 const Depositos = ({loading,changeOrder,order,depositos}:{
     depositos:Deposito[]
@@ -24,24 +26,17 @@ const Depositos = ({loading,changeOrder,order,depositos}:{
                 </th>
                 
                     
-                <th className=" headerTable  cursor-pointer" onClick={()=>{
-                    if(order == undefined) return
-                    if(order == Order.DESC){
-                        changeOrder(Order.ASC)
-                    }else{
-                        changeOrder(Order.DESC)
-                    }
-                    }}>
+                <th className=" headerTable  cursor-pointer w-96">
                     <div className="flex space-x-2 items-center">
                   <span>Fecha del depósito</span>
-                  {order == Order.DESC ?
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true" className="h-5 w-5"><path d="M4 5h8l-4 6-4-6z"></path></svg>
-                  :
-                  <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path d="M4 11h8L8 5l-4 6z"></path></svg>
-                }
+                    {/* {order == Order.DESC ?
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true" className="h-5 w-5"><path d="M4 5h8l-4 6-4-6z"></path></svg>
+                    :
+                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path d="M4 11h8L8 5l-4 6z"></path></svg>
+                    } */}
                 </div>
                 </th>
-                <th className="headerTable">
+                <th className="headerTable w-28">
                     Monto 
                 </th>
                 <th className="headerTable">
@@ -56,20 +51,18 @@ const Depositos = ({loading,changeOrder,order,depositos}:{
                 return(
                     <tr key={item.id} className={`${index % 2 && "bg-gray-100"}`}>
                         <td className="rowTable font-medium">{index + 1}.-</td>
-                        <td className="rowTable">{item.amount}</td>
-                        <td className="rowTable">{moment(item.created_at).utc().format("LL")}</td>
+                        <td className="rowTable w-96">{moment(item.created_at).utc().format("LL")}</td>
+                        <td className="rowTable w-28">{item.income}</td>
                         <td className="rowTable">{item.gloss}</td>
 
                         <td onClick={()=>{}}
-                        className="rowTable font-medium underline text-primary cursor-pointer">Ver reporte</td>
+                        className="rowTable font-medium underline text-primary cursor-pointer">
+                            <Link href={`${adminRoutes.depositos}/${item.uuid}?gloss=${item.gloss}`}>Ver reporte</Link>
+                            </td>
 
                     </tr>
                 )
             })}
-           
-          
-         
-
         </tbody>
     </table>
            

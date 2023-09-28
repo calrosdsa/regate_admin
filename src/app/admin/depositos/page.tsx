@@ -1,16 +1,19 @@
 "use client"
 import AccountBank from "@/components/admin/billing/AccountBank";
 import Depositos from "@/components/admin/billing/Depositos";
+import Pagination from "@/components/util/pagination/Pagination";
 import { useAppDispatch } from "@/context/reduxHooks";
 import { GetBankAccount, GetBanks, GetDepositos } from "@/core/repository/billing";
 import { Order } from "@/core/type/enums";
 import { Tab } from "@headlessui/react"
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Page = () => {
     const searchParams = useSearchParams();
     const tabIndex = searchParams.get("tabIndex")
+    const page = searchParams.get("page") || "1"
     const current = new URLSearchParams(Array.from(searchParams.entries()))
     const dispatch = useAppDispatch()
     const pathname = usePathname();
@@ -19,8 +22,10 @@ const Page = () => {
     const [accountBank,setAccontBank] = useState<AccountBank | null>(null)
     const [loadingAccountBank,setLoadingAccountBank] = useState(false)
     const [loadingDepositos,setLoadingDepositos] = useState(false)
-    const [depositos,setDepositos] = useState<Deposito[]>([])
+    const [depositosResponse,setDepositosResponse] = useState<DepositoPaginationResponse  | undefined>(undefined)
     const [order,setOrder] =useState(Order.DESC)
+    const [paginationProps,setPaginationProps] = useState<PaginationProps | undefined>(undefined)
+
 
     const appendSerachParams = (key:string,value:string)=>{
         current.set(key,value);
@@ -42,9 +47,19 @@ const Page = () => {
     }
     const getDeposits = async() =>{
         try{
+            // setDepositosResponse({...depositosResponse,
+            //     results:[]
+            // })
             setLoadingDepositos(true)
-            const res = await GetDepositos()
-            setDepositos(res)
+            const res:DepositoPaginationResponse = await GetDepositos(page)
+            setPaginationProps({
+                pageSize:res.page_size,
+                count:res.count > 0 ? res.count : 0,
+                nextPage:res.next_page,
+                currentPage:Number(page)
+            })
+            console.log(res)
+            setDepositosResponse(res)
             setLoadingDepositos(false)
         }catch(err){
             setLoadingDepositos(false)
@@ -60,8 +75,30 @@ const Page = () => {
         }
     }
 
-    const getData = () =>{
-        switch(tabIndex){
+    
+    const onPrev = () => {
+        if(paginationProps == undefined) return
+        if(paginationProps.currentPage == 1){
+            return
+        }else {
+            const pagePrev = paginationProps.currentPage -1
+            // appendSerachParams("page",pagePrev.toString
+            // getReservas(filterData,pagePrev)
+        }
+    }
+    const onNext = () => {
+        if(paginationProps == undefined) return
+        if(paginationProps.nextPage == 0){
+            return
+        }else {
+            const nextPage = paginationProps.currentPage + 1
+            // appendSerachParams("page",nextPage.toString
+            // getReservas(filterData,nextPage)
+        }
+    }
+
+    const getData = (tab:string) =>{
+        switch(tab){
             case "0":
                 getDeposits()
                 break;
@@ -75,23 +112,29 @@ const Page = () => {
     }
 
     useEffect(()=>{
-        getData()
+        if(tabIndex != null){
+            getData(tabIndex)
+        }else{
+            getData("0")
+        }
     },[])
     return(
         <div>
+          
              <Tab.Group defaultIndex={tabIndex != null ? Number(tabIndex):0}>
 
                     <Tab.List className={" sticky top-0 bg-gray-50  w-full z-10 py-3"}>
                         <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
                         onClick={()=>{
                             appendSerachParams("tabIndex","0")
-                            getData()
+                            if(depositosResponse != undefined) return
+                            getData("0")
                             }}>Depositos</Tab>
                         <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
                         onClick={()=>{
                             appendSerachParams("tabIndex","1")
                             if(accountBank != null) return
-                            getData()
+                            getData('1')
                         }}>Cuenta</Tab>
                         {/* <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
                         onClick={()=>{      
@@ -101,11 +144,48 @@ const Page = () => {
 
 
                     <Tab.Panels className={"p-2"}>
-                        <Tab.Panel className={"mx-auto flex justify-center w-full "}>
+                        <Tab.Panel className={"w-full relative"}>
+                            
+              <span className="text-xl font-medium">Reservas 
+              <span className="text-xl text-gray-500  font-normal">({depositosResponse?.count || 0})</span></span>
+            <div className="pt-2 pb-4 flex flex-wrap justify-between md:items-center relative h-[70px]">
+                
+        <div className="flex space-x-3 py-2">
+                
+                <button className="button-inv" disabled={loadingDepositos}  onClick={()=>{
+                    setDepositosResponse(undefined)
+                    getDeposits()
+                    // getReservas(filterData,1)
+                    }}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+        <path fillRule="evenodd" d="M4.755 10.059a7.5 7.5 0 0112.548-3.364l1.903 1.903h-3.183a.75.75 0 100 1.5h4.992a.75.75 0 00.75-.75V4.356a.75.75 0 00-1.5 0v3.18l-1.9-1.9A9 9 0 003.306 9.67a.75.75 0 101.45.388zm15.408 3.352a.75.75 0 00-.919.53 7.5 7.5 0 01-12.548 3.364l-1.902-1.903h3.183a.75.75 0 000-1.5H2.984a.75.75 0 00-.75.75v4.992a.75.75 0 001.5 0v-3.18l1.9 1.9a9 9 0 0015.059-4.035.75.75 0 00-.53-.918z" clipRule="evenodd" />
+                </svg>
+                </button>
+      </div>
+            {paginationProps != undefined &&
+                    <Pagination
+                    currentPage={paginationProps.currentPage}
+                    setPage={(page)=>{
+                        // console.log(Math.ceil(paginationProps.count/paginationProps.pageSize))
+                        appendSerachParams("page",page.toString())
+                        // getReservas(filterData,page)
+                        setPaginationProps({
+                            ...paginationProps,
+                            currentPage:page
+                        })
+                    }}
+                    totalCount={paginationProps.count}
+                    pageSize={paginationProps.pageSize}
+                    onPrev={onPrev}
+                    onNext={onNext}
+                    />
+                }
+
+            </div>
 
                             <Depositos
                             loading={loadingDepositos}
-                            depositos={depositos}
+                            depositos={depositosResponse?.results || []}
                             order={order}
                             changeOrder={(order)=>setOrder(order)}
                             />

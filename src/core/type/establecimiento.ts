@@ -7,6 +7,7 @@ type Establecimiento = {
     id:number
     uuid:string
     address:string
+    address_photo?:string
     phone_number:string
     email:string
     created_at:string

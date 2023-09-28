@@ -27,6 +27,7 @@ import UpdatePayMethodDialog from '@/components/establecimiento/setting/UpdatePa
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { appendSerachParams } from '@/core/util/routes';
 import { unexpectedError } from '@/context/config';
+import CommonImage from '@/components/util/image/CommonImage';
 
 const Page = ({ params }: { params: { uuid: string } }) =>{
     const [openMap,setOpenMap] = useState(false)
@@ -250,6 +251,8 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             edit={(addLoader,removeLoader,e)=>updateEstablecimiento("email",e,addLoader,removeLoader)}
             />
 
+            <div>
+
             <div className=" flex justify-between items-center space-x-5">
                 <div className="grid">
                     <span className="label">Ubicación</span>
@@ -258,15 +261,28 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 <span onClick={()=>{
                     setOpenMap(true)
                     appendSerachParams("map","1",router,current,pathname)
-                    }} className=" underline font-medium cursor-pointer">Edit</span>
+                }} className=" underline font-medium cursor-pointer">Edit</span>
+            </div>
+            <div className="w-full h-44 mt-2">
+            <CommonImage
+            src={data?.establecimiento?.address_photo + `?${Date.now()}`}
+            w={250}
+            h={200}
+            className={`rounded object-cover w-full sm:w-max`}
+            // alt={""}
+            />
+            </div>
             </div>
 
+            <div>
+            <span className="label pb-1">Imagen de portada</span>
             <UploadImage
             setFile={(e)=>setPhoto(e)}
             src={data?.establecimiento.photo}
             save={(setLoading)=>uploadImage(setLoading)}
             width="w-full"
             />
+            </div>
        
             {openMap&&
                 <MapComponent 

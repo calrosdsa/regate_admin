@@ -24,6 +24,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
     const searchParams = useSearchParams();
     const instalacionId = searchParams.get("id")
     const tabIndex = searchParams.get("tabIndex")
+    const isDialogOpen = searchParams.get("dialog")
     const current = new URLSearchParams(Array.from(searchParams.entries()))
     const currentDay = new Date().getDay()
     const dispatch = useAppDispatch()
@@ -198,8 +199,22 @@ const Page = ({ params }: { params: { uuid: string } })=>{
     useEffect(()=>{
         if(reservaDetail != null){
             setOpenReservaDetailDialog(true)
+            appendSerachParams("dialog","1")
         }
     },[reservaDetail])
+
+    useEffect(()=>{
+        window.addEventListener("popstate",()=>{
+                setOpenReservaDetailDialog(false)
+                setCreateReservaDialog(false)
+                setOpenCreateInstalacion(false)
+        });
+    return () => {
+        window.removeEventListener("popstate", (e)=>{
+            console.log("Remove listener")
+        });
+    };
+    },[])
    
     return(
         <>
@@ -216,7 +231,10 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                 
             <div className="flex flex-col w-full col-span-2 p-2 border-[1px] shadow-lg md:h-screen overflow-auto ">
                 <div className="flex justify-between">
-                <button onClick={()=>setOpenCreateInstalacion(true)} className="button-inv w-min h-10 whitespace-nowrap">Crear Cancha</button>
+                <button onClick={()=>{
+                    appendSerachParams("dialog","1")
+                    setOpenCreateInstalacion(true)
+                    }} className="button-inv w-min h-10 whitespace-nowrap">Crear Cancha</button>
 
                 <button className="button w-min h-10" disabled={loadingInstalaciones} onClick={()=>{
                     setInstalaciones([])
@@ -229,7 +247,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
 
                 </div>
             <h2 className="title py-2">Cancha</h2>
-                <div className="flex md:gap-y-2 w-fulll overflow-auto md:grid ">
+                <div className="flex md:gap-y-2 w-fulll overflow-auto md:grid h-20 md:h-min">
                     <Loading
                     loading={loadingInstalaciones}
                     className="flex justify-center mb-2"
@@ -345,7 +363,9 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                                     <button
                                      className={`items-center justify-center h-10 w-36 flex space-x-1 whitespace-nowrap
                                      ${selectedCupos.length == 0 ? "button-disabled":"button"}`}
-                                     disabled={selectedCupos.length == 0} onClick={()=>setCreateReservaDialog(true)}>
+                                     disabled={selectedCupos.length == 0} onClick={()=>{
+                                        appendSerachParams("dialog","1")
+                                        setCreateReservaDialog(true)}}>
                                         <span>Crear Reserva</span>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                                         <path d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z" />

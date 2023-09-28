@@ -20,8 +20,8 @@ export async function GetBankAccount(){
       return res.json()
 }
 
-export async function GetDepositos(){
-    const res = await fetch(`../../api/admin/billing/depositos`)
+export async function GetDepositos(page:string){
+    const res = await fetch(`../../api/admin/billing/depositos?page=${page}`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')
@@ -30,6 +30,32 @@ export async function GetDepositos(){
     //   console.log(res)
       return res.json()
 }
+export async function GetDeposito(uuid:string){
+  const res = await fetch(`../../api/admin/billing/deposito?uuid=${uuid}`)
+  if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error('Failed to fetch data')
+    }
+   
+  //   console.log(res)
+    return res.json()
+}
+
+export async function GetReservasPagadas(data:ReservaDataFilter,page:number){
+  const res = await fetch(`../../api/admin/billing/reservas-pagadas?page=${page}`,{
+    method:'post',
+    body:JSON.stringify(data)
+  })
+  if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error('Failed to fetch data')
+    }
+   
+  //   console.log(res)
+    return res.json()
+}
+
+
 
 
 export async function UpdateBankAccount(data:AccountBank){
