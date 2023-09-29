@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { UiState } from "../models/ui";
+import { ReporteId } from "@/core/type/enums";
 
 
 
@@ -8,7 +9,8 @@ const uiState:UiState=  {
     innerLoading:false,
     loaded:false,
     loaderDialog:false,
-    openSidebar:false
+    openSidebar:false,
+    ongoingDownloadProcess:[]
 }
 
 
@@ -27,6 +29,13 @@ const uiSlice = createSlice({
         },
         openSidebar(state,action:PayloadAction<boolean>){
             state.openSidebar = action.payload
+        },
+        setOngoingDownloadProcess(state,action:PayloadAction<number[]>){
+            state.ongoingDownloadProcess = [...state.ongoingDownloadProcess,...action.payload]
+        },
+        removeOngoingProcessFromQueue(state,action:PayloadAction<ReporteId>){
+            const ongoingDownloads = state.ongoingDownloadProcess.filter(item=>item != action.payload)
+            state.ongoingDownloadProcess = ongoingDownloads
         }
     }
 })

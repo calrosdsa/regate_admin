@@ -11,7 +11,7 @@ const Deposito = ({deposito,loading}:{
         <div className="w-full">
 
 
-            <div className="text-lg font-medium bg-gray-200 w-full p-2">Información general sobre el depósito</div>
+            <div className="font-medium bg-gray-200 w-full p-2">Información general sobre el depósito</div>
             {loading &&
             <Loader
             className="flex justify-center mt-10"

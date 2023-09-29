@@ -11,6 +11,9 @@ export const adminRoutes = {
     depositos:`${rootAdmin}/depositos`,
     dashboad:{
         main:`${rootAdmin}/dashboard`
+    },
+    entidad:{
+        main:`${rootAdmin}/entidad`
     }
 }
 

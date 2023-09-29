@@ -4,13 +4,17 @@ import Deposito from "@/components/admin/billing/Deposito";
 import ReservaList from "@/components/reservas/ReservaList";
 import DialogReservaDetail from "@/components/reservas/dialog/DialogReservaDetail";
 import Pagination from "@/components/util/pagination/Pagination";
+import { downloadReporteDeposito } from "@/context/actions/download-actions";
+import { API_URL } from "@/context/config";
 import { useAppDispatch } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
 import { GetDeposito, GetReservasPagadas } from "@/core/repository/billing";
 import { GetReservaDetail } from "@/core/repository/reservas";
-import { Order, OrderQueue } from "@/core/type/enums";
+import { Order, OrderQueue, ReporteId } from "@/core/type/enums";
 import { adminRoutes } from "@/core/util/routes";
 import { Tab } from "@headlessui/react";
+import axios from "axios";
+import moment from "moment";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -139,6 +143,10 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 getDeposito()
         }
     }
+    const downloadReport = async()=>{
+        if(deposito == null) return
+       dispatch(downloadReporteDeposito(deposito.id,ReporteId.DEPOSITO))
+    }
 
     useEffect(()=>{
         if(reservaDetail != null){
@@ -192,7 +200,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             <Tab.Panels className={"p-2"}>
             <Tab.Panel className={"w-full"}>
                 <div className="pb-3">
-                    <button className="button">Descargar Reporte</button>
+                    <button onClick={()=>downloadReport()} className="button">Descargar Reporte</button>
                 </div>
                 <Deposito
                 deposito={deposito}

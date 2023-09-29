@@ -35,7 +35,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
     const current = new URLSearchParams(Array.from(searchParams.entries()))
     const pathname = usePathname()
     const router = useRouter()
-    const map = searchParams.get("map")
+    // const map = searchParams.get("map")
     const [data,setData] = useState<EstablecimientoDetail | null>(null)
     const [openAddIntervalDialog,setOpenAddIntervalDialog] = useState(false)
     const [openDeleteIntervalDialog,setOpenDeleteIntervalDialog] = useState(false)
