@@ -20,7 +20,7 @@ export async function POST(request:Request) {
       )
       const data =await res.json()
       // console.log("BODY-RES",data)
-      return NextResponse.json(data,{status:200})
+      return NextResponse.json(data,{status:res.status})
    }catch(err){
       console.log("error request",err)
       return NextResponse.json("Error Request",{status:500})

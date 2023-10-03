@@ -14,6 +14,19 @@ type Deposito = {
     income:number
     currency_abb:string
     tarifa:number
+    date_paid:string
+    estado:number
+    establecimiento_name:string
+}
+
+type DepositoEmpresa = {
+    id:number
+    uuid:string
+    empresa_id:number
+    created_at:string
+    total_income:number
+    date_paid:string
+    depositos?:Deposito[]
 }
 
 type DepositoPaginationResponse = {
@@ -23,6 +36,12 @@ type DepositoPaginationResponse = {
     page_size:number
 }
 
+type DepositoEmpresaPaginationResponse = {
+    results:DepositoEmpresa[]
+    next_page:number
+    count:number
+    page_size:number
+}
 
 
 type Bank = {

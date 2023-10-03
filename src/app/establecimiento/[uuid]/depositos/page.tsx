@@ -1,17 +1,16 @@
 "use client"
 import AccountBank from "@/components/admin/billing/AccountBank";
 import Depositos from "@/components/admin/billing/Depositos";
-import DepositosEmpresa from "@/components/admin/billing/DepositosEmpresa";
 import Pagination from "@/components/util/pagination/Pagination";
 import { useAppDispatch } from "@/context/reduxHooks";
-import { GetBankAccount, GetBanks, GetDepositos, GetDepositosEmpresa, GetDepositosFromDepositoEmpresa } from "@/core/repository/billing";
+import { GetBankAccount, GetBanks, GetDepositos } from "@/core/repository/billing";
 import { Order } from "@/core/type/enums";
 import { Tab } from "@headlessui/react"
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const Page = () => {
+const Page = ({params}:{params:{uuid:string}}) => {
     const searchParams = useSearchParams();
     const tabIndex = searchParams.get("tabIndex")
     const page = searchParams.get("page") || "1"
@@ -23,10 +22,9 @@ const Page = () => {
     const [accountBank,setAccontBank] = useState<AccountBank | null>(null)
     const [loadingAccountBank,setLoadingAccountBank] = useState(false)
     const [loadingDepositos,setLoadingDepositos] = useState(false)
-    const [depositosResponse,setDepositosResponse] = useState<DepositoEmpresaPaginationResponse  | undefined>(undefined)
+    const [depositosResponse,setDepositosResponse] = useState<DepositoPaginationResponse  | undefined>(undefined)
     const [order,setOrder] =useState(Order.DESC)
     const [paginationProps,setPaginationProps] = useState<PaginationProps | undefined>(undefined)
-    // const [loadingDepositosFromEmpresa,setLoadingDepositosFromEmpresa] = useState
 
 
     const appendSerachParams = (key:string,value:string)=>{
@@ -53,7 +51,7 @@ const Page = () => {
             //     results:[]
             // })
             setLoadingDepositos(true)
-            const res:DepositoEmpresaPaginationResponse = await GetDepositosEmpresa(page)
+            const res:DepositoPaginationResponse = await GetDepositos(page,params.uuid)
             setPaginationProps({
                 pageSize:res.page_size,
                 count:res.count > 0 ? res.count : 0,
@@ -85,12 +83,12 @@ const Page = () => {
         }else {
             const pagePrev = paginationProps.currentPage -1
             appendSerachParams("page",pagePrev.toString())
-            // getReservas(filterData,page)
-            setPaginationProps({
-                ...paginationProps,
-                currentPage:pagePrev
-            })
-            getDeposits(Number(pagePrev))
+                        // getReservas(filterData,page)
+                        setPaginationProps({
+                            ...paginationProps,
+                            currentPage:pagePrev
+                        })
+                        getDeposits(Number(pagePrev))
             // appendSerachParams("page",pagePrev.toString
             // getReservas(filterData,pagePrev)
         }
@@ -108,9 +106,6 @@ const Page = () => {
                 currentPage:nextPage
             })
             getDeposits(Number(nextPage))
-            
-            // appendSerachParams("page",nextPage.toString
-            // getReservas(filterData,nextPage)
         }
     }
 
@@ -127,41 +122,7 @@ const Page = () => {
                 getDeposits(Number(page))
         }
     }
-
-    const getDepositosFromDepositoEmpresa=async(id:number) =>{
-        try{
-            if(depositosResponse == undefined) return
-            const result = depositosResponse.results.find(item=>item.id == id)
-            if (result == undefined) return 
-            if(result.depositos != undefined){
-                const updateDepositos = depositosResponse.results.map(item=>{
-                    if(item.id == id){
-                        item.depositos = undefined
-                    }
-                    return item
-                })
-                setDepositosResponse({
-                    ...depositosResponse,
-                    results:updateDepositos
-                })
-            }else{
-                const res:Deposito[] = await GetDepositosFromDepositoEmpresa(id)
-                // const record = 
-                const updateDepositos = depositosResponse.results.map(item=>{
-                    if(item.id == id){
-                        item.depositos = res
-                    }
-                    return item
-                })
-                setDepositosResponse({
-                    ...depositosResponse,
-                    results:updateDepositos
-                })
-            }
-        }catch(err){
-            console.log(err)
-        }
-    }
+   
 
     useEffect(()=>{
         if(tabIndex != null){
@@ -171,7 +132,7 @@ const Page = () => {
         }
     },[])
     return(
-        <div className="h-screen">
+        <div>
           
              <Tab.Group defaultIndex={tabIndex != null ? Number(tabIndex):0}>
 
@@ -220,12 +181,12 @@ const Page = () => {
                     setPage={(page)=>{
                         // console.log(Math.ceil(paginationProps.count/paginationProps.pageSize))
                         appendSerachParams("page",page.toString())
-                        getDeposits(page)
                         // getReservas(filterData,page)
                         setPaginationProps({
                             ...paginationProps,
                             currentPage:page
                         })
+                        getDeposits(Number(page))
                     }}
                     totalCount={paginationProps.count}
                     pageSize={paginationProps.pageSize}
@@ -236,12 +197,12 @@ const Page = () => {
 
             </div>
 
-                            <DepositosEmpresa
+                            <Depositos
                             loading={loadingDepositos}
                             depositos={depositosResponse?.results || []}
                             order={order}
+                            uuid={params.uuid}
                             changeOrder={(order)=>setOrder(order)}
-                            getDepositosFromDepositoEmpresa={getDepositosFromDepositoEmpresa}
                             />
                             {/* Depositos */}
                         </Tab.Panel>

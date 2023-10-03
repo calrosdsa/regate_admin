@@ -11,7 +11,7 @@ import { uiActions } from "@/context/slices/uiSlice";
 import { GetDeposito, GetReservasPagadas } from "@/core/repository/billing";
 import { GetReservaDetail } from "@/core/repository/reservas";
 import { Order, OrderQueue, ReporteId } from "@/core/type/enums";
-import { adminRoutes } from "@/core/util/routes";
+import { adminRoutes, rootEstablecimiento } from "@/core/util/routes";
 import { Tab } from "@headlessui/react";
 import axios from "axios";
 import moment from "moment";
@@ -19,11 +19,12 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const Page = ({ params }: { params: { uuid: string } }) =>{
+const Page = ({params}:{params:{uuid:string}}) =>{
     const searchParams = useSearchParams();
     const gloss = searchParams.get("gloss")
     const tabIndex = searchParams.get("tabIndex")
     const page = searchParams.get("page")
+    const depositoUuid = searchParams.get("depositoUuid")
     const dispatch = useAppDispatch()
     const pathname = usePathname();
     const current = new URLSearchParams(Array.from(searchParams.entries()))
@@ -38,7 +39,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         queue:OrderQueue.CREATED
     })
     const [filterData,setFilterData] = useState<ReservaDataFilter>({
-        uuid:params.uuid,
+        uuid:depositoUuid || "",
         query:"",
         order:Order.DESC,
         order_queue:OrderQueue.CREATED,
@@ -88,7 +89,9 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
     const getDeposito = async() =>{
         try{
             setLoadingDeposito(true)
-            const res:Deposito = await GetDeposito(params.uuid)
+            if(depositoUuid == null) return
+            const res:Deposito = await GetDeposito(depositoUuid)
+            console.log(res)
             setDeposito(res)
             setLoadingDeposito(false)
         }catch(err){
@@ -164,7 +167,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         <>
         <div className="default-padding h-screen">
             <div className="flex space-x-2 items-center">
-                <Link href={adminRoutes.depositos} className="link">Depositos</Link>
+                <Link href={`${rootEstablecimiento}/${params.uuid}/depositos`} className="link">Depositos</Link>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
                  className="w-5 h-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
@@ -188,7 +191,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                     if(reservas.length != 0) return
                     getReservas(filterData,1)
                     // getData()
-                    }}>Reservas</Tab>
+                    }}>Reservas Pagadas</Tab>
               
                 {/* <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
                 onClick={()=>{      

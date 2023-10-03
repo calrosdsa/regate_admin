@@ -1,12 +1,13 @@
 import Loading from "@/components/util/loaders/Loading"
 import { Order, OrderQueue } from "@/core/type/enums"
-import { adminRoutes } from "@/core/util/routes"
+import { adminRoutes, rootEstablecimiento } from "@/core/util/routes"
 import moment from "moment"
 import Link from "next/link"
 
-const Depositos = ({loading,changeOrder,order,depositos}:{
+const Depositos = ({loading,changeOrder,order,depositos,uuid}:{
     depositos:Deposito[]
     loading:boolean
+    uuid:string
     changeOrder:(order:Order)=>void
     order?:Order
 }) =>{
@@ -44,6 +45,7 @@ const Depositos = ({loading,changeOrder,order,depositos}:{
                 </th>
                 <th className="headerTable">
                 </th>
+                
             </tr>
         </thead>
         <tbody>
@@ -57,7 +59,7 @@ const Depositos = ({loading,changeOrder,order,depositos}:{
 
                         <td onClick={()=>{}}
                         className="rowTable font-medium underline text-primary cursor-pointer">
-                            <Link href={`${adminRoutes.depositos}/${item.uuid}?gloss=${item.gloss}`}>Ver reporte</Link>
+                            <Link href={`${rootEstablecimiento}/${uuid}/depositos/detail?depositoUuid=${item.uuid}&gloss=${item.gloss}`}>Ver reporte</Link>
                             </td>
 
                     </tr>
