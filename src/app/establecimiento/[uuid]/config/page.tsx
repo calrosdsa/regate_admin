@@ -8,7 +8,7 @@ import { uiActions } from '@/context/slices/uiSlice';
 import { UpdateEstablecimiento, UpdateEstablecimientoAddress, UpdateEstablecimientoPhoto, getEstablecimiento } from '@/core/repository/establecimiento';
 import EditComponent from '@/components/util/input/EditComponent';
 import EditComponentImage from '@/components/util/input/EditComponentImage';
-import { PaidType } from '@/core/type/enums';
+import { DepositoEstado, EstablecimientoEstado, PaidType } from '@/core/type/enums';
 import { getIntervaloString, getPaymentMethod } from '@/core/util/converter';
 import AddHorarioIntervalDialog from '@/components/establecimiento/setting/AddHorarioIntervalDialog';
 import DeleteHorarioIntervalDialog from '@/components/establecimiento/setting/DeleteHorarioIntervalDialog';
@@ -147,7 +147,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 toast.success("¡Los cambios realizados han sido guardados exitosamente!")
             }catch(err){
                 removeLoader()
-                toast.error("¡Los cambios realizados han sido guardados exitosamente!")
+                toast.error(unexpectedError)
             }
         }
     }
@@ -170,11 +170,11 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 })
                 setLoading(false)
                 setOpenMap(false)
-                toast.success("¡Los cambios realizados han sido guardados exitosamente!")
+                // toast.success("¡Los cambios realizados han sido guardados exitosamente!")
             }catch(err){
                 setLoading(false)
                 console.log(err)
-                toast.error("¡Los cambios realizados han sido guardados exitosamente!")
+                toast.error(unexpectedError)
             }
         }
     }
@@ -207,7 +207,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         }catch(err){
             setLoading(false)
             console.log(err)
-            toast.error("¡Los cambios realizados han sido guardados exitosamente!")
+            toast.error(unexpectedError)
         }
     }
     }
@@ -231,7 +231,27 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         {/* <button onClick={()=>setOpenMap(true)}>Open Map</button> */}
         {data?.establecimiento != null &&
         <div className='p-4 flex flex-col space-y-6 xl:overflow-auto'>
-            <span className="text-xl py-2 font-medium">Establecimiento Info</span>
+            <span className="text-xl py-2 font-medium">Sucursal Info</span>
+            <div>
+            <span className="label">Estado de la sucursal</span>
+            {data.establecimiento.is_approved ?
+            <div className="flex space-x-2 text-green-600 items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="text-lg">Verificado</span>
+            </div>
+            :
+            <div className="flex space-x-2 text-gray-600 items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
+            className="w-6 h-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="text-lg">Verificación pendiente</span>
+            
+            </div>
+            }
+            </div>
             <EditComponent
             label='Nombre'
             content={data?.establecimiento.name}

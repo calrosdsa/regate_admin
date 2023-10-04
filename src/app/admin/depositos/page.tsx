@@ -52,6 +52,12 @@ const Page = () => {
             // setDepositosResponse({...depositosResponse,
             //     results:[]
             // })
+            if(depositosResponse != undefined){
+                setDepositosResponse({
+                    ...depositosResponse,
+                    results:[]
+                })
+            }
             setLoadingDepositos(true)
             const res:DepositoEmpresaPaginationResponse = await GetDepositosEmpresa(page)
             setPaginationProps({
@@ -171,7 +177,7 @@ const Page = () => {
         }
     },[])
     return(
-        <div className="h-screen">
+        <div className=" h-full  w-full">
           
              <Tab.Group defaultIndex={tabIndex != null ? Number(tabIndex):0}>
 

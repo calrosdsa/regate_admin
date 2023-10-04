@@ -66,3 +66,8 @@ export enum DepositoEstado {
     PENDIENTE =1,
     EMITIDO = 2
 }
+
+export enum EstablecimientoEstado {
+    ESTABLECIMIENTO_ENABLED = 1,
+    ESTABLECIMIENTO_DISABLED = 2
+}

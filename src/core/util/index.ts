@@ -25,3 +25,13 @@ export function classNames(...classes:any) {
     map.get(key)?.push(value) ?? map.set(key, [value]);
     return map;
   }, new Map<Q, T[]>());
+
+
+  export const downloadFile = (url:string,name:string) =>{
+    const link = document.createElement('a');
+    document.body.appendChild(link);
+    link.href = url;
+    link.download = name
+    // link.setAttribute('download', name); //or any other extension
+    link.click()
+  }

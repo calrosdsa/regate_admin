@@ -6,6 +6,7 @@ export async function GetEstablecimientos() {
   const res = await fetch("../../api/establecimiento")
   if(res.status == 401) {
     redirectToLogin()
+    throw new Error('Failed to fetch data')
   }
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary

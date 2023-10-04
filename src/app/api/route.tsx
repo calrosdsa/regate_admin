@@ -21,7 +21,7 @@ export async function POST(request:Request) {
       if(res.status == 200){
             //  console.log(data)
             const oneDay = 24 * 60 * 60 * 1000
-            nextCookies.set("rol",data.user.idRol,{ 
+            nextCookies.set("rol",data.user.rol,{ 
                   expires: Date.now() + oneDay,
                   httpOnly:true
             })
@@ -29,6 +29,7 @@ export async function POST(request:Request) {
                   expires: Date.now() + oneDay,
                   httpOnly:true
             })
+            
             return NextResponse.json(data,{status:200})
             
             // return new Response(JSON.stringify(data)    ,{

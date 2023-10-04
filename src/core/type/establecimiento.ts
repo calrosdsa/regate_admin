@@ -16,6 +16,8 @@ type Establecimiento = {
     name:string
     photo:string
     portada:string
+    estado:number
+    is_approved:boolean
 }
 
 type EstablecimientoData = {

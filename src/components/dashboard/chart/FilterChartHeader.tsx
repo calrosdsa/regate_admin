@@ -4,6 +4,7 @@ import { chartActions } from "@/context/slices/chartSlice";
 import { FilterChartData } from "@/core/type/chart";
 import { TypeOfChart, TypeOfDate } from "@/core/type/enums";
 import { Menu, Popover } from "@headlessui/react";
+import moment from "moment";
 import { useEffect, useState } from "react";
 import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
 
@@ -28,7 +29,6 @@ chartType,getNewData,allowedCharts,label}:{
     });
     
     const handleValueChange = (value:DateValueType) => {
-        console.log("value:", value);
         const data:FilterChartData = {
           ...filterData,
           start_date:value?.startDate?.toString(),
@@ -89,8 +89,8 @@ chartType,getNewData,allowedCharts,label}:{
                 <div className="smallButton px-2" onClick={()=>{
                    const data:FilterChartData = {
                     ...filterData,
-                    start_date:value?.startDate?.toString(),
-                    end_date:value?.endDate?.toString(),
+                    start_date:moment(value?.startDate?.toString()).utc().format(),
+                    end_date:moment(value?.endDate?.toString()).utc().format(),
                   }
                   getNewData(data)
                 }}>

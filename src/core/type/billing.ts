@@ -16,6 +16,8 @@ type Deposito = {
     tarifa:number
     date_paid:string
     estado:number
+    comprobante_url:string | null 
+    emition_date:string | null 
     establecimiento_name:string
 }
 

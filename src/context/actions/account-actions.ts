@@ -78,13 +78,13 @@ export const login = (email:string,password:string) :ThunkAction<void,RootState,
                            }
                            break;
                     }
-                    if(typeof window != undefined){
-                        const urlParams = new URLSearchParams(window.location.search);
-                        const redirect = urlParams.get('redirect');
-                        if(redirect != null){
-                            window.location.replace(redirect as string)
-                        }
-                    }
+                    // if(typeof window != undefined){
+                    //     const urlParams = new URLSearchParams(window.location.search);
+                    //     const redirect = urlParams.get('redirect');
+                    //     if(redirect != null){
+                    //         window.location.replace(redirect as string)
+                    //     }
+                    // }
                    dispatch(uiActions.setInnerLoading(false))
                    break;
                 case 400:

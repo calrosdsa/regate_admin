@@ -24,7 +24,7 @@ export const downloadReporteDeposito = (depositoId: number,reporteId:ReporteId) 
                 }else{
                     id = toast.loading("Generando reporte, por favor espere...")
                     const date = moment().format('LLLL').replace(":",";");
-                    await axios.post(`${API_URL}/reporte/deposito/${depositoId}/`,{},{
+                    await axios.post(`../../../api/admin/billing/deposito/reporte?depositoId=${depositoId}`,{},{
                         responseType:"blob"
                     }).then((response)=>{
                         const url = window.URL.createObjectURL(new Blob([response.data]));

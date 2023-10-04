@@ -30,7 +30,7 @@ import { useEffect, useState } from "react"
     // const data:Establecimiento[] = await getData()
 
     return (
-        <div className="h-screen overflow-auto">
+        <div className=" px-2">
 
             <div className=" flex space-x-3 pt-2">
          <Link href={"/create-establecimiento"}

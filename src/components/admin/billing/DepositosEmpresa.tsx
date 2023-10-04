@@ -16,7 +16,7 @@ const DepositosEmpresa = ({loading,changeOrder,order,depositos,getDepositosFromD
 
         <>
 
-<div className={`relative w-full ${loading && "h-20"}`}>
+<div className={`relative overflow-auto w-full ${loading && "h-20"}`}>
             <Loading
             loading={loading}
             className="absolute top-12 left-1/2 -translate-x-1/2"

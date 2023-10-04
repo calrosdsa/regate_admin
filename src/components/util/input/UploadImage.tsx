@@ -35,7 +35,7 @@ const UploadImage = ({setFile,src,save,id="file",width="w-44",height="h-44"}:{
             src={source.includes("https") ? `${source}?${Date.now()}` : source}
             w={250}
             h={200}
-            className={`${width} ${height} rounded object-cover`}
+            className={`${width} ${height} rounded ${source == "/images/img-default.png" ? 'object-contain':'object-cover'}`}
             // alt={""}
             />
             </div>

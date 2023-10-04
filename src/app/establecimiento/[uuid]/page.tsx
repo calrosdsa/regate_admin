@@ -174,7 +174,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
         }
         data.uuid = params.uuid
         dispatch(chartActions.setFilterData(data))
-        console.log(data)
+        console.log("FINAL FILTER DATA",data)
         dispatch(getReservasAmountData(data))
       }}
       setData={()=>{

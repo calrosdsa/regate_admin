@@ -1,6 +1,7 @@
 "use client"
 
 import Deposito from "@/components/admin/billing/Deposito";
+import DepositoMenuOption from "@/components/admin/billing/DepositoMenuOption";
 import ReservaList from "@/components/reservas/ReservaList";
 import DialogReservaDetail from "@/components/reservas/dialog/DialogReservaDetail";
 import Pagination from "@/components/util/pagination/Pagination";
@@ -162,8 +163,8 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
     },[])
     return(
         <>
-        <div className="default-padding h-screen">
-            <div className="flex space-x-2 items-center">
+        <div className="default-padding h-screen px-1">
+            <div className="flex space-x-2 items-center pt-2">
                 <Link href={adminRoutes.depositos} className="link">Depositos</Link>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
                  className="w-5 h-5">
@@ -199,8 +200,11 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
 
             <Tab.Panels className={"p-2"}>
             <Tab.Panel className={"w-full"}>
-                <div className="pb-3">
+            <div className="pb-3 flex justify-between">
                     <button onClick={()=>downloadReport()} className="button">Descargar Reporte</button>
+                    <DepositoMenuOption
+                    deposito={deposito}
+                    />
                 </div>
                 <Deposito
                 deposito={deposito}

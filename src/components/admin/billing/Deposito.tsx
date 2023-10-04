@@ -24,7 +24,7 @@ const Deposito = ({deposito,loading}:{
             {deposito != null &&
             <div className="border-[1px]  bg-white p-2 sm:p-4">
 
-            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6 border-b-[1px] pb-2">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 border-b-[1px] pb-2">
 
             <div className="grid">
             <span className=" subtitle">Asunto del depósito</span>
@@ -33,7 +33,7 @@ const Deposito = ({deposito,loading}:{
 
             <div className="grid">
             <span className=" subtitle">Periodo de facturación</span>
-            <span className="text-sm">{moment(deposito.date_paid).utc().format("LL")}</span>
+            <span className="text-lg text-gray-600">{moment(deposito.date_paid).utc().format("l")}</span>
             </div>
 
 
@@ -57,7 +57,11 @@ const Deposito = ({deposito,loading}:{
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="text-lg">Pendiente</span>
+            <span className="text-lg">Emitido 
+            {deposito.emition_date != null &&
+            <span className="text-gray-600"> {moment(deposito.emition_date).format('l')}</span>
+            }
+            </span>
             </div>
             </div>
             }
@@ -66,7 +70,7 @@ const Deposito = ({deposito,loading}:{
             </div>
 
             <div className="grid grid-cols-3 gap-3 pt-10">
-                <div className=" col-start-2 col-span-2">
+                <div className=" col-span-full md:col-start-2 md:col-span-2">
             <span className=" subtitle text-lg">Balance</span>
             <div className="grid gird-cols-3 p-1 gap-y-1">
                 <span className="col-start-1">Ingresos</span>
