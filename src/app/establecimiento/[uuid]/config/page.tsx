@@ -28,8 +28,14 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { appendSerachParams } from '@/core/util/routes';
 import { unexpectedError } from '@/context/config';
 import CommonImage from '@/components/util/image/CommonImage';
+import EditComponentSelect from '@/components/util/input/EditComponentSelect';
+import { systemActions } from '@/context/slices/systemSlice';
+import { InfoTextId } from '@/core/repository/core/system';
+import { getInfoText } from '@/context/actions/system-actions';
 
 const Page = ({ params }: { params: { uuid: string } }) =>{
+    const establecimientoEstados = [{value:"true",name:"Visible"}
+    ,{value:"false",name:"No visible"}]
     const [openMap,setOpenMap] = useState(false)
     const searchParams = useSearchParams();
     const current = new URLSearchParams(Array.from(searchParams.entries()))
@@ -53,6 +59,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
     // const {establecimiento,setting_establecimiento} = data as EstablecimientoDetail
     const dispatch = useAppDispatch()
     const loaded = useAppSelector(state=>state.ui.loaded)
+    const openInfoBar = useAppSelector(state=>state.system.openInfoBar)
 
     const openAmenityDialog=async()=>{
         try{
@@ -169,7 +176,8 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                     }
                 })
                 setLoading(false)
-                setOpenMap(false)
+                // setOpenMap(false)
+                toast.success("¡Los cambios realizados han sido guardados exitosamente!")
                 // toast.success("¡Los cambios realizados han sido guardados exitosamente!")
             }catch(err){
                 setLoading(false)
@@ -212,6 +220,8 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
     }
     }
 
+   
+
     useEffect(()=>{
         getEstablecimientoDetail()
     },[])
@@ -227,21 +237,29 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
     },[])
     return(
        <>
-       <div className='grid xl:grid-cols-2 gap-2 h-screen'>
+       <div className='grid xl:grid-cols-2 gap-2 h-screen w-full'>
         {/* <button onClick={()=>setOpenMap(true)}>Open Map</button> */}
         {data?.establecimiento != null &&
         <div className='p-4 flex flex-col space-y-6 xl:overflow-auto'>
             <span className="text-xl py-2 font-medium">Sucursal Info</span>
+
             <div>
-            <span className="label">Estado de la sucursal</span>
-            {data.establecimiento.is_approved ?
+            <div className='flex space-x-3 items-center'>
+                <span className="label">Estado de la sucursal</span>
+                <span onClick={()=>{
+                    dispatch(systemActions.setOpenInfoBar(!openInfoBar))
+                    dispatch(getInfoText(InfoTextId.SUCURSAL_ESTADO_ID))
+                    }} className='info-label'>Información</span>
+            </div>
+            {data.establecimiento.estado == EstablecimientoEstado.ESTABLECIMIENTO_VERIFICADO &&
             <div className="flex space-x-2 text-green-600 items-center">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span className="text-lg">Verificado</span>
             </div>
-            :
+            }
+            {data.establecimiento.estado == EstablecimientoEstado.ESTABLECIMIENTO_PENDIENTE&&
             <div className="flex space-x-2 text-gray-600 items-center">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
             className="w-6 h-6">
@@ -252,6 +270,17 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             </div>
             }
             </div>
+
+            {data.establecimiento.estado == EstablecimientoEstado.ESTABLECIMIENTO_VERIFICADO &&
+            <EditComponentSelect
+            label='Visibilidad'
+            items={establecimientoEstados}
+            getItems={()=>{}}
+            updateSelect={(value,addLoader,removeLoader,currentName)=>updateEstablecimiento("visibility",value,addLoader,removeLoader)}
+            currentSelected={establecimientoEstados.find(item=>item.value == data.establecimiento.visibility.toString())}
+            />
+            }
+
             <EditComponent
             label='Nombre'
             content={data?.establecimiento.name}

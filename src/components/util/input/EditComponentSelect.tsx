@@ -7,7 +7,7 @@ import { Tooltip } from "react-tooltip"
 const EditComponentSelect = ({items,currentSelected,getItems,updateSelect,tooltipId,contentToolTip,label}:{
     items:SelectItem[]
     label:string
-    currentSelected:SelectItem
+    currentSelected:SelectItem | undefined
     getItems:()=>void
     updateSelect:(value:string,addLoader:()=>void,removeLoader:()=>void,currentName:string)=>void
     contentToolTip?:JSX.Element
@@ -15,7 +15,7 @@ const EditComponentSelect = ({items,currentSelected,getItems,updateSelect,toolti
 }) => {
     const [show,setShow] = useState(false)
     const [loading,setLoading] = useState(false)
-    const [value,setValue] = useState(currentSelected.value)
+    const [value,setValue] = useState(currentSelected?.value || "")
     return(
         <div>
              <div className=" flex justify-between items-center space-x-5 py-3 divider">
@@ -36,7 +36,9 @@ const EditComponentSelect = ({items,currentSelected,getItems,updateSelect,toolti
                         </>
                     }
                     </div>
+                    {currentSelected != undefined &&
                     <span className="text-sm">{currentSelected.name}</span>
+                    }
                 </div>
                 <span onClick={()=>{
                     getItems()

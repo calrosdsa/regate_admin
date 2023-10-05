@@ -149,8 +149,8 @@ const Entidad = () =>{
                 setLoaded={(b:boolean)=>dispatch(uiActions.setLoaded(b))}
                 open={openMap}
                 close={()=>setOpenMap(false)}
-                lng={Number(empresaDetail.empresa.longitud)}
-                lat={Number(empresaDetail.empresa.latitud)}
+                lng={empresaDetail.empresa.longitud != undefined ? Number(empresaDetail.empresa.longitud) : -63.17996724474814 }
+                lat={empresaDetail?.empresa.latitud != undefined ? Number(empresaDetail.empresa.latitud) : -17.782670771152922}
                 address={empresaDetail.empresa.address || ""}
                 setAddress={(e)=>{
                     setEmpresaDetail({

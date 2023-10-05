@@ -5,8 +5,8 @@ type Empresa = {
     name:string
     created_at:string
     updated_at:string
-    longitud:string
-    latitud:string
+    longitud?:string
+    latitud?:string
     admin_id:string | null
     phone_number:string | null
     email:string | null

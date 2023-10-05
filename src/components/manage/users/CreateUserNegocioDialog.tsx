@@ -9,12 +9,13 @@ import { UserRol } from '@/core/type/enums'
 import { getEstablecimientos } from '@/context/actions/account-actions'
 import Image from 'next/image'
 import Loading from '@/components/util/loaders/Loading'
-import { CreateUser } from '@/core/repository/manage'
 import ButtonWithLoader from '@/components/util/button/ButtonWithLoader'
-import { GetEstablecimientos } from '@/core/repository/establecimiento'
 import { uiActions } from '@/context/slices/uiSlice'
 import InputWithIcon from '@/components/util/input/InputWithIcon'
 import { unexpectedError } from '@/context/config'
+import DialogLayout from '@/components/util/dialog/DialogLayout'
+import { GetEstablecimientos } from '@/core/repository/establecimiento'
+import { CreateUser } from '@/core/repository/manage'
 
  interface Props{
    openModal:boolean
@@ -133,6 +134,7 @@ const CreateUserNegocioDialog:React.FC<Props>=({
           establecimientos:[]
       }
       const res = await CreateUser(request)
+      console.log(res)
       refreshUsers()
       toast.success("Se ha agragado un nuevo usuario")
       closeModal()
@@ -146,37 +148,13 @@ const CreateUserNegocioDialog:React.FC<Props>=({
 
   return (
     <>
-    <Transition appear show={openModal} as={Fragment}>
-    <Dialog as='div' className="relative z-20" open={openModal} onClose={() =>{
-        closeModal()
-    }}>
-    <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-            >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
-      </Transition.Child>
-        <div className='fixed inset-0 max-w-lg  mx-auto top-1/2 -translate-y-1/2 '>
-      <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-      <Dialog.Panel>
-        <div className='rounded-lg bg-white h-[62vh] overflow-auto'>
-            <DialogHeader
-            title={currentTab == Tab.MAIN ? 'Crear usuario' : "¿A qué complejos tendrá acceso el usuario?"}
-            close={()=>closeModal()}
-            />
+   <DialogLayout
+   title='Crear administrador'
+   className=' max-w-lg'
+   open={openModal}
+   close={closeModal}
+    >
+        <div className='rounded-lg bg-white h-[65vh] overflow-auto'>
             {Tab.MAIN == currentTab &&
             <form className='p-2' onSubmit={onSubmit}>
                 <InputWithIcon
@@ -341,11 +319,7 @@ const CreateUserNegocioDialog:React.FC<Props>=({
             </div>
             }
         </div>
-    </Dialog.Panel>
-    </Transition.Child>
-    </div>
-    </Dialog>
-    </Transition>
+    </DialogLayout>
     </>
   )
 }

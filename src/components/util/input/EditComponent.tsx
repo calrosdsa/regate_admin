@@ -3,10 +3,11 @@ import { useState } from "react"
 import ButtonWithLoader from "../button/ButtonWithLoader"
 
 
-const EditComponent =  ({label,content,edit,type="text",isTextArea=false}:{
+const EditComponent =  ({label,content,edit,type="text",isTextArea=false,enableEdit=true}:{
     label:string
     content:string
     type?:string
+    enableEdit?:boolean
     isTextArea?:boolean
     edit:(addLoader:()=>void,removeLoader:()=>void,value:string)=>void
 }) =>{
@@ -20,7 +21,9 @@ const EditComponent =  ({label,content,edit,type="text",isTextArea=false}:{
                     <span className="label">{label}</span>
                     <span className="text-sm">{content}</span>
                 </div>
-                <span onClick={()=>setShow(!show)} className=" underline font-medium cursor-pointer">Edit</span>
+                {enableEdit &&
+                    <span onClick={()=>setShow(!show)} className=" underline font-medium cursor-pointer">Edit</span>
+                }
             </div>
             <Transition
             show={show}

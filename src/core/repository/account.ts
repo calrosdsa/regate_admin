@@ -11,6 +11,17 @@ export async function GetEstablecimientosUserByUuid(data:string) {
     return res.json()
   }
 
+  
+export async function GetAccount() {
+  const res = await fetch("../../api/account")
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error('Failed to fetch data')
+  }
+  return res.json()
+}
+
+
   export async function SendResetPasswordEmail(mail:string) {
     const res = await fetch(`../../api/account/auth/send-reset-password?mail=${mail}`)
     return res

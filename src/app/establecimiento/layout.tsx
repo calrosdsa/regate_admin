@@ -7,10 +7,13 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useAppDispatch, useAppSelector } from '@/context/reduxHooks';
 import LoaderDialog from '@/components/util/loaders/LoaderDialog';
 import MobileSidebar from '@/components/util/sidebar/MobileSidebar';
-import { uiActions } from '@/context/slices/uiSlice';
+import uiSlice, { uiActions } from '@/context/slices/uiSlice';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getUser } from '@/context/actions/account-actions';
+import { Dialog, Transition } from '@headlessui/react';
+import InfoBar from '@/components/util/info-bar/InfoBar';
+import { systemActions } from '@/context/slices/systemSlice';
 
 
 
@@ -23,7 +26,7 @@ export default function RootLayout({
   const pathName = usePathname()
   const dispatch = useAppDispatch()
   const uiState = useAppSelector(state=>state.ui)
-  const [openInfoBar,setOpenInfoBar] = useState(true)
+  const systemState = useAppSelector(state=>state.system)
   useEffect(()=>{
     dispatch(uiActions.openSidebar(false))
     dispatch(getUser())
@@ -59,24 +62,24 @@ export default function RootLayout({
             </svg>
           </button>
 
-          <div className={``}>
+          {/* <div className={``}>
          <svg onClick={()=>setOpenInfoBar(!openInfoBar)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
         <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
       </svg>
-         </div>
+         </div> */}
 
           </div>
 
-          <div className='flex '>
          {children}
         
-          {openInfoBar &&
-            <div className=' absolute h-screen w-full z-20 bg-white'>
-              dnaksdmas
-            </div>
-          }
-          </div>
-
+         <InfoBar
+         open={systemState.openInfoBar}
+         close={()=>dispatch(systemActions.setOpenInfoBar(false))}
+         infoText={systemState.infoText}
+         loading={systemState.loadingInfoText}
+         />
+      
+          {/* } */}
 
          </div>
 

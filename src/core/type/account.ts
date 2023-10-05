@@ -12,7 +12,7 @@ type User  = {
     email:string
     empresa_id:number
     estado:number
-    phone:string
+    phone?:string
     last_login:string | null
     rol?:number
     user_id:string

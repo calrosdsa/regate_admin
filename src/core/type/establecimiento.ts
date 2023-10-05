@@ -17,7 +17,7 @@ type Establecimiento = {
     photo:string
     portada:string
     estado:number
-    is_approved:boolean
+    visibility:boolean
 }
 
 type EstablecimientoData = {

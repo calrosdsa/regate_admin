@@ -78,6 +78,10 @@
   .link {
     @apply text-primary underline text-sm font-medium
   }
+  .info-label {
+    @apply text-primary label text-xs hover:text-hoverPrimary hover:underline cursor-pointer
+  }
+  
 }
 
 
