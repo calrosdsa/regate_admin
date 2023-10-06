@@ -1,5 +1,6 @@
 import { logout } from "@/context/actions/account-actions";
 import { useAppDispatch } from "@/context/reduxHooks";
+import Link from "next/link";
 
 
 const UserSideBar = ({user}:{
@@ -8,7 +9,8 @@ const UserSideBar = ({user}:{
     const dispatch = useAppDispatch()
 
     return (
-        <div className="grid gap-y-2">
+        <Link href={"../../account"}
+         className="grid gap-y-2">
             <div className="px-2 py-1 border-b-[1px]
                 flex items-center space-x-3 h-12 text-gray-900  dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
                 <img src="/images/user-icon-placeholder.webp" alt="" className="rounded-full h-7 w-7"/>
@@ -29,7 +31,7 @@ const UserSideBar = ({user}:{
 
             <span className='text-sm' onClick={()=>dispatch(logout())}>Cerrar session</span>
         </div>
-        </div>
+        </Link>
     )
 }
 

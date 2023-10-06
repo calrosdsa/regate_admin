@@ -17,6 +17,7 @@ type User  = {
     rol?:number
     user_id:string
     username:string
+    last_updated_password?:string
 }
 
 type LoginResponse = {
@@ -31,4 +32,9 @@ type AccountState = {
 
 type PasswordRequest = {
     password:string
+}
+
+type PasswordUpdateRequest = {
+    current_password:string
+    new_password:string
 }

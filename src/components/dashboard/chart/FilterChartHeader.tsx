@@ -99,6 +99,10 @@ chartType,getNewData,allowedCharts,label}:{
                  </svg>
                 </div>
 
+                {/* <div className=" smallButton">
+                  dasdas
+                </div> */}
+
                 <div className=" ">
               <Datepicker value={value} onChange={handleValueChange} 
                         // showFooter={true}
@@ -113,9 +117,8 @@ chartType,getNewData,allowedCharts,label}:{
                                 pastMonth: "El mes pasado",
                             }
                         }}
-                        inputClassName={"w-[220px] smallButton outline-none text-sm p-2"}
+                        inputClassName={"w-[180px] smallButton outline-none text-sm p-2 cursor-pointer"}
                         toggleClassName={"hidden"}
-                    
                         showShortcuts={true}
                         primaryColor="indigo"
                         />

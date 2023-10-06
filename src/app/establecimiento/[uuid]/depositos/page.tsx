@@ -1,9 +1,10 @@
 "use client"
 import AccountBank from "@/components/admin/billing/AccountBank";
 import Depositos from "@/components/admin/billing/Depositos";
+import Loader from "@/components/util/loaders/Loader";
 import Pagination from "@/components/util/pagination/Pagination";
 import { useAppDispatch } from "@/context/reduxHooks";
-import { GetBankAccount, GetBanks, GetDepositos } from "@/core/repository/billing";
+import { GetBankAccountEstablecimiento, GetBankAccounts, GetBanks, GetDepositos } from "@/core/repository/billing";
 import { Order } from "@/core/type/enums";
 import { Tab } from "@headlessui/react"
 import Link from "next/link";
@@ -37,7 +38,7 @@ const Page = ({params}:{params:{uuid:string}}) => {
     const getAccountBank = async() =>{
         try{
             setLoadingAccountBank(true)
-            const res = await GetBankAccount()
+            const res = await GetBankAccountEstablecimiento(params.uuid)
             setAccontBank(res)
             setLoadingAccountBank(false)
         }catch(err){
@@ -140,13 +141,13 @@ const Page = ({params}:{params:{uuid:string}}) => {
                         <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
                         onClick={()=>{
                             appendSerachParams("tabIndex","0")
-                            if(depositosResponse != undefined) return
+                            // if(depositosResponse != undefined) return
                             getData("0")
                             }}>Depositos</Tab>
                         <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
                         onClick={()=>{
                             appendSerachParams("tabIndex","1")
-                            if(accountBank != null) return
+                            // if(accountBank != null) return
                             getData('1')
                         }}>Cuenta</Tab>
                         {/* <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
@@ -206,8 +207,15 @@ const Page = ({params}:{params:{uuid:string}}) => {
                             />
                             {/* Depositos */}
                         </Tab.Panel>
-                        <Tab.Panel className={"mx-auto flex justify-center w-full "}>
+                        <Tab.Panel className={"mx-auto w-full "}>
+
+                            {loadingAccountBank &&
+                                <Loader
+                                className="flex justify-center items-center mt-5 w-full"
+                                />
+                            }
                             <AccountBank
+                            enableEdit={false}
                             accountBank={accountBank}
                             loading={loadingAccountBank}
                             banks={banks}

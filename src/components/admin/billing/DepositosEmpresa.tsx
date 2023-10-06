@@ -39,7 +39,7 @@ const DepositosEmpresa = ({loading,changeOrder,order,depositos,getDepositosFromD
                 </div>
                 </th>
 
-                <th className="headerTable  cursor-pointer w-64 flex justify-end">Ingreso</th>
+                <th className="headerTable  cursor-pointer w-64 flex ">Ingreso</th>
                 {/* <th className="headerTable w-28">
                     Monto 
                 </th>
@@ -77,10 +77,14 @@ const DepositosEmpresa = ({loading,changeOrder,order,depositos,getDepositosFromD
                         }
                         </td>
                         <td className="rowTable w-64 font-medium">{moment(item.created_at).utc().format("LL")}</td>
-                        <td className="rowTable font-medium pl-6 grid grid-cols-2 gap-x-1">
-                                                <span className=" place-self-end">{item.total_income}</span>
-                                                <span className=" place-self-start">BOB</span>
-                                            </td>
+
+                        <td className="rowTable font-medium  w-64  flex  justify-start space-x-1">
+                            <div className="grid grid-cols-2 gap-x-1">
+                                <span className=" place-self-end">{item.total_income}</span>
+                                <span className=" place-self-start">BOB</span>
+                            </div>
+                        </td>
+
                         <td></td>
                         <td></td>
 
@@ -101,9 +105,11 @@ const DepositosEmpresa = ({loading,changeOrder,order,depositos,getDepositosFromD
                                             <td></td>
                                             <td className="rowTable w-64 pl-6">{moment(item.created_at).utc().format("LL")}</td>
 
-                                            <td className="rowTable pl-6 grid grid-cols-2 gap-x-1">
-                                                <span className=" place-self-end">{item.income}</span>
-                                                <span className=" place-self-start">BOB</span>
+                                            <td className="rowTable  w-64 pl-6 flex  justify-start space-x-1">
+                                                <div className="grid grid-cols-2 gap-x-1">
+                                                    <span className=" place-self-end">{item.income}</span>
+                                                    <span className=" place-self-start">BOB</span>
+                                                </div>
                                             </td>
 
                                         <td className="rowTable">{item.establecimiento_name}</td>

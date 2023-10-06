@@ -1,6 +1,7 @@
 type AccountBank = {
-    id:number
-    empresa_id:number
+    id?:number
+    name:string
+    empresa_id?:number
     account_number:string
     account_name:string
     bank_id:number
@@ -49,5 +50,10 @@ type DepositoEmpresaPaginationResponse = {
 type Bank = {
     id:number
     name:string
+}
+
+type AssignBankAccountRequest = {
+    id:number
+    establecimiento_id:number
 }
 

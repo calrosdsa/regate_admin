@@ -57,7 +57,10 @@ const DialogLayout = ({open,close,children,title ="",className="",allowClose=fal
              </svg>
 
                      </Dialog.Title>
+                     <input type="text" readOnly className="h-0 w-1 opacity-0"/>
+                     <div className="-mt-6">
                      {children}
+                     </div>
             </Dialog.Panel>
           </Transition.Child>
         </div>

@@ -4,13 +4,15 @@ import { useState } from "react"
 import { Tooltip } from "react-tooltip"
 
 
-const EditComponentSelect = ({items,currentSelected,getItems,updateSelect,tooltipId,contentToolTip,label}:{
+const EditComponentSelect = ({items,currentSelected,getItems,updateSelect,tooltipId,contentToolTip,
+    label,enableEdit=true}:{
     items:SelectItem[]
     label:string
     currentSelected:SelectItem | undefined
     getItems:()=>void
     updateSelect:(value:string,addLoader:()=>void,removeLoader:()=>void,currentName:string)=>void
     contentToolTip?:JSX.Element
+    enableEdit?:boolean
     tooltipId?:string
 }) => {
     const [show,setShow] = useState(false)
@@ -38,12 +40,14 @@ const EditComponentSelect = ({items,currentSelected,getItems,updateSelect,toolti
                     </div>
                     {currentSelected != undefined &&
                     <span className="text-sm">{currentSelected.name}</span>
-                    }
+                }
                 </div>
-                <span onClick={()=>{
-                    getItems()
-                    setShow(!show)
+                {enableEdit &&
+                    <span onClick={()=>{
+                        getItems()
+                        setShow(!show)
                     }} className=" underline font-medium cursor-pointer">Edit</span>
+                }
             </div>
 
             <Transition
@@ -55,18 +59,21 @@ const EditComponentSelect = ({items,currentSelected,getItems,updateSelect,toolti
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
             >
-          <select name="" id="" className="input" value={value} onChange={(e)=>{
+          <select disabled={!enableEdit}
+          name="" id="" className="input"  value={value} onChange={(e)=>{
             setValue(e.target.value)
             }}>
             {items.map((item)=>{
                 return(
-                    <option key={item.value} value={item.value}>{item.name}</option>
+                    <option 
+                    key={item.value} value={item.value}>{item.name}</option>
                     )
                 })}
           </select>
 
+                {enableEdit &&
             <ButtonWithLoader
-              onClick={()=>{
+            onClick={()=>{
                   const name = items.find(item=>item.value == value)?.name
                   if(name != undefined){
                       updateSelect(value,()=>setLoading(true),()=>{
@@ -78,7 +85,8 @@ const EditComponentSelect = ({items,currentSelected,getItems,updateSelect,toolti
               title="Guardar"
               className="mt-2 w-28"
               loading={loading}
-            />
+              />
+            }
               {/* <button onClick={()=>edit(()=>setLoading(true),()=>setLoading(false),value)} */}
                {/* className=" button">Guardar Cambios</button> */}
             </Transition>

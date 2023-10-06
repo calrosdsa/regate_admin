@@ -1,10 +1,15 @@
 "use client"
 import AccountBank from "@/components/admin/billing/AccountBank";
+import AssignBankAccountToEstablecimientos from "@/components/admin/billing/AssignBankAccounToEstablecimiento";
+import CreateBankAccountDialog from "@/components/admin/billing/CreateBankAccountDialog";
 import Depositos from "@/components/admin/billing/Depositos";
 import DepositosEmpresa from "@/components/admin/billing/DepositosEmpresa";
+import Loader from "@/components/util/loaders/Loader";
 import Pagination from "@/components/util/pagination/Pagination";
-import { useAppDispatch } from "@/context/reduxHooks";
-import { GetBankAccount, GetBanks, GetDepositos, GetDepositosEmpresa, GetDepositosFromDepositoEmpresa } from "@/core/repository/billing";
+import { getEstablecimientosUser } from "@/context/actions/account-actions";
+import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
+import { uiActions } from "@/context/slices/uiSlice";
+import { GetBankAccounts, GetBanks, GetDepositos, GetDepositosEmpresa, GetDepositosFromDepositoEmpresa } from "@/core/repository/billing";
 import { Order } from "@/core/type/enums";
 import { Tab } from "@headlessui/react"
 import Link from "next/link";
@@ -20,14 +25,23 @@ const Page = () => {
     const pathname = usePathname();
     const router = useRouter()
     const [banks,setBanks] = useState<Bank[]>([])
-    const [accountBank,setAccontBank] = useState<AccountBank | null>(null)
+    const [accountBanks,setAccontBanks] = useState<AccountBank[]>([])
+    const [openCreateBankAccount,setOpenCreateBankAccount] = useState(false)
+    const [openAssignBankAccount,setOpenAssignBankAccount] = useState(false)
     const [loadingAccountBank,setLoadingAccountBank] = useState(false)
     const [loadingDepositos,setLoadingDepositos] = useState(false)
     const [depositosResponse,setDepositosResponse] = useState<DepositoEmpresaPaginationResponse  | undefined>(undefined)
     const [order,setOrder] =useState(Order.DESC)
     const [paginationProps,setPaginationProps] = useState<PaginationProps | undefined>(undefined)
+    const establecimientos = useAppSelector(state=>state.account.establecimientos)
     // const [loadingDepositosFromEmpresa,setLoadingDepositosFromEmpresa] = useState
 
+    const openAssignBankAccountDialog = ()=>{
+        if(establecimientos.length == 0){
+            dispatch(getEstablecimientosUser())
+        }
+        setOpenAssignBankAccount(true)
+    }
 
     const appendSerachParams = (key:string,value:string)=>{
         current.set(key,value);
@@ -36,11 +50,11 @@ const Page = () => {
         router.push(`${pathname}${query}`);
     }
 
-    const getAccountBank = async() =>{
+    const getAccountBanks = async() =>{
         try{
             setLoadingAccountBank(true)
-            const res = await GetBankAccount()
-            setAccontBank(res)
+            const res = await GetBankAccounts()
+            setAccontBanks(res)
             setLoadingAccountBank(false)
         }catch(err){
             setLoadingAccountBank(false)
@@ -126,7 +140,7 @@ const Page = () => {
                 getDeposits(Number(page))
                 break;
             case "1":
-                getAccountBank()
+                getAccountBanks()
                 getBanks()
                 break;
             default:
@@ -177,8 +191,8 @@ const Page = () => {
         }
     },[])
     return(
+        <>
         <div className=" h-full  w-full">
-          
              <Tab.Group defaultIndex={tabIndex != null ? Number(tabIndex):0}>
 
                     <Tab.List className={" sticky top-0 bg-gray-50  w-full z-10 py-3"}>
@@ -191,9 +205,9 @@ const Page = () => {
                         <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
                         onClick={()=>{
                             appendSerachParams("tabIndex","1")
-                            if(accountBank != null) return
+                            if(accountBanks != null) return
                             getData('1')
-                        }}>Cuenta</Tab>
+                        }}>Cuentas</Tab>
                         {/* <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
                         onClick={()=>{      
                             appendSerachParams("tabIndex","2")
@@ -251,18 +265,64 @@ const Page = () => {
                             />
                             {/* Depositos */}
                         </Tab.Panel>
-                        <Tab.Panel className={"mx-auto flex justify-center w-full "}>
-                            <AccountBank
-                            accountBank={accountBank}
-                            loading={loadingAccountBank}
-                            banks={banks}
-                            setAccountBank={(account)=>setAccontBank(account)}
-                            />
+                        <Tab.Panel className={"mx-auto w-full px-2"}>
+                            <div className="flex space-x-2 flex-wrap">
+
+                            <button onClick={()=>setOpenCreateBankAccount(true)}
+                            className="button">Crear cuenta</button>
+
+                            <button onClick={()=>openAssignBankAccountDialog()}
+                            className="button">Asignar cuenta</button>
+
+                            </div>
+                            {loadingAccountBank &&
+                                <Loader
+                                className="flex justify-center items-center mt-5"
+                                />
+                            }
+                            <div className="flex flex-col w-full">
+                            {accountBanks.map((item,idx)=>{
+                                return(
+                                    <div key={idx}>
+                                <AccountBank
+                                accountBank={item}
+                                banks={banks}
+                                setAccountBank={(account)=>{
+                                    const updateList = accountBanks.map(item=>{
+                                        if(item.id == account.id){
+                                            item = account
+                                        }
+                                        return item
+                                    })
+                                    setAccontBanks(updateList)
+                                }}
+                                />
+                                </div>
+                            )
+                        })}
+                        </div>
                         </Tab.Panel>
 
                         </Tab.Panels>
              </Tab.Group>
         </div>
+        {(openCreateBankAccount && banks.length >0 ) &&
+        <CreateBankAccountDialog
+        open={openCreateBankAccount}
+        close={()=>setOpenCreateBankAccount(false)}
+        items={banks}
+        setAccountBank={(account)=>setAccontBanks(val=>[...val,account])}
+        />
+    }
+       {openAssignBankAccount &&
+            <AssignBankAccountToEstablecimientos
+            close={()=>setOpenAssignBankAccount(false)}
+            open={openAssignBankAccount}
+            accounts={accountBanks}
+            establecimientos={establecimientos}
+            />
+        }
+        </>
     )
 }
 

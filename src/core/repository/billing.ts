@@ -1,5 +1,7 @@
+import { LOCAL_URL } from "@/context/config"
+
 export async function GetBanks(){
-    const res = await fetch(`../../api/admin/billing/banks`)
+    const res = await fetch(`${LOCAL_URL}/api/admin/billing/banks`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')
@@ -9,7 +11,7 @@ export async function GetBanks(){
       return res.json()
 }
 
-export async function GetBankAccount(){
+export async function GetBankAccounts(){
     const res = await fetch(`../../api/admin/billing/bank-account`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
@@ -19,6 +21,18 @@ export async function GetBankAccount(){
     //   console.log(res)
       return res.json()
 }
+
+export async function GetBankAccountEstablecimiento(uuid:string){
+  const res = await fetch(`../../api/admin/billing/bank-account/establecimiento?uuid=${uuid}`)
+  if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error('Failed to fetch data')
+    }
+   
+  //   console.log(res)
+    return res.json()
+}
+
 export async function GetDepositosEmpresa(page:number){
   const res = await fetch(`../../api/admin/billing/depositos-empresa?page=${page}`)
     if (!res.ok) {
@@ -88,4 +102,32 @@ export async function UpdateBankAccount(data:AccountBank){
      
     //   console.log(res)
       return res.json()
+}
+
+export async function CreateBankAccount(data:AccountBank){
+  const res = await fetch(`../../../api/admin/billing/bank-account/create/`,{
+    method:'post',
+    body:JSON.stringify(data)
+  })
+  if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error('Failed to fetch data')
+    }
+   
+  //   console.log(res)
+    return res.json()
+}
+
+export async function AssignBankAccount(data:AssignBankAccountRequest){
+  const res = await fetch(`../../../api/admin/billing/bank-account/assign/`,{
+    method:'post',
+    body:JSON.stringify(data)
+  })
+  if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error('Failed to fetch data')
+    }
+   
+  //   console.log(res)
+    return res.json()
 }

@@ -43,3 +43,15 @@ export async function GetAccount() {
     }
     return res.json()
   }
+
+  export async function UpdatePassword(d:PasswordUpdateRequest) {
+    const res = await fetch(`../../api/account/auth/update-password`,{
+      method:"POST",
+      body:JSON.stringify(d),
+    })
+    // if (!res.ok) {
+    //   // This will activate the closest `error.js` Error Boundary
+    //   throw new Error('Failed to fetch data')
+    // }
+    return res
+  }

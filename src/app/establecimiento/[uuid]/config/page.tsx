@@ -26,7 +26,7 @@ import { UpdateSettings } from '@/core/repository/setting';
 import UpdatePayMethodDialog from '@/components/establecimiento/setting/UpdatePayMethodDialog';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { appendSerachParams } from '@/core/util/routes';
-import { unexpectedError } from '@/context/config';
+import { successfulMessage, unexpectedError } from '@/context/config';
 import CommonImage from '@/components/util/image/CommonImage';
 import EditComponentSelect from '@/components/util/input/EditComponentSelect';
 import { systemActions } from '@/context/slices/systemSlice';
@@ -151,7 +151,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                     }
                 })
                 removeLoader()
-                toast.success("¡Los cambios realizados han sido guardados exitosamente!")
+                toast.success(successfulMessage)
             }catch(err){
                 removeLoader()
                 toast.error(unexpectedError)
@@ -177,7 +177,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 })
                 setLoading(false)
                 // setOpenMap(false)
-                toast.success("¡Los cambios realizados han sido guardados exitosamente!")
+                toast.success(successfulMessage)
                 // toast.success("¡Los cambios realizados han sido guardados exitosamente!")
             }catch(err){
                 setLoading(false)

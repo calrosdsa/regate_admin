@@ -88,7 +88,8 @@ export const getReservasHoursData  = (data:FilterChartData) :ThunkAction<void,Ro
             const newResevasCountHours = res.map(item=>{
                 item = {
                   name:moment(item.name).utc().format("ll"),
-                  value:(item.value/2)
+                  value:(item.value/2),
+                  value2:item.value2 != undefined? (item.value2/2) : 0
                 }
                 return item
               })
@@ -208,7 +209,8 @@ export const getChartData  = (data:FilterChartData) :ThunkAction<void,RootState,
             const newResevasCountHours = res?.reserva_count_hours.map(item=>{
                 item = {
                   name:moment(item.name).utc().format("ll"),
-                  value:(item.value/2)
+                  value:(item.value/2),
+                  value2:item.value2 != undefined? (item.value2/2) : 0
                 }
                 return item
               })

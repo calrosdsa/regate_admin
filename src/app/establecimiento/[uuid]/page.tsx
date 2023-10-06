@@ -121,6 +121,34 @@ const Page= ({params}:{params:{uuid:string}})=>{
     return null;
   };
 
+  
+  const CustomTooltipCountHoursStacked = ({ active, payload, label }:any) => {
+    if (active) {
+      return (
+        <>
+            {(payload != null && payload.length > 0) &&
+        <div className="p-2 border-2 rounded-lg bg-white  border-gray-600 ">
+          <span className=' whitespace-nowrap'>{payload[0].payload.name}</span>
+          {payload.map((item:any,idx:number)=>{
+            return(
+              <div key={idx}>
+              <span style={{
+                color:item.color,
+                fontWeight:600
+              }}>{item.value} Horas</span>
+              </div>
+          )
+          })}
+          <span>Total:{payload.map((item:any)=>item.value).reduce((partial:number,a:number)=>partial+a,0)} Hrs</span>
+            </div>
+          }
+          </>
+      );
+    }
+
+    return null;
+  };
+
   const resetFilterData = (typeOfChart:TypeOfChart,typeDate:TypeOfDate) => {
     dispatch(chartActions.setCloseDialog(false))
     dispatch(chartActions.setTypeOfChart(typeOfChart))
@@ -184,8 +212,8 @@ const Page= ({params}:{params:{uuid:string}})=>{
         dispatch(chartActions.setAllowedCharts([TypeOfDate.day,TypeOfDate.week,TypeOfDate.month,TypeOfDate.year]))
         dispatch(chartActions.setData(chartState.response?.reserva_amount || []))
       }}
-        keyValue2='value2'
         singleColor={true}
+        keyValue2='value2'
         legendLabels={["Local","App"]}
         showLegend={true}
         closeDialog={chartState.closeDialog}
@@ -211,8 +239,9 @@ const Page= ({params}:{params:{uuid:string}})=>{
        title="Horas reservadas"
        subtitle={`Total de horas reservadas en los últimos ${lastDays} días`}
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
-      CustomToolTip={CustomTooltip}
+      // CustomToolTip={CustomTooltip}
       className='col-start-4 col-span-full'
+      CustomToolTip={CustomTooltipCountHoursStacked}
       getNewData={(data:FilterChartData)=>{
          const currentEstablecmiento = accountState.establecimientos.find(item=>item.uuid == params.uuid)
          if(currentEstablecmiento != undefined){
@@ -229,13 +258,20 @@ const Page= ({params}:{params:{uuid:string}})=>{
         dispatch(chartActions.setAllowedCharts([TypeOfDate.day,TypeOfDate.week,TypeOfDate.month,TypeOfDate.year]))
         dispatch(chartActions.setData(chartState.response?.reserva_count_hours || []))
       }}
+        singleColor={true}
+        keyValue2='value2'
+        legendLabels={["Local","App"]}
+        showLegend={true}
       closeDialog={chartState.closeDialog}
       >
     <LineChartConnectNulls    
     data={chartState.response?.reserva_count_hours || []}
     loading={chartState.loading}
     fontSize={12}
-    CustomToolTip={CustomTooltip}
+    legendLabels={["Local","App"]}
+    keyValue2='value2'
+    // CustomToolTip={CustomTooltip}
+    CustomToolTip={CustomTooltipCountHoursStacked}
     />
     </ChartDropMenu>
 

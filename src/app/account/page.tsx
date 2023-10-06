@@ -1,10 +1,13 @@
 "use client"
 
 import EditComponent from "@/components/util/input/EditComponent";
-import UpdatePassword from "@/components/util/input/UpdatePassword";
+import UpdatePasswordComponent from "@/components/util/input/UpdatePasswordComponent";
+import Loader from "@/components/util/loaders/Loader";
 import { GetAccount } from "@/core/repository/account";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Page = () =>{
     const [account,setAccount] = useState<User | undefined>(undefined)
@@ -33,12 +36,18 @@ const Page = () =>{
     },[])
 
     return(
-        <div>
+        <>
+         <ToastContainer
+            position='bottom-center'
+        />
         <div className="grid sm:grid-cols-2 p-3 max-w-6xl mx-auto gap-x-10">
             <span className="title text-2xl col-span-full pb-5 pt-3">Cuenta</span>
 
                 <div className="flex flex-col gap-y-2">
                     <span className="title text-xl">Información personal</span>
+                    {loadingAccount &&
+                    <Loader className=" flex justify-center w-full pt-10"/>
+                    }
                     {account != undefined &&
                    <>
                     <EditComponent
@@ -59,6 +68,7 @@ const Page = () =>{
                     label='Número de Telefono'
                     content={account.phone || ""}
                     type='tel'
+                    enableEdit={false}
                     edit={(addLoader,removeLoader,e)=>updateAccount("phone_number",e,addLoader,removeLoader)}
                     />
                     </>     
@@ -68,9 +78,15 @@ const Page = () =>{
                 <div className="flex flex-col gap-y-2">
                     <span className="title text-xl">Inicio de sesión y seguridad</span>
 
+                    {loadingAccount &&
+                    <Loader className=" flex justify-center w-full pt-10"/>
+                    }
+
                     {account != undefined &&
                    <>
-                    <UpdatePassword/>
+                    <UpdatePasswordComponent
+                    last_updated_password={account.last_updated_password}
+                    />
                     <EditComponent
                     label='Último inicio de sesión'
                     type='email'
@@ -84,7 +100,7 @@ const Page = () =>{
                 </div>
 
             </div>
-        </div>
+        </>
     )
 }
 

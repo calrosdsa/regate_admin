@@ -3,8 +3,16 @@ import {useState} from "react"
 import ButtonWithLoader from "../button/ButtonWithLoader"
 import { Transition } from "@headlessui/react"
 import ButtonSubmit from "../button/ButtonSubmit"
+import moment from "moment"
+import { UpdatePassword } from "@/core/repository/account"
+import { toast } from "react-toastify"
+import { successfulMessage, unexpectedError } from "@/context/config"
 
-const UpdatePassword = () =>{
+const UpdatePasswordComponent = ({
+    last_updated_password
+}:{
+    last_updated_password?:string
+}) =>{
     const [formData,setFormData] = useState({
         currentPassword:"",
         newPassword:"",
@@ -21,12 +29,29 @@ const UpdatePassword = () =>{
         })
     }
 
-    const onSubmit = (e:React.FormEvent<HTMLFormElement>)=>{
+    const onSubmit = async(e:React.FormEvent<HTMLFormElement>)=>{
         try{
+            setLoading(true)
             e.preventDefault()
-
+            const request:PasswordUpdateRequest = {
+                current_password:currentPassword,
+                new_password:newPassword
+            }
+            const res:Response = await UpdatePassword(request)
+            const data = await res.json()
+            switch(res.status){
+                case 400:
+                    toast.error(data.message)
+                    break;
+                case 200:
+                    toast.success(successfulMessage)
+                    break;
+                default:
+                    toast.info(unexpectedError)    
+            }
+            setLoading(false)
         }catch(err){
-            console.log(err)
+            toast.error(unexpectedError)
         }
     }
 
@@ -35,7 +60,7 @@ const UpdatePassword = () =>{
         <div className=" flex justify-between items-center space-x-5 py-3 divider">
            <div className="grid">
                <span className="label">Contraseña</span>
-               {/* <span className="text-sm">{content}</span> */}
+               <span className="text-sm">{last_updated_password != undefined ? moment(last_updated_password).utc().format('LLLL'):""}</span>
            </div>
             <span onClick={()=>setShow(!show)} className=" underline font-medium cursor-pointer">Actualizar</span>
        </div>
@@ -49,7 +74,7 @@ const UpdatePassword = () =>{
        leaveTo="transform opacity-0 scale-95"
        >
 
-        <form action="" className="grid gap-y-3">
+        <form onSubmit={onSubmit} className="grid gap-y-3">
             <div >
             <label className="label"
             htmlFor="currentPassword">Contraseña actual</label>
@@ -108,4 +133,4 @@ const UpdatePassword = () =>{
     )
 }
 
-export default UpdatePassword;
+export default UpdatePasswordComponent;
