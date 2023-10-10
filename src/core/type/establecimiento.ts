@@ -1,6 +1,7 @@
 type EstablecimientoDetail = {
     establecimiento:Establecimiento
     setting_establecimiento:SettingEstablecimiento
+    establecimiento_photos:Photo[]
 }
 
 type Establecimiento = {
@@ -19,6 +20,7 @@ type Establecimiento = {
     estado:number
     visibility:boolean
 }
+
 
 type EstablecimientoData = {
     description:string

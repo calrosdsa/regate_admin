@@ -77,6 +77,20 @@ export async function UpdateEstablecimientoPhoto(data:FormData) {
   return res.json()
 }
 
+export async function AddEstablecimientoPhoto(data:FormData) {
+  const res = await fetch(`../../api/establecimiento/add/photo`,{
+    method:"POST",
+    body:data,
+  })
+  if(res.status == 401) {
+    redirectToLogin()
+  }
+  if (!res.ok) {
+    throw new Error('Failed to fetch data')
+  }
+  return res.json()
+}
+
 export async function UpdateEstablecimientoAddress(data:string) {
   const res = await fetch(`../../api/establecimiento/update/address`,{
     method:"POST",

@@ -5,7 +5,7 @@ import '../../../../style/mapbox.css'
 import { MapComponent } from '@/components/register/MapComponent';
 import { useAppDispatch, useAppSelector } from '@/context/reduxHooks';
 import { uiActions } from '@/context/slices/uiSlice';
-import { UpdateEstablecimiento, UpdateEstablecimientoAddress, UpdateEstablecimientoPhoto, getEstablecimiento } from '@/core/repository/establecimiento';
+import { AddEstablecimientoPhoto, UpdateEstablecimiento, UpdateEstablecimientoAddress, UpdateEstablecimientoPhoto, getEstablecimiento } from '@/core/repository/establecimiento';
 import EditComponent from '@/components/util/input/EditComponent';
 import EditComponentImage from '@/components/util/input/EditComponentImage';
 import { DepositoEstado, EstablecimientoEstado, PaidType } from '@/core/type/enums';
@@ -32,6 +32,7 @@ import EditComponentSelect from '@/components/util/input/EditComponentSelect';
 import { systemActions } from '@/context/slices/systemSlice';
 import { InfoTextId } from '@/core/repository/core/system';
 import { getInfoText } from '@/context/actions/system-actions';
+import EstablecimientoPhotos from '@/components/util/image/Photos';
 
 const Page = ({ params }: { params: { uuid: string } }) =>{
     const establecimientoEstados = [{value:"true",name:"Visible"}
@@ -54,6 +55,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
     const [openAddRuleDialog,setOpenAddRuleDialog] = useState(false)
     const [openDeleteRuleDialog,setOpenDeleteRuleDialog] = useState(false)
     const [openUpdateMethodDialog,setOpenUpdateMethodDialog] = useState(false)
+    const [establecimientoPhoto,setEstablecimientoPhoto] = useState<File | undefined>(undefined)
     const [photo,setPhoto] = useState<File | undefined>(undefined)
     
     // const {establecimiento,setting_establecimiento} = data as EstablecimientoDetail
@@ -160,11 +162,11 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
     }
 
     const uploadImage = async(setLoading:(e:boolean)=>void) =>{
-        if(photo != undefined && data?.establecimiento != undefined){
+        if(establecimientoPhoto != undefined && data?.establecimiento != undefined){
             try{
                 setLoading(true)
                 const formData = new FormData()
-                formData.append("photo",photo)
+                formData.append("photo",establecimientoPhoto)
                 formData.append("uuid",data?.establecimiento.uuid)
                 formData.append("id",data?.establecimiento.id.toString())
                 const res:string = await UpdateEstablecimientoPhoto(formData)
@@ -184,6 +186,30 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 console.log(err)
                 toast.error(unexpectedError)
             }
+        }
+    }
+    const addEstablecimientoPhoto = async(setLoading:(e:boolean)=>void) => {
+        if(photo != undefined && data?.establecimiento != undefined){
+        try{
+            setLoading(true)
+            const formData = new FormData()
+            formData.append("file",photo)
+            formData.append("uuid",data?.establecimiento.uuid)
+            formData.append("establecimiento_id",data?.establecimiento.id.toString())
+            const res:Photo = await AddEstablecimientoPhoto(formData)
+            setData({
+                ...data,
+                establecimiento_photos:[...data.establecimiento_photos,res]
+            })
+            setLoading(false)
+            // setOpenMap(false)
+            toast.success(successfulMessage)
+            // toast.success("¡Los cambios realizados han sido guardados exitosamente!")
+        }catch(err){
+            setLoading(false)
+            console.log(err)
+            toast.error(unexpectedError)
+        }
         }
     }
     const updateAddress = async(lng:string,lat:string,address:string,setLoading:(bool:boolean)=>void) =>{
@@ -312,7 +338,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                     appendSerachParams("map","1",router,current,pathname)
                 }} className=" underline font-medium cursor-pointer">Edit</span>
             </div>
-            <div className="w-full h-44 mt-2">
+            <div className="w-full mt-2 mb-2">
             <CommonImage
             src={data?.establecimiento?.address_photo + `?${Date.now()}`}
             w={250}
@@ -326,11 +352,30 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             <div>
             <span className="label pb-1">Imagen de portada</span>
             <UploadImage
-            setFile={(e)=>setPhoto(e)}
+            setFile={(e)=>setEstablecimientoPhoto(e)}
             src={data?.establecimiento.photo}
             save={(setLoading)=>uploadImage(setLoading)}
             width="w-full"
             />
+            </div>
+
+            <div>
+            <span className="label pb-1">Imagenes</span>
+            <div className='flex gap-3 w-full flex-wrap'>
+            <EstablecimientoPhotos
+            items={data.establecimiento_photos}
+            uuid={params.uuid}
+            />
+            <UploadImage
+            setFile={(e)=>setPhoto(e)}
+            // src={data?.establecimiento.photo}
+            save={(setLoading)=>addEstablecimientoPhoto(setLoading)}
+            clearAfterUpload={true}
+            width="w-40"
+            height='h-40'
+            id='photos'
+            />
+            </div>
             </div>
        
             {openMap&&

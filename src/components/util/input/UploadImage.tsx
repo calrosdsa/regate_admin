@@ -3,13 +3,14 @@ import { ChangeEvent, useEffect, useState } from "react";
 import CommonImage from "../image/CommonImage";
 import ButtonWithLoader from "../button/ButtonWithLoader";
 
-const UploadImage = ({setFile,src,save,id="file",width="w-44",height="h-44"}:{
+const UploadImage = ({setFile,src,save,id="file",width="w-44",height="h-44",clearAfterUpload=false}:{
     setFile:(e:File)=>void
     src?:string
     width?:string
     height?:string
-    save?:(setLoading:(e:boolean)=>void)=>void
+    save?:(setLoading:(e:boolean)=>void)=>Promise<void>
     id?:string
+    clearAfterUpload?:boolean
 }) => {
     const [loading,setLoading] = useState(false)
     const [source,setSource] = useState("/images/img-default.png")
@@ -30,7 +31,7 @@ const UploadImage = ({setFile,src,save,id="file",width="w-44",height="h-44"}:{
     },[src])
     return(
         <div className="grid sm:grid-cols-2  place-items-center ">
-            <div className="w-full h-44">
+            <div className="w-full h-40">
             <CommonImage
             src={source.includes("https") ? `${source}?${Date.now()}` : source}
             w={250}
@@ -46,7 +47,12 @@ const UploadImage = ({setFile,src,save,id="file",width="w-44",height="h-44"}:{
             </label>
             {save != undefined &&
             <ButtonWithLoader
-            onClick={()=>save((e)=>setLoading(e))}
+            onClick={async()=>{
+                await save((e)=>setLoading(e))
+                if(clearAfterUpload){
+                    setSource("/images/img-default.png")
+                }
+            }}
             title="Guardar"
             className=""
             loading={loading}

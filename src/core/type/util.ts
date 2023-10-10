@@ -9,3 +9,10 @@ type PaginationProps = {
 type ResponseMessage = {
     message:string
 }
+
+
+type Photo = {
+    id:number
+    parent_id:number
+    url:string
+}

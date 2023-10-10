@@ -1,12 +1,13 @@
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment, useEffect, useRef, useState } from 'react'
 
-export default function MenuLayout({children}:{
-    children:React.ReactNode
+export default function MenuLayout({children,className=""}:{
+  className?:string
+  children:React.ReactNode
 }) {
   return (
     <div className="h-7">
-      <Menu as="div" className="relative inline-block text-left">
+      <Menu as="div" className={`relative inline-block text-left ${className}`}>
         <div>
           <Menu.Button className="rounded-full noSelect hover:bg-gray-200 cursor-pointer flex justify-center">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
