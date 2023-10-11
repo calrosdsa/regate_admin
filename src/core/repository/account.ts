@@ -21,6 +21,10 @@ export async function GetAccount() {
   return res.json()
 }
 
+  export async function ValidateUser() {
+    const res = await fetch(`../../api/account/auth/validate`)
+    return res
+  }
 
   export async function SendResetPasswordEmail(mail:string) {
     const res = await fetch(`../../api/account/auth/send-reset-password?mail=${mail}`)

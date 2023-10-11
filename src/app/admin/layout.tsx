@@ -7,13 +7,16 @@ import SideBar from '@/components/util/sidebar/Sidebar'
 import MobileSidebar from '@/components/util/sidebar/MobileSidebar'
 import { useAppDispatch, useAppSelector } from '@/context/reduxHooks'
 import { uiActions } from '@/context/slices/uiSlice'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { getUser } from '@/context/actions/account-actions'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import LoaderDialog from '@/components/util/loaders/LoaderDialog'
 import ButtonIcon from '@/components/util/button/ButtonIcon'
+import { ValidateUser } from '@/core/repository/account'
+import { rootEstablecimiento } from '@/core/util/routes'
+import { Http } from '@/core/type/enums'
 
 // const inter = Inter({ subsets: ['latin'] })
 
@@ -26,12 +29,19 @@ export default function RootLayout({
   const dispatch = useAppDispatch()
   const uiState = useAppSelector(state=>state.ui)
   const pathName = usePathname()
+  const router = useRouter()
 
+  const validateUser = async() =>{
+      const res = await ValidateUser()
+      if(res.status == Http.StatusUnauthorized){
+        router.push('../auth/login')  
+      }
+  }
   useEffect(()=>{
+    validateUser()
     dispatch(uiActions.openSidebar(false))
     dispatch(getUser())
   },[pathName])
-
   return (
     // <html lang="en">
     //   <body className="flex">

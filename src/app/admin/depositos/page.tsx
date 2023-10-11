@@ -205,7 +205,7 @@ const Page = () => {
                         <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
                         onClick={()=>{
                             appendSerachParams("tabIndex","1")
-                            if(accountBanks != null) return
+                            if(accountBanks.length > 0) return
                             getData('1')
                         }}>Cuentas</Tab>
                         {/* <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}

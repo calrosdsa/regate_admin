@@ -166,7 +166,7 @@ const Page = ({params}:{params:{uuid:string}}) =>{
     return(
         <>
         <div className="default-padding h-screen">
-            <div className="flex space-x-2 items-center">
+            <div className="flex space-x-2 items-center p-1">
                 <Link href={`${rootEstablecimiento}/${params.uuid}/depositos`} className="link">Depositos</Link>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
                  className="w-5 h-5">

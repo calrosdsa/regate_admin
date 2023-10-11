@@ -5,7 +5,7 @@ import '../../../../style/mapbox.css'
 import { MapComponent } from '@/components/register/MapComponent';
 import { useAppDispatch, useAppSelector } from '@/context/reduxHooks';
 import { uiActions } from '@/context/slices/uiSlice';
-import { AddEstablecimientoPhoto, UpdateEstablecimiento, UpdateEstablecimientoAddress, UpdateEstablecimientoPhoto, getEstablecimiento } from '@/core/repository/establecimiento';
+import { AddEstablecimientoPhoto, DeleteEstablecimientoPhoto, UpdateEstablecimiento, UpdateEstablecimientoAddress, UpdateEstablecimientoPhoto, getEstablecimiento } from '@/core/repository/establecimiento';
 import EditComponent from '@/components/util/input/EditComponent';
 import EditComponentImage from '@/components/util/input/EditComponentImage';
 import { DepositoEstado, EstablecimientoEstado, PaidType } from '@/core/type/enums';
@@ -237,7 +237,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 })
                 setOpenMap(false)
                 setLoading(false)
-                toast.success("¡Los cambios realizados han sido guardados exitosamente!")
+                toast.success(successfulMessage)
         }catch(err){
             setLoading(false)
             console.log(err)
@@ -245,7 +245,23 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         }
     }
     }
-
+    const deleteEstablecimientoPhoto = async(setLoading:(e:boolean)=>void,d:Photo) =>{
+        try{
+            if(data == null) return
+            setLoading(true)
+            await DeleteEstablecimientoPhoto(d)
+            const updatePhotoList = data.establecimiento_photos.filter(item=>item.id != d.id)
+            setData({
+                ...data,
+                establecimiento_photos:updatePhotoList
+            })
+            toast.success(successfulMessage)
+            setLoading(false)
+        }catch(err){
+            toast.error(unexpectedError)
+            setLoading(false)
+        }
+    }
    
 
     useEffect(()=>{
@@ -365,6 +381,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             <EstablecimientoPhotos
             items={data.establecimiento_photos}
             uuid={params.uuid}
+            deletePhoto={deleteEstablecimientoPhoto}
             />
             <UploadImage
             setFile={(e)=>setPhoto(e)}

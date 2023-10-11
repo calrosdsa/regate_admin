@@ -26,7 +26,7 @@ export default function MenuLayout({children,className=""}:{
           leaveTo="transform opacity-0 scale-95"
         >
           <Menu.Items className="absolute right-1 z-10 mt-2 overflow-y-auto bg-white shadow-lg ring-1 ring-black
-         ring-opacity-5 focus:outline-none">
+          rounded-md ring-opacity-5 focus:outline-none">
             {children}
             {/* <div className="px-1 py-1 ">
 

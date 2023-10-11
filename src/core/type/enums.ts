@@ -71,3 +71,8 @@ export enum EstablecimientoEstado {
     ESTABLECIMIENTO_VERIFICADO = 1,
     ESTABLECIMIENTO_PENDIENTE = 2
 }
+
+export enum Http {
+    StatusUnauthorized = 401,
+    StatusBadRequest = 400
+}

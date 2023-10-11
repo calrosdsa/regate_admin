@@ -1,4 +1,5 @@
 import Loader from "@/components/util/loaders/Loader";
+import { getDepositoEstadoName } from "@/core/repository/billing";
 import { DepositoEstado } from "@/core/type/enums";
 import moment from "moment";
 
@@ -45,7 +46,7 @@ const Deposito = ({deposito,loading}:{
             className="w-6 h-6">
   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="text-lg">Pendiente</span>
+            <span className="text-lg">{getDepositoEstadoName(deposito.estado)}</span>
             </div>
             </div>
             }
@@ -57,7 +58,7 @@ const Deposito = ({deposito,loading}:{
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="text-lg">Emitido 
+            <span className="text-lg">{getDepositoEstadoName(deposito.estado)}
             {deposito.emition_date != null &&
             <span className="text-gray-600"> {moment(deposito.emition_date).format('l')}</span>
             }

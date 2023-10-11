@@ -1,4 +1,5 @@
 import { LOCAL_URL } from "@/context/config"
+import { DepositoEstado } from "../type/enums"
 
 export async function GetBanks(){
     const res = await fetch(`${LOCAL_URL}/api/admin/billing/banks`)
@@ -56,7 +57,7 @@ export async function GetDepositosFromDepositoEmpresa(id:number){
 }
 
 export async function GetDepositos(page:number,uuid:string){
-  const res = await fetch(`../../api/admin/billing/depositos?page=${page}&uuid=${uuid}`)
+  const res = await fetch(`${LOCAL_URL}/api/admin/billing/depositos?page=${page}&uuid=${uuid}`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')
@@ -66,7 +67,7 @@ export async function GetDepositos(page:number,uuid:string){
       return res.json()
 }
 export async function GetDeposito(uuid:string){
-  const res = await fetch(`../../../api/admin/billing/deposito?uuid=${uuid}`)
+  const res = await fetch(`${LOCAL_URL}/api/admin/billing/deposito?uuid=${uuid}`)
   if (!res.ok) {
       // This will activate the closest `error.js` Error Boundary
       throw new Error('Failed to fetch data')
@@ -77,7 +78,7 @@ export async function GetDeposito(uuid:string){
 }
 
 export async function GetReservasPagadas(data:ReservaDataFilter,page:number){
-  const res = await fetch(`../../../api/admin/billing/reservas-pagadas?page=${page}`,{
+  const res = await fetch(`${LOCAL_URL}/api/admin/billing/reservas-pagadas?page=${page}`,{
     method:'post',
     body:JSON.stringify(data)
   })
@@ -130,4 +131,13 @@ export async function AssignBankAccount(data:AssignBankAccountRequest){
    
   //   console.log(res)
     return res.json()
+}
+
+export const getDepositoEstadoName = (estado:DepositoEstado):string =>{
+      switch(estado){
+      case DepositoEstado.EMITIDO:
+        return  "Emitido"      
+        case DepositoEstado.PENDIENTE:
+        return "Pendiente"  
+     }
 }

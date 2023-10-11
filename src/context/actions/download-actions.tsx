@@ -8,7 +8,7 @@ import { accountActions } from "../slices/accountSlice"
 import { adminRoutes, rootEstablecimiento } from "@/core/util/routes"
 import { Id, toast } from "react-toastify"
 import { redirectToLogin } from "."
-import { API_URL, unexpectedError } from "../config"
+import { API_URL, LOCAL_URL, unexpectedError } from "../config"
 import moment from "moment"
 
 
@@ -24,7 +24,7 @@ export const downloadReporteDeposito = (depositoId: number,reporteId:ReporteId) 
                 }else{
                     id = toast.loading("Generando reporte, por favor espere...")
                     const date = moment().format('LLLL').replace(":",";");
-                    await axios.post(`../../../api/admin/billing/deposito/reporte?depositoId=${depositoId}`,{},{
+                    await axios.post(`${LOCAL_URL}/api/admin/billing/deposito/reporte?depositoId=${depositoId}`,{},{
                         responseType:"blob"
                     }).then((response)=>{
                         const url = window.URL.createObjectURL(new Blob([response.data]));

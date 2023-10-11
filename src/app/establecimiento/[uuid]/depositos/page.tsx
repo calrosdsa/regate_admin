@@ -3,11 +3,9 @@ import AccountBank from "@/components/admin/billing/AccountBank";
 import Depositos from "@/components/admin/billing/Depositos";
 import Loader from "@/components/util/loaders/Loader";
 import Pagination from "@/components/util/pagination/Pagination";
-import { useAppDispatch } from "@/context/reduxHooks";
 import { GetBankAccountEstablecimiento, GetBankAccounts, GetBanks, GetDepositos } from "@/core/repository/billing";
 import { Order } from "@/core/type/enums";
 import { Tab } from "@headlessui/react"
-import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -16,7 +14,6 @@ const Page = ({params}:{params:{uuid:string}}) => {
     const tabIndex = searchParams.get("tabIndex")
     const page = searchParams.get("page") || "1"
     const current = new URLSearchParams(Array.from(searchParams.entries()))
-    const dispatch = useAppDispatch()
     const pathname = usePathname();
     const router = useRouter()
     const [banks,setBanks] = useState<Bank[]>([])
@@ -137,7 +134,7 @@ const Page = ({params}:{params:{uuid:string}}) => {
           
              <Tab.Group defaultIndex={tabIndex != null ? Number(tabIndex):0}>
 
-                    <Tab.List className={" sticky top-0 bg-gray-50  w-full z-10 py-3"}>
+                    <Tab.List className={"w-full z-10 py-3"}>
                         <Tab className={({ selected }) => `tab ${selected && "tab-enabled"}`}
                         onClick={()=>{
                             appendSerachParams("tabIndex","0")

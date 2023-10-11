@@ -2,10 +2,11 @@ import ImageOption from "../input/ImageOption";
 
 
 const Photos = ({
-    items,uuid
+    items,uuid,deletePhoto
 }:{
     items:Photo[]
     uuid:string
+    deletePhoto:(setLoading:(e:boolean)=>void,d:Photo)=>void
 }) => {
     return(
         <>
@@ -13,10 +14,11 @@ const Photos = ({
                 return(
                     <div className="w-40" key={index}>
                         <ImageOption
-                        establecimiento_id={item.parent_id}
+                        parent_id={item.parent_id}
                         id={item.id}
                         url={item.url}
                         establecimiento_uuid={uuid}
+                        deletePhoto={deletePhoto}
                         />
                     </div>
                 )
