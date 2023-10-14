@@ -33,6 +33,8 @@ import { systemActions } from '@/context/slices/systemSlice';
 import { InfoTextId } from '@/core/repository/core/system';
 import { getInfoText } from '@/context/actions/system-actions';
 import EstablecimientoPhotos from '@/components/util/image/Photos';
+import { days } from '@/context/actions/chart-actions';
+import AttentionScheduleComponent from '@/components/establecimiento/setting/AttentionScheduleComponent';
 
 const Page = ({ params }: { params: { uuid: string } }) =>{
     const establecimientoEstados = [{value:"true",name:"Visible"}
@@ -103,10 +105,26 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
     const getEstablecimientoDetail = async() =>{
         try{
             const res:EstablecimientoDetail =await getEstablecimiento(params.uuid)
+            const week = days.map(day=>{
+                const scheduleDay = res.attention_schedule_week.find(item=>item.day_week == day.value)
+                const schedule:AttentionSchedule = {
+                    day_name:day.day,
+                    day_week:day.value,
+                    establecimiento_id:res.establecimiento.id,
+                    id:scheduleDay?.id || 0,
+                    schedule_interval:scheduleDay?.schedule_interval || [],
+                    open:scheduleDay?.open || false,
+                    closed:scheduleDay?.closed || false
+                }
+                return schedule
+            })
             console.log(res)
             getEstablecimientoAmenities(res.establecimiento.id)
             getEstablecimientoRules(res.establecimiento.id)
-            setData(res)
+            setData({
+                ...res,
+                attention_schedule_week:week
+            })
 
         }catch(err){
             console.log(err)
@@ -420,6 +438,18 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         {data?.setting_establecimiento != undefined &&
             <div className='p-4 flex flex-col gap-y-4 xl:overflow-auto'>
             <span className="text-xl py-2 font-medium">Establecimiento Ajustes</span>
+
+            <span className='label'>Metodo de pago</span>
+            <AttentionScheduleComponent
+            attention_schedue_week={data.attention_schedule_week}
+            updateList={(e)=>{
+                setData({
+                    ...data,
+                    attention_schedule_week:e
+                })
+            }}
+            />
+
             <span className='label'>Metodo de pago</span>
             <div className='flex flex-wrap gap-3'>   
             {data?.setting_establecimiento.paid_type != null &&

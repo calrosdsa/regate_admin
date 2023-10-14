@@ -1,3 +1,15 @@
+export async function UpdateAttentionSchedule(data:AttentionSchedule){
+  const res = await fetch(`../../api/setting/attention-schedule/`,{
+      method:'POST',
+      body:JSON.stringify(data)
+  })
+  if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error('Failed to fetch data')
+    }
+    return res.json()
+}
+
 export async function addIntervalsHorario(data:AddIntervalRequest){
     const res = await fetch(`../../api/setting/interval`,{
         method:'POST',

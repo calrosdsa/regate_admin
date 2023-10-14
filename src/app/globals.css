@@ -81,6 +81,13 @@
   .info-label {
     @apply text-primary label text-xs hover:text-hoverPrimary hover:underline cursor-pointer
   }
+  .icon-button {
+    @apply rounded-full active:bg-gray-200 lg:hover:bg-gray-200 cursor-pointer w-8 h-8 p-[6px]
+  }
+  .text-button {
+    @apply text-primary lg:hover:bg-primary lg:hover:bg-opacity-10 p-3 rounded-lg cursor-pointer 
+    active:bg-primary active:bg-opacity-10 font-medium text-sm
+  }
   
 }
 

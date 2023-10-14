@@ -2,12 +2,14 @@ import { Dialog, Transition } from "@headlessui/react"
 import {  Fragment, ReactNode, useRef } from 'react'
 
 
-const DialogLayout = ({open,close,children,title ="",className="",allowClose=false,allowFullScreen=false}:{
+const DialogLayout = ({open,close,children,title ="",className="",allowClose=false,allowFullScreen=false,
+showHeader=true}:{
     open:boolean
     allowClose?:boolean
     close:()=>void
     children:ReactNode
     className?:string
+    showHeader?:boolean
     title?:string
     allowFullScreen?:boolean
 }) =>{
@@ -46,9 +48,10 @@ const DialogLayout = ({open,close,children,title ="",className="",allowClose=fal
                 >
                 <Dialog.Panel className={`transform overflow-hidden rounded-lg bg-white p-2
                 text-left align-middle shadow-xl transition-all w-full ${className} ${allowFullScreen && "h-screen sm:h-full"}`}>
+                  {showHeader&&
                   <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900 flex justify-between items-center space-x-12"
+                  as="h3"
+                  className="text-lg font-medium leading-6 text-gray-900 flex justify-between items-center space-x-12"
                   >
                     <span>{title}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
@@ -57,6 +60,7 @@ const DialogLayout = ({open,close,children,title ="",className="",allowClose=fal
              </svg>
 
                      </Dialog.Title>
+                    }
                      <input type="text" readOnly className="h-0 w-1 opacity-0"/>
                      <div className="-mt-6">
                      {children}

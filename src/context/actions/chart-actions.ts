@@ -276,7 +276,7 @@ const months = [
 
 ]
 
-const days = [
+export const days = [
     {day:"Domingo",value:0},
     {day:"Lunes",value:1},
     {day:"Martes",value:2},
