@@ -57,6 +57,17 @@ const AttentionScheduleDialog = ({open,close,currentScheduleDay,setCurrentSchedu
     }
     
     const deleteScheduleTime = (index:number) =>{
+        // const newList = data.schedule_interval.splice(index,1)
+        const newList = data.schedule_interval.map((item,idx)=>{
+            if(idx == index){
+                item.deleted = true
+            }
+            return item
+        })
+        setData({
+            ...data,
+            schedule_interval:newList
+        })
     }
 
 
@@ -153,18 +164,23 @@ const AttentionScheduleDialog = ({open,close,currentScheduleDay,setCurrentSchedu
             <div className=" flex flex-col space-y-4 px-2 sm:px-10 pt-3">
                 {data.schedule_interval.map((item,index)=>{
                     return(
+                        <>
+                        {!item.deleted &&
                         <div key={index} className="flex space-x-2 items-center">
-                            <input type="time" className="input w-28" value={item.start_time}
+                            <input type="time" className="input w-[120px]" value={item.start_time}
                             name="start_time"
                             onChange={(e)=>onStartTimeChange(e,index)}/>
-                            <input type="time" className="input w-28" value={item.end_time}
+                            <input type="time" className="input w-[120px]" value={item.end_time}
                             name="end_time" onChange={(e)=>onEndTimeChange(e,index)}
                             />
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
-                             className="icon-button">
+                            <svg onClick={()=>deleteScheduleTime(index)}
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
+                            className="icon-button">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </div>
+                        }
+                        </>
                     )
                 })}
             </div>

@@ -439,7 +439,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             <div className='p-4 flex flex-col gap-y-4 xl:overflow-auto'>
             <span className="text-xl py-2 font-medium">Establecimiento Ajustes</span>
 
-            <span className='label'>Metodo de pago</span>
+            <span className='label'>Horario de atención</span>
             <AttentionScheduleComponent
             attention_schedue_week={data.attention_schedule_week}
             updateList={(e)=>{
