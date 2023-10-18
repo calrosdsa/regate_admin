@@ -21,7 +21,6 @@
     "eslint": "8.42.0",
     "eslint-config-next": "13.4.4",
     "firebase": "^10.3.1",
-    "mapbox-gl": "^2.15.0",
     "moment": "^2.29.4",
     "next": "13.4.4",
     "next-pwa": "^5.6.0",
