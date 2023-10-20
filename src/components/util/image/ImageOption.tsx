@@ -1,6 +1,6 @@
 import { Menu } from "@headlessui/react"
 import MenuLayout from "../button/MenuLayout"
-import CommonImage from "../image/CommonImage"
+import CommonImage from "./CommonImage"
 import { useState } from "react"
 import Loader from "../loaders/Loader"
 import Spinner from "../loaders/Spinner"

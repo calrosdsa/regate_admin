@@ -1,4 +1,4 @@
-import ImageOption from "../input/ImageOption";
+import ImageOption from "./ImageOption";
 
 
 const Photos = ({

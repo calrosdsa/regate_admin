@@ -32,7 +32,7 @@ import EditComponentSelect from '@/components/util/input/EditComponentSelect';
 import { systemActions } from '@/context/slices/systemSlice';
 import { InfoTextId } from '@/core/repository/core/system';
 import { getInfoText } from '@/context/actions/system-actions';
-import EstablecimientoPhotos from '@/components/util/image/Photos';
+import Photos from '@/components/util/image/Photos';
 import { days } from '@/context/actions/chart-actions';
 import AttentionScheduleComponent from '@/components/establecimiento/setting/AttentionScheduleComponent';
 
@@ -329,6 +329,16 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             
             </div>
             }
+             {data.establecimiento.estado == EstablecimientoEstado.ESTABLECIMIENTO_BLOQUEADO&&
+            <div className="flex space-x-2 text-gray-600 items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
+            className="w-6 h-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="text-lg">Verificación pendiente</span>
+            
+            </div>
+            }
             </div>
 
             {data.establecimiento.estado == EstablecimientoEstado.ESTABLECIMIENTO_VERIFICADO &&
@@ -396,7 +406,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             <div>
             <span className="label pb-1">Imagenes</span>
             <div className='flex gap-3 w-full flex-wrap'>
-            <EstablecimientoPhotos
+            <Photos
             items={data.establecimiento_photos}
             uuid={params.uuid}
             deletePhoto={deleteEstablecimientoPhoto}

@@ -120,7 +120,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
 
           <ButtonSubmit 
           loading={uploadLoading}
-          title="Crear Establecimiento"
+          title="Crear cancha"
           />
             </form>
         </div>

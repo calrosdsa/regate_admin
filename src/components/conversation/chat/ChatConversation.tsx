@@ -62,6 +62,7 @@ const ChatConversation = ({conversation}:{
       },[messages])
 
     useEffect(()=>{
+        // setMessages([])
         console.log("getting new connection")
         connection.current = new WebSocket(`ws://localhost:9091/v1/ws/conversation/?id=${id}`);
         connection.current.onopen = () => {
