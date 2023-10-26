@@ -4,9 +4,9 @@ import { cookies } from 'next/headers'; // Import cookies
 import { API_URL } from "@/context/config";
 export async function POST(request:Request) {
    try{
-      const nextCookies = cookies(); // Get cookies object
-      
+      const nextCookies = cookies(); // Get cookies object      
       const body = await request.json();
+      console.log(body)
       const res = await fetch(`${API_URL}/account/admin/login/`,{
             method:"post",
             body:JSON.stringify(body),

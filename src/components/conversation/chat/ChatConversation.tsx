@@ -1,5 +1,6 @@
 import { API_URL_MESSAGE } from "@/context/config";
 import { GetMessages } from "@/core/repository/conversation";
+import { MessageEvent, TypeChat } from "@/core/type/enums";
 import { formatterShorTime, getRandomInt } from "@/core/util";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -14,12 +15,12 @@ const ChatConversation = ({conversation}:{
     const searchParams = useSearchParams()
     const id = searchParams.get("id") || conversation.conversation_id.toString()
     const [page,setPage] = useState(1)
-    const [hideButton,setHideButton] = useState(false)
+    const [hideButton,setHideButton] = useState(true)
     const getMessages = async(page:number) => {
         const res:PaginationConversationMessage = await GetMessages(Number(id),page)
-        if(res.results.length < 20){
+        if(res.nextPage == 0){
             console.log("SIZE ",res.results.length)
-            setHideButton(true)
+            setHideButton(false)
         }
         if(page == 1){
             setMessages(res.results)
@@ -34,18 +35,38 @@ const ChatConversation = ({conversation}:{
         }
     },[searchParams])
 
-    const sendMessage = ()=>{
+    const sendMessage = async()=>{
         try{
             if(messageContent=="") return
             const data:ConversationMessage = {
             id: getRandomInt(),
-            sender_id:2023,
-            conversation_id:conversation.conversation_id,
+            profile_id:conversation.profile_id,
+            chat_id:conversation.conversation_id,
             content:messageContent,
+            type_message:0,
+            parent_id:conversation.parent_id,
             created_at:new Date().toISOString(),
             }
-            console.log(data)
-            connection.current?.send(JSON.stringify(data))
+            const messagePublishRequest:MessagePublishRequest = {
+                type_chat:TypeChat.TypeChatInboxEstablecimiento,
+                message:data,
+                chat_id:conversation.conversation_id
+            }
+            // const data:
+            console.log(messagePublishRequest)
+            const res = await fetch("http://localhost:9091/v1/chat/publish/message/",{
+                method:"post",
+                body:JSON.stringify(messagePublishRequest),
+                headers:{
+                    "Content-Type":"application/json"
+                }
+            })
+            if(!res.ok){
+                throw new Error('Failed to fetch data')
+            }
+            const body = await res.json()
+            console.log("MESSAGE RESPONSE",body)
+            // connection.current?.send(JSON.stringify(data))
             setMessageContent("")
         }catch(err){
             console.log(err)
@@ -64,18 +85,20 @@ const ChatConversation = ({conversation}:{
     useEffect(()=>{
         // setMessages([])
         console.log("getting new connection")
-        connection.current = new WebSocket(`ws://localhost:9091/v1/ws/conversation/?id=${id}`);
+        connection.current = new WebSocket(`ws://localhost:9091/v1/ws/suscribe/chat/?id=${id}&profileId=0`);
         connection.current.onopen = () => {
         }
         connection.current.onclose = () => {
         };
         connection.current.onmessage = (e) => {
-            console.log(e.data)
-          const message:ConversationMessage = JSON.parse(e.data)
-          setMessages(e=>[message,...e])
-        //   data.created_on = Date.now()
-        //   setMessages(oldArray => [...oldArray,data]);
-            // refEl.current.scrollIntoView({behavior:"smooth"})
+            const payload:MessagePayload = JSON.parse(e.data)
+            switch(payload.type){
+                case MessageEvent.Message:
+                    const message:ConversationMessage = JSON.parse(payload.payload)
+                    setMessages(e=>[message,...e])
+                    break;
+
+            }
         };
 
         return () => {
@@ -92,13 +115,13 @@ const ChatConversation = ({conversation}:{
                 {messages.map((item)=>{
                     return(
                         <div key={item.id} className={` p-2 m-2 rounded-lg text-sm grid max-w-lg
-                        ${item.sender_id == conversation.profile_id
+                        ${item.profile_id == conversation.profile_id
                         ?"place-self-start bg-gray-200 "
                         :"place-self-end bg-primary text-white"} `}>
 
                             {item.reply_to != null &&
                             <div className={`p-1 rounded-lg 
-                            ${item.sender_id == conversation.profile_id 
+                            ${item.profile_id == conversation.profile_id 
                             ?"bg-gray-200 brightness-90 border-primary border-l-4"
                             :"bg-primary brightness-90 border-white border-l-4"
                         }`}>

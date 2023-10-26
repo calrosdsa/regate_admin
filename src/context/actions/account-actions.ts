@@ -45,10 +45,11 @@ export const login = (email:string,password:string) :ThunkAction<void,RootState,
     return async(dispatch)=>{
         try{
             console.log(password,email)
+            const fcm_token = localStorage.getItem("_fcm")
             dispatch(uiActions.setInnerLoading(true))
             const res = await fetch(`../api`,{
                  method:"POST",
-                 body:JSON.stringify({email,password})
+                 body:JSON.stringify({email,password,fcm_token})
             })
             console.log(res.status)
             // console.log(await res.json())

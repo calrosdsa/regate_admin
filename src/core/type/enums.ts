@@ -77,3 +77,11 @@ export enum Http {
     StatusUnauthorized = 401,
     StatusBadRequest = 400
 }
+
+export enum TypeChat {
+    TypeChatInboxEstablecimiento= 2
+}
+
+export enum MessageEvent {
+    Message = "message"
+}
