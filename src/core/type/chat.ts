@@ -27,7 +27,10 @@ type ConversationMessage = {
     type_message:number
     reply_to?:number
     parent_id:number
+    is_read?:boolean
+    is_user?:boolean
     reply?:Reply
+    shouldIncrement?:boolean
 }
 
 type PaginationConversationMessage = {
@@ -46,4 +49,14 @@ type Reply = {
     parent_id:number
 }
 
+type Chat = {
+    message?:ConversationMessage
+    chat:EstablecimientoConversation
+    count_unread_messages:number
+}
 
+type ChatState = {
+    chats:Chat[]
+    messages:ConversationMessage[]
+    messages_count:number
+}

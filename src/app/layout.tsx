@@ -6,7 +6,7 @@ import { Providers } from './provider'
 import LoaderDialog from '@/components/util/loaders/LoaderDialog';
 import { useAppDispatch, useAppSelector } from '@/context/reduxHooks';
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 // import { firebaseConfig } from '@/core/util/firebase-messaging-sw.js'
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken,onMessage} from "firebase/messaging";
@@ -18,6 +18,9 @@ import 'moment/locale/es'
 import { WS_URL } from '@/context/config'
 import { PayloadType, WsAccountPayload } from '@/core/type/notification'
 import { toast } from 'react-toastify'
+import { initDb, insertMessage } from '@/context/db'
+import { chatActions } from '@/context/slices/chatSlice'
+import { Parent } from './parent'
 // import { messaging } from '@/core/util/firebase'
 
 // export const metadata = {
@@ -30,10 +33,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const connection = useRef<WebSocket>();
-
-
- 
+  
+  
   
   const GetToken = () =>{
     const firebaseConfig = {
@@ -81,13 +82,9 @@ export default function RootLayout({
   }
 
 
-  const startWs = () => {
-    
-  }
-
-
 
   useEffect(()=>{
+    initDb()
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/firebase-messaging-sw.js").then(
         (registration) => {
@@ -104,36 +101,7 @@ export default function RootLayout({
     GetToken()
     moment.locale("es")
 
-    const userLocal = localStorage.getItem("user") 
-    const user:User | null = userLocal != null ? JSON.parse(userLocal) : null
-    console.log(user)
-    if(user != null) {
-      connection.current =  new WebSocket(`${WS_URL}/v1/ws/suscribe/user/admin/?id=${user.id}`)
-      connection.current.onmessage = (e) => {
-        const data:WsAccountPayload = JSON.parse(e.data)
-        switch(data.type){
-          case PayloadType.PAYLOAD_GRUPO_MESSAGES:
-            toast.info("Tienes un nuevo mensaje")
-            break;
-        }
-        console.log(e)
-        // const payload:MessagePayload = JSON.parse(e.data)
-        // switch(payload.type){
-        //     case MessageEvent.Message:
-        //         const message:ConversationMessage = JSON.parse(payload.payload)
-        //         setMessages(e=>[message,...e])
-        //         break;
-
-        // }
-    };
-    connection.current.onclose = () => {
-      console.log("WS ONCLOSE")
-    };
-    }
-    return () => {
-      console.log("WS CLOSE")  
-      connection.current?.close();
-    }
+    
   },[])
   
 
@@ -146,10 +114,14 @@ export default function RootLayout({
       </head>
       <Providers>
       <body className='bg-gray-50'>
+        <>
         {/* <button onClick={()=>getTokenFcm()}>
           GET TOKEN
         </button> */}
+        <Parent>
         {children}
+        </Parent>
+        </>
         </body>
       </Providers>
     </html>
