@@ -29,6 +29,7 @@ type ConversationMessage = {
     parent_id:number
     is_read?:boolean
     is_user?:boolean
+    is_deleted?:boolean
     reply?:Reply
     shouldIncrement?:boolean
 }

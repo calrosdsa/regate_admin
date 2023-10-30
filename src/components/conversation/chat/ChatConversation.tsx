@@ -157,7 +157,11 @@ const ChatConversation = ({current}:{
                             ?"bg-gray-200 brightness-90 border-primary border-l-4"
                             :"bg-primary brightness-90 border-white border-l-4"
                         }`}>
+                            {item.is_deleted ?
+                            <span className=" italic">Se ha eliminado este mensage</span>
+                            :
                                 <span>{item.reply?.content}</span>
+                            }
                             </div>
                             }
 
