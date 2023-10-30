@@ -41,13 +41,10 @@ type PaginationConversationMessage = {
 
 type Reply = {
     id:number
-	profile_id:number
-    chat_id:number
     content:string
+    data:string | null
     created_at:string
     type_message:number
-    reply_to?:number
-    parent_id:number
 }
 
 type Chat = {

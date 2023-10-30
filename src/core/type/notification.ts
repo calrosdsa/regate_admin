@@ -1,5 +1,5 @@
 export type WsAccountPayload = {
-    type:PayloadType
+    type:number
     payload:string
 }
 

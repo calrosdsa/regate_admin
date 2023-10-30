@@ -3,21 +3,36 @@ import { getEstablecimientos, getEstablecimientosUser } from "@/context/actions/
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { Disclosure } from "@headlessui/react";
 import Link from "next/link";
- import { useParams, usePathname,  } from "next/navigation";
-import { useEffect } from "react";
+ import { useParams, usePathname, useSearchParams,  } from "next/navigation";
+import { useEffect, useState } from "react";
 import UserSideBar from "./UserSidebar";
 import { useRouter } from "next/navigation";
 import { UserRol } from "@/core/type/enums";
+import { GetMessagesCount } from "@/core/repository/chat";
+import { chatActions } from "@/context/slices/chatSlice";
 
 
 const SideBarEstablecimiento = () =>{
    const dispatch = useAppDispatch()
    const establecimientos = useAppSelector(state=>state.account.establecimientos)
+   const countMessage = useAppSelector(state=>state.chat.messages_count)
    const user = useAppSelector(state => state.account.user)
    const pathname = usePathname()
-   const searchParams = useParams()
+   const params = useParams()
    const router = useRouter()
-   const root = `/establecimiento/${searchParams.uuid}`
+   const root = `/establecimiento/${params.uuid}`
+   // const searchParams = useSearchParams()
+   // const current = new URLSearchParams(Array.from(searchParams.entries()))
+
+   const getCoutConversationMessage = async() => {
+      try{
+         const res = await GetMessagesCount(params.uuid)
+         dispatch(chatActions.updateGlobalMessageCount(res))
+      }catch(err){
+         console.log(err)
+      }
+   }
+
    useEffect(()=>{
       if(establecimientos.length > 0 ){
 
@@ -25,6 +40,7 @@ const SideBarEstablecimiento = () =>{
    },[establecimientos])
 
    useEffect(()=>{
+      getCoutConversationMessage()
       if(establecimientos.length == 0){
          dispatch(getEstablecimientosUser())
       }
@@ -47,7 +63,7 @@ const SideBarEstablecimiento = () =>{
          
       <div className="text-gray-900  dark:text-white border-b-[1px] py-2">
          <select name="" id="" className="w-full bg-gray-50 dark:bg-gray-800 outline-none" 
-         value={searchParams.uuid}
+         value={params.uuid}
          onChange={(e)=>{
             router.push(`/establecimiento/${e.target.value}`)
             }}>
@@ -96,7 +112,11 @@ const SideBarEstablecimiento = () =>{
             ${pathname == `${root}/conversations` && "bg-gray-200 dark:bg-gray-700"}`}>
                <svg aria-hidden="true" className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M8.707 7.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l2-2a1 1 0 00-1.414-1.414L11 7.586V3a1 1 0 10-2 0v4.586l-.293-.293z"></path><path d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path></svg>
                <span className="flex-1 ml-3 whitespace-nowrap">Inbox</span>
-               <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">3</span>
+               {countMessage > 0 &&
+               <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 
+               text-sm font-medium text-white bg-primary rounded-full 
+               ">{countMessage}</span>
+               }
             </Link>
          </li>
 

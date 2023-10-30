@@ -48,14 +48,20 @@ const ChatConversation = ({current}:{
             }        
             if(ids.length > 0){
                 await UpdateMessagesToReaded(JSON.stringify(body))
+                console.log("Updated messages ids")
+                dispatch(chatActions.updateChat({
+                    ...current,
+                    count_unread_messages:current.count_unread_messages - ids.length
+                }))
             }
-            dispatch(chatActions.updateChat({
-                ...current,
-                count_unread_messages:current.count_unread_messages - ids.length
-            }))
         }catch(err){
             console.log(err)
         }
+    }
+
+    const getReplyMessage = (replyMessageId:number) =>{
+        const reply = messages.find(item=>item.id == replyMessageId)
+        return reply
     }
     useEffect(()=>{
         if(id != null){
@@ -145,29 +151,31 @@ const ChatConversation = ({current}:{
                <div className="flex flex-col-reverse  overflow-auto h-[93%] pt-20">
                <div ref={refEl}/>
                 {messages.map((item)=>{
+                    const reply = item.reply_to != undefined ? getReplyMessage(item.reply_to) : undefined
                     return(
                         <div key={item.id} className={` p-2 m-2 rounded-lg text-sm grid max-w-lg
                         ${item.is_user
                         ?"place-self-start bg-gray-200 "
                         :"place-self-end bg-primary text-white"} `}>
 
-                            {item.reply_to != null &&
+                            {(item.reply_to != null && reply != undefined )&&
                             <div className={`p-1 rounded-lg 
-                            ${item.profile_id == current.chat.profile_id 
+                            ${!reply.is_user  
                             ?"bg-gray-200 brightness-90 border-primary border-l-4"
-                            :"bg-primary brightness-90 border-white border-l-4"
+                            :"brightness-90 border-white border-l-4"
                         }`}>
-                            {item.is_deleted ?
+                            {reply?.is_deleted ?
                             <span className=" italic">Se ha eliminado este mensage</span>
                             :
-                                <span>{item.reply?.content}</span>
+                                <span>{reply?.content}</span>
                             }
                             </div>
                             }
-
-                            <span>
-                             {item.content}
-                            </span>
+                            {item.is_deleted ?
+                            <span className=" italic">Se ha eliminado este mensage</span>
+                            :
+                            <span>{item.content}</span>
+                            }
                             <span className="text-[11px] ">
                                 {formatterShorTime(item.created_at)}
                             </span>

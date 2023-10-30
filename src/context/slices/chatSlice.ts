@@ -16,7 +16,7 @@ const chatSlice = createSlice({
     initialState:chatState,
     reducers:{
         updateGlobalMessageCount(state,action:PayloadAction<number>){
-            state.messages_count = action.payload
+            state.messages_count += action.payload
         },
         setChats(state,action:PayloadAction<Chat[]>){
             state.chats = action.payload

@@ -38,10 +38,11 @@ export function Parent({ children }:any) {
               shouldIncrement:shouldIncrement
             }
             dispatch(chatActions.updateLastMessage(updateMessages))
-            connection.current?.send("My data")
+            dispatch(chatActions.updateGlobalMessageCount(1))
+            // connection.current?.send("My data")
             break;
         }
-        console.log(e)
+        console.log(data)
         // const payload:MessagePayload = JSON.parse(e.data)
         // switch(payload.type){
         //     case MessageEvent.Message:
