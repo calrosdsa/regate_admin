@@ -7,6 +7,7 @@ import { MessageEvent, TypeChat } from "@/core/type/enums";
 import { formatterShorTime, getRandomInt } from "@/core/util";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import MessageData from "./MessageData";
 
 const ChatConversation = ({current}:{
     current:Chat
@@ -147,8 +148,8 @@ const ChatConversation = ({current}:{
     },[searchParams])
 
     return(
-        <div className="h-screen ">
-               <div className="flex flex-col-reverse  overflow-auto h-[93%] pt-20">
+        <div className="h-[95vh] ">
+               <div className="flex flex-col-reverse  overflow-auto h-[93%] pt-10 xl:pt-20">
                <div ref={refEl}/>
                 {messages.map((item)=>{
                     const reply = item.reply_to != undefined ? getReplyMessage(item.reply_to) : undefined
@@ -171,6 +172,13 @@ const ChatConversation = ({current}:{
                             }
                             </div>
                             }
+                            {item.data != null &&
+                            <MessageData
+                            data={item.data}
+                            type_message={item.type_message}
+                            />
+                        }
+
                             {item.is_deleted ?
                             <span className=" italic">Se ha eliminado este mensage</span>
                             :

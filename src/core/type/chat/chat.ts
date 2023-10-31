@@ -24,6 +24,7 @@ type ConversationMessage = {
     chat_id:number
     content:string
     created_at:string
+    data?:string | null
     type_message:number
     reply_to?:number
     parent_id:number
