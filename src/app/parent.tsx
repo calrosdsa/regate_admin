@@ -1,8 +1,9 @@
 'use client';
 
+import { handleIncomeMessages } from "@/context/actions/chat-actions";
 import { WS_URL } from "@/context/config";
 import { getMessagesChat, insertMessage } from "@/context/db";
-import { useAppDispatch } from "@/context/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { chatActions } from "@/context/slices/chatSlice";
 import store from "@/context/store";
 import { PayloadType, WsAccountPayload } from "@/core/type/notification";
@@ -26,19 +27,7 @@ export function Parent({ children }:any) {
         const data:WsAccountPayload = JSON.parse(e.data)
         switch(data.type){
           case PayloadType.PAYLOAD_GRUPO_MESSAGES:
-            let message:ConversationMessage = JSON.parse(data.payload)
-            const chatId = current.get("conversationId") 
-            let shouldIncrement = true
-            if(chatId != null){
-              shouldIncrement  = Number(chatId) != message.chat_id
-            }
-            const updateMessages:ConversationMessage = {
-              ...message,
-              is_read:false,
-              shouldIncrement:shouldIncrement
-            }
-            dispatch(chatActions.updateLastMessage(updateMessages))
-            dispatch(chatActions.updateGlobalMessageCount(1))
+            dispatch(handleIncomeMessages(data.payload))
             // connection.current?.send("My data")
             break;
         }

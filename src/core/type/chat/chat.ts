@@ -56,6 +56,7 @@ type Chat = {
 
 type ChatState = {
     chats:Chat[]
+    chat?:Chat
     messages:ConversationMessage[]
     messages_count:number
 }

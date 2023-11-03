@@ -8,6 +8,7 @@ import { formatterShorTime, getRandomInt } from "@/core/util";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import MessageData from "./MessageData";
+import moment from "moment";
 
 const ChatConversation = ({current}:{
     current:Chat
@@ -42,7 +43,6 @@ const ChatConversation = ({current}:{
     }
     const updateMessageToRead = async(messages:ConversationMessage[]) =>{
         try{
-
             const ids = messages.filter(item => item.is_read == false).map(item=>item.id)
             const body = {
                 ids:ids
@@ -54,9 +54,23 @@ const ChatConversation = ({current}:{
                     ...current,
                     count_unread_messages:current.count_unread_messages - ids.length
                 }))
+                dispatch(chatActions.updateGlobalMessageCount(-ids.length))
             }
         }catch(err){
             console.log(err)
+        }
+    }
+
+    const checkIsLast = (item:ConversationMessage) =>{
+        try {
+            const isLast = messages
+            .findLast(v =>moment(v.created_at).format('L') == moment(item.created_at).format('L'))
+            if(isLast != undefined){
+                return isLast.id == item.id
+            }
+            return false
+        }catch(err){
+            return false
         }
     }
 
@@ -64,11 +78,7 @@ const ChatConversation = ({current}:{
         const reply = messages.find(item=>item.id == replyMessageId)
         return reply
     }
-    useEffect(()=>{
-        if(id != null){
-            getMessages(1)
-        }
-    },[searchParams])
+   
 
     const sendMessage = async()=>{
         try{
@@ -117,12 +127,17 @@ const ChatConversation = ({current}:{
     },[page])
 
     useEffect(()=>{
+            getMessages(page)
+    },[])
+
+    useEffect(()=>{
         refEl.current?.scrollIntoView({behavior:"smooth"})
       },[scrollToBottom])
 
     useEffect(()=>{
         // setMessages([])
-        console.log("getting new connection")
+        dispatch(chatActions.setChat(current))
+        console.log("CHAT CONVERSATION",current)
         connection.current = new WebSocket(`ws://localhost:9091/v1/ws/suscribe/chat/?id=${id}&profileId=0`);
         connection.current.onopen = () => {
         }
@@ -134,6 +149,7 @@ const ChatConversation = ({current}:{
                 case MessageEvent.Message:
                     const message:ConversationMessage = JSON.parse(payload.payload)
                     dispatch(chatActions.setMessage(message))
+                    updateMessageToRead([message])
                     setScrollToBottom(!scrollToBottom)
                     // setMessages(e=>[message,...e])
                     break;
@@ -149,12 +165,20 @@ const ChatConversation = ({current}:{
 
     return(
         <div className="h-[95vh] ">
-               <div className="flex flex-col-reverse  overflow-auto h-[93%] pt-10 xl:pt-20">
+               <div className="flex flex-col-reverse  overflow-auto h-[92%] pt-10 xl:pt-20">
                <div ref={refEl}/>
                 {messages.map((item)=>{
                     const reply = item.reply_to != undefined ? getReplyMessage(item.reply_to) : undefined
                     return(
-                        <div key={item.id} className={` p-2 m-2 rounded-lg text-sm grid max-w-lg
+                        <div  key={item.id} className="max-w-full grid ">
+                        <div >
+                            {checkIsLast(item) && 
+                            <div className="w-full justify-center flex">
+                                <span className=" rounded-lg text-sm bg-gray-200 px-2 py-1">{moment(item.created_at).format("MMM DD")}</span>
+                            </div>
+                            }
+                        </div>
+                        <div className={` p-2 m-2 rounded-lg text-sm max-w-xs xl:max-w-lg
                         ${item.is_user
                         ?"place-self-start bg-gray-200 "
                         :"place-self-end bg-primary text-white"} `}>
@@ -183,10 +207,11 @@ const ChatConversation = ({current}:{
                             <span className=" italic">Se ha eliminado este mensage</span>
                             :
                             <span>{item.content}</span>
-                            }
+                        }
                             <span className="text-[11px] ">
                                 {formatterShorTime(item.created_at)}
                             </span>
+                        </div>
                         </div>
                     )
                 })}

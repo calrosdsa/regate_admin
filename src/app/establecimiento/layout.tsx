@@ -14,6 +14,7 @@ import { getUser } from '@/context/actions/account-actions';
 import { Dialog, Transition } from '@headlessui/react';
 import InfoBar from '@/components/util/info-bar/InfoBar';
 import { systemActions } from '@/context/slices/systemSlice';
+import { chatActions } from '@/context/slices/chatSlice';
 
 
 
@@ -27,9 +28,14 @@ export default function RootLayout({
   const dispatch = useAppDispatch()
   const uiState = useAppSelector(state=>state.ui)
   const systemState = useAppSelector(state=>state.system)
+  const clearState = () =>{
+    console.log("CLEAR STATE")
+    dispatch(chatActions.setChat(undefined))
+ }
   useEffect(()=>{
     dispatch(uiActions.openSidebar(false))
     dispatch(getUser())
+    clearState()
   },[pathName])
   return (
     <>

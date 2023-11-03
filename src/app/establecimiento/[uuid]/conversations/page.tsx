@@ -47,8 +47,8 @@ const Page = ({params} : { params:{uuid:string}})=>{
     },[])
     return(
         <div className="grid xl:grid-cols-7">
-            <div className={`w-full md:col-span-2 p-2 h-screen bg-gray-100 shadow-md
-            ${(openChat || !isMobile) && "hidden"}`}>
+            <div className={`w-full md:col-span-2 p-1 h-screen bg-gray-100 shadow-md
+            ${openChat && "hidden xl:block"}`}>
             <Conversations
             conversations={chats}
             setConversation={(e)=>{
@@ -62,13 +62,13 @@ const Page = ({params} : { params:{uuid:string}})=>{
             />
             </div>
 
-            <div className={`xl:col-span-5 h-full ${(!openChat || !isMobile) && "hidden"}`}>
+            <div className={`lg:col-span-5 h-full ${!openChat && "hidden xl:block"}`}>
                     {chat != undefined &&
                     <>
                     <div className="fixed top-0 w-full bg-gray-100  shadow-md">
                         <div className="flex items-center space-x-2 p-2"> 
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
-                        strokeWidth={1.5} stroke="currentColor" className=" icon-button"
+                        strokeWidth={1.5} stroke="currentColor" className=" icon-button xl:hidden"
                         onClick={()=>setOpenChat(false)}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                         </svg>

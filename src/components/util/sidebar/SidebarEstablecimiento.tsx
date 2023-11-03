@@ -21,6 +21,8 @@ const SideBarEstablecimiento = () =>{
    const params = useParams()
    const router = useRouter()
    const root = `/establecimiento/${params.uuid}`
+
+   
    // const searchParams = useSearchParams()
    // const current = new URLSearchParams(Array.from(searchParams.entries()))
 

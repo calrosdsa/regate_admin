@@ -7,6 +7,7 @@ import { insertMessage } from "../db";
 
 const chatState:ChatState=  {
     chats:[],
+    chat:undefined,
     messages:[],
     messages_count:0
 }
@@ -16,7 +17,11 @@ const chatSlice = createSlice({
     initialState:chatState,
     reducers:{
         updateGlobalMessageCount(state,action:PayloadAction<number>){
+            console.log(action.payload)
             state.messages_count += action.payload
+        },
+        setChat(state,action:PayloadAction<Chat | undefined>){
+            state.chat = action.payload
         },
         setChats(state,action:PayloadAction<Chat[]>){
             state.chats = action.payload
