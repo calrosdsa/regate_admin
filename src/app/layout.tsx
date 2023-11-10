@@ -84,21 +84,20 @@ export default function RootLayout({
 
 
   useEffect(()=>{
-    initDb()
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/firebase-messaging-sw.js").then(
-        (registration) => {
-          console.log("Service worker registration succeeded:", registration);
-        },
-        (error) => {
-          console.error(`Service worker registration failed: ${error}`);
-        },
-      );  
-    } else {
-      console.error("Service workers are not supported.");
-    }
-    requestPermission()
-    GetToken()
+    // if ("serviceWorker" in navigator) {
+    //   navigator.serviceWorker.register("/firebase-messaging-sw.js").then(
+    //     (registration) => {
+    //       console.log("Service worker registration succeeded:", registration);
+    //     },
+    //     (error) => {
+    //       console.error(`Service worker registration failed: ${error}`);
+    //     },
+    //   );  
+    // } else {
+    //   console.error("Service workers are not supported.");
+    // }
+    // requestPermission()
+    // GetToken()
     moment.locale("es")
 
     
