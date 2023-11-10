@@ -23,11 +23,11 @@ const Login = () =>{
     const [loading,setLoading] = useState(false)
     // const authtate = useAppSelector(state=>state.auth)
     const [formData,setFormData ] = useState({
-      email:"12312@o232131",
-      name:"eweqweq",
-      phone_number:"312312",
-      description:"31231",
-      address:"21312",
+      email:"",
+      name:"",
+      phone_number:"",
+      description:"",
+      address:"",
       longitud: -63.18102600200848,
       latitud:-17.783844868238027,
     })
