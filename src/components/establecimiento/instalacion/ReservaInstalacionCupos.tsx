@@ -174,7 +174,7 @@ const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCup
                             if(item.reserva != undefined){
                                 if(item.reserva.reserva_id != null){
                                     getReservaDetail(item.reserva.reserva_id)
-                                }else {
+                                }else if(item.reserva.available) {
                                     if(isAfter) return
                                     selecReservaCupo(item.reserva)
                                             }
@@ -220,7 +220,7 @@ const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCup
                                 if(item.reserva != undefined){
                                     if(item.reserva.reserva_id != null){
                                         getReservaDetail(item.reserva.reserva_id)
-                                    }else {
+                                    }else if(item.reserva.available) {
                                         if(isAfter) return
                                         selecReservaCupo(item.reserva)
                                                 }

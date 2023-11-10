@@ -20,7 +20,7 @@ export const EditHorarioPrecio = ({open,close,cupo}:{
     // const dispatch = useAppDispatch()
     const [loading,setLoading] = useState(false)
     const [price,setPrice] = useState<string>(cupo?.price?.toString()|| "")
-    const [available,setAvailable] = useState<boolean>(cupo?.available || false)
+    const [available,setAvailable] = useState<boolean>(cupo?.available || true)
     const params = useParams()
 
     const onSubmit = async(e:FormEvent<HTMLFormElement>) =>{
@@ -34,6 +34,7 @@ export const EditHorarioPrecio = ({open,close,cupo}:{
           const precio = Number(price)
             const cupoRequest = cupo
             cupoRequest.price = precio
+            cupoRequest.available = available
             if(cupo.id == undefined){
               const res:Cupo = await createCupoInstalacion(cupoRequest,params.uuid)
               console.log(res)
