@@ -26,7 +26,7 @@ const payMethods:PayMethod[] = [
 const UpdatePayMethodDialog = ({open,close,establecimiento_id,update,currentMethods}:{
     close:()=>void
     open:boolean
-    currentMethods:number[] | undefined
+    currentMethods:number[] | null
     establecimiento_id:number
     update:(d:number[])=>void
 }) =>{
