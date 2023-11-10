@@ -7,10 +7,11 @@ import {useRef, useState} from "react"
 import CancelReservaDialog from "./CancelReservaDialog";
 import { getEstadoReserva } from "../ReservaList";
 import { ReservaEstado } from "@/core/type/enums";
-const DialogReservaDetail = ({open,close,data}:{
+const DialogReservaDetail = ({open,close,data,update}:{
     open:boolean
     close:()=>void
-    data:ReservaDetail
+    data:ReservaDetail,
+    update:()=>void
 }) => {
     const [cancelReservaDialog,setCancelReservaDialog] = useState(false)
 
@@ -23,14 +24,16 @@ const DialogReservaDetail = ({open,close,data}:{
      open={cancelReservaDialog}
      reserva={data.reserva}
      close={()=>setCancelReservaDialog(false)}
-
+     update={()=>{
+        update()
+        close()
+     }}
      />
      }
      <DialogLayout
      className=" max-w-md sm:max-w-lg md:max-w-xl"
      title="Detalles de la Reserva"
      allowFullScreen={true}
-     allowClose={true}
      open={open} close={close}>
 
         <div className='rounded-lg bg-white overflow-auto pt-2'>

@@ -9,6 +9,7 @@ interface Reserva extends Profile {
     start_date:string
     end_date:string
     created_at:string
+    user_local_id?:number
 }
 
 type ReservaDetail = {
@@ -41,6 +42,7 @@ type ReservaCancelRequest = {
     reserva_id:number
     content:string
     establecimiento_id:number
-    profile_id:number
+    profile_id?:number
+    user_local_id?:number
     admin_id?:string 
 }

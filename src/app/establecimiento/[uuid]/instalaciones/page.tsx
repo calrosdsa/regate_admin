@@ -75,6 +75,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
             }
             console.log(filterData)
             const data = await GetCupoReservaInstalciones(filterData)
+            console.log(data)
             setCuposReservas(data)
             setLoadingReservas(false)
             setSelectedCupos([])
@@ -412,6 +413,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         open={openReservaDetailDialog}
         close={()=>setOpenReservaDetailDialog(false)}
         data={reservaDetail}
+        update={()=>getCuposReservaInstalacion(reservaDetail.instalacion.id)}
         />
         }
 

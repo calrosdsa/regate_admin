@@ -8,10 +8,11 @@ import { useState } from "react"
 import { toast } from "react-toastify"
 
 
-const CancelReservaDialog = ({open,close,reserva}:{
+const CancelReservaDialog = ({open,close,update,reserva}:{
     open:boolean
     reserva:Reserva
     close:()=>void
+    update:()=>void
 }) =>{
     const [openConfirmationDialog,setOpenConfirmationDialog] = useState(false)
     const [loading,setLoading] = useState(false)
@@ -28,10 +29,12 @@ const CancelReservaDialog = ({open,close,reserva}:{
                 content:value,
                 establecimiento_id:reserva.establecimiento_id,
                 reserva_id:reserva.id,
-                profile_id:reserva.profile_id
+                profile_id:reserva.profile_id,
+                user_local_id:reserva.user_local_id
             }
              await CancelReserva(request)
              setLoading(false)
+             update()
              close()
             toast.success("Reserva Cancelada")
         }catch(err){
