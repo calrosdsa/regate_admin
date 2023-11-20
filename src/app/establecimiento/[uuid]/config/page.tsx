@@ -382,12 +382,12 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                     appendSerachParams("map","1",router,current,pathname)
                 }} className=" underline font-medium cursor-pointer">Edit</span>
             </div>
-            <div className="w-full mt-2 mb-2">
+            <div className=" mt-2 mb-2">
             <CommonImage
             src={data?.establecimiento?.address_photo + `?${Date.now()}`}
             w={250}
             h={200}
-            className={`rounded object-cover w-full sm:w-max`}
+            className={`rounded object-cover`}
             // alt={""}
             />
             </div>
@@ -479,7 +479,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             {data?.setting_establecimiento.paid_type != null &&
             data?.setting_establecimiento.paid_type.includes(PaidType.DEFERRED_PAYMENT) &&
                 <EditComponent
-                label='Porcentaje para recervar una cancha'
+                label='Monto inicial para recervar una cancha'
                 content={`${data?.setting_establecimiento.payment_for_reservation}`}
                 edit={(addLoader,removeLoader,e)=>updateSettings("payment_for_reservation",e,addLoader,removeLoader)}
                 />

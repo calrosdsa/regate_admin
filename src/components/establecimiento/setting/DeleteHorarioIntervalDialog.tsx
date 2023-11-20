@@ -53,7 +53,7 @@ const DeleteHorarioIntervalDialog = ({open,close,intervalHorario,appendIntervals
         }
         <DialogLayout
         className="max-w-lg"
-         open={open} close={close} title="Añadir rango de hora para la reserva">
+         open={open} close={close} title="Remover rango de hora para la reserva">
             <div>
             <div className="grid gap-3 grid-cols-2 py-5">
             {intervalHorario.map((item)=>{

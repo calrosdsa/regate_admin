@@ -81,6 +81,33 @@ export async function getInstalacionDayHorario(instalacionId:number,dayWeek:numb
       return res.json()
 }
 
+export async function CopyInstalacionHorario(d:string){
+  const res = await fetch(`../../api/establecimiento/instalacion/horario/copy`,{
+    method:"POST",
+    body:d
+  })
+  if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error('Failed to fetch data')
+    }
+   
+    return res.json()
+}
+
+export async function ResetInstalacionHorarioDay(d:string){
+  const res = await fetch(`../../api/establecimiento/instalacion/horario/reset`,{
+    method:"POST",
+    body:d
+  })
+  if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error('Failed to fetch data')
+    }
+   
+    return res.json()
+}
+
+
 export async function GetCupoReservaInstalciones(d:CupoReservaRequest){
   const res = await fetch(`../../api/establecimiento/instalacion/reserva-cupo`,{
     cache: 'no-store',

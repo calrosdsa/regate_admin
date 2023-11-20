@@ -327,6 +327,9 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                             cupos={cupos}
                             getHorarioDay={(day:number)=>getHorariosDay(day,instalacion.id)}
                             loading={loadingHorarios}
+                            instalaciones={instalaciones}
+                            updateHorarios={(e)=>setCupos(e)}
+                        
                             />
                         </Tab.Panel>
                         }

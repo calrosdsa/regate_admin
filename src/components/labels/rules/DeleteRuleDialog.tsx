@@ -59,7 +59,7 @@ const DeleteRuleDialog = ({rules,close,open,establecimientoId,setNewRulesEstable
         }
         <DialogLayout
         className="max-w-lg"
-         open={open} close={close} title="Agregar comodidades">
+         open={open} close={close} title="Remover reglas">
             <div className="py-2 max-w-xl">
                 <div className="gap-2 flex overflow-auto max-w-xl flex-wrap " >
                     {rules.map((item)=>{
