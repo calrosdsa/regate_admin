@@ -23,6 +23,7 @@ const Page = ({params} : { params:{uuid:string}})=>{
     const [openChat,setOpenChat] = useState(false)
     const chats = useAppSelector(state=>state.chat.chats)
     const [ chat,setChat ] = useState<Chat | undefined>(undefined)
+    const [loadMore,setLoadMore] = useState(false)
     const getConversations = async() =>{
         try{
             const res:Chat[] = await GetConversations(params.uuid)
@@ -52,6 +53,8 @@ const Page = ({params} : { params:{uuid:string}})=>{
             <Conversations
             conversations={chats}
             setConversation={(e)=>{
+                setLoadMore(false)
+                dispatch(chatActions.setMessages([]))
                 setChat(e)
                 setOpenChat(true)
                 current.set("conversationId",e.chat.conversation_id.toString());
@@ -86,7 +89,8 @@ const Page = ({params} : { params:{uuid:string}})=>{
                 <div className=" h-full flex flex-col-reverse w-full">
                 <ChatConversation
                 current={chat}
-
+                setLoadMore={(e)=>setLoadMore(e)}
+                loadMore={loadMore}
                 />
                 </div>
                 </>

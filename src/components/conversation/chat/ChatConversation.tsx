@@ -10,8 +10,10 @@ import { useEffect, useRef, useState } from "react";
 import MessageData from "./MessageData";
 import moment from "moment";
 
-const ChatConversation = ({current}:{
+const ChatConversation = ({current,loadMore,setLoadMore}:{
     current:Chat
+    loadMore:boolean
+    setLoadMore:(bool:boolean)=>void
 }) => {
     const dispatch = useAppDispatch()
     const messages = useAppSelector(state=>state.chat.messages)
@@ -21,7 +23,6 @@ const ChatConversation = ({current}:{
     const searchParams = useSearchParams()
     const id = searchParams.get("id") || current.chat.conversation_id.toString()
     const [page,setPage] = useState(1)
-    const [loadMore,setLoadMore] = useState(false)
     const [scrollToBottom,setScrollToBottom] = useState(false)
     const getMessages = async(page:number) => {
         console.log("PAGE",page)
@@ -128,7 +129,7 @@ const ChatConversation = ({current}:{
 
     useEffect(()=>{
             getMessages(page)
-    },[])
+    },[current])
 
     useEffect(()=>{
         refEl.current?.scrollIntoView({behavior:"smooth"})
@@ -161,7 +162,7 @@ const ChatConversation = ({current}:{
             connection.current?.close();
         }
             // })
-    },[searchParams])
+    },[current])
 
     return(
         <div className="h-[95vh] ">

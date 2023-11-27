@@ -98,7 +98,7 @@ const ReservaList = ({reservas,loading,order,changeOrder,getReservaDetail}:{
                         src={item.profile_photo || "/images/profile.png"}
                         h={30}
                         w={30}
-                        className="rounded-full"
+                        className="rounded-full w-9 h-9"
                         />
                         <span className="rowTable truncate ">{getFullName(item.nombre,item.apellido)}</span>
                         </td>
