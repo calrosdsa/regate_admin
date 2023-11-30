@@ -128,7 +128,7 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
             onChange={(e)=>getHorarioDay(Number(e.target.value))}>    
             {dayWeek.map((item)=>{
                 return(
-                    <option value={item.dayWeek}>{item.dayName}</option>
+                    <option key={item.dayWeek} value={item.dayWeek}>{item.dayName}</option>
                     // <div key={item.dayWeek} onClick={()=>getHorarioDay(item.dayWeek)}
                     // className={`${selectedDay == item.dayWeek ? 'button':'button-inv'}`}>
                     //     {item.dayName}
