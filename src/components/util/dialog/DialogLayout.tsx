@@ -46,7 +46,7 @@ showHeader=true}:{
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
                 >
-                <Dialog.Panel className={`transform overflow-hidden rounded-lg bg-white p-2
+                <Dialog.Panel className={`transform overflow-auto rounded-lg bg-white p-2 
                 text-left align-middle shadow-xl transition-all w-full ${className} ${allowFullScreen && "h-screen sm:h-full"}`}>
                   {showHeader&&
                   <Dialog.Title

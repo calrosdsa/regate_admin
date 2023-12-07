@@ -19,11 +19,12 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
         description:"",
         cantidad_de_personas:20,
         category_id: 1,
+        precio_hora:0
       })
       const [uploadLoading,setUploadingLoading] = useState(false)
       const [categories,setCategories] = useState<Label[]>([])
       const [photo,setPhoto] = useState<File | undefined>()
-      const {name,description,category_id,cantidad_de_personas} = formData
+      const {name,description,category_id,cantidad_de_personas,precio_hora} = formData
       const onChange = (e:ChangeEvent<HTMLInputElement>)=>{
       //   dispatch(authActions.setErrrorLogin(undefined))
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -42,6 +43,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
             uploadData.append("description",description)
             uploadData.append("category_id",category_id.toString())
             uploadData.append("cantidad_de_personas",cantidad_de_personas.toString())
+            uploadData.append("precio_hora",precio_hora.toString())
             // uploadData.append("establecimiento_id",id.toString())
             uploadData.append("establecimiento_uuid",uuid)
             if(photo != undefined) uploadData.append("photo",photo)
@@ -62,7 +64,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
       },[])
    
     return(
-        <div className=" max-w-xl">
+        <div className=" max-w-xl overflow-auto">
             <form onSubmit={onSubmit}>
 
             <UploadImage
@@ -105,6 +107,18 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
                 })}
           </select>
             </div>
+
+          <InputWithMaxLength
+          value={precio_hora.toString()}
+          name="precio_hora"
+          onChangeValue={(e)=>{
+              // if(e.target.value.length <= 20){ 
+              onChange(e)
+            // }
+          }}
+          label="Precio por media hora"
+          type="number"
+          />
          
          <InputWithMaxLength
           value={cantidad_de_personas.toString()}

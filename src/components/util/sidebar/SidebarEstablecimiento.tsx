@@ -108,7 +108,7 @@ const SideBarEstablecimiento = () =>{
                <span className="flex-1 ml-3 whitespace-nowrap">Canchas</span>
             </Link>
          </li>
-
+{/* 
          <li>
             <Link href={`${root}/conversations`} className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700
             ${pathname == `${root}/conversations` && "bg-gray-200 dark:bg-gray-700"}`}>
@@ -120,7 +120,7 @@ const SideBarEstablecimiento = () =>{
                ">{countMessage}</span>
                }
             </Link>
-         </li>
+         </li> */}
 
             {/* <li>
                <Link href={`${root}/users`} className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700
@@ -138,12 +138,23 @@ const SideBarEstablecimiento = () =>{
          <li>
             <Link href={`${root}/reservas`} className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700
             ${pathname == `${root}/reservas` && "bg-gray-200 dark:bg-gray-700"}`}>
-               <svg aria-hidden="true" className="flex-shrink-0 w-6 h-6 text-gray-500  dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clipRule="evenodd"></path></svg>
+               <svg aria-hidden="true" className="flex-shrink-0 w-6 h-6 text-gray-500  dark:text-gray-400 group-hover:text-gray-900
+                dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clipRule="evenodd"></path></svg>
                <span className="flex-1 ml-3 whitespace-nowrap">Reservas</span>
             </Link>
          </li>
 
-          <li>
+         <li>
+            <Link href={`${root}/users`} className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700
+            ${pathname == `${root}/users` && "bg-gray-200 dark:bg-gray-700"}`}>
+               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="flex-shrink-0 w-6 h-6 text-gray-500  dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
+               <path d="M7 8a3 3 0 100-6 3 3 0 000 6zM14.5 9a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM1.615 16.428a1.224 1.224 0 01-.569-1.175 6.002 6.002 0 0111.908 0c.058.467-.172.92-.57 1.174A9.953 9.953 0 017 18a9.953 9.953 0 01-5.385-1.572zM14.5 16h-.106c.07-.297.088-.611.048-.933a7.47 7.47 0 00-1.588-3.755 4.502 4.502 0 015.874 2.636.818.818 0 01-.36.98A7.465 7.465 0 0114.5 16z" />
+               </svg>
+               <span className="flex-1 ml-3 whitespace-nowrap">Users</span>
+            </Link>
+         </li>
+
+          {/* <li>
             <Link href={`${root}/depositos`} className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700
             ${pathname == `${root}/depositos` && "bg-gray-200 dark:bg-gray-700"}`}>
                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
@@ -154,10 +165,10 @@ const SideBarEstablecimiento = () =>{
                </svg>
                <span className="flex-1 ml-3 whitespace-nowrap">Depositos</span>
             </Link>
-         </li>
+         </li> */}
          
 
-         <li>
+         {/* <li>
             <Link href={`${root}/salas`} className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700
             ${pathname == `${root}/salas` && "bg-gray-200 dark:bg-gray-700"}`}>
                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
@@ -170,7 +181,7 @@ const SideBarEstablecimiento = () =>{
 
                <span className="flex-1 ml-3 whitespace-nowrap">Salas</span>
             </Link>
-         </li>
+         </li> */}
 
             
       {user?.rol == UserRol.ADMIN_USER_ROL &&

@@ -1,24 +1,21 @@
 import { NextResponse } from "next/server";
 import { cookies } from 'next/headers'; // Import cookies
 import { API_URL } from "@/context/config";
-export async function POST(request:Request,
+export async function GET(request:Request,
     { params }: { params: { uuid: string } }) {
    const { searchParams } = new URL(request.url)
-   const page = searchParams.get('page')
+   const query = searchParams.get('query')
    const nextCookies = cookies(); // Get cookies object
    const token = nextCookies.get('access_token')?.value
 //    console.log(token)
    if(token == undefined){
     return NextResponse.json("Usuario no authorizado",{status:401})
   }
-  try{   
-      const body = await request.text()
-      const res = await fetch(`${API_URL}/users/admin/users-empresa/?page=${page}`,{
-         method:"POST",
-         body:body,
+  try{
+    //   const body:Cupo = await request.json()
+      const res = await fetch(`${API_URL}/users/admin/search-users-empresa/?query=${query}`,{
          headers:{
-            'Authorization':`Bearer ${token}`,
-            'Content-Type':'application/json '
+            'Authorization':`Bearer ${token}`
          }
       })
       const data =await res.json()
