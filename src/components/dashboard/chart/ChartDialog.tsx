@@ -1,6 +1,6 @@
 import DialogLayout from "@/components/util/dialog/DialogLayout"
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Datepicker, { DateRangeType, DateValueType } from "react-tailwindcss-datepicker";
 import FilterChartHeader from "./FilterChartHeader";
 import { TypeOfChart, TypeOfDate } from "@/core/type/enums";
@@ -11,10 +11,11 @@ import CommonBarChart from "./CommonBarChart";
 import LineChartConnectNulls from "./LineChartConnectNulls";
 import StackedBarChart from "./StackedBarChart";
 import { chartActions } from "@/context/slices/chartSlice";
-import { FilterChartData } from "@/core/type/chart";
+import { ChartTypeData, FilterChartData } from "@/core/type/chart";
+import Loader from "@/components/util/loaders/Loader";
 
 const ChartDialog = ({open,close,CustomToolTip,getNewData,showLegend,legendLabels,singleColor,
-keyValue2,label}:{
+keyValue2,label,chartTypeData}:{
     open:boolean
     close:()=>void
     getNewData:(data:FilterChartData)=>void
@@ -24,13 +25,82 @@ keyValue2,label}:{
     legendLabels:string[]
     keyValue2?:string
     label:string
+    chartTypeData:ChartTypeData
 }) =>{
     const dispatch = useAppDispatch()
     // const [typeDate,setTypeDate] = useState(TypeOfDate.day)
     const [hideHeader,setHideHeader] = useState(false)
     const chartState = useAppSelector(state=>state.chart)
+    const [ shouldShowSecondLabel,setShowSecondLabel ]= useState(false)
+    const [labelName,setLabelName] = useState("")
+    const [valueName,setValueName] = useState("")
 
-    
+    const getTypeOfDate = (typeDate:TypeOfDate) =>{
+        switch(typeDate){
+            case TypeOfDate.hour:
+                setLabelName("Hora")
+                break;
+            case TypeOfDate.day:
+                setLabelName("Dia")
+                break;
+            case TypeOfDate.week:
+                setLabelName("Semana")
+                break;
+            case TypeOfDate.month:
+                setLabelName("Mes")
+                break;
+            case TypeOfDate.year:
+                setLabelName("Año")
+                break;
+            default:
+                setLabelName("")
+        }
+    }
+
+    const getLabel = ()=>{
+        switch(chartTypeData){
+            case ChartTypeData.INGRESOS_RESERVAS:
+                setShowSecondLabel(true)
+                setValueName("Local")
+                setLabelName("Fecha")
+                break;
+            case ChartTypeData.HORAS_RESERVAS:
+                setShowSecondLabel(false)
+                setValueName("Horas")
+                setLabelName("Fecha")
+                break;
+            case ChartTypeData.HORAS_RESERVADAS_AVERAGE:
+                setShowSecondLabel(false)    
+                if(chartState.data.length > 2){
+                    getTypeOfDate(chartState.filterData.type_date)
+                }else{
+                    setLabelName("Origen")
+                    setValueName("Horas")
+                }
+                break;
+            case ChartTypeData.INGRESOS_AVERAGE:
+                setShowSecondLabel(false)    
+                if(chartState.data.length > 2){
+                    getTypeOfDate(chartState.filterData.type_date)
+                }else{
+                    setLabelName("Origen")
+                    setValueName("Ingresos")
+                }
+                break; 
+            case ChartTypeData.USUARIOS:
+                setShowSecondLabel(false)    
+                setLabelName("Usuarios")
+                setValueName("Cantidad de usuarios")
+                break;
+            default:
+                setShowSecondLabel(false)
+                setValueName("Local")
+                setLabelName("Fecha")
+        }
+    }
+    useEffect(()=>{
+        getLabel()
+    },[])
     return(
         <>
         <Transition appear show={open} as={Fragment}>
@@ -62,6 +132,7 @@ keyValue2,label}:{
                                     type_date:type_date
                                 }
                                 getNewData(data)
+                                getTypeOfDate(data.type_date)
                                 // dispatch(chartActions.setFilterData({
                                 //     ...chartState.filterData,
                                 //     type_date:type_date
@@ -73,7 +144,7 @@ keyValue2,label}:{
                             />
 
                <div className='border-t-[1px] border-gray-400 p-3 relative'>
-                    <div className='pb-5'>Total de casos creados</div>
+                    {/* <div className='pb-5'>Total de casos creados</div> */}
                     {/* {JSON.stringify(chartState.data)} */}
                 {chartState.typeOfChart == TypeOfChart.bar && 
                 <CommonBarChart
@@ -126,6 +197,51 @@ keyValue2,label}:{
                 />
                 }
              </div>
+
+             <div className={`border-t-[1px] border-gray-400 p-3 relative `}>
+                {chartState.loading ?
+          <Loader className=' absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 '/>
+                :
+             <table className="w-full shadow-xl">
+
+             <thead className=" bg-gray-200 text-left noselect">
+            <tr>
+                <th className="headerTable w-10">
+                </th>
+                <th className="headerTable">
+                   {labelName}
+                </th>
+                <th className="headerTable">
+                    {valueName}
+                </th>        
+                {shouldShowSecondLabel &&
+                <th className="headerTable">
+                    App
+                </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            {chartState.data.map((item,index)=>{
+                return(
+                    <tr key={index} 
+                    className={`${index % 2 && "bg-gray-100"}`}>
+                        <td className="rowTable font-medium">{index + 1}.-</td>
+                        <td className="rowTable truncate ">{item.name}</td>
+                        <td className="rowTable truncate ">{item.value}</td>
+                        {shouldShowSecondLabel &&
+                            <td className="rowTable truncate ">{item.value2}</td>
+                        }
+                    </tr>
+                )
+            })}
+        </tbody>
+                </table>
+        }
+             </div>
+
+
+
                             </div>
                         </div>
                         </Dialog.Panel>

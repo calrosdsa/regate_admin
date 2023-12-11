@@ -28,6 +28,12 @@ type Cupo = {
     establecimiento_id:number
 }
 
+type CreateUpdateCuposRequest = {
+    cupos:Cupo[]
+    available:boolean
+    precio:number
+}
+
 
 
 type CupoReserva = {

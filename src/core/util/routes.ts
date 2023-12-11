@@ -24,3 +24,7 @@ export const appendSerachParams = (key:string,value:string,router:AppRouterInsta
     const query = search ? `?${search}` : "";
     router.push(`${pathname}${query}`);
 }
+
+export const getRouteEstablecimiento= (uuid:string,route:string) =>{
+    return `${rootEstablecimiento}/${uuid}/${route}`
+}

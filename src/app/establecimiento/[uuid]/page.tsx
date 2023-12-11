@@ -11,7 +11,7 @@ import { TypeOfChart, TypeOfDate } from '@/core/type/enums';
 import { chartActions } from '@/context/slices/chartSlice';
 import { useEffect } from 'react';
 import { getChartData, getReservaAverageAmountBase, getReservaUserFrequency, getReservasAmountData, getReservasAverageAmount, getReservasHoursAverage, getReservasHoursData } from '@/context/actions/chart-actions';
-import { FilterChartData } from '@/core/type/chart';
+import { ChartTypeData, FilterChartData } from '@/core/type/chart';
 import moment from 'moment';
 import TriangleBarChart from '@/components/dashboard/chart/TriangleBarChart';
 import { PieChart } from 'recharts';
@@ -217,6 +217,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
         legendLabels={["Local","App"]}
         showLegend={true}
         closeDialog={chartState.closeDialog}
+        chartTypeData={ChartTypeData.INGRESOS_RESERVAS}
       >
         <CommonBarChart
           data={chartState.response?.reserva_amount || []}
@@ -263,6 +264,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
         legendLabels={["Local","App"]}
         showLegend={true}
       closeDialog={chartState.closeDialog}
+      chartTypeData={ChartTypeData.HORAS_RESERVAS}
       >
     <LineChartConnectNulls    
     data={chartState.response?.reserva_count_hours || []}
@@ -298,6 +300,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
         dispatch(chartActions.setData(chartState.response?.reserva_count_hours_base || []))
       }}
       closeDialog={chartState.closeDialog}
+      chartTypeData={ChartTypeData.HORAS_RESERVADAS_AVERAGE}
       >
       <CommonPieChart
       data={chartState.response?.reserva_count_hours_base || []}
@@ -330,6 +333,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
         dispatch(chartActions.setData(chartState.response?.reserva_hour_average || []))
       }}
       closeDialog={chartState.closeDialog}
+      chartTypeData={ChartTypeData.HORAS_RESERVADAS_AVERAGE}
       >
         <CommonBarChart
           data={chartState.response?.reserva_hour_average || []}
@@ -367,6 +371,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
         dispatch(chartActions.setData(chartState.response?.reserva_amount_base || []))
       }}
       closeDialog={chartState.closeDialog}
+      chartTypeData={ChartTypeData.INGRESOS_AVERAGE}
       >
       <CommonPieChart
       data={chartState.response?.reserva_amount_base || []}
@@ -403,6 +408,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
         legendLabels={["Local","App"]}
         showLegend={true}
         closeDialog={chartState.closeDialog}
+        chartTypeData={ChartTypeData.INGRESOS_AVERAGE}
       >
         <CommonBarChart
           data={chartState.response?.reserva_amount_average || []}
@@ -445,6 +451,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
         dispatch(chartActions.setData(chartState.response?.user_frequency || []))
       }}
       closeDialog={chartState.closeDialog}
+      chartTypeData={ChartTypeData.USUARIOS}
       >
         <CommonBarChart
           data={chartState.response?.user_frequency || []}

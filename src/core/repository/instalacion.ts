@@ -147,3 +147,16 @@ export async function updateCupoInstalacion(id:number,precio:number,available:bo
   }
   return res.json()
 }
+
+export async function CreateUpdateCupos(data:CreateUpdateCuposRequest) {
+  const res = await fetch(`../../api/cupo/create-update`,{
+    method:"POST",
+    body:JSON.stringify(data)
+  })
+
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error('Failed to fetch data')
+  }
+  return res.json()
+}

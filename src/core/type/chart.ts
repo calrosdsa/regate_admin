@@ -8,6 +8,16 @@ export type NameValueData = {
 }
 
 
+export enum ChartTypeData {
+  INGRESOS_RESERVAS,
+  HORAS_RESERVAS,
+  HORAS_RESERVADAS_AVERAGE,
+  INGRESOS_AVERAGE,
+  USUARIOS,
+  INGRESOS_HORAS
+}
+
+
 // {
 //     "establecimiento_id":1,
 //     "start_date":"2023-09-02 23:00:00",

@@ -13,6 +13,7 @@ import { uiActions } from "@/context/slices/uiSlice";
 import { toast } from "react-toastify";
 import { successfulMessage, unexpectedError } from "@/context/config";
 import ConfirmationDialog from "@/components/util/dialog/ConfirmationDialog";
+import { TooltipContainer } from "@/components/util/tooltips/Tooltip";
 
 const dayWeek:Horario[] = [
     {dayName:"Domingo",dayWeek:DayWeek.Domingo},
@@ -40,8 +41,16 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
     const [cupo,setCupo] = useState<Cupo | undefined>(undefined)
     const currentDay = new Date().getDay()
     const [resetDayConfirmationDialog,setResetDayConfirmationDialog] = useState(false)
+    const [selectedCupos,setSelectedCupos] = useState<Cupo[]>([])
 
-
+    const appendCupo = (cupo:Cupo) =>{
+        if(selectedCupos.map(item=>item.time).includes(cupo.time)){
+            const updateList = selectedCupos.filter(item=>item.time != cupo.time)
+            setSelectedCupos(updateList)
+        }else{
+            setSelectedCupos((v)=>[...v,cupo])
+        }
+    }
 
     const openEditDialog = (cupo?:Cupo)=>{
         setCupo(cupo)
@@ -101,7 +110,13 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
         <EditHorarioPrecio
         open={editHorarioDialog}
         close={()=>setEditHorarioDialog(false)}
-        cupo={cupo}
+        cupos={selectedCupos}
+        updateCupos={()=>{
+            // const updateCuposList = cupos.map(item=>{
+            //     if(selectedCupos.map(item=>item.time))
+            // })
+            setSelectedCupos([])
+        }}
         />
         }
         {resetDayConfirmationDialog &&
@@ -137,8 +152,9 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
         }
         <div className="relative">
 
-        <div className=" flex w-full space-x-3  pb-6 relative justify-between items-center">
-            <select className="input w-min" value={selectedDay?.toString()} 
+        <div className="sticky top-14 -mt-3 bg-gray-50  w-full z-10  flex  space-x-3    justify-between items-center">
+            <div className="flex space-x-2 items-end">    
+            <select className="input w-min h-9" value={selectedDay?.toString()} 
             onChange={(e)=>getHorarioDay(Number(e.target.value))}>    
             {dayWeek.map((item)=>{
                 return(
@@ -147,9 +163,32 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
                     // className={`${selectedDay == item.dayWeek ? 'button':'button-inv'}`}>
                     //     {item.dayName}
                     // </div>
-                )
-            })}
+                    )
+                })}
             </select>
+
+            <TooltipContainer 
+                                helpText="Intenta seleccionar la hora que deseas editar."
+                                disabled={selectedCupos.length != 0}
+                                >
+                                    <button
+                                     className={`items-center justify-center flex space-x-1 whitespace-nowrap h-9
+                                     ${selectedCupos.length == 0 ? "button-disabled":"button"}`}
+                                     disabled={selectedCupos.length == 0} onClick={()=>{
+                                        setEditHorarioDialog(true)
+                                        // appendSerachParams("dialog","1")
+                                        // setCreateReservaDialog(true)
+                                        }}>
+                                        <span>Editar</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                                        <path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z" />
+                                        <path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z" />
+                                        </svg>
+
+                                    </button>
+                                </TooltipContainer>
+
+            </div>
 
             <div className="flex space-x-2 items-center">
 
@@ -201,9 +240,11 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
         loading={loading}
         className="flex justify-center w-full"
         />
+        <div className="pt-6">
+
         {cupos.slice(0,48).map((item,index)=>{
                 return(
-                    <div key={index} onClick={()=>openEditDialog(item)}
+                    <div key={index} onClick={()=>appendCupo(item)}
                     className="flex space-x-4 h-10 items-center">
                         {(index +1) % 2 == 1 ?
                         <span className=" -translate-y-5 w-9 text-sm">{item.time.slice(0,5)}</span>
@@ -215,7 +256,9 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
                             <span className=" w-full h-[0.5px]  bg-gray-400"></span>
                         }
 
-                        <div className={`w-full h-10 hover:bg-gray-200  flex items-center p-1 cursor-pointer`}>
+                        <div className={`w-full h-10  flex items-center p-1 cursor-pointer
+                        ${item.available && "bg-gray-200"} 
+                        ${selectedCupos.map(item=>item.time).includes(item.time) ? "bg-primary text-white":"hover:bg-gray-200"}`}>
                             <div className="flex items-center space-x-3">
                                 {item.price != undefined ?
                                 <span className="text-sm font-medium">{item.price} BOB</span>
@@ -237,6 +280,8 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
 
                 )
             })}
+        </div>
+
 
         {/* <div className="grid grid-cols-2 xl:grid-cols-4 gap-2">
             {cupos.map((item,index)=>{

@@ -3,12 +3,12 @@ import MenuLayout from "../../util/button/MenuLayout";
 import { useEffect, useState } from "react";
 import ChartDialog from "./ChartDialog";
 import { TypeOfChart } from "@/core/type/enums";
-import { FilterChartData } from "@/core/type/chart";
+import { ChartTypeData, FilterChartData } from "@/core/type/chart";
 import ButtonIcon from "@/components/util/button/ButtonIcon";
 
 const ChartDropMenu = ({
     children,title,subtitle,setTypeOfChart,setData,className = "",CustomToolTip,getNewData,
-    showLegend=false,legendLabels=[],singleColor=false,keyValue2,closeDialog
+    showLegend=false,legendLabels=[],singleColor=false,keyValue2,closeDialog,chartTypeData
 }:{
     children:React.ReactNode
     title:string
@@ -22,6 +22,7 @@ const ChartDropMenu = ({
     showLegend?:boolean
     legendLabels?:string[]
     keyValue2?:string
+    chartTypeData:ChartTypeData
     closeDialog:boolean
 }) => {
     const [openChartDialog,setOpenChartDialog] = useState(false)
@@ -46,6 +47,7 @@ const ChartDropMenu = ({
         singleColor={singleColor}
         legendLabels={legendLabels}
         showLegend={showLegend}
+        chartTypeData={chartTypeData}
         />
         }
         <div className={`${className} border-[1px] border-gray-500 rounded-lg p-2`}>

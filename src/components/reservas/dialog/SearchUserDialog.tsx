@@ -11,7 +11,8 @@ import { unexpectedError } from "@/context/config"
 import { GetUsersEmpresa } from "@/core/repository/manage"
 import { CancelReserva } from "@/core/repository/reservas"
 import { SearchUsersEmpresa } from "@/core/repository/users"
-import { useState } from "react"
+import useDebounce from "@/core/util/hooks/useDebounce"
+import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 
 
@@ -24,12 +25,15 @@ const SearchUserDialog = ({open,close,selectUserEmpresa}:{
     const [searchQuery,setSearchQuery] = useState("")
     const [loading,setLoading] = useState(false)
     const [users,setUsers] = useState<UserEmpresa[]>([])
+    const debouncedValue = useDebounce(searchQuery,1000)
     const onSearch = async() =>{
         try{
+            if(searchQuery == "") return
             setUsers([])
             setLoading(true)
             const q = searchQuery.trim().replaceAll(/\s+/g,":* & ") + ":*"
             const res = await SearchUsersEmpresa(q)
+            console.log(res)
             setUsers(res)
             setLoading(false)
         }catch(err){
@@ -37,6 +41,12 @@ const SearchUserDialog = ({open,close,selectUserEmpresa}:{
             console.log(err)
         }
     }
+
+    useEffect(() => {
+        onSearch()
+        // Do fetch here...
+        // Triggers when "debouncedValue" changes
+      }, [debouncedValue])
   
     return(
         <>
@@ -79,9 +89,9 @@ const SearchUserDialog = ({open,close,selectUserEmpresa}:{
                 loading={loading}
                 className="flex justify-center mt-2"
                 />
-            {users.map((item)=>{
+            {users.map((item,idx)=>{
                 return(
-                    <div key={item.id} className="record"
+                    <div key={idx} className="record"
                     onClick={()=>selectUserEmpresa(item)}>
                         <span className="">{item.name}</span>
                     </div>

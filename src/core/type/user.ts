@@ -1,5 +1,6 @@
 type UserEmpresa = {
     id:number
+    uuid?:string
     name:string
     phone_number:string
 }

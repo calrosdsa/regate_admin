@@ -133,25 +133,25 @@ chartType,getNewData,allowedCharts,label}:{
                 {allowedCharts.includes(TypeOfDate.day) &&
                 <button onClick={()=>setTypeOfDate(TypeOfDate.day)}
                  className={`smallButton px-2 ${TypeOfDate.day == filterData.type_date && "border-primary text-primary"}`}>
-                    Day
+                    Dia
                 </button>
                 }
                 {allowedCharts.includes(TypeOfDate.week) &&
                 <button onClick={()=>setTypeOfDate(TypeOfDate.week)}
                 className={`smallButton px-2 ${TypeOfDate.week == filterData.type_date && "border-primary text-primary"}`}>
-                    Week
+                    Semana
                 </button>
                 }
                 {allowedCharts.includes(TypeOfDate.month) &&
                 <button onClick={()=>setTypeOfDate(TypeOfDate.month)}
                 className={`smallButton px-2 ${TypeOfDate.month == filterData.type_date && "border-primary text-primary"}`}>
-                    Month
+                    Mes
                 </button>
                 }
                 {allowedCharts.includes(TypeOfDate.year) &&
                 <button onClick={()=>setTypeOfDate(TypeOfDate.year)}
                 className={`smallButton px-2 ${TypeOfDate.year == filterData.type_date && "border-primary text-primary"}`}>
-                    Year
+                    Año
                 </button>
                 }
             </div>

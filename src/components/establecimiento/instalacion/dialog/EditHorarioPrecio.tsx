@@ -6,52 +6,66 @@ import DialogLayout from '@/components/util/dialog/DialogLayout'
 import InputWithIcon from '@/components/util/input/InputWithIcon'
 import ButtonSubmit from '@/components/util/button/ButtonSubmit'
 import { TooltipIcon } from '@/components/util/tooltips/Tooltip'
-import { createCupoInstalacion, updateCupoInstalacion } from '@/core/repository/instalacion'
+import { CreateUpdateCupos, createCupoInstalacion, updateCupoInstalacion } from '@/core/repository/instalacion'
 import { useParams } from 'next/navigation'
 import moment from 'moment'
 import { useAppDispatch } from '@/context/reduxHooks'
 import { uiActions } from '@/context/slices/uiSlice'
+import { toast } from 'react-toastify'
+import { successfulMessage, unexpectedError } from '@/context/config'
 
-export const EditHorarioPrecio = ({open,close,cupo}:{
+export const EditHorarioPrecio = ({open,close,cupos,updateCupos}:{
     open:boolean
     close:()=>void
-    cupo:Cupo | undefined
+    cupos:Cupo[]
+    updateCupos:()=>void
 }) => {
     // const dispatch = useAppDispatch()
     const [loading,setLoading] = useState(false)
-    const [price,setPrice] = useState<string>(cupo?.price?.toString()|| "")
-    const [available,setAvailable] = useState<boolean>(cupo?.available || true)
+    const [price,setPrice] = useState<string>("")
+    const [available,setAvailable] = useState<boolean>(true)
     const params = useParams()
 
     const onSubmit = async(e:FormEvent<HTMLFormElement>) =>{
       try{
-
-        e.preventDefault()
-        // console.log("CUPO",cupo)
-        if(cupo != undefined){
           setLoading(true)
-          // dispatch(uiActions.setLoaderDialog(true))
-          const precio = Number(price)
-            const cupoRequest = cupo
-            cupoRequest.price = precio
-            cupoRequest.available = available
-            if(cupo.id == undefined){
-              const res:Cupo = await createCupoInstalacion(cupoRequest,params.uuid)
-              console.log(res)
-              cupo.id = res.id
-              cupo.price = res.price
-              cupo.available = res.available
+        e.preventDefault()
+        const request:CreateUpdateCuposRequest =  {
+          cupos:cupos,
+          precio:Number(price),
+          available:available
+        }
+        await CreateUpdateCupos(request)
+        updateCupos()
+        toast.success(successfulMessage)
+        setLoading(false)
 
-              close()
-            }else {
-              const res = await updateCupoInstalacion(cupo.id,precio,available)
-              cupo.price = precio
-              cupo.available = available
-              console.log(res)
-              close()
-            }
-          }
+        // console.log("CUPO",cupo)
+        // if(cupo != undefined){
+        //   setLoading(true)
+        //   // dispatch(uiActions.setLoaderDialog(true))
+        //   const precio = Number(price)
+        //     const cupoRequest = cupo
+        //     cupoRequest.price = precio
+        //     cupoRequest.available = available
+        //     if(cupo.id == undefined){
+        //       const res:Cupo = await createCupoInstalacion(cupoRequest,params.uuid)
+        //       console.log(res)
+        //       cupo.id = res.id
+        //       cupo.price = res.price
+        //       cupo.available = res.available
+
+        //       close()
+        //     }else {
+        //       const res = await updateCupoInstalacion(cupo.id,precio,available)
+        //       cupo.price = precio
+        //       cupo.available = available
+        //       console.log(res)
+        //       close()
+        //     }
+        //   }
         }catch(err){
+          toast.error(unexpectedError)
           setLoading(false)
         }
     }

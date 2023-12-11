@@ -1,23 +1,26 @@
 "use client"
 import UserListTable from "@/components/user/UserListTable"
+import EditUserEmpresaDialog from "@/components/user/dialog/EditUserEmpresaDialog"
 import SearchInput from "@/components/util/input/SearchInput"
 import Pagination from "@/components/util/pagination/Pagination"
 import { GetUsersEmpresaPagination } from "@/core/repository/users"
 import useEffectOnce from "@/core/util/hooks/useEffectOnce"
 import { useSearchParams } from "next/navigation"
 import { useState } from "react"
-const Page = () =>{
+const Page = ({ params }: { params: { uuid: string } }) =>{
     const searchParams = useSearchParams();
     const current = new URLSearchParams(Array.from(searchParams.entries()))
     const [users,setUsers] = useState<UserEmpresa[]>([])
     const [loading,setLoading] = useState(false)
     const [query,setQuery] = useState("")
     const [paginationProps,setPaginationProps] = useState<PaginationProps | undefined>(undefined)
+    const [openEditUserDialog,setOpenEditUserDialog] = useState(false)
     const [filterData,setFilterData] = useState<RequestUserEmpresaFilter>({
         query:"",
         // order:Order.DESC,
         // order_queue:OrderQueue.CREATED,
     })
+    const [userEmpresa,setUserEmpresa] = useState<UserEmpresa | undefined>(undefined)
 
     const appendSerachParams = (key:string,value:string)=>{
         current.set(key,value);
@@ -98,6 +101,22 @@ const Page = () =>{
     })
     return(
         <>
+        {(openEditUserDialog && userEmpresa != undefined) && 
+        <EditUserEmpresaDialog
+        open={openEditUserDialog}
+        close={()=>setOpenEditUserDialog(false)}
+        userEmpresa={userEmpresa}
+        onUpdate={(name,phone)=>{
+            const updateUser = {...userEmpresa,name:name,phone_number:phone}
+            const updateUserList= users.map(item=> {
+                if(item.id == updateUser.id){
+                    item = updateUser
+                }
+                return item
+            })
+            setUsers(updateUserList)
+        }}/>
+        }
         <div className="p-2 overflow-auto h-screen">
 
             <div>
@@ -179,6 +198,11 @@ const Page = () =>{
             <UserListTable
             usersEmpresa={users}
             loading={loading}
+            uuid={params.uuid}
+            selectUser={(e:UserEmpresa)=>{
+                setUserEmpresa(e)
+                setOpenEditUserDialog(true)
+            }}
             />
         </div>
 
