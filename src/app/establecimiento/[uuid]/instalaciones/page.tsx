@@ -358,8 +358,6 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                                     setStartDate(date)}}
                                  className="input w-[120px]"/>  
                                 </div>
-
-                               
                                 <TooltipContainer 
                                 helpText="Intenta seleccionar las casillas que no hayan sido reservadas."
                                 disabled={selectedCupos.length != 0}

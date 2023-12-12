@@ -122,23 +122,11 @@ export async function GetCupoReservaInstalciones(d:CupoReservaRequest){
     return res.json()
 }
 
-export async function createCupoInstalacion(cupo:Cupo,uuid:string) {
-    const res = await fetch(`../../api/cupo`,{
-      method:"POST",
-      body:JSON.stringify(cupo)
-    })
 
-    if (!res.ok) {
-      // This will activate the closest `error.js` Error Boundary
-      throw new Error('Failed to fetch data')
-    }
-    return res.json()
-}
-
-export async function updateCupoInstalacion(id:number,precio:number,available:boolean) {
-  const res = await fetch(`../../api/cupo`,{
-    method:"PUT",
-    body:JSON.stringify({id,precio,available})
+export async function CreateUpdateCupos(data:CreateUpdateCuposRequest) {
+  const res = await fetch(`../../api/cupo/create-update`,{
+    method:"POST",
+    body:JSON.stringify(data)
   })
 
   if (!res.ok) {
@@ -148,10 +136,11 @@ export async function updateCupoInstalacion(id:number,precio:number,available:bo
   return res.json()
 }
 
-export async function CreateUpdateCupos(data:CreateUpdateCuposRequest) {
-  const res = await fetch(`../../api/cupo/create-update`,{
+
+export async function DeleteCupos(ids:(number | undefined)[]) {
+  const res = await fetch(`../../api/cupo/delete`,{
     method:"POST",
-    body:JSON.stringify(data)
+    body:JSON.stringify(ids)
   })
 
   if (!res.ok) {

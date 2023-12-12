@@ -6,7 +6,7 @@ import DialogLayout from '@/components/util/dialog/DialogLayout'
 import InputWithIcon from '@/components/util/input/InputWithIcon'
 import ButtonSubmit from '@/components/util/button/ButtonSubmit'
 import { TooltipIcon } from '@/components/util/tooltips/Tooltip'
-import { CreateUpdateCupos, createCupoInstalacion, updateCupoInstalacion } from '@/core/repository/instalacion'
+import { CreateUpdateCupos } from '@/core/repository/instalacion'
 import { useParams } from 'next/navigation'
 import moment from 'moment'
 import { useAppDispatch } from '@/context/reduxHooks'
@@ -18,7 +18,7 @@ export const EditHorarioPrecio = ({open,close,cupos,updateCupos}:{
     open:boolean
     close:()=>void
     cupos:Cupo[]
-    updateCupos:()=>void
+    updateCupos:(c:Cupo[])=>void
 }) => {
     // const dispatch = useAppDispatch()
     const [loading,setLoading] = useState(false)
@@ -35,8 +35,9 @@ export const EditHorarioPrecio = ({open,close,cupos,updateCupos}:{
           precio:Number(price),
           available:available
         }
-        await CreateUpdateCupos(request)
-        updateCupos()
+        const res:Cupo[] = await CreateUpdateCupos(request)
+        console.log("CUPOS",res)
+        updateCupos(res)
         toast.success(successfulMessage)
         setLoading(false)
 
@@ -76,8 +77,22 @@ export const EditHorarioPrecio = ({open,close,cupos,updateCupos}:{
 
   return (
     <DialogLayout
+    title='Editar horario de atención'
     className=' max-w-lg'
      open={open} close={close}>
+      <div className="grid">
+        <span className='label'>Horas a editar</span>
+
+        <div className='flex overflow-auto space-x-2 py-2'>
+        {cupos.map((item,idx)=>{
+          return(
+            <div key={idx} className='w-min rounded-full bg-primary text-white px-2 py-1'>
+              <span>{item.time}</span>
+            </div>
+          )
+        })}
+        </div>
+
         <form onSubmit={onSubmit}>
             <div className='grid grid-cols-2 gap-3'>
             <div>
@@ -123,6 +138,7 @@ export const EditHorarioPrecio = ({open,close,cupos,updateCupos}:{
                 />
               </div>
         </form>
+      </div>
     </DialogLayout>
     // Use the `Transition` component at the root level
            

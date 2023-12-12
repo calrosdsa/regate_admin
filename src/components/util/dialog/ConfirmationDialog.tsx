@@ -51,7 +51,7 @@ const ConfirmationDialog = ({open,close,title,description,descartar=close,perfor
 
                      </Dialog.Title>
               <p className='px-2 pb-1 text-sm'>{description}</p>
-                   <div className='grid grid-cols-2 place-items-center border-t-[1px] text-lg'>
+                   <div className='grid grid-cols-2 place-items-center border-t-[1px] subtitle text-base'>
                        <span  onClick={()=>descartar()}
                         className='cursor-pointer hover:bg-gray-200 w-full rounded-bl-lg justify-center border-r-[1px] flex p-2'>Descartar</span>
                        <span onClick={()=>{

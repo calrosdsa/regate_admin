@@ -13,7 +13,7 @@ export async function POST(request:Request) {
     console.log(token)
   try{
       const body  = await request.text()
-      const res = await fetch(`${API_URL}/instalacion/admin/cupo/create-update/`,{
+      const res = await fetch(`${API_URL}/instalacion/admin/cupo/delete/`,{
             method:"POST",
             body:body,
             headers:{
