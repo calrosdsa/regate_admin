@@ -1,7 +1,7 @@
 import { API_URL } from "@/context/config"
 
 export async function getEstablecimientoReservasCount(uuid:string) {
-  const res = await fetch(`${API_URL}/admin/reservas-establecimmiento-count/${uuid}/`)
+  const res = await fetch(`../../api/reservas/establecimiento/count?uuid=${uuid}`)
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch data')

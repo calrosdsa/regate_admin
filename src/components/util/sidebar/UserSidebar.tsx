@@ -1,17 +1,19 @@
 import { logout } from "@/context/actions/account-actions";
 import { useAppDispatch } from "@/context/reduxHooks";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 
 const UserSideBar = ({user}:{
     user:User
 }) =>{
     const dispatch = useAppDispatch()
+    const router = useRouter()
 
     return (
-        <Link href={"../../account"}
+        <div
          className="grid gap-y-2">
-            <div className="px-2 py-1 border-b-[1px]
+            <div onClick={()=>router.push("../../account")}  className="px-2 py-1 border-b-[1px]
                 flex items-center space-x-3 h-12 text-gray-900  dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
                 <img src="/images/user-icon-placeholder.webp" alt="" className="rounded-full h-7 w-7"/>
                 <div className="grid">
@@ -31,7 +33,7 @@ const UserSideBar = ({user}:{
 
             <span className='text-sm' onClick={()=>dispatch(logout())}>Cerrar session</span>
         </div>
-        </Link>
+        </div>
     )
 }
 

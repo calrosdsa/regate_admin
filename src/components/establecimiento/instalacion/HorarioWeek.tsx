@@ -200,8 +200,8 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
         }
         <div className="relative">
 
-        <div className="sticky top-14 -mt-4 bg-gray-50  w-full z-10  flex  space-x-3 h-12  justify-between items-center overflow-x-auto">
-            <div className="flex space-x-2 items-end ">    
+        <div className="sticky top-14 -mt-4 bg-gray-50  w-full z-10  flex  space-x-3 h-12  justify-between items-center ">
+            <div className="flex space-x-2 items-end overflow-x-auto">    
             <select className="input w-min h-9" value={selectedDay?.toString()} 
             onChange={(e)=>{
                 getHorarioDay(Number(e.target.value))

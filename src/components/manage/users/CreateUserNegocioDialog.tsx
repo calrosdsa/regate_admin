@@ -154,7 +154,7 @@ const CreateUserNegocioDialog:React.FC<Props>=({
    open={openModal}
    close={closeModal}
     >
-        <div className='rounded-lg bg-white h-[65vh] overflow-auto'>
+        <div className='rounded-lg bg-white overflow-auto'>
             {Tab.MAIN == currentTab &&
             <form className='p-2' onSubmit={onSubmit}>
                 <InputWithIcon
@@ -282,12 +282,13 @@ const CreateUserNegocioDialog:React.FC<Props>=({
             </form>
             }
             {Tab.ESTABLECIMIENTOS == currentTab &&
-            <div className='pb-12 pt-2'>
+            <div className=' pt-2'>
               
               <Loading
               loading={uiState.innerLoading}
               className='pt-2 flex w-full justify-center'
               />
+              <div className=' overflow-auto'>
               {establecimientos.map((item,idx)=>{
                 return(
                   <div key={idx} onClick={()=>selectEstablecimientos(item.id)}
@@ -297,12 +298,13 @@ const CreateUserNegocioDialog:React.FC<Props>=({
 
                     <input type="checkbox" checked={establecimientosIds.map(item=>item.uuid).includes(item.uuid)} 
                     onChange={()=>selectEstablecimientos(item.id)}/>
-
                   </div>
                 )
               })}
+
+              </div>
             
-              <div className='absolute w-full bottom-0 rounded-lg border-t-[1px] h-12 z-10 bg-white'>
+              <div className=' w-full  rounded-lg border-t-[1px] z-10 bg-white'>
 
               <div className='flex justify-between w-full p-1'>
                 <button className='button' onClick={()=>setCurrentTab(Tab.MAIN)}>Volver</button>
