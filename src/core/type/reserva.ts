@@ -12,6 +12,12 @@ interface Reserva extends Profile {
     user_local_id?:number
 }
 
+type ReservaReporteRequest = {
+    establecimiento_id:number
+    start_date:string
+    end_date:string
+}
+
 type ReservaDetail = {
     instalacion:Instalacion
     reserva:Reserva

@@ -54,3 +54,50 @@ export const downloadReporteDeposito = (depositoId: number,reporteId:ReporteId) 
         }
     }
 }
+
+
+export const downloadReporteReservasExcel = (
+    data:ReservaReporteRequest
+    ) 
+:ThunkAction<void,RootState,undefined,AnyAction>=>{
+    let id:Id;
+    // const source = cancelToken.source();
+    return async(dispatch,getState)=>{
+        try{
+            const uiState = getState().ui
+            dispatch(uiActions.setOngoingDownloadProcess([data.establecimiento_id]))
+            if(uiState.ongoingDownloadProcess.includes(data.establecimiento_id)){
+                    toast.info("Hay una descarga en curso.")
+                }else{
+                    id = toast.loading("Generando reporte, por favor espere...")
+                    const date = moment().format('LLLL').replace(":",";");
+                    await axios.post(`${LOCAL_URL}/api/reservas/reporte`,data,{
+                        responseType:"blob"
+                    }).then((response)=>{
+                        const url = window.URL.createObjectURL(new Blob([response.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', `${date} - Deposito.xlsx`); //or any other extension
+                        document.body.appendChild(link);
+                        toast.update(id, {render: "Se ha completado la descarga", type: "success", isLoading: false,autoClose:5000});
+                        link.click();
+                    })
+            dispatch(uiActions.removeOngoingProcessFromQueue(data.establecimiento_id))
+            }
+        }catch(err:any){
+            console.log(err)
+            if (axios.isCancel(err)) {
+                toast.update(id, {render:"Descarga Cancelada", type: "info", isLoading: false ,autoClose:5000});
+                dispatch(uiActions.removeOngoingProcessFromQueue(data.establecimiento_id))                
+            }else{
+                dispatch(uiActions.removeOngoingProcessFromQueue(data.establecimiento_id))                
+                toast.update(id, {render:err.response.message, type: "error", isLoading: false ,autoClose:5000});
+                // dispatch(uiActions.setLoading(false))
+                if(err.response.status == 401){
+                    redirectToLogin()
+                }
+            }
+
+        }
+    }
+}
