@@ -33,7 +33,7 @@ const uiSlice = createSlice({
         setOngoingDownloadProcess(state,action:PayloadAction<number[]>){
             state.ongoingDownloadProcess = [...state.ongoingDownloadProcess,...action.payload]
         },
-        removeOngoingProcessFromQueue(state,action:PayloadAction<ReporteId>){
+        removeOngoingProcessFromQueue(state,action:PayloadAction<number>){
             const ongoingDownloads = state.ongoingDownloadProcess.filter(item=>item != action.payload)
             state.ongoingDownloadProcess = ongoingDownloads
         }

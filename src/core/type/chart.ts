@@ -3,16 +3,28 @@ import { TypeOfChart, TypeOfDate } from "./enums"
 export type NameValueData = {
     name:string
     value:number
-    value2?:number
+    value2:number | null
     date?:string
 }
 
+export type ChartExportRequest = {
+    data:NameValueData[]
+    labels:string[]
+    has_value_2:boolean
+}
+
+export enum TypeValueChart {
+    NONE,
+    HOURS,
+    INGRESOS,
+}
 
 export enum ChartTypeData {
   INGRESOS_RESERVAS,
   HORAS_RESERVAS,
   HORAS_RESERVADAS_AVERAGE,
   INGRESOS_AVERAGE,
+  INGRESOS_AVERAGE_DATE,
   USUARIOS,
   INGRESOS_HORAS
 }

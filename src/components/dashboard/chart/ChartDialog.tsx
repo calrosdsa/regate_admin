@@ -11,8 +11,9 @@ import CommonBarChart from "./CommonBarChart";
 import LineChartConnectNulls from "./LineChartConnectNulls";
 import StackedBarChart from "./StackedBarChart";
 import { chartActions } from "@/context/slices/chartSlice";
-import { ChartTypeData, FilterChartData } from "@/core/type/chart";
+import { ChartExportRequest, ChartTypeData, FilterChartData, TypeValueChart } from "@/core/type/chart";
 import Loader from "@/components/util/loaders/Loader";
+import { exportDashboardDataExcel } from "@/context/actions/download-actions";
 
 const ChartDialog = ({open,close,CustomToolTip,getNewData,showLegend,legendLabels,singleColor,
 keyValue2,label,chartTypeData}:{
@@ -34,6 +35,18 @@ keyValue2,label,chartTypeData}:{
     const [ shouldShowSecondLabel,setShowSecondLabel ]= useState(false)
     const [labelName,setLabelName] = useState("")
     const [valueName,setValueName] = useState("")
+    const [typeValue,setTypeValue] = useState(TypeValueChart.NONE)
+
+    const getTypeValue = () =>{
+        switch(typeValue){
+            case TypeValueChart.HOURS:
+                return "hrs."
+            case TypeValueChart.INGRESOS:    
+                return "BOB"
+            default:
+                return ""
+        }
+    }
 
     const getTypeOfDate = (typeDate:TypeOfDate) =>{
         switch(typeDate){
@@ -60,16 +73,19 @@ keyValue2,label,chartTypeData}:{
     const getLabel = ()=>{
         switch(chartTypeData){
             case ChartTypeData.INGRESOS_RESERVAS:
+                setTypeValue(TypeValueChart.INGRESOS)
                 setShowSecondLabel(true)
                 setValueName("Local")
                 setLabelName("Fecha")
                 break;
             case ChartTypeData.HORAS_RESERVAS:
-                setShowSecondLabel(false)
-                setValueName("Horas")
+                setTypeValue(TypeValueChart.HOURS)
+                setShowSecondLabel(true)
+                setValueName("Local")
                 setLabelName("Fecha")
                 break;
             case ChartTypeData.HORAS_RESERVADAS_AVERAGE:
+                setTypeValue(TypeValueChart.HOURS)
                 setShowSecondLabel(false)    
                 if(chartState.data.length > 2){
                     getTypeOfDate(chartState.filterData.type_date)
@@ -79,6 +95,7 @@ keyValue2,label,chartTypeData}:{
                 }
                 break;
             case ChartTypeData.INGRESOS_AVERAGE:
+                setTypeValue(TypeValueChart.INGRESOS)
                 setShowSecondLabel(false)    
                 if(chartState.data.length > 2){
                     getTypeOfDate(chartState.filterData.type_date)
@@ -98,6 +115,18 @@ keyValue2,label,chartTypeData}:{
                 setLabelName("Fecha")
         }
     }
+
+    const exportData = () =>{
+        const hasSecondLabel = chartState.data[0].value2 != null
+        const labels =hasSecondLabel? ["",labelName,valueName,"App"] : ["",labelName,valueName]
+        const request:ChartExportRequest = {
+            has_value_2:hasSecondLabel,
+            data:chartState.data,
+            labels:labels
+        }
+        dispatch(exportDashboardDataExcel(request))
+    }
+
     useEffect(()=>{
         getLabel()
     },[])
@@ -141,6 +170,7 @@ keyValue2,label,chartTypeData}:{
                             getNewData={getNewData}
                             setHideHeader={(bool)=>setHideHeader(bool)}
                             applyTypeChart={(type:TypeOfChart)=>dispatch(chartActions.setTypeOfChart(type))}
+                            exportData={exportData}
                             />
 
                <div className='border-t-[1px] border-gray-400 p-3 relative'>

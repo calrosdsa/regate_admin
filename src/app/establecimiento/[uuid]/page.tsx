@@ -408,7 +408,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
         legendLabels={["Local","App"]}
         showLegend={true}
         closeDialog={chartState.closeDialog}
-        chartTypeData={ChartTypeData.INGRESOS_AVERAGE}
+        chartTypeData={ChartTypeData.INGRESOS_RESERVAS}
       >
         <CommonBarChart
           data={chartState.response?.reserva_amount_average || []}

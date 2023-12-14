@@ -60,6 +60,7 @@ export enum TypeOfDate {
 
 export enum ReporteId{
     DEPOSITO,
+    EXPORT_DASHBOARD_DATA,
 }
 
 export enum DepositoEstado {
