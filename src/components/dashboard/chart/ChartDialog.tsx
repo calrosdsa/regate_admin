@@ -122,7 +122,8 @@ keyValue2,label,chartTypeData}:{
         const request:ChartExportRequest = {
             has_value_2:hasSecondLabel,
             data:chartState.data,
-            labels:labels
+            labels:labels,
+            type_value_chart:typeValue
         }
         dispatch(exportDashboardDataExcel(request))
     }
@@ -258,9 +259,9 @@ keyValue2,label,chartTypeData}:{
                     className={`${index % 2 && "bg-gray-100"}`}>
                         <td className="rowTable font-medium">{index + 1}.-</td>
                         <td className="rowTable truncate ">{item.name}</td>
-                        <td className="rowTable truncate ">{item.value}</td>
+                        <td className="rowTable truncate ">{item.value} {getTypeValue()}</td>
                         {shouldShowSecondLabel &&
-                            <td className="rowTable truncate ">{item.value2}</td>
+                            <td className="rowTable truncate ">{item.value2} {getTypeValue()}</td>
                         }
                     </tr>
                 )

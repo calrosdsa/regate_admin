@@ -11,6 +11,7 @@ export type ChartExportRequest = {
     data:NameValueData[]
     labels:string[]
     has_value_2:boolean
+    type_value_chart:TypeValueChart
 }
 
 export enum TypeValueChart {

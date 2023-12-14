@@ -134,13 +134,24 @@ const SideBarEstablecimiento = () =>{
                </Link>
             </li> */}
 
-
          <li>
             <Link href={`${root}/reservas`} className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700
             ${pathname == `${root}/reservas` && "bg-gray-200 dark:bg-gray-700"}`}>
                <svg aria-hidden="true" className="flex-shrink-0 w-6 h-6 text-gray-500  dark:text-gray-400 group-hover:text-gray-900
                 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clipRule="evenodd"></path></svg>
                <span className="flex-1 ml-3 whitespace-nowrap">Reservas</span>
+            </Link>
+         </li>
+
+         
+         <li>
+            <Link href={`${root}/eventos`} className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700
+            ${pathname == `${root}/eventos` && "bg-gray-200 dark:bg-gray-700"}`}>
+               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="flex-shrink-0 w-6 h-6 text-gray-500 
+                dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
+               <path fillRule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.75 2.75 0 0118 6.75v8.5A2.75 2.75 0 0115.25 18H4.75A2.75 2.75 0 012 15.25v-8.5A2.75 2.75 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75z" clipRule="evenodd" />
+               </svg>
+               <span className="flex-1 ml-3 whitespace-nowrap">Eventos</span>
             </Link>
          </li>
 

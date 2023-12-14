@@ -17,7 +17,8 @@ const accountSlice = createSlice({
         },
         setEstablecimientos(state,action:PayloadAction<EstablecimientoUser[]>){
             state.establecimientos = action.payload
-        }
+        },
+        
     }
 })
 
