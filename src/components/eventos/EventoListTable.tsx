@@ -58,7 +58,7 @@ const EventoListTable = ({evnetos,loading,uuid}:{
                         <td className="rowTable ">{item.description}</td>
                         {/* <td className="rowTable">{item.name}</td> */}
                         <td className="rowTable">
-                                <Link href={getRouteEstablecimiento(uuid,`eventos/`)}
+                                <Link href={getRouteEstablecimiento(uuid,`eventos/${uuid}?name=${item.name}&id=${item.id}`)}
                                 className="font-medium underline text-primary cursor-pointer">Ver</Link>
 
                         </td>

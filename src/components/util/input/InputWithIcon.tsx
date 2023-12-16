@@ -16,7 +16,7 @@ const InputWithIcon = ({onChange,value,label,name,type="text",error,icon,classNa
 required= true}:Props) =>{
 
   return(
-    <div className={`relative mt-3 ${className}`}>
+    <div className={`relative mt-3 mx-1 ${className}`}>
           {label != undefined &&
         <label className="label">{label}</label>
       }
@@ -30,7 +30,7 @@ required= true}:Props) =>{
         value={value}
         // minLength={8}
         className={` border-[1px] rounded-lg rounded-b-lg p-2 h-10 w-full
-        border-gray-400 mt-1 text-sm text-gray-900 focus:outline-blue-600
+        border-gray-400 mt-1 text-sm text-gray-900 focus:outline-primary
         ${icon != undefined && "pl-7"}`}
         placeholder={placeholder} />
           <span className="text-red-500 pl-2 absolute left-0 -bottom-4 font-medium text-xs truncate"

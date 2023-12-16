@@ -3,7 +3,7 @@ import { TypeOfChart, TypeOfDate } from "./enums"
 export type NameValueData = {
     name:string
     value:number
-    value2:number | null
+    value2?:number | null
     date?:string
 }
 

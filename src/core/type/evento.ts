@@ -6,6 +6,7 @@ type CreateEventoRequest = {
 
 type Evento = {
     id:number
+    uuid:string
     name:string
     description:string
     establecimiento_id:number

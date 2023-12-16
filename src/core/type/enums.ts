@@ -63,6 +63,13 @@ export enum ReporteId{
     EXPORT_DASHBOARD_DATA,
 }
 
+export enum Repeat {
+    NEVER,
+    DAYLY,
+    WEEKLY,
+    MOTHTLY
+}
+
 export enum DepositoEstado {
     PENDIENTE =1,
     EMITIDO = 2

@@ -34,7 +34,7 @@ onClick={()=>setShow(!show)}
         minLength={8}
         className=" border-[1px] rounded-lg  peer rounded-b-lg   p-2 h-10 w-full
         border-gray-400 mt-1 pl-7 text-sm
-        text-gray-900 focus:outline-blue-600"
+        text-gray-900 focus:outline-primary"
         placeholder="" />
           <span className="text-red-500 pl-2 absolute left-0 -bottom-4 font-medium text-xs truncate"
          >{error}</span>
