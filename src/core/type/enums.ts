@@ -70,6 +70,11 @@ export enum Repeat {
     MOTHTLY
 }
 
+export enum UntilOptions {
+    DATE,
+    COUNT,
+}
+
 export enum DepositoEstado {
     PENDIENTE =1,
     EMITIDO = 2
