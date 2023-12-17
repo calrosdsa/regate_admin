@@ -37,7 +37,9 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
                         </button>
                 </div>
 
-                <Calendar/>
+                <Calendar
+                uuid={params.uuid}
+                />
 
 
                 </div>

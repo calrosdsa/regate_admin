@@ -1,9 +1,14 @@
+import InstalacionCard from "@/components/establecimiento/instalacion/InstalacionCard"
 import DialogLayout from "@/components/util/dialog/DialogLayout"
 import InputDateTime from "@/components/util/input/InputDateTime"
 import SelectTime from "@/components/util/select/SelectTime"
-import { Repeat, UntilOptions } from "@/core/type/enums"
+import { days } from "@/context/actions/chart-actions"
+import { GetInstalaciones } from "@/core/repository/instalacion"
+import { Repeat, EndOptions } from "@/core/type/enums"
+import { dayMonth } from "@/core/util/data"
 import moment from "moment"
 import { useState } from "react"
+import Image from "next/image"
 
 const repeatOptions = [
     {
@@ -23,38 +28,91 @@ const repeatOptions = [
         repeat:Repeat.MOTHTLY
     },
 ]
-const CalendarDialogReserva = ({close,open,startDate,startTime="00:00"}:{
+const CalendarDialogReserva = ({close,open,startDate,startTime,uuid}:{
     close:()=>void
     open:boolean
     startDate?:string
-    startTime?:string
+    startTime?:moment.Moment
+    uuid:string
 }) =>{
     const [repeatOption,setRepeatOption] = useState(Repeat.NEVER)
-    const [untilOption,setUntilOption] = useState(UntilOptions.DATE)
+    const [untilOption,setUntilOption] = useState(EndOptions.DATE)
     const [untilDate,setUntilDate] = useState(startDate || "")
+    const [selectedWeeks,setSelectedWeeks] = useState<number[]>([])
+    const [tab,setTab] = useState(0)
+    const [instalaciones,setInstalaciones] = useState<Instalacion[]>([])
+    const [start,setStart] = useState({
+        date:startDate,
+        time:startTime?.format("HH:mm")
+    })
+    const [end,setEnd] = useState({
+        date:startDate,
+        time:startTime?.add(30,"minutes").format("HH:mm")
+    })
+
+    const getCurrentRepatName = () =>{
+        switch(repeatOption){
+            case Repeat.DAYLY:
+                return "Day"
+            case Repeat.WEEKLY:
+                return "Semana"
+            case Repeat.MOTHTLY:
+                return "Mes"
+            default:
+                return ""
+        }
+    }
+
+    const getInstalaciones = async () =>{
+        try{
+            setInstalaciones([])
+            const res = await GetInstalaciones(uuid)
+            setInstalaciones(res)
+        }catch(e){
+            console.log(e)
+        }
+    }
+
+    const validateToContinue = () =>{
+        setTab(1)
+        getInstalaciones()
+    }
+
+
     return(
         <DialogLayout
         close={close}
         open={open}
-        className=" max-w-md h-[60vh]"
+        className=" max-w-md "
         title="Reservar"
         >
-        <div className="grid sm: grid-cols-2 gap-x-4 gap-y-4">
+            {tab == 0 &&
+        <div className="grid sm:grid-cols-2 gap-x-4 gap-y-4">
             <InputDateTime
             label="Inicio"
-            startDate={startDate}
-            startTime={startTime}
+            datetime={start}
+            setTime={(e)=>{
+                setStart({...start,time:e})
+            }}
+            setDate={(e)=>{
+                setStart({...start,date:e})
+            }}
             />
             <InputDateTime
             label="Fin"
-            startDate={startDate}
-            startTime={startTime}
+            datetime={end}
+            setTime={(e)=>{
+                setEnd({...end,time:e})
+            }}
+            setDate={(e)=>{
+                setEnd({...end,date:e})
+            }}
             />
 
-            <div className="flex space-x-2 items-center col-span-full">
+            {/* <div className="flex space-x-2 items-center col-span-full">
                 <input id="all-day" type="checkbox" />
-                <label htmlFor="all-day" className="text-xs">Todo el dia</label>
-            </div>
+                <label htmlFor="all-day" className="text-sm">Todo el dia</label>
+            </div> */}
 
             <div className=" grid">
                 <span className="label">Repetir</span>
@@ -69,31 +127,101 @@ const CalendarDialogReserva = ({close,open,startDate,startTime="00:00"}:{
                 </select> 
             </div>
 
-            {repeatOption == Repeat.DAYLY &&
+            {repeatOption != Repeat.NEVER &&
             <div className=" grid">
                 <span className="label">Repetir cada</span>
                 <div className="flex space-x-2 items-center">
                 <input type="number" className="input h-8 w-20" min={1} />
-                <span className="text-sm">Dia(s)</span>
+                <span className="text-sm">
+                    {getCurrentRepatName()}(s)
+                    </span>
                 </div>
             </div>
             }
 
+
+           {(repeatOption != Repeat.NEVER && repeatOption != Repeat.DAYLY) &&
+            
+               <div className="grid">
+                <span className="label">Repetir en</span>
+                {repeatOption == Repeat.WEEKLY && 
+                <div className="flex flex-wrap gap-2 p-2" >
+                {days.map((item,index) =>{
+                    return (
+                        <div key={index} 
+                        onClick={()=>{
+                            if(selectedWeeks.includes(item.value)){
+                                const news = selectedWeeks.filter(t=>t != item.value)
+                                setSelectedWeeks(news)
+                            }else{
+                                setSelectedWeeks([...selectedWeeks,item.value])
+                            }
+                        }}
+                        className={`icon-button flex justify-center items-center noSelect
+                        ${selectedWeeks.includes(item.value) ? "text-primary bg-primary bg-opacity-10"
+                        :"border-[1px] border-gray-300"}
+                        `}>
+                            {item.day.slice(0,1)}
+                        </div>
+                        )
+                    })}
+                </div>
+                }
+                {repeatOption == Repeat.MOTHTLY && 
+                <>
+                <div className="flex items-center space-x-3 p-2">
+                    <div className="flex space-x-2">
+                    <input type="radio" name="moth-day-select" id="moth-day-select"/>
+                    </div>
+                    <label className="text-sm" htmlFor="moth-day-select">Dia</label>
+                    <input type="number" className="input h-8 w-20" min={1} /> 
+                </div>
+
+                <div className="flex space-x-3 p-2">
+                    <input type="radio" name="moth-day-select" id=""/>
+                    <div className="grid gap-y-2">
+                    <select name="" id="" className="select h-8 text-sm">
+                        {dayMonth.map((item,idx)=>{
+                            return(
+                                <option key={idx} value={item.value}>{item.name}</option>
+                                )
+                            })}
+                    </select>
+
+                    <select name="" id="" className="select h-8 text-sm">
+                        {days.map((item,idx)=>{
+                            return(
+                                <option key={idx} value={item.value}>{item.day}</option>
+                                )
+                            })}
+                    </select>
+                    </div>
+                </div>
+                </>
+                }
+
+            </div>
+            }
+
+
+
+            {repeatOption != Repeat.NEVER &&
             <div className="grid">
                 <span className="label">Termina</span>
 
-                <div className="flex space-x-2 items-center mt-2">
+                <div className="flex space-x-2 r mt-2">
                 <select name="repeat" id="repeat" className=" select h-8 text-sm"
+                onChange={(e)=>setUntilOption(Number(e.target.value))}
                 >
                             <option className="text-sm"
-                             value={UntilOptions.DATE}>Hasta</option>
+                             value={EndOptions.DATE}>Hasta</option>
                              <option className="text-sm"
-                             value={UntilOptions.COUNT}>Por conteo</option>
+                             value={EndOptions.COUNT}>Por conteo</option>
                 </select> 
-                {untilOption == UntilOptions.COUNT &&
+                {untilOption == EndOptions.COUNT &&
                 <input type="number" className="input h-8 w-full" min={1} />
                 }
-                 {untilOption == UntilOptions.DATE &&
+                 {untilOption == EndOptions.DATE &&
                  <>
         <label className="relative flex items-center input h-8 p-0 w-full ">
             <input
@@ -121,9 +249,53 @@ const CalendarDialogReserva = ({close,open,startDate,startTime="00:00"}:{
                 }
                 </div>
             </div>
+        }
+
 
         </div>
+        }
+        {tab == 1 &&
+        <div>
+            {instalaciones.map((item,index)=>{
+                return(
+                            <div key={index} className="flex space-x-3 p-2  cursor-pointer border-[1px] relative rounded-lg
+                            hover:bg-gray-100">
+                                <div className="w-36">
+                                    {/* <CommonImage
+                                    src={item.portada}
+                                    h={100} w={120} className={"h-20 w-36 object-cover rounded-lg"}/> */}
+                                {(item.portada == null || item.portada == "") ?
+                                <Image
+                                src="/images/img-default.png"
+                                height={100}
+                                width={150}
+                                alt={item.name} 
+                                className=" rounded-lg h-16 w-36   object-contain bg-gray-200 p-2"
+                                />
+                                :
+                                <Image
+                                src={item.portada as string}
+                                height={100}
+                                width={150}
+                                alt={item.name} 
+                                className=" rounded-lg h-16 w-36  object-cover"
+                                />
+                            }
+                            </div>
+                        <span className="font-medium text-sm  line-clamp-2 w-1/2
+                        p-1 z-10 rounded-br-lg">{item.name}</span>
+                    </div>
+                )
+            })}
+        </div>
+        }
+
         
+        <div className=" mt-4 flex w-full justify-end">
+            <button onClick={()=>validateToContinue()}
+             className="button">Continuar</button>
+        </div>
+
         </DialogLayout>
         )
 }

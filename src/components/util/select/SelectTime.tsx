@@ -4,9 +4,11 @@ import moment from 'moment'
 import { Fragment } from 'react'
 
 const SelectTime = ({
-    setTime
+    setTime,
+    currentTime
 }:{
     setTime:(e:Date)=>void
+    currentTime:string
 }) =>{
   return (
     <div className="h-8 z-10 border-r border-t border-b border-gray-400 px-1 grid place-content-center hover:bg-gray-200 rounded-l-lg">
@@ -30,7 +32,7 @@ const SelectTime = ({
         >
 
       <Menu.Items className="fixed  z-10 mt-2 overflow-y-auto bg-white shadow-lg ring-1 ring-black
-        rounded-md ring-opacity-5 focus:outline-none grid h-64 overflow-auto">
+        rounded-md ring-opacity-5 focus:outline-none grid h-48 overflow-auto">
             {hours.map((item,idx)=>{
                 return(
         <Menu.Item >

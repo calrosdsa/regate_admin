@@ -70,7 +70,7 @@ export enum Repeat {
     MOTHTLY
 }
 
-export enum UntilOptions {
+export enum EndOptions {
     DATE,
     COUNT,
 }

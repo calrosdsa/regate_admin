@@ -11,3 +11,27 @@ export const estadoVisibility:SelectItem[] = [
         value:EstadoVisibility.DISABLED.toString()
     }
 ]
+
+
+export const dayMonth = [
+    {
+        name:"Primero",
+        value:0
+    },
+    {
+        name:"Segundo",
+        value:1
+    },
+    {
+        name:"Tercero",
+        value:2
+    },
+    {
+        name:"Cuarto",
+        value:3
+    },
+    {
+        name:"Ultimo",
+        value:4
+    },
+]

@@ -13,11 +13,7 @@ import { toast } from "react-toastify";
 import SearchInput from "@/components/util/input/SearchInput";
 import SearchUserDialog from "./SearchUserDialog";
 
-type CupoR = {
-    start_date:string
-    instalacion_id:number
-    precio:number
-}
+
 type CupoRequest = {
     cupos:CupoR[]
     total_price:number

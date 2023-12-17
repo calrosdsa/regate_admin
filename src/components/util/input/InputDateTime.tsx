@@ -5,16 +5,22 @@ import moment from "moment";
 
 
 const InputDateTime = ({
-    label,className,startDate,startTime="00:00"
+    label,className,datetime,setDate,setTime
 }:{
     className?:string
     label:string
-    startDate?:string
-    startTime?:string
+    datetime:{
+        date: string | undefined;
+        time: string | undefined;
+    }
+    setTime:(e:string)=>void
+    setDate:(e:string)=>void
+    
 })=>{
-    const [date,setDate] = useState(startDate)
-    const [time,setTime] = useState(startTime)
+    // const [date,setDate] = useState(datetime.date)
+    // const [time,setTime] = useState(startTime)
     const inputDateRef = useRef<HTMLInputElement | null>(null)
+    const {date,time} = datetime
 
 
     const setMinDate = () =>{
@@ -39,12 +45,13 @@ const InputDateTime = ({
              {label != undefined &&
         <span className="label">{label}</span>
       }
-        <label className="relative flex items-center input h-8 p-0 w-full">
+        <label className="relative flex items-center input h-8 p-0 mt-2 w-full">
             <SelectTime
             setTime={(e)=>{
                 const t = moment(e).utc().format("HH:mm")
                 setTime(t)
             }}
+            currentTime={time}
             />
 
             <label htmlFor={label} className="h-8 border-r border-t border-b border-gray-400 px-1
@@ -55,6 +62,7 @@ const InputDateTime = ({
             </label>
             <input
             type="date"
+            name="date"
             ref={inputDateRef}
             className="w-0 "
             onChange={(e)=>{

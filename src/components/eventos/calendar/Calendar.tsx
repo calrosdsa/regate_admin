@@ -10,10 +10,10 @@ type WeekDay = {
     name:string
     date:string
 }
-const Calendar = () =>{
+const Calendar = ({uuid}:{uuid:string}) =>{
     const [openReservaDialog,setOpenReservaDialog] = useState(false)
     const [startDate,setStartDate] = useState("")
-    const [startTime,setStartTime] = useState("")
+    const [startTime,setStartTime] = useState(moment(new Date()))
     const [days,setDays] = useState<WeekDay[]>([])
 
     const openDialog = (startDate:string,startTime:Date,shouldAdd:boolean) => {
@@ -21,9 +21,9 @@ const Calendar = () =>{
         const t = moment(startTime).utc()
         if(shouldAdd){
             t.add(30, 'minutes')
-            setStartTime(t.format("HH:mm"))
+            setStartTime(t)
         }else{
-            setStartTime(t.format("HH:mm"))
+            setStartTime(t)
 
         }
         setOpenReservaDialog(true)
@@ -53,6 +53,7 @@ const Calendar = () =>{
         <>
         {openReservaDialog &&
         <CalendarDialogReserva
+        uuid={uuid}
         open={openReservaDialog}
         close={()=>setOpenReservaDialog(false)}
         startTime={startTime}

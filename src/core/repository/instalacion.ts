@@ -1,8 +1,8 @@
-import { API_URL } from "@/context/config"
+import { API_URL, LOCAL_URL } from "@/context/config"
 
 
 export async function UpdateInstalacion(data:string,id:number) {
-  const res = await fetch(`../../api/establecimiento/instalacion?instalacion_id=${id}`,{
+  const res = await fetch(`${LOCAL_URL}/api/establecimiento/instalacion?instalacion_id=${id}`,{
     method:"PUT",
     body:data,
   })
@@ -13,7 +13,7 @@ export async function UpdateInstalacion(data:string,id:number) {
 }
 
 export async function UpdateInstalacionPhoto(data:FormData) {
-  const res = await fetch(`../../api/establecimiento/instalacion/photo`,{
+  const res = await fetch(`${LOCAL_URL}/api/establecimiento/instalacion/photo`,{
     method:"PUT",
     body:data,
   })
@@ -25,7 +25,7 @@ export async function UpdateInstalacionPhoto(data:FormData) {
 
 
 export async function CreateInstalacion(data:FormData) {
-  const res = await fetch(`../../api/establecimiento/instalacion`,{
+  const res = await fetch(`${LOCAL_URL}/api/establecimiento/instalacion`,{
     method:"POST",
     body:data,
   })
@@ -35,8 +35,8 @@ export async function CreateInstalacion(data:FormData) {
   return res.json()
 }
 
-export async function getInstalaciones(uuid:string){
-    const res = await fetch(`../../api/establecimiento/instalacion/list?uuid=${uuid}`)
+export async function GetInstalaciones(uuid:string){
+    const res = await fetch(`${LOCAL_URL}/api/establecimiento/instalacion/list?uuid=${uuid}`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')
@@ -47,7 +47,7 @@ export async function getInstalaciones(uuid:string){
 }
 
 export async function GetInstalacion(uuid:string){
-    const res = await fetch(`../../api/establecimiento/instalacion?uuid=${uuid}`)
+    const res = await fetch(`${LOCAL_URL}/api/establecimiento/instalacion?uuid=${uuid}`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')
@@ -59,7 +59,7 @@ export async function GetInstalacion(uuid:string){
 
 
 export async function getInstalacionById(id:number){
-  const res = await fetch(`../../api/establecimiento/instalacion/${id}`)
+  const res = await fetch(`${LOCAL_URL}/api/establecimiento/instalacion/${id}`)
   if (!res.ok) {
       // This will activate the closest `error.js` Error Boundary
       throw new Error('Failed to fetch data')
@@ -72,7 +72,7 @@ export async function getInstalacionById(id:number){
 
 
 export async function getInstalacionDayHorario(instalacionId:number,dayWeek:number){
-  const res = await fetch(`../../api/establecimiento/instalacion/horario?instalacionId=${instalacionId}&dayWeek=${dayWeek}`)
+  const res = await fetch(`${LOCAL_URL}/api/establecimiento/instalacion/horario?instalacionId=${instalacionId}&dayWeek=${dayWeek}`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')
@@ -82,7 +82,7 @@ export async function getInstalacionDayHorario(instalacionId:number,dayWeek:numb
 }
 
 export async function CopyInstalacionHorario(d:string){
-  const res = await fetch(`../../api/establecimiento/instalacion/horario/copy`,{
+  const res = await fetch(`${LOCAL_URL}/api/establecimiento/instalacion/horario/copy`,{
     method:"POST",
     body:d
   })
@@ -95,7 +95,7 @@ export async function CopyInstalacionHorario(d:string){
 }
 
 export async function ResetInstalacionHorarioDay(d:string){
-  const res = await fetch(`../../api/establecimiento/instalacion/horario/reset`,{
+  const res = await fetch(`${LOCAL_URL}/api/establecimiento/instalacion/horario/reset`,{
     method:"POST",
     body:d
   })
@@ -109,7 +109,7 @@ export async function ResetInstalacionHorarioDay(d:string){
 
 
 export async function GetCupoReservaInstalciones(d:CupoReservaRequest){
-  const res = await fetch(`../../api/establecimiento/instalacion/reserva-cupo`,{
+  const res = await fetch(`${LOCAL_URL}/api/establecimiento/instalacion/reserva-cupo`,{
     cache: 'no-store',
     method:"POST",
     body:JSON.stringify(d)
@@ -124,7 +124,7 @@ export async function GetCupoReservaInstalciones(d:CupoReservaRequest){
 
 
 export async function CreateUpdateCupos(data:CreateUpdateCuposRequest) {
-  const res = await fetch(`../../api/cupo/create-update`,{
+  const res = await fetch(`${LOCAL_URL}/api/cupo/create-update`,{
     method:"POST",
     body:JSON.stringify(data)
   })
@@ -138,7 +138,7 @@ export async function CreateUpdateCupos(data:CreateUpdateCuposRequest) {
 
 
 export async function DeleteCupos(ids:(number | undefined)[]) {
-  const res = await fetch(`../../api/cupo/delete`,{
+  const res = await fetch(`${LOCAL_URL}/api/cupo/delete`,{
     method:"POST",
     body:JSON.stringify(ids)
   })

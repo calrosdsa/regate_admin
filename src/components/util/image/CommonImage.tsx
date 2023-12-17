@@ -58,7 +58,7 @@ const CommonImage = ({src,h,w,className}:{
         // blurDataURL={rgbDataURL(233, 233, 233)}
         width={w}
         height={h}
-        className={`object-contain rounded-lg`}
+        className={className}
         />
       }
       </>
