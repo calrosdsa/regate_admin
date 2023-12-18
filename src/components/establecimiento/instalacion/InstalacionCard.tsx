@@ -6,7 +6,7 @@ interface Props{
 const InstalacionCard = ({instalacion}:Props) =>{
 
     return(
-        <div className="grid grid-cols-2 min-w-[250px] cursor-pointer border-[1px] relative rounded-lg">
+        <div className="flex items-center min-w-[250px] cursor-pointer relative p-1">
             <div className="">
             {(instalacion.portada == null || instalacion.portada == "") ?
             <Image
@@ -14,7 +14,7 @@ const InstalacionCard = ({instalacion}:Props) =>{
             height={100}
             width={150}
             alt={instalacion.name} 
-            className=" rounded-lg h-16 object-contain bg-gray-200 p-2"
+            className=" rounded-full h-12 w-12 object-contain bg-gray-200 p-2"
             />
             :
             <Image
@@ -22,7 +22,7 @@ const InstalacionCard = ({instalacion}:Props) =>{
             height={100}
             width={150}
             alt={instalacion.name} 
-            className=" rounded-lg h-16 object-cover"
+            className=" rounded-full h-12 w-12 object-cover"
             />
         }
         </div>

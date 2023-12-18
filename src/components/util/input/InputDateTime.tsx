@@ -48,7 +48,7 @@ const InputDateTime = ({
         <label className="relative flex items-center input h-8 p-0 mt-2 w-full">
             <SelectTime
             setTime={(e)=>{
-                const t = moment(e).utc().format("HH:mm")
+                const t = e.utc().format("HH:mm")
                 setTime(t)
             }}
             currentTime={time}
@@ -75,6 +75,7 @@ const InputDateTime = ({
             <input
             type="text"
             value={date + " " + time}
+            onChange={()=>{}}
             className=" outline-none px-2 w-full"/>
 
            

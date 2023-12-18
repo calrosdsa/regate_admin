@@ -5,11 +5,12 @@ import Loading from "../util/loaders/Loading";
 import { Order, OrderQueue, ReservaEstado } from "@/core/type/enums";
 import Link from "next/link";
 import { getRouteEstablecimiento } from "@/core/util/routes";
+import { Evento } from "@/core/type/evento";
 
 
 
-const EventoListTable = ({evnetos,loading,uuid}:{
-    evnetos:Evento[]
+const EventoListTable = ({eventos,loading,uuid}:{
+    eventos:Evento[]
     // selectUser:(userEmpresa:UserEmpresa)=>void
     loading:boolean
     uuid:string
@@ -43,7 +44,7 @@ const EventoListTable = ({evnetos,loading,uuid}:{
             </tr>
         </thead>
         <tbody>
-        {evnetos.map((item,index)=>{
+        {eventos.map((item,index)=>{
                 return(
                     <tr key={index} 
                      className={`${index % 2 && "bg-gray-100"}`}>
@@ -58,7 +59,7 @@ const EventoListTable = ({evnetos,loading,uuid}:{
                         <td className="rowTable ">{item.description}</td>
                         {/* <td className="rowTable">{item.name}</td> */}
                         <td className="rowTable">
-                                <Link href={getRouteEstablecimiento(uuid,`eventos/${uuid}?name=${item.name}&id=${item.id}`)}
+                                <Link href={getRouteEstablecimiento(uuid,`eventos/${item.uuid}?name=${item.name}&id=${item.id}`)}
                                 className="font-medium underline text-primary cursor-pointer">Ver</Link>
 
                         </td>

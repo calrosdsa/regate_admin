@@ -1,4 +1,4 @@
-import { EstadoVisibility } from "../type/enums";
+import { DayMonthPosition, EstadoVisibility } from "../type/enums";
 
 
 export const estadoVisibility:SelectItem[] = [
@@ -16,22 +16,22 @@ export const estadoVisibility:SelectItem[] = [
 export const dayMonth = [
     {
         name:"Primero",
-        value:0
+        value:DayMonthPosition.FIRST
     },
     {
         name:"Segundo",
-        value:1
+        value:DayMonthPosition.SECOND
     },
     {
         name:"Tercero",
-        value:2
+        value:DayMonthPosition.THIRD
     },
     {
         name:"Cuarto",
-        value:3
+        value:DayMonthPosition.FOURTH
     },
     {
         name:"Ultimo",
-        value:4
+        value:DayMonthPosition.LAST
     },
 ]

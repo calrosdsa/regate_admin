@@ -154,7 +154,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
 
         <div className=" overflow-auto">
             <EventoListTable
-            evnetos={eventos}
+            eventos={eventos}
             loading={loading}
             uuid={params.uuid}
             />

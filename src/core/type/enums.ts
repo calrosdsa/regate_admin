@@ -42,6 +42,13 @@ export const enum ReservaEstado {
     Cancel
 }
 
+export const enum ReservaType {
+    App,
+    Local,
+    Sala,
+    Evento,
+}
+
 export enum TypeOfChart {
     line,
     bar,
@@ -68,6 +75,14 @@ export enum Repeat {
     DAYLY,
     WEEKLY,
     MOTHTLY
+}
+
+export enum DayMonthPosition {
+    FIRST,
+    SECOND,
+    THIRD,
+    FOURTH,
+    LAST
 }
 
 export enum EndOptions {

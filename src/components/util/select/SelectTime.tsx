@@ -7,8 +7,8 @@ const SelectTime = ({
     setTime,
     currentTime
 }:{
-    setTime:(e:Date)=>void
-    currentTime:string
+    setTime:(e:moment.Moment)=>void
+    currentTime:string | undefined
 }) =>{
   return (
     <div className="h-8 z-10 border-r border-t border-b border-gray-400 px-1 grid place-content-center hover:bg-gray-200 rounded-l-lg">
@@ -35,16 +35,28 @@ const SelectTime = ({
         rounded-md ring-opacity-5 focus:outline-none grid h-48 overflow-auto">
             {hours.map((item,idx)=>{
                 return(
+                  <>
         <Menu.Item >
           {({ active}) => (
               <button
-              onClick={()=>setTime(item.hour)}
-              className={`px-4 py-2  ${active && 'bg-blue-500'}`}
+              onClick={()=>setTime(moment(item.hour))}
+              className={`px-4 py-2  ${(active || currentTime == moment(item.hour).utc().format("HH:mm")) && 'bg-blue-500'}`}
               >
               {moment(item.hour).utc().format("LT")}
             </button>
           )}
         </Menu.Item>
+        <Menu.Item >
+          {({ active}) => (
+              <button
+              onClick={()=>setTime(moment(item.hour).add(30,"minutes"))}
+              className={`px-4 py-2  ${(active || currentTime == moment(item.hour).add(30,"minutes").utc().format("HH:mm")) && 'bg-blue-500'}`}
+              >
+              {moment(item.hour).add(30,"minutes").utc().format("LT")}
+            </button>
+          )}
+        </Menu.Item>
+          </>
                 )
             })}
     

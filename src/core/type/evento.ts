@@ -1,4 +1,4 @@
-import { Repeat, EndOptions } from "./enums"
+import { Repeat, EndOptions, DayMonthPosition, ReservaType } from "./enums"
 
 export type CreateEventoRequest = {
     name:string
@@ -25,12 +25,9 @@ export type EventoPaginationResponse = {
 
 export type ReservaFromEventoRequest = {
     cupos:CupoR[]
-    repeat_option?:Repeat
-    repeat_every?:number
-    end_option?:EndOptions
-    until_date?:string
-    count?:number
-    selected_days_week?:number[]
-    day_month:number
-    day_month_position:number
+    establecimiento_id:number
+    instalaciones:number[]
+    reserva_type?:ReservaType
+    evento_uuid?:string
+    reserva_id?:number
 }

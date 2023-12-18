@@ -44,9 +44,22 @@ type ReservaOrder = {
     queue:number
 }
 
+type ReservaCupo = {
+    reserva_type:number
+    start_date:string
+    reserva_id:number | null
+    evento_id:number | null
+}
+
+type ReservaCupoRequest = {
+    start_date:string
+    end_date:string
+    uuid:string
+}
+
 type CupoR = {
     start_date:string
-    instalacion_id:number
+    instalacion_id?:number
     precio:number
 }
 

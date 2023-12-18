@@ -11,7 +11,7 @@ import { TooltipIcon, TooltipContainer } from "@/components/util/tooltips/Toolti
 import { unexpectedError } from "@/context/config";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
-import { GetCupoReservaInstalciones, GetInstalacion, getInstalacionDayHorario, getInstalaciones } from "@/core/repository/instalacion";
+import { GetCupoReservaInstalciones, GetInstalacion, GetInstalaciones, getInstalacionDayHorario } from "@/core/repository/instalacion";
 import { GetReservaDetail, getInstalacionReservas } from "@/core/repository/reservas";
 import { Tab } from "@headlessui/react";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -113,7 +113,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
     const getData = async()=>{
         try{
             setLoadingInstalaciones(true)
-            const instalaciones:Instalacion[] = await getInstalaciones(params.uuid)
+            const instalaciones:Instalacion[] = await GetInstalaciones(params.uuid)
             setInstalaciones(instalaciones)
             if(instalaciones.length > 0){
                 if(instalacionId != null){
@@ -248,7 +248,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
 
                 </div>
             <h2 className="title py-2">Cancha</h2>
-                <div className="flex md:gap-y-2 w-fulll overflow-auto md:grid h-20 md:h-min">
+                <div className="flex md:flex-col w-fulll overflow-auto md:gap-y-2 pb-3 md:pb-0 space-x-2 md:space-x-0  md:h-min">
                     <Loading
                     loading={loadingInstalaciones}
                     className="flex justify-center mb-2"
@@ -256,7 +256,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                 {instalaciones.map((item)=>{
                     return(
                         <div key={item.uuid} 
-                        className={`hover:bg-gray-200 p-1 rounded-lg ${instalacion?.id == item.id && "bg-gray-200"}`}
+                        className={`hover:bg-gray-200  border-[1px] rounded-lg ${instalacion?.id == item.id && "bg-gray-200"}`}
                         onClick={()=>{
                         setInstalacion(null)
                         getInstalacion(item.uuid)

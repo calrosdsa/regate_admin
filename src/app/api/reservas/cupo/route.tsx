@@ -7,8 +7,8 @@ import { cookies } from 'next/headers'; // Import cookies
 
 
 export async function POST(request:Request) {
-//   const { searchParams } = new URL(request.url)
-//   const id = searchParams.get('establecimiento_id')
+  // const { searchParams } = new URL(request.url)
+  // const uuid = searchParams.get('uuid')
   const nextCookies = cookies(); // Get cookies object
   const token = nextCookies.get('access_token')?.value
   if(token == undefined){
@@ -17,8 +17,7 @@ export async function POST(request:Request) {
     // console.log("TOKEN",token)
   try{
       const body = await request.text()
-    //   console.log(body.get("name"))
-      const res = await fetch(`${API_URL}/admin/create-reserva/`,{
+      const res = await fetch(`${API_URL}/admin/reservas/cupo/`,{
             method:'POST',
             body:body,
             headers:{

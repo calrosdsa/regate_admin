@@ -18,7 +18,7 @@ export async function POST(request:Request) {
   try{
       const body = await request.text()
     //   console.log(body.get("name"))
-      const res = await fetch(`${API_URL}/admin/create-reserva/`,{
+      const res = await fetch(`${API_URL}/admin/reservas/create-cupos/`,{
             method:'POST',
             body:body,
             headers:{

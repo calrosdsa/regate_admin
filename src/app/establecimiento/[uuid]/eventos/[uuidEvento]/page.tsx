@@ -2,6 +2,7 @@
 
 import Calendar from "@/components/eventos/calendar/Calendar";
 import { hours } from "@/context/actions/chart-actions";
+import { ReservaType } from "@/core/type/enums";
 import { getRouteEstablecimiento } from "@/core/util/routes";
 import moment from "moment";
 import Link from "next/link";
@@ -39,6 +40,8 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
 
                 <Calendar
                 uuid={params.uuid}
+                uuidEvent={params.uuidEvento}
+                reserva_type={ReservaType.Evento}
                 />
 
 

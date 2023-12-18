@@ -1,16 +1,22 @@
 import { hours } from "@/context/actions/chart-actions"
 import moment from "moment"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import CalendarDialogReserva from "../dialog/CalendarDialogReserva"
 import useEffectOnce from "@/core/util/hooks/useEffectOnce"
-import { DayWeek } from "@/core/type/enums"
+import { DayWeek, ReservaType } from "@/core/type/enums"
+import { GetReservasCupo } from "@/core/repository/reservas"
 
 type WeekDay = {
     day:string
     name:string
     date:string
+    cupos_reserva:ReservaCupo[]
 }
-const Calendar = ({uuid}:{uuid:string}) =>{
+const Calendar = ({uuid,uuidEvent,reserva_type}:{
+    uuid:string
+    uuidEvent:string
+    reserva_type:ReservaType
+}) =>{
     const [openReservaDialog,setOpenReservaDialog] = useState(false)
     const [startDate,setStartDate] = useState("")
     const [startTime,setStartTime] = useState(moment(new Date()))
@@ -29,21 +35,55 @@ const Calendar = ({uuid}:{uuid:string}) =>{
         setOpenReservaDialog(true)
     }
 
+    const getReservasCupo = async(cupos:WeekDay[]) =>{
+        try{
+            const request:ReservaCupoRequest = {
+                start_date:cupos[0].date,
+                end_date:cupos.slice(-1)[0].date,
+                uuid:uuid
+            }
+            const res:ReservaCupo[] = await GetReservasCupo(request)
+            const resDates = res.map(item=>moment(item.start_date).format("yyyy-MM-DD"))
+            const d = cupos.map((item)=>{
+                if(resDates.includes(item.date)){
+                    const filterDates = res.filter(t=>item.date== moment(t.start_date).format("yyyy-MM-DD"))
+                    item.cupos_reserva = filterDates
+                }
+                return item
+            })
+            setDays(d)
+            console.log(res)
+        }catch(e){
+
+        }
+
+    }
+
     const generateDaysWeek = () =>{
         setDays([])
+        let cupos:WeekDay[]= []
         for(let i =0;i< 7;i++){
             const today = moment(new Date())
             const t =  today.add(i,"days")
             const dayWeek:WeekDay = {
                 day:t.format('DD'),
                 name:t.format('dddd'),
-                date:t.format("yyyy-MM-DD")
+                date:t.format("yyyy-MM-DD"),
+                cupos_reserva:[]
             }
             console.log(i,dayWeek)
             setDays(e=>[...e,dayWeek])
+            cupos.push(dayWeek)
         }
+        getReservasCupo(cupos)
     }
 
+    // useEffect(()=>{
+    //     if(days.length > 0){
+    //         getReservasCupo()
+    //         console.log(days[0].date,days.slice(-1)[0].date)
+    //     }
+    // },[])
 
 
     useEffectOnce(()=>{
@@ -58,6 +98,8 @@ const Calendar = ({uuid}:{uuid:string}) =>{
         close={()=>setOpenReservaDialog(false)}
         startTime={startTime}
         startDate={startDate}
+        reserva_type={reserva_type}
+        uuidEvent={uuidEvent}
         />
         }
         <div>
@@ -91,8 +133,8 @@ const Calendar = ({uuid}:{uuid:string}) =>{
 
             {hours.map((item,idx)=>{
                         return(
-                        <tr className="bg-white border-b-2 ">
-                            <td key={idx} className="p-4 w-14  bg-gray-200 relative">
+                        <tr key={idx} className="bg-white border-b-2 ">
+                            <td  className="p-4 w-14  bg-gray-200 relative">
                                 <span className=" absolute top-2">{moment(item.hour).utc().format("LT")}</span>
                             </td>
 
@@ -100,20 +142,25 @@ const Calendar = ({uuid}:{uuid:string}) =>{
                                 return(
                                     <td key={idx} className="border-l bg-gray-50">
                                <div onClick={()=>openDialog(t.date,item.hour,false)} className=" hover:bg-gray-100 w-full h-9">
-
+                               {t.cupos_reserva.map(m=>moment(m.start_date).utc().format("LT")).includes(moment(item.hour).utc().format("LT")) &&
+                                <div>
+                                HERE {t.cupos_reserva.length}
+                                </div>
+                                }
                                </div>
 
                                <div className="w-full border-t-[1px]"/>
 
                                <div onClick={()=>openDialog(t.date,item.hour,true)} className=" hover:bg-gray-100 w-full h-9">
-
+                                {t.cupos_reserva.map(m=>moment(m.start_date).utc().format("LT")).includes(moment(item.hour).utc().format("LT")) &&
+                                <div>
+                                HERE {t.cupos_reserva.length}
+                                </div>
+                                }
                                </div>
                             </td>
                                 )
-                            })}
-
-
-                            
+                            })}   
 
 
                         </tr>
