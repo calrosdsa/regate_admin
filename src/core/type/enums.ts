@@ -76,7 +76,10 @@ export enum Repeat {
     WEEKLY,
     MOTHTLY
 }
-
+export enum MonthDaySelectOption {
+    BY_DAY_OF_MONTH,
+    BY_POSITION_DAY_OF_MONTH
+}
 export enum DayMonthPosition {
     FIRST,
     SECOND,

@@ -42,6 +42,7 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
                 uuid={params.uuid}
                 uuidEvent={params.uuidEvento}
                 reserva_type={ReservaType.Evento}
+                eventoId={Number(id || 0)}
                 />
 
 

@@ -30,7 +30,7 @@
     @apply text-xl font-medium
   }
   .subtitle {
-    @apply text-sm font-medium text-gray-600
+    @apply text-sm font-medium text-gray-700
   }
   .tab {
     @apply  border-b-2 px-4 py-2 font-medium outline-none text-sm

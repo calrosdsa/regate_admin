@@ -45,6 +45,7 @@ type CupoReserva = {
     available:boolean
     nombre:string
     apellido:string
+    evento_id?:number
     profile_id:number
 }
 
@@ -54,4 +55,5 @@ type CupoReservaRequest = {
     instalacion_id:number
     date:string
     day_week:number
+    end_date:string
 }

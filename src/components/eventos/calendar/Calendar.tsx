@@ -10,9 +10,14 @@ type WeekDay = {
     day:string
     name:string
     date:string
-    cupos_reserva:ReservaCupo[]
+    updatedCount:number
 }
-const Calendar = ({uuid,uuidEvent,reserva_type}:{
+type DateWeekWithCupos = {
+    cupose_reserva:ReservaCupo[]
+    index:number
+}
+const Calendar = ({uuid,uuidEvent,reserva_type,eventoId}:{
+    eventoId:number
     uuid:string
     uuidEvent:string
     reserva_type:ReservaType
@@ -21,6 +26,8 @@ const Calendar = ({uuid,uuidEvent,reserva_type}:{
     const [startDate,setStartDate] = useState("")
     const [startTime,setStartTime] = useState(moment(new Date()))
     const [days,setDays] = useState<WeekDay[]>([])
+    const [dateWeekWithCupos,setDateWeekWithCupos] = useState<DateWeekWithCupos[]>([])
+    const [reservasCupo,setReservasCupo] = useState<ReservaCupo[]>([])
 
     const openDialog = (startDate:string,startTime:Date,shouldAdd:boolean) => {
         setStartDate(startDate)
@@ -42,21 +49,33 @@ const Calendar = ({uuid,uuidEvent,reserva_type}:{
                 end_date:daysWeek.slice(-1)[0].date,
                 uuid:uuid
             }
+            console.log("REQUEST",request)
             const res:ReservaCupo[] = await GetReservasCupo(request)
-            const resDates = res.map(item=>moment(item.start_date).format("yyyy-MM-DD"))
-            const d = daysWeek.map((item)=>{
-                if(resDates.includes(item.date)){
-                    const filterDates = res.filter(t=>item.date== moment(t.start_date).format("yyyy-MM-DD"))
-                    item.cupos_reserva = filterDates
-                }
-                return item
-            })
-            setDays(d)
-            console.log(res)
+            setReservasCupo(res)
         }catch(e){
-
+            console.log(e)
         }
+    }
 
+    const updateDateWeekWithCupos  = () =>{
+        console.log(reservasCupo,"UPDATE --- C")
+        const resDates = reservasCupo.map(item=>item.start_date.slice(0,10))
+        setDateWeekWithCupos([])
+        const d = days.map((item,idx)=>{
+            if(resDates.includes(item.date)){
+                const filterDates = reservasCupo.filter(t=>item.date==t.start_date.slice(0,10))
+                const n:DateWeekWithCupos= {
+                    cupose_reserva:filterDates,
+                    index:idx
+                } 
+                setDateWeekWithCupos(t=>[...t,n])
+                item.updatedCount = item.updatedCount++
+            }
+            
+            return item
+        })
+        setDays(d)
+        console.log(dateWeekWithCupos,"D")
     }
 
     const generateDaysWeek = () =>{
@@ -69,7 +88,7 @@ const Calendar = ({uuid,uuidEvent,reserva_type}:{
                 day:t.format('DD'),
                 name:t.format('dddd'),
                 date:t.format("yyyy-MM-DD"),
-                cupos_reserva:[]
+                updatedCount:0
             }
             console.log(i,dayWeek)
             setDays(e=>[...e,dayWeek])
@@ -78,13 +97,16 @@ const Calendar = ({uuid,uuidEvent,reserva_type}:{
         getReservasCupo(cupos)
     }
 
-    const getCuposReservaByHora = ( cuposReserva:ReservaCupo[],currentDate:string,hora:string) =>{
-           const targetDateTime = currentDate + " " + hora
-           console.log("TARGET DATE TIME",targetDateTime)
+    const getCuposReservaByHora = ( index:number,hora:string) =>{
+        //    console.log("TARGET DATE TIME",targetDateTime)
         try{
-            const list = cuposReserva.filter(item=>moment(item.start_date).utc().format("yyyy-MM-DD HH:mm") == moment(targetDateTime).format("yyyy-MM-DD HH:mm"))
-            console.log(list,moment(targetDateTime).format())
-            return list
+            // console.log(dateWeekWithCupos,"DATEWEEK")
+            if(dateWeekWithCupos.length>0){
+                const list = dateWeekWithCupos.find(item => item.index == index)?.cupose_reserva.filter(item=>moment(item.start_date.slice(0,16)).format("LT") == hora)
+                return list
+            }else{
+                return []
+            }
         }catch(err){
             console.log(err)
             return []
@@ -98,6 +120,12 @@ const Calendar = ({uuid,uuidEvent,reserva_type}:{
     //     }
     // },[])
 
+    useEffect(()=>{
+        if(reservasCupo.length>0){
+            console.log(reservasCupo,"cupos")
+            updateDateWeekWithCupos()
+        }
+    },[reservasCupo])
 
     useEffectOnce(()=>{
         generateDaysWeek()
@@ -113,6 +141,8 @@ const Calendar = ({uuid,uuidEvent,reserva_type}:{
         startDate={startDate}
         reserva_type={reserva_type}
         uuidEvent={uuidEvent}
+        updateDateWithCupos={(e: ReservaCupo[])=>setReservasCupo([...reservasCupo,...e])}
+        eventoId={eventoId}
         />
         }
         <div>
@@ -152,25 +182,21 @@ const Calendar = ({uuid,uuidEvent,reserva_type}:{
                                 <span className=" absolute top-2">{horaString}</span>
                             </td>
 
-                            {days.map((t,idx)=>{
+                            {days.map((t,idx2)=>{
                                 return(
-                                    <td key={idx} className="border-l bg-gray-50">
-                               <div onClick={()=>openDialog(t.date,item.hour,false)} className=" hover:bg-gray-100 w-full h-9">
-                               {t.cupos_reserva.map(m=>moment(m.start_date).utc().format("LT")).includes(horaString) &&
-                                <div>
-                                HERE {getCuposReservaByHora(t.cupos_reserva,t.date,horaString).length}
-                                </div>
-                                }
+                                    <td key={idx2} className="border-l bg-gray-50">
+                               <div onClick={()=>openDialog(t.date,item.hour,false)} className=" hover:bg-gray-100 w-full h-9 ">
+                               <CalendarReserva
+                                    reservaCupos={getCuposReservaByHora(idx2,horaString) || []}
+                                    />
                                </div>
 
                                <div className="w-full border-t-[1px]"/>
 
-                               <div onClick={()=>openDialog(t.date,item.hour,true)} className=" hover:bg-gray-100 w-full h-9">
-                                {t.cupos_reserva.map(m=>moment(m.start_date).utc().format("LT")).includes(horaString) &&
-                                <div>
-                                HERE {getCuposReservaByHora(t.cupos_reserva,t.date,moment(item.hour).add(30,"minutes").utc().format("LT")).length}
-                                </div>
-                                }
+                               <div onClick={()=>openDialog(t.date,item.hour,true)} className=" hover:bg-gray-100 w-full h-9 ">
+                                    <CalendarReserva
+                                    reservaCupos={getCuposReservaByHora(idx2,moment(item.hour).add(30,"minutes").utc().format("LT")) || []}
+                                    />
                                </div>
                             </td>
                                 )
@@ -191,3 +217,29 @@ const Calendar = ({uuid,uuidEvent,reserva_type}:{
 }
 
 export default Calendar
+
+
+const CalendarReserva = ({
+    reservaCupos
+}:{
+    reservaCupos:ReservaCupo[]
+}) =>{
+    return(
+        <>
+        {reservaCupos.length == 0 ?
+        <div>
+
+        </div>
+        :
+        <div className={`grid grid-cols-${reservaCupos.length} gap-x-1`}>
+            {reservaCupos.map((item,i)=>{
+                return(
+                    <div key={i} className="bg-primary  h-9 z-10" />
+                    
+                )
+            })}
+        </div>
+        }
+            </>
+    )
+}

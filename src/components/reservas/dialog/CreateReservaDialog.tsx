@@ -21,6 +21,7 @@ type CupoRequest = {
     end_time:string
     instalacion_id:number
     establecimiento_id:number
+    establecimiento_uuid:string
     user_empresa:UserEmpresa
 }
 const CreateReservaDialog = ({open,close,instalacion,reservaCupos,refresh,uuid}:{
@@ -75,6 +76,7 @@ const CreateReservaDialog = ({open,close,instalacion,reservaCupos,refresh,uuid}:
                 paid:Number(formData.paid),
                 end_time:moment(cupos[cupos.length - 1].start_date).utc().add(30,'minutes').toISOString(),
                 establecimiento_id:establecimientosUser.find(item=>item.uuid == uuid)?.id || 0,
+                establecimiento_uuid:uuid,
                 user_empresa:{
                     id:userEmpresa?.id || 0,
                     phone_number:phone_number,

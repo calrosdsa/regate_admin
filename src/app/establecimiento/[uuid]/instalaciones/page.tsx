@@ -14,6 +14,7 @@ import { uiActions } from "@/context/slices/uiSlice";
 import { GetCupoReservaInstalciones, GetInstalacion, GetInstalaciones, getInstalacionDayHorario } from "@/core/repository/instalacion";
 import { GetReservaDetail, getInstalacionReservas } from "@/core/repository/reservas";
 import { Tab } from "@headlessui/react";
+import moment from "moment";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -64,12 +65,14 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                 filterData = {
                     day_week:date.getDay(), 
                     date:date.toJSON().slice(0,10),
+                    end_date:moment(startDate).add(1,'days').format("yyyy-MM-DD"),
                     instalacion_id:instalacionId
                 }
             }else{
                 filterData = {
                     day_week:startDate.getDay(),
                     date:startDate.toJSON().slice(0,10),
+                    end_date:moment(startDate).add(1,'days').format("yyyy-MM-DD"),
                     instalacion_id:instalacionId
                 }
             }
