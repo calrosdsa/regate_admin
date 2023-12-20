@@ -35,16 +35,16 @@ const Calendar = ({uuid,uuidEvent,reserva_type}:{
         setOpenReservaDialog(true)
     }
 
-    const getReservasCupo = async(cupos:WeekDay[]) =>{
+    const getReservasCupo = async(daysWeek:WeekDay[]) =>{
         try{
             const request:ReservaCupoRequest = {
-                start_date:cupos[0].date,
-                end_date:cupos.slice(-1)[0].date,
+                start_date:daysWeek[0].date,
+                end_date:daysWeek.slice(-1)[0].date,
                 uuid:uuid
             }
             const res:ReservaCupo[] = await GetReservasCupo(request)
             const resDates = res.map(item=>moment(item.start_date).format("yyyy-MM-DD"))
-            const d = cupos.map((item)=>{
+            const d = daysWeek.map((item)=>{
                 if(resDates.includes(item.date)){
                     const filterDates = res.filter(t=>item.date== moment(t.start_date).format("yyyy-MM-DD"))
                     item.cupos_reserva = filterDates
@@ -76,6 +76,19 @@ const Calendar = ({uuid,uuidEvent,reserva_type}:{
             cupos.push(dayWeek)
         }
         getReservasCupo(cupos)
+    }
+
+    const getCuposReservaByHora = ( cuposReserva:ReservaCupo[],currentDate:string,hora:string) =>{
+           const targetDateTime = currentDate + " " + hora
+           console.log("TARGET DATE TIME",targetDateTime)
+        try{
+            const list = cuposReserva.filter(item=>moment(item.start_date).utc().format("yyyy-MM-DD HH:mm") == moment(targetDateTime).format("yyyy-MM-DD HH:mm"))
+            console.log(list,moment(targetDateTime).format())
+            return list
+        }catch(err){
+            console.log(err)
+            return []
+        }
     }
 
     // useEffect(()=>{
@@ -132,19 +145,20 @@ const Calendar = ({uuid,uuidEvent,reserva_type}:{
          
 
             {hours.map((item,idx)=>{
+                        const horaString = moment(item.hour).utc().format("LT")
                         return(
                         <tr key={idx} className="bg-white border-b-2 ">
                             <td  className="p-4 w-14  bg-gray-200 relative">
-                                <span className=" absolute top-2">{moment(item.hour).utc().format("LT")}</span>
+                                <span className=" absolute top-2">{horaString}</span>
                             </td>
 
                             {days.map((t,idx)=>{
                                 return(
                                     <td key={idx} className="border-l bg-gray-50">
                                <div onClick={()=>openDialog(t.date,item.hour,false)} className=" hover:bg-gray-100 w-full h-9">
-                               {t.cupos_reserva.map(m=>moment(m.start_date).utc().format("LT")).includes(moment(item.hour).utc().format("LT")) &&
+                               {t.cupos_reserva.map(m=>moment(m.start_date).utc().format("LT")).includes(horaString) &&
                                 <div>
-                                HERE {t.cupos_reserva.length}
+                                HERE {getCuposReservaByHora(t.cupos_reserva,t.date,horaString).length}
                                 </div>
                                 }
                                </div>
@@ -152,9 +166,9 @@ const Calendar = ({uuid,uuidEvent,reserva_type}:{
                                <div className="w-full border-t-[1px]"/>
 
                                <div onClick={()=>openDialog(t.date,item.hour,true)} className=" hover:bg-gray-100 w-full h-9">
-                                {t.cupos_reserva.map(m=>moment(m.start_date).utc().format("LT")).includes(moment(item.hour).utc().format("LT")) &&
+                                {t.cupos_reserva.map(m=>moment(m.start_date).utc().format("LT")).includes(horaString) &&
                                 <div>
-                                HERE {t.cupos_reserva.length}
+                                HERE {getCuposReservaByHora(t.cupos_reserva,t.date,moment(item.hour).add(30,"minutes").utc().format("LT")).length}
                                 </div>
                                 }
                                </div>
