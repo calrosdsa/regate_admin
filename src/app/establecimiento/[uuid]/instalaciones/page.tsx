@@ -65,7 +65,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                 filterData = {
                     day_week:date.getDay(), 
                     date:date.toJSON().slice(0,10),
-                    end_date:moment(startDate).add(1,'days').format("yyyy-MM-DD"),
+                    end_date:moment(date).add(1,'days').format("yyyy-MM-DD"),
                     instalacion_id:instalacionId
                 }
             }else{

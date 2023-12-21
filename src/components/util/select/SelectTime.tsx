@@ -39,7 +39,10 @@ const SelectTime = ({
         <Menu.Item >
           {({ active}) => (
               <button
-              onClick={()=>setTime(moment(item.hour))}
+              onClick={(e)=>{
+                e.stopPropagation()
+                setTime(moment(item.hour))
+              }}
               className={`px-4 py-2  ${(active || currentTime == moment(item.hour).utc().format("HH:mm")) && 'bg-blue-500'}`}
               >
               {moment(item.hour).utc().format("LT")}
@@ -49,7 +52,10 @@ const SelectTime = ({
         <Menu.Item >
           {({ active}) => (
               <button
-              onClick={()=>setTime(moment(item.hour).add(30,"minutes"))}
+              onClick={(e)=>{
+                e.stopPropagation()
+                setTime(moment(item.hour).add(30,"minutes"))
+              }}
               className={`px-4 py-2  ${(active || currentTime == moment(item.hour).add(30,"minutes").utc().format("HH:mm")) && 'bg-blue-500'}`}
               >
               {moment(item.hour).add(30,"minutes").utc().format("LT")}

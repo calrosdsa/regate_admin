@@ -18,6 +18,29 @@ type Instalacion = {
     estado:number
 }
 
+type InstalacionRequest = {
+    id : number 
+    uuid: string
+    name:string
+    description:string
+    establecimiento_id:number
+    establecimiento_uuid:string
+    category_id:number
+    category_name:string
+    portada?:string
+    max_cupos:number
+    precio_horario:number
+    custom_precio_instalacion:CustomPrecioInstalacion[]
+    time_range:string[]
+}
+
+
+type CustomPrecioInstalacion = {
+    start_time:string
+    end_time:string
+    precio:string
+}
+
 type Cupo = {
     id?:number
     time:string
