@@ -9,7 +9,7 @@ import { dayMonth } from "@/core/util/data"
 import moment from "moment"
 import { ChangeEvent, useState } from "react"
 import Image from "next/image"
-import { CheckRervasCuposAvailables, CreateReservaCupos } from "@/core/repository/reservas"
+import { CheckRervasCuposAvailables, CreateReservaCupos, DeleteReservaCupos } from "@/core/repository/reservas"
 import { ReservaFromEventoRequest } from "@/core/type/evento"
 import Loader from "@/components/util/loaders/Loader"
 import Spinner from "@/components/util/loaders/Spinner"
@@ -17,6 +17,7 @@ import { toast } from "react-toastify"
 import { successfulMessage, unexpectedError } from "@/context/config"
 import ButtonWithLoader from "@/components/util/button/ButtonWithLoader"
 import Loading from "@/components/util/loaders/Loading"
+import TimeSelect from "@/components/util/input/TimeSelect"
 
 const repeatOptions = [
     {
@@ -40,7 +41,8 @@ type InstalacionWithReservaCupos = {
     instalacion:Instalacion
     cupos:ReservaCupo[]
 }
-const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type,uuidEvent,updateDateWithCupos,eventoId}:{
+const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type,uuidEvent,
+    updateDateWithCupos,eventoId,isForDelete}:{
     close:()=>void
     open:boolean
     startDate?:string
@@ -50,6 +52,7 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
     uuidEvent:string
     eventoId:number
     updateDateWithCupos:(e:ReservaCupo[]) =>void
+    isForDelete:boolean
 }) =>{
     const [repeatOption,setRepeatOption] = useState(Repeat.NEVER)
     const [untilOption,setUntilOption] = useState(EndOptions.DATE)
@@ -60,15 +63,9 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
     const [selectedInstalaciones,setSelectedInstalaciones] = useState<number[]>([])
     const [loadingSaveButton,setLoadingSaveButton] = useState(false)
     const [loading,setLoading] = useState(false)
-    const [start,setStart] = useState({
-        date:startDate,
-        time:startTime?.format("HH:mm")
-    })
-    const [cupos,setCupos] = useState<CupoR[]>([])
-    const [end,setEnd] = useState({
-        date:startDate,
-        time:startTime?.add(30,"minutes").format("HH:mm")
-    })
+    const [start,setStart] = useState(startTime?.format("HH:mm"))
+    const [times,setTimes] = useState<string[]>([])
+    const [end,setEnd] = useState(startTime?.add(30,"minutes").format("HH:mm"))
     const [filterData,setFilterData] = useState({
         repeat_every:"1",
         until_date:startDate,
@@ -99,12 +96,12 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
             [e.target.name]:e.target.value
         })
     }
-    const onChangeSelect = (e:ChangeEvent<HTMLSelectElement>)=>{
-        setFilterData({
-            ...filterData,
-            [e.target.name]:e.target.value
-        })
-    }
+    // const onChangeSelect = (e:ChangeEvent<HTMLSelectElement>)=>{
+    //     setFilterData({
+    //         ...filterData,
+    //         [e.target.name]:e.target.value
+    //     })
+    // }
 
     const getInstalaciones = async () =>{
         try{
@@ -123,11 +120,11 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
     }
 
     const validateToContinue = () =>{
-        const startM = moment(start.date + " " + start.time)
+        const startM = moment(startDate + " " + start)
         console.log(startM.format(),"start date")
-        const endM = moment(end.date + " " + end.time)
+        const endM = moment(startDate + " " + end)
         const minutesDifference = ((endM.hour()*60) + endM.minute()) - ((startM.hour()*60) + startM.minute()) 
-        const dayDiff = moment(until_date + " " + start.time).diff(startM,"days") +1
+        const dayDiff = moment(until_date + " " + start).diff(startM,"days") +1
         let count:number;
                 if(untilOption == EndOptions.DATE){
                     count = dayDiff
@@ -137,21 +134,21 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
         switch(repeatOption){
             case Repeat.NEVER:
                 for(let t =0;t < (minutesDifference/30);t++){
-                    const cupo:CupoR = {
-                        start_date:moment(startM).add(30*t,"minutes").format(),
-                        precio:100,
-                    }
-                    setCupos(e=>[...e,cupo])
+                    // const cupo:CupoR = {
+                    //     start_date:moment(startM).add(30*t,"minutes").format(),
+                    //     precio:100,
+                    // }
+                    setTimes(e=>[...e,moment(startM).add(30*t,"minutes").format()])
                 }
                 break;
             case Repeat.DAYLY:
                 for(let i=0;i<count;i=Number(repeat_every)+i){
                     for(let t =0;t < (minutesDifference/30);t++){
-                        const cupo:CupoR = {
-                            start_date:moment(startM).add(i,'days').add(30*t,"minutes").format(),
-                            precio:100,
-                        }
-                        setCupos(e=>[...e,cupo])
+                        // const cupo:CupoR = {
+                        //     start_date:moment(startM).add(i,'days').add(30*t,"minutes").format(),
+                        //     precio:100,
+                        // }
+                        setTimes(e=>[...e,moment(startM).add(i,'days').add(30*t,"minutes").format()])
                     }
                   }  
                   console.log("dasmdoas")
@@ -162,11 +159,11 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
                     for(let t =0;t < (minutesDifference/30);t++){
                         const today = moment(startM).add(i,'days').add(30*t,"minutes")
                         if(selectedDaysWeeks.includes(today.day())){
-                            const cupo:CupoR = {
-                                start_date:today.format(),
-                                precio:100,
-                            }
-                            setCupos(e=>[...e,cupo])
+                            // const cupo:CupoR = {
+                            //     start_date:today.format(),
+                            //     precio:100,
+                            // }
+                            setTimes(e=>[...e,moment(startM).add(i,'days').add(30*t,"minutes").format()])
                         }
                     }
                 }
@@ -177,11 +174,11 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
                     for(let t =0;t < (minutesDifference/30);t++){
                         const today = moment(startM).add(i,'days').add(30*t,"minutes") 
                         if(today.date() == Number(day_month)){
-                            const cupo:CupoR = {
-                                start_date:today.format(),
-                                precio:100,
-                            }
-                            setCupos(e=>[...e,cupo])
+                            // const cupo:CupoR = {
+                            //     start_date:today.format(),
+                            //     precio:100,
+                            // }
+                            setTimes(e=>[...e,moment(startM).add(i,'days').add(30*t,"minutes").format()])
                             console.log(today.date(),day_month) 
                         }
                         // if(today)
@@ -190,7 +187,7 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
                 break;
             }
             
-            console.log(cupos)
+            console.log(times)
                 setTab(1)
         getInstalaciones()
     }
@@ -209,15 +206,22 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
 
     const checkReservaCupoAvailables = async(instalacionId:number,establecimientoId:number) => {
         try{
-            console.log(cupos)
-            addInstalacionLoader(instalacionId)
-            if(selectedInstalaciones.includes(instalacionId)){
+            if(isForDelete){
+                if(selectedInstalaciones.includes(instalacionId)){
+                    removeInstalacion(instalacionId)
+                    return
+                }
+                addInstalacion(instalacionId)
+            }else{
+                console.log(times)
+                addInstalacionLoader(instalacionId)
+                if(selectedInstalaciones.includes(instalacionId)){
                 removeInstalacion(instalacionId)
                 removeInstalacionLoader(instalacionId)
                 return
             }
             const request:ReservaFromEventoRequest = {
-                cupos:cupos,
+                times:times,
                 establecimiento_id:establecimientoId,
                 instalaciones:[instalacionId]
             } 
@@ -235,6 +239,7 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
                 setInstalaciones(updateInstalacionList)
             }
             removeInstalacionLoader(instalacionId)
+        }
         }catch(err){
             removeInstalacionLoader(instalacionId)
             console.log(err)
@@ -243,22 +248,30 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
 
     const createReservaCupos = async() =>{
         try{
+            if(times.length ==0) return
             setLoadingSaveButton(true)
+            console.log("CURRENT DAY WEEK",moment(times[0]).day())
             const request:ReservaFromEventoRequest = {
-                cupos:cupos,
+                times:times,
                 evento_uuid:uuidEvent,
                 reserva_type:reserva_type,
                 instalaciones:selectedInstalaciones,
-                establecimiento_id:instalaciones[0].instalacion.establecimiento_id | 0
+                establecimiento_id:instalaciones[0].instalacion.establecimiento_id | 0,
+                day_week:moment(times[0]).day()
             }
-            await CreateReservaCupos(request)
+            
+            if(isForDelete){
+                await DeleteReservaCupos(request)
+
+            }else{
+                await CreateReservaCupos(request)
+            }
             let reservasCupo:ReservaCupo[] = []
             for(let i = 0;i<selectedInstalaciones.length;i++){
-                const l:ReservaCupo[] = cupos.map(item=>{
-                    console.log(item.start_date,moment(item.start_date).format())
+                const l:ReservaCupo[] = times.map(item=>{
                     return {
                         reserva_type:ReservaType.Evento,
-                        start_date:item.start_date,
+                        start_date:item,
                         reserva_id:null,
                         evento_id:eventoId
                     }
@@ -283,11 +296,21 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
         close={close}
         open={open}
         className=" max-w-md "
-        title="Reservar"
+        title={isForDelete ? "Eliminar" :"Reservar"}
         >
             {tab == 0 &&
         <div className="grid sm:grid-cols-2 gap-x-4 gap-y-4">
-            <InputDateTime
+            <TimeSelect
+            time={start}
+            setTime={(e)=>{setStart(e)}}
+            label="Inicio"
+            />
+             <TimeSelect
+            time={end}
+            setTime={(e)=>{setEnd(e)}}
+            label="Fin"
+            />
+            {/* <InputDateTime
             label="Inicio"
             datetime={start}
             setTime={(e)=>{
@@ -296,8 +319,8 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
             setDate={(e)=>{
                 setStart({...start,date:e})
             }}
-            />
-            <InputDateTime
+            /> */}
+            {/* <InputDateTime
             label="Fin"
             datetime={end}
             setTime={(e)=>{
@@ -306,7 +329,7 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
             setDate={(e)=>{
                 setEnd({...end,date:e})
             }}
-            />
+            /> */}
 
             {/* <div className="flex space-x-2 items-center col-span-full">
                 <input id="all-day" type="checkbox" />

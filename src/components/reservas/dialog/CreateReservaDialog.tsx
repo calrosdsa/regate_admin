@@ -103,7 +103,7 @@ const CreateReservaDialog = ({open,close,instalacion,reservaCupos,refresh,uuid}:
     },[totalPrice])
     useEffect(()=>{
         if(totalPrice == 0){
-            setTotalPrice(reservaCupos.map(item=>item.precio).reduce((prev,curr)=>prev + curr))
+            setTotalPrice(reservaCupos.map(item=>item.precio).reduce((prev,curr)=>prev + curr) )
         }
         if(orderedCupo.length == 0){
             const newCupos = reservaCupos.sort((left,right)=>{

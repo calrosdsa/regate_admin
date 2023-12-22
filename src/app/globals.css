@@ -19,6 +19,10 @@
     @apply py-2 border-[1px] text-white  bg-primary opacity-50 cursor-not-allowed
     px-3 text-sm font-medium   rounded-md
   }
+  .button-hover {
+    @apply py-2 border-[1px]   hover:bg-hoverPrimary hover:text-white
+    active:ring-blue-300 active:ring-2 px-3 text-sm font-medium  cursor-pointer rounded-md
+  }
   .smallButton {
     @apply   flex space-x-1 py-1 border-[1px] border-gray-300 items-center bg-white hover:bg-gray-200 
     active:ring-blue-300 active:ring-2 px-3 text-sm

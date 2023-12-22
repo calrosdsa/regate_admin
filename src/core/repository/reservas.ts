@@ -56,7 +56,7 @@ export async function getEstablecimientoReservas(data:ReservaDataFilter,page:num
 
   
   export async function CheckRervasCuposAvailables(data:ReservaFromEventoRequest) {
-    const res = await fetch(`${LOCAL_URL}/api/reservas/instalacion/check-cupos-availables`,{
+    const res = await fetch(`${LOCAL_URL}/api/reservas/check-cupos-availables`,{
       method:"post",
       body:JSON.stringify(data)
     })
@@ -68,7 +68,19 @@ export async function getEstablecimientoReservas(data:ReservaDataFilter,page:num
   }
 
   export async function CreateReservaCupos(data:ReservaFromEventoRequest) {
-    const res = await fetch(`${LOCAL_URL}/api/reservas/instalacion/create-reserva-cupos`,{
+    const res = await fetch(`${LOCAL_URL}/api/reservas/create-cupos`,{
+      method:"post",
+      body:JSON.stringify(data)
+    })
+    if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error('Failed to fetch data')
+    }
+    return res.json()
+  }
+
+  export async function DeleteReservaCupos(data:ReservaFromEventoRequest) {
+    const res = await fetch(`${LOCAL_URL}/api/reservas/delete-cupos-evento`,{
       method:"post",
       body:JSON.stringify(data)
     })

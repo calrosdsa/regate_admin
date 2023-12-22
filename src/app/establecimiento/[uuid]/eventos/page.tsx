@@ -81,6 +81,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         <>
         {createEventoDialog &&
         <CreateEventDialog
+        addEvento={(e)=>setEventos([e,...eventos])}
         open={createEventoDialog}
         close={()=>setCreateEventoDialog(false)}
         establecimientoId={establecimientos.find(item=>item.uuid == params.uuid)?.id}

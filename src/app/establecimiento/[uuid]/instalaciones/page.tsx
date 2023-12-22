@@ -32,7 +32,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
     const pathname = usePathname();
     const router = useRouter()
     const [createReservaDialog,setCreateReservaDialog] = useState(false)
-    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [startDate, setStartDate] = useState<Date | null>(new Date());
     const [loadingInstalacion,setLoadingInstalacion] = useState(false)
     const [loadingReservas,setLoadingReservas] = useState(false)
     const [loadingInstalaciones,setLoadingInstalaciones] = useState(false)
@@ -351,15 +351,31 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                                 </svg>
                                 </button>
                                 {/* <label htmlFor="date">Choose Date</label> */}
-                                <div className="w-[122px]">
-                                <input type="date" id="date" 
+                                <div className="mx-2 ">
+                                    
+                    <label htmlFor="date-calendar"  className="button px-2 h-10  items-center flex space-x-2 relative
+                    w-full">
+                        <span className="text-sm">{moment(startDate).format("MMMM DD")}
+                        </span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                        <path fillRule="evenodd" d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z" clipRule="evenodd" />
+                        </svg>
+                    <input type="date" 
+                     onChange={(e)=>{
+                        console.log(e.target.value)
+                        const date = new Date(e.target.value)
+                        date.setTime(date.getTime()+ (10*60*60*1000))
+                        setStartDate(date)}}
+                     id="date-calendar" className="w-0 h-0"/>
+                    </label>
+                                {/* <input type="date" id="date" 
                                 value={startDate == null ? new Date().toJSON().slice(0,10) :startDate.toJSON().slice(0,10)}
                                 onChange={(e)=>{
                                     console.log(e.target.value)
                                     const date = new Date(e.target.value)
                                     date.setTime(date.getTime()+ (10*60*60*1000))
                                     setStartDate(date)}}
-                                 className="input w-[120px]"/>  
+                                 className="input w-[120px]"/>   */}
                                 </div>
                                 <TooltipContainer 
                                 helpText="Intenta seleccionar las casillas que no hayan sido reservadas."

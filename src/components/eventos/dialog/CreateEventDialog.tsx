@@ -4,14 +4,15 @@ import InputWithIcon from "@/components/util/input/InputWithIcon";
 import TextAreaWithMaxLength from "@/components/util/input/TextAreaWithMaxLength";
 import { successfulMessage, unexpectedError } from "@/context/config";
 import { CreateEvento } from "@/core/repository/evento";
-import { CreateEventoRequest } from "@/core/type/evento";
+import { CreateEventoRequest, Evento, EventoPaginationResponse } from "@/core/type/evento";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 
 
-const CreateEventDialog = ({open,close,establecimientoId}:{
+const CreateEventDialog = ({open,close,establecimientoId,addEvento}:{
     open:boolean,
     close:()=>void
+    addEvento:(e:Evento)=>void
     establecimientoId?:number 
 }) =>{
     const [loading,setLoading] = useState(false)
@@ -38,7 +39,8 @@ const CreateEventDialog = ({open,close,establecimientoId}:{
                 establecimiento_id:establecimientoId
             } 
             console.log(request,"DATA")
-            await CreateEvento(request)
+            const res:Evento = await CreateEvento(request)
+            addEvento(res)
             setLoading(false)
             toast.success(successfulMessage)
             // onUpdate(formData.name,formData.phone_numberx)

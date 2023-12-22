@@ -172,40 +172,47 @@ const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCup
                             <div className="grid w-10/12">
                         <span className=" w-full h-[0.5px] bg-gray-400"></span>
                         <div 
-                         onClick={()=>{
-                            if(item.reserva != undefined){
-                                if(item.reserva.reserva_id != null){
-                                    getReservaDetail(item.reserva.reserva_id)
-                                }else  {
-                                    if(item.reserva.evento_id != undefined) return
-                                    if(isAfter) return
-                                    selecReservaCupo(item.reserva)
+                             onClick={()=>{
+                                if(item.reserva != undefined){
+                                    if(!item.reserva.available) return
+                                    if(item.reserva.reserva_id != null){
+                                        getReservaDetail(item.reserva.reserva_id)
+                                    }else {
+                                        if(item.reserva.evento_id != undefined) return
+                                        if(isAfter) return
+                                        selecReservaCupo(item.reserva)
+                                                }
                                             }
-                                        }
-                                    }}
+                                        }}
                             className={`w-full h-10 flex items-center p-1 cursor-pointer
-                            ${item.reserva != undefined && `${item.reserva.color} text-white`}
+                            ${item.reserva != undefined && `${item.reserva.color} text-white ` }
                             ${isSelected && "bg-gray-400 bg-opacity-50"}
                             ${isAfter && "disabled"}
                             ${item.reserva?.evento_id != undefined && "disabled"}
-                            `
-                            }>
-                               <>
-                               {item.reserva?.reserva_id != null ?
+                            `}>
+                                <>
+                                {item.reserva?.reserva_id != null ?
                                 <span className="text-sm">{getFullName(item.reserva?.nombre,item.reserva?.apellido)}</span>
                                 :
                                 <>
-                                 {item.reserva != undefined &&
+                                {item.reserva != undefined &&
                                     <>
                                     {/* {item.reserva.available? */}
                                    <div className="flex w-full justify-between">
                                    {/* <span className="text-green-700 text-xs">Hora disponible </span> */}
-                                   {item.reserva?.evento_id != undefined?
-                                   <span className="subtitle">Reservada para evento</span>
-                                   :
-                                   isAfter &&
-                                   <span className="subtitle">No puedes reservar en esta hora</span>
-                                   }
+                                   {item.reserva.available ?
+                                       <span className="subtitle">{item.reserva.precio} BOB</span>
+                                       :
+                                       <span className="subtitle text-red-500">Hora no configurada</span>
+                                    }
+
+                                    {item.reserva?.evento_id != undefined?
+                                    <span className="subtitle text-primary">Reservada para evento</span>
+                                    :
+                                    isAfter &&
+                                    <span className="subtitle">No puedes reservar en esta hora</span>
+                                    }
+                                    
                                    </div>
                                         {/* :
                                         <span className="text-gray-500 text-xs">Hora deshabilitada</span>
@@ -215,7 +222,7 @@ const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCup
                                 </>
                                 }
                                 </>
-                                </div>
+                            </div>
                             </div>
 
                         </div>    
@@ -226,6 +233,7 @@ const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCup
                             <div 
                              onClick={()=>{
                                 if(item.reserva != undefined){
+                                    if(!item.reserva.available) return
                                     if(item.reserva.reserva_id != null){
                                         getReservaDetail(item.reserva.reserva_id)
                                     }else {
@@ -251,12 +259,19 @@ const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCup
                                     {/* {item.reserva.available? */}
                                    <div className="flex w-full justify-between">
                                    {/* <span className="text-green-700 text-xs">Hora disponible </span> */}
-                                   {item.reserva?.evento_id != undefined?
-                                   <span className="subtitle">Reservada para evento</span>
-                                   :
-                                   isAfter &&
-                                   <span className="subtitle">No puedes reservar en esta hora</span>
-                                   }
+                                   {item.reserva.available ?
+                                       <span className="subtitle">{item.reserva.precio} BOB</span>
+                                       :
+                                       <span className="subtitle text-red-500">Hora no configurada</span>
+                                    }
+
+                                    {item.reserva?.evento_id != undefined?
+                                    <span className="subtitle text-primary">Reservada para evento</span>
+                                    :
+                                    isAfter &&
+                                    <span className="subtitle">No puedes reservar en esta hora</span>
+                                    }
+                                    
                                    </div>
                                         {/* :
                                         <span className="text-gray-500 text-xs">Hora deshabilitada</span>
@@ -276,40 +291,7 @@ const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCup
             })}
         </div>
       
-        // <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-2 ">
-        //     {newCupos.sort((left,right)=>{
-        //         return moment.utc(left.time).diff(moment.utc(right.time))
-        //     }).map((item,idx)=>{
-        //         const isSelected = selectedCupos.map(item=>item.time).includes(item.time)
-        //         // console.log(moment().utcOffset(0, true).toISOString(),'MOMENT UTC')
-        //         const isAfter = moment.utc(item.time).isBefore(moment().utcOffset(0, true).toISOString())
-        //         // console.log(isAfter,item.time)
-        //         // const disabled = r
-        //         return(
-        //             <div key={idx} onClick={()=>{
-        //                 if(item.reserva_id != null){
-        //                     getReservaDetail(item.reserva_id)
-        //                 }else {
-        //                     if(isAfter) return
-        //                     selecReservaCupo(item)
-        //                 }
-        //             }}
-        //             className={`card grid grid-cols-2 ${isSelected && "bg-gray-900 text-white"}
-        //             ${isAfter && "disabled"}
-        //             ${item.color}
-        //             ${item.precio_reserva != null && "text-white"}`}>
-        //                 <div className="grid">
-        //                 <span className="label">Hora</span>
-        //                 <span className="text-sm">{item.time.substring(11,16)}</span>
-        //                 </div>
-        //                 <div className="grid">
-        //                 <span className="label">Precio</span>
-        //                 <span className="text-sm">{item.precio}</span>
-        //                 </div>
-        //             </div>
-        //         )
-        //     })}
-        // </div>
+      
     )
 }
 

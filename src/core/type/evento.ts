@@ -24,10 +24,11 @@ export type EventoPaginationResponse = {
 
 
 export type ReservaFromEventoRequest = {
-    cupos:CupoR[]
+    times:string[]
     establecimiento_id:number
     instalaciones:number[]
     reserva_type?:ReservaType
     evento_uuid?:string
     reserva_id?:number
+    day_week?:number
 }
