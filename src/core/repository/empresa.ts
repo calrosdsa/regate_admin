@@ -5,7 +5,6 @@ export async function GetEmpresaDetail(){
         throw new Error('Failed to fetch data')
       }
      
-    //   console.log(res)
       return res.json()
   }  
   
@@ -19,7 +18,6 @@ export async function GetEmpresaDetail(){
           throw new Error('Failed to fetch data')
         }
        
-      //   console.log(res)
         return res.json()
   }
 
@@ -33,6 +31,5 @@ export async function GetEmpresaDetail(){
         throw new Error('Failed to fetch data')
       }
      
-    //   console.log(res)
       return res.json()
 }

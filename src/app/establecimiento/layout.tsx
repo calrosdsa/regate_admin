@@ -29,7 +29,6 @@ export default function RootLayout({
   const uiState = useAppSelector(state=>state.ui)
   const systemState = useAppSelector(state=>state.system)
   const clearState = () =>{
-    console.log("CLEAR STATE")
     dispatch(chatActions.setChat(undefined))
  }
   useEffect(()=>{

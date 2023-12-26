@@ -36,12 +36,10 @@ export const EditHorarioPrecio = ({open,close,cupos,updateCupos}:{
           available:available
         }
         const res:Cupo[] = await CreateUpdateCupos(request)
-        console.log("CUPOS",res)
         updateCupos(res)
         toast.success(successfulMessage)
         setLoading(false)
 
-        // console.log("CUPO",cupo)
         // if(cupo != undefined){
         //   setLoading(true)
         //   // dispatch(uiActions.setLoaderDialog(true))
@@ -51,7 +49,6 @@ export const EditHorarioPrecio = ({open,close,cupos,updateCupos}:{
         //     cupoRequest.available = available
         //     if(cupo.id == undefined){
         //       const res:Cupo = await createCupoInstalacion(cupoRequest,params.uuid)
-        //       console.log(res)
         //       cupo.id = res.id
         //       cupo.price = res.price
         //       cupo.available = res.available
@@ -61,7 +58,6 @@ export const EditHorarioPrecio = ({open,close,cupos,updateCupos}:{
         //       const res = await updateCupoInstalacion(cupo.id,precio,available)
         //       cupo.price = precio
         //       cupo.available = available
-        //       console.log(res)
         //       close()
         //     }
         //   }

@@ -33,12 +33,10 @@ const SearchUserDialog = ({open,close,selectUserEmpresa}:{
             setLoading(true)
             const q = searchQuery.trim().replaceAll(/\s+/g,":* & ") + ":*"
             const res = await SearchUsersEmpresa(q)
-            console.log(res)
             setUsers(res)
             setLoading(false)
         }catch(err){
             setLoading(false)
-            console.log(err)
         }
     }
 

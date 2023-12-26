@@ -83,16 +83,13 @@ const CreateReservaDialog = ({open,close,instalacion,reservaCupos,refresh,uuid}:
                     name:name
                 }
             }
-            console.log(requestData,"REQUEST DATA")
             const res = await CreateReserva(JSON.stringify(requestData))
             toast.success("Se ha creado exitosamente la reserva")
             refresh()
             close()
             setLoading(false)
-            console.log(res)
         }catch(err){
             setLoading(false)
-            console.log(err)
         }
     }
     useEffect(()=>{
@@ -109,7 +106,6 @@ const CreateReservaDialog = ({open,close,instalacion,reservaCupos,refresh,uuid}:
             const newCupos = reservaCupos.sort((left,right)=>{
                 return moment.utc(left.time).diff(moment.utc(right.time))
             })
-            // console.log(newCupos,"ordered")
             setOrderedCupos(newCupos)
         }
     },[])
@@ -136,16 +132,16 @@ const CreateReservaDialog = ({open,close,instalacion,reservaCupos,refresh,uuid}:
       open={open} close={close} title="Crear reserva">
         <div className='rounded-lg bg-white overflow-auto max-w-xl'>
             <div className="p-2 ">
-                    <div className="flex space-x-3">
+                    <div className="flex space-x-3 items-center">
                     <CommonImage
                         src={instalacion.portada}
-                        h={100}
-                        w={170}
-                        className="rounded-lg"
+                        h={140}
+                        w={140}
+                        className="rounded-full h-12 w-12 object-cover"
                         />
-                        <span className="text-sm font-semibold">{instalacion.name}</span>
+                        <span className="font-semibold">{instalacion.name}</span>
                     </div>
-                        <div className="grid">
+                        <div className="grid pt-2">
                         <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
                             <span className="label">Precio de la reserva</span>
                             <span className="text-xs ">{totalPrice}</span>

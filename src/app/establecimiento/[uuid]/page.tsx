@@ -32,7 +32,6 @@ const Page= ({params}:{params:{uuid:string}})=>{
 
 
   const SimpleToolTip = ({ active, payload, label }:any) => {
-    // console.log(active, payload, label);
   
     if (active) {
       return (
@@ -54,7 +53,6 @@ const Page= ({params}:{params:{uuid:string}})=>{
 
 
   const CustomTooltip = ({ active, payload, label }:any) => {
-    // console.log(active, payload, label);
   
     if (active) {
       return (
@@ -167,7 +165,6 @@ const Page= ({params}:{params:{uuid:string}})=>{
       start_date:now.subtract(7,"days").toISOString(),
       uuid:params.uuid
     }
-    console.log(filterData)
     dispatch(chartActions.setFilterData(filterData))
     
     // if(chartState.response == undefined){
@@ -181,7 +178,6 @@ const Page= ({params}:{params:{uuid:string}})=>{
       });
     return () => {
         window.removeEventListener("popstate", (e)=>{
-            console.log("Remove listener")
         });
     };
   },[])
@@ -202,7 +198,6 @@ const Page= ({params}:{params:{uuid:string}})=>{
         }
         data.uuid = params.uuid
         dispatch(chartActions.setFilterData(data))
-        console.log("FINAL FILTER DATA",data)
         dispatch(getReservasAmountData(data))
       }}
       setData={()=>{
@@ -290,7 +285,6 @@ const Page= ({params}:{params:{uuid:string}})=>{
         }
         data.uuid = params.uuid
         dispatch(chartActions.setFilterData(data))
-        console.log(data)
         dispatch(getReservaAverageAmountBase(data))
       }}
       setData={()=>{
@@ -322,7 +316,6 @@ const Page= ({params}:{params:{uuid:string}})=>{
         }
         data.uuid = params.uuid
         dispatch(chartActions.setFilterData(data))
-        console.log(data)
         dispatch(getReservasHoursAverage(data))
       }}
       setData={()=>{
@@ -361,7 +354,6 @@ const Page= ({params}:{params:{uuid:string}})=>{
         }
         data.uuid = params.uuid
         dispatch(chartActions.setFilterData(data))
-        console.log(data)
         dispatch(getReservaAverageAmountBase(data))
       }}
       setData={()=>{
@@ -393,7 +385,6 @@ const Page= ({params}:{params:{uuid:string}})=>{
         }
         data.uuid = params.uuid
         dispatch(chartActions.setFilterData(data))
-        console.log(data)
         dispatch(getReservasAverageAmount(data))
       }}
       setData={()=>{
@@ -441,7 +432,6 @@ const Page= ({params}:{params:{uuid:string}})=>{
         }
         data.uuid = params.uuid
         dispatch(chartActions.setFilterData(data))
-        console.log(data)
         dispatch(getReservaUserFrequency(data))
       }}
       setData={()=>{

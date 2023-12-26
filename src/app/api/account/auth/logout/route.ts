@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 export async function GET(request:Request) {
    const nextCookies = cookies(); // Get cookies object
    const token = nextCookies.get('access_token')?.value
-//    console.log(token)
    if(token == undefined){
     return NextResponse.json("Usuario no authorizado",{status:401})
   }
@@ -13,13 +12,11 @@ export async function GET(request:Request) {
     //   const body:Cupo = await request.json()
       nextCookies.delete("access_token")
       nextCookies.delete("rol")
-      console.log("LOGOUT")
       
       // redirect("http://localhost:3000/auth/login")
       return NextResponse.json("",{status:200})
    
    }catch(err){
-      console.log(err)
       return NextResponse.json("Error Request",{status:500})
    }
 }

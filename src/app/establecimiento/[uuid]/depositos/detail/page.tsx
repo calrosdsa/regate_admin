@@ -293,6 +293,7 @@ const Page = ({params}:{params:{uuid:string}}) =>{
         open={openReservaDetailDialog}
         close={()=>setOpenReservaDetailDialog(false)}
         data={reservaDetail}
+        update={()=>{}}
         />
         }
         </>

@@ -87,7 +87,6 @@ export default function Page(){
             setLoadingEstablecimientos(false)
         }catch(err){
             setLoadingEstablecimientos(false)
-            console.log(err)
         }
     }
 
@@ -125,10 +124,8 @@ export default function Page(){
             setOpenUserOptionDialog(false)
             // getUsersEmpresa()
             dispatch(uiActions.setLoaderDialog(false))
-            console.log(res)
         }catch(err){
             dispatch(uiActions.setLoaderDialog(false))
-            console.log(err)
         }
     }
 

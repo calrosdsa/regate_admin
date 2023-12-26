@@ -40,7 +40,6 @@ const CancelReservaDialog = ({open,close,update,reserva}:{
         }catch(err){
             setLoading(false)
             toast.error(unexpectedError)
-            console.log(err)
         }
     }
 

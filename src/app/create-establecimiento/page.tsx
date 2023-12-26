@@ -59,12 +59,10 @@ const Login = () =>{
         setLoading(false)
         toast.success("Se ha creado un nuevo establecimiento")
         
-        console.log(data)
         // dispatch(login(email,name))
       }catch(err){
         toast.error("Un error a ocurrido")
         setLoading(false  )
-        console.log(err)
       }
       // window.location.assign("http://localhost:3000/establecimiento/1469058c-6084-4e1e-a191-de1d5fa3b9c5/instalaciones")
     }  

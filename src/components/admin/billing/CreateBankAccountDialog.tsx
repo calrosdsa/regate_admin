@@ -45,11 +45,9 @@ const CreateBankAccountDialog = ({close,open,items,setAccountBank}:{
             setLoading(false) 
             setAccountBank(res)
             close()
-            console.log(res)
         }catch(err){
             toast.error(unexpectedError)
             setLoading(false) 
-            console.log(err)
         }
     }
 

@@ -27,7 +27,6 @@ const Page = ({params} : { params:{uuid:string}})=>{
     const getConversations = async() =>{
         try{
             const res:Chat[] = await GetConversations(params.uuid)
-            console.log("Conversations",res)
             dispatch(chatActions.setChats(res))
             const currentId = searchParams.get("conversationId")
             if(currentId != null ){
@@ -37,7 +36,6 @@ const Page = ({params} : { params:{uuid:string}})=>{
                 }
             }
         }catch(err){
-            console.log("Error",err)
         }
     }
 

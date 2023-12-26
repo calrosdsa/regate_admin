@@ -58,19 +58,16 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId}:{
                 end_date:daysWeek.slice(-1)[0].date,
                 uuid:uuid
             }
-            console.log("REQUEST",request)
             const res:ReservaCupo[] = await GetReservasCupo(request)
             setReservasCupo(res)
             setLoadingSpinner(false)
         }catch(e){
             setLoadingSpinner(false)
             toast.error(unexpectedError)
-            console.log(e)
         }
     }
 
     const updateDateWeekWithCupos  = () =>{
-        console.log(reservasCupo,"UPDATE --- C")
         const resDates = reservasCupo.map(item=>item.start_date.slice(0,10))
         setDateWeekWithCupos([])
         const d = days.map((item,idx)=>{
@@ -87,7 +84,6 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId}:{
             return item
         })
         setDays(d)
-        console.log(dateWeekWithCupos,"D")
     }
 
     const generateDaysWeek = (startDate:moment.Moment,days:number = countDays) =>{
@@ -101,7 +97,6 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId}:{
                 date:t.format("yyyy-MM-DD"),
                 updatedCount:0
             }
-            console.log(i,dayWeek)
             setDays(e=>[...e,dayWeek])
             cupos.push(dayWeek)
         }
@@ -109,9 +104,7 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId}:{
     }
 
     const getCuposReservaByHora = ( index:number,hora:string) =>{
-        //    console.log("TARGET DATE TIME",targetDateTime)
         try{
-            // console.log(dateWeekWithCupos,"DATEWEEK")
             if(dateWeekWithCupos.length>0){
                 const list = dateWeekWithCupos.find(item => item.index == index)?.cupose_reserva.filter(item=>moment(item.start_date.slice(0,16)).format("LT") == hora)
                 return list
@@ -119,7 +112,6 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId}:{
                 return []
             }
         }catch(err){
-            console.log(err)
             return []
         }
     }
@@ -127,13 +119,11 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId}:{
     // useEffect(()=>{
     //     if(days.length > 0){
     //         getReservasCupo()
-    //         console.log(days[0].date,days.slice(-1)[0].date)
     //     }
     // },[])
 
     useEffect(()=>{
         if(reservasCupo.length>0){
-            console.log(reservasCupo,"cupos")
             updateDateWeekWithCupos()
         }
     },[reservasCupo])
@@ -367,8 +357,6 @@ const CalendarReserva = ({
 
     const measuredRef = useCallback((node:any) => {
         if (node !== null) {
-            console.log(node.getBoundingClientRect().width)
-            console.log(node.getBoundingClientRect().width/reservaCupos.length)
             if(width == 0){
                 setWidth(node.getBoundingClientRect().width );
             }

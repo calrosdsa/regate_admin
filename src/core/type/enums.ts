@@ -38,7 +38,7 @@ export const enum UserEstado {
 
 export const enum ReservaEstado {
     Valid,
-    Expired,
+    Pendiente,
     Cancel
 }
 

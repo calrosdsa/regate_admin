@@ -20,7 +20,6 @@ export async function POST(request:Request) {
          "Content-Type":"application/json"
       }})
       const data =await res.json()
-      console.log(data)
       return NextResponse.json(data,{status:res.status})
    }catch(err){
       // console.log(err)

@@ -13,9 +13,11 @@ interface Reserva extends Profile {
 }
 
 type ReservaReporteRequest = {
-    establecimiento_id:number
+    establecimiento_uuid:string
     start_date:string
     end_date:string
+    estado?:number
+    instalaciones:[]
 }
 
 type ReservaDetail = {

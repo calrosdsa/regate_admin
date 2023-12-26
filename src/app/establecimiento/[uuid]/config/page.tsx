@@ -81,13 +81,11 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         try{
             dispatch(uiActions.setLoaderDialog(true))
             const res:Label[] = await GetRules()
-            console.log(res)
             const newRules = res.filter(item=>!rulesEstablecimiento.map(it=>it.id).includes(item.id))
             setRules(newRules)
             setOpenAddRuleDialog(true)
             dispatch(uiActions.setLoaderDialog(false))
         }catch(err){
-            console.log(err)
             dispatch(uiActions.setLoaderDialog(false))
         }
     }
@@ -118,7 +116,6 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 }
                 return schedule
             })
-            console.log(res)
             getEstablecimientoAmenities(res.establecimiento.id)
             getEstablecimientoRules(res.establecimiento.id)
             setData({
@@ -127,7 +124,6 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             })
 
         }catch(err){
-            console.log(err)
         }
         // console.log(data)
     }
@@ -136,9 +132,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             try{
                 addLoader()
                 const req = JSON.stringify({[name]:value})
-                console.log(JSON.stringify(req))
                 const res = await UpdateEstablecimiento(req,data?.establecimiento.id)
-                console.log(res)
                 setData({
                     ...data,
                     establecimiento:{
@@ -160,9 +154,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             try{
                 addLoader()
                 const req = JSON.stringify({[name]:value})
-                console.log(JSON.stringify(req))
                 const res = await UpdateSettings(req,data?.establecimiento.id)
-                console.log(res)
                 setData({
                     ...data,
                     setting_establecimiento:{
@@ -201,7 +193,6 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 // toast.success("¡Los cambios realizados han sido guardados exitosamente!")
             }catch(err){
                 setLoading(false)
-                console.log(err)
                 toast.error(unexpectedError)
             }
         }
@@ -225,7 +216,6 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             // toast.success("¡Los cambios realizados han sido guardados exitosamente!")
         }catch(err){
             setLoading(false)
-            console.log(err)
             toast.error(unexpectedError)
         }
         }

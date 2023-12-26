@@ -79,13 +79,11 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
             })
             setSelectedCupos([])
             updateHorarios(updateCurrentCupos)
-            console.log(ids)
             dispatch(uiActions.setLoaderDialog(false))
             toast.success(successfulMessage)
         }catch(err){
             dispatch(uiActions.setLoaderDialog(false))
             toast.error(unexpectedError)
-            console.log(err)
         }
     }
 
@@ -114,10 +112,8 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
    }
 
 //    const mergeC = () =>{
-//     console.log("merging")
 //     cupos.map((item,idx)=>{
 //         if(idx % 2 == 0){
-//             console.log("its even",item)
 //         }
 //         return
 //     })
@@ -127,7 +123,6 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
         if(currentDay != undefined){
             getHorarioDay(currentDay)
         }
-        console.log(currentDay)
     },[instalacionId])
 
     // useEffect(()=>{

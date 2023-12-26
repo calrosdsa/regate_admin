@@ -9,7 +9,6 @@ export const handleIncomeMessages  = (payload:string) :ThunkAction<void,RootStat
             const chat = getState().chat.chat
             let message:ConversationMessage = JSON.parse(payload)
             let shouldIncrement = true
-            console.log("CHAT",chat)
             if(chat != undefined){
               shouldIncrement  = Number(chat.chat.conversation_id) != message.chat_id
             }
@@ -23,7 +22,6 @@ export const handleIncomeMessages  = (payload:string) :ThunkAction<void,RootStat
               dispatch(chatActions.updateGlobalMessageCount(1))
             }            
         }catch(err){
-            console.log(err)
         }
     }
 }

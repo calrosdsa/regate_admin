@@ -21,7 +21,6 @@ const Page = () =>{
             setLoadingAccount(false)
         }catch(err){
             setLoadingAccount(false)
-            console.log(err)
         }
     }
 

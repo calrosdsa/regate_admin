@@ -31,7 +31,6 @@ const SideBarEstablecimiento = () =>{
          const res = await GetMessagesCount(params.uuid)
          dispatch(chatActions.updateGlobalMessageCount(res))
       }catch(err){
-         console.log(err)
       }
    }
 

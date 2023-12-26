@@ -25,12 +25,9 @@ const ChatConversation = ({current,loadMore,setLoadMore}:{
     const [page,setPage] = useState(1)
     const [scrollToBottom,setScrollToBottom] = useState(false)
     const getMessages = async(page:number) => {
-        console.log("PAGE",page)
         const res:PaginationConversationMessage = await GetMessages(Number(id),page)
         updateMessageToRead(res.results)
-        console.log("RESULTS",res)
         if(res.nextPage == 0 || res.results.length < 20){``
-            console.log("SIZE ",res.results.length)
             setLoadMore(false)
         }else{
             setLoadMore(true)
@@ -50,7 +47,6 @@ const ChatConversation = ({current,loadMore,setLoadMore}:{
             }        
             if(ids.length > 0){
                 await UpdateMessagesToReaded(JSON.stringify(body))
-                console.log("Updated messages ids")
                 dispatch(chatActions.updateChat({
                     ...current,
                     count_unread_messages:current.count_unread_messages - ids.length
@@ -58,7 +54,6 @@ const ChatConversation = ({current,loadMore,setLoadMore}:{
                 dispatch(chatActions.updateGlobalMessageCount(-ids.length))
             }
         }catch(err){
-            console.log(err)
         }
     }
 
@@ -101,7 +96,6 @@ const ChatConversation = ({current,loadMore,setLoadMore}:{
                 chat_id:current.chat.conversation_id
             }
             // const data:
-            console.log(messagePublishRequest)
             const res = await fetch("http://localhost:9091/v1/chat/publish/message/",{
                 method:"post",
                 body:JSON.stringify(messagePublishRequest),
@@ -113,12 +107,10 @@ const ChatConversation = ({current,loadMore,setLoadMore}:{
                 throw new Error('Failed to fetch data')
             }
             const body = await res.json()
-            console.log("MESSAGE RESPONSE",body)
             setMessageContent("")
             dispatch(chatActions.updateLastMessage(data))
             setScrollToBottom(!scrollToBottom)
         }catch(err){
-            console.log(err)
         }
     }
     useEffect(()=>{
@@ -138,7 +130,6 @@ const ChatConversation = ({current,loadMore,setLoadMore}:{
     useEffect(()=>{
         // setMessages([])
         dispatch(chatActions.setChat(current))
-        console.log("CHAT CONVERSATION",current)
         connection.current = new WebSocket(`ws://localhost:9091/v1/ws/suscribe/chat/?id=${id}&profileId=0`);
         connection.current.onopen = () => {
         }

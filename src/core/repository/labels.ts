@@ -7,7 +7,6 @@ export async function GetAmenities(){
         throw new Error('Failed to fetch data')
       }
      
-    //   console.log(res)
       return res.json()
 }
 
@@ -18,7 +17,6 @@ export async function GetRules(){
         throw new Error('Failed to fetch data')
       }
      
-    //   console.log(res)
       return res.json()
 }
 
@@ -29,7 +27,6 @@ export async function GetCategories(){
       throw new Error('Failed to fetch data')
     }
    
-  //   console.log(res)
     return res.json()
 }
 
@@ -40,7 +37,6 @@ export async function GetAmenitiesEstablecimiento(id:number){
       throw new Error('Failed to fetch data')
     }
    
-  //   console.log(res)
     return res.json()
 }
 
@@ -51,7 +47,6 @@ export async function GetRulesEstablecimiento(id:number){
       throw new Error('Failed to fetch data')
     }
    
-  //   console.log(res)
     return res.json()
 }
 

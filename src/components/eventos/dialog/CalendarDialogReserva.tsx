@@ -115,13 +115,11 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
             setInstalaciones(instalacionWithReservaCupos)
         }catch(e){
             setLoading(false)
-            console.log(e)
         }
     }
 
     const validateToContinue = () =>{
         const startM = moment(startDate + " " + start)
-        console.log(startM.format(),"start date")
         const endM = moment(startDate + " " + end)
         const minutesDifference = ((endM.hour()*60) + endM.minute()) - ((startM.hour()*60) + startM.minute()) 
         const dayDiff = moment(until_date + " " + start).diff(startM,"days") +1
@@ -151,7 +149,6 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
                         setTimes(e=>[...e,moment(startM).add(i,'days').add(30*t,"minutes").format()])
                     }
                   }  
-                  console.log("dasmdoas")
                 break;
             case Repeat.WEEKLY:
                 // count = count * 7
@@ -179,7 +176,6 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
                             //     precio:100,
                             // }
                             setTimes(e=>[...e,moment(startM).add(i,'days').add(30*t,"minutes").format()])
-                            console.log(today.date(),day_month) 
                         }
                         // if(today)
                     }
@@ -187,7 +183,6 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
                 break;
             }
             
-            console.log(times)
                 setTab(1)
         getInstalaciones()
     }
@@ -213,7 +208,6 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
                 }
                 addInstalacion(instalacionId)
             }else{
-                console.log(times)
                 addInstalacionLoader(instalacionId)
                 if(selectedInstalaciones.includes(instalacionId)){
                 removeInstalacion(instalacionId)
@@ -227,7 +221,6 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
             } 
             const res:ReservaCupo[] = await CheckRervasCuposAvailables(request)
             if(res.length == 0){
-                console.log("CHECK",res)
                 addInstalacion(instalacionId)
             }else{
                 const updateInstalacionList = instalaciones.map(item=>{
@@ -242,7 +235,6 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
         }
         }catch(err){
             removeInstalacionLoader(instalacionId)
-            console.log(err)
         }
     }
 
@@ -250,7 +242,6 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
         try{
             if(times.length ==0) return
             setLoadingSaveButton(true)
-            console.log("CURRENT DAY WEEK",moment(times[0]).day())
             const request:ReservaFromEventoRequest = {
                 times:times,
                 evento_uuid:uuidEvent,
@@ -278,7 +269,6 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
                 })
                 reservasCupo = [...reservasCupo,...l]
             }
-            console.log("update reservas",reservasCupo)
             updateDateWithCupos(reservasCupo)
             toast.success(successfulMessage)
             setLoadingSaveButton(false)
@@ -286,7 +276,6 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
         }catch(e){
             toast.error(unexpectedError)
             setLoadingSaveButton(false)
-            console.log(e)
         }
     }
 
@@ -491,8 +480,8 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
             }
             {instalaciones.map((item,index)=>{
                 return(
-                    <div>
-                            <div key={index} 
+                    <div key={index} >
+                            <div 
                             onClick={()=>checkReservaCupoAvailables(item.instalacion.id,item.instalacion.establecimiento_id)}
                             className="flex space-x-3 p-2 items-center cursor-pointer border-b relative
                             hover:bg-gray-100 justify-between">

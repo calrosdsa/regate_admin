@@ -17,10 +17,8 @@ export async function GET(request:Request,
          'Authorization':`Bearer ${token}`
       }})
       const data =await res.json()
-      // console.log(data)
       return NextResponse.json(data,{status:res.status})
    }catch(err){
-      // console.log(err)
       return NextResponse.json("Error Request",{status:500})
    }
 }

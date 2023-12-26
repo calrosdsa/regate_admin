@@ -27,8 +27,6 @@ export default function Page(){
         e.preventDefault()
         setLoading(true)
         const res:Response = await SendResetPasswordEmail(email)
-        console.log(res)
-        console.log(res.status)
         const data = await res.json()
         switch(res.status){
             case 200:

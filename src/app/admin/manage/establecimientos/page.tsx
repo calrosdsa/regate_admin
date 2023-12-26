@@ -14,12 +14,10 @@ import { useEffect, useState } from "react"
             setEstablecimientos([])
             setLoading(true)
             const data:EstablecimientoData[] = await GetEstablecimientos()
-            console.log("RESPONSE",data)
             setEstablecimientos(data)
             setLoading(false)
         }catch(err){
             setLoading(true)
-            console.log("ERROR",err)
         }
             // setReservas(data)
     }

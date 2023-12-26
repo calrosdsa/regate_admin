@@ -10,11 +10,9 @@ type HoraCupo= {
     reserva?:CupoReserva
 }
 // const now = moment().utcOffset(0, true).toJSON().slice(0,10)
-// console.log("NOW",now.toJSON().slice(0,10))
 // const nowYear = now.year()
 // const monthNow = now.month() < 10 ? `0${now.month() +1}`:now.month() +1
 // const dayNow = now.day() < 10 ? `0${now.day()}`:now.day()
-// console.log(now.daysInMonth())
 
 const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCupo,selectedCupos,date}:{
     cupos:CupoReserva[]
@@ -138,7 +136,6 @@ const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCup
     },[newCupos,date])
 
     useEffect(()=>{
-        console.log("CUPOS UPDATED",cupos)
         if(cupos.length != 0){
             setNewCupos([])
             mergeData(cupos)

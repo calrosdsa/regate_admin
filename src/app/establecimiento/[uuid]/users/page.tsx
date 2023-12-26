@@ -33,7 +33,6 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         appendSerachParams("page","1")
         // console.log(query.trim().replaceAll(/\s+/g,","))
         const q = query.trim().replaceAll(/\s+/g,":* & ") + ":*"
-        console.log(q)
         const filterD:RequestUserEmpresaFilter = {
             ...filterData,
             query:q

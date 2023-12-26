@@ -25,12 +25,8 @@ export default function Page({params} : { params:{token:string}}){
     }
     const verifyEmail = async()=>{
       const res =await VerifyToken(params.token)
-      console.log(res.status,"STATUS")
       if(res.status == 401){
           router.push("/auth/forgot-password")
-          console.log("EXPIRADO")
-      }else{
-          console.log("VALID")
       }
     }
 
@@ -48,7 +44,6 @@ export default function Page({params} : { params:{token:string}}){
         setLoading(false)
       }catch(err){
         setLoading(false)
-        console.log(err)
       }
       // window.location.assign("http://localhost:3000/establecimiento/1469058c-6084-4e1e-a191-de1d5fa3b9c5/instalaciones")
     }  

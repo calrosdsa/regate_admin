@@ -10,7 +10,6 @@ import { cookies } from 'next/headers'; // Import cookies
 export async function POST(request:Request) {
     const nextCookies = cookies(); // Get cookies object
     const token = nextCookies.get('access_token')?.value
-    console.log(token)
   try{
       const body  = await request.text()
       const res = await fetch(`${API_URL}/instalacion/admin/cupo/delete/`,{
@@ -24,7 +23,6 @@ export async function POST(request:Request) {
       const data =await res.json()
       return NextResponse.json(data,{status:res.status})
    }catch(err){
-      console.log(err)
       return NextResponse.json("Error Request",{status:500})
    }
 }

@@ -59,7 +59,6 @@ export default function Page({ params }: { params: { uuid: string } }){
     
 
     useEffect(()=>{
-        console.log("GETTING_SALAS")
         getSalas()
     },[])
 

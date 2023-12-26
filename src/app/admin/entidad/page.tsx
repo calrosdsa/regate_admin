@@ -47,7 +47,6 @@ const Entidad = () =>{
                 const req = JSON.stringify({[name]:value})
                 // console.log(JSON.stringify(req))
                 const res = await UpdateEmpresaDetail(req)
-                console.log(res)
                 setEmpresaDetail({
                     ...empresaDetail,
                     empresa:{
@@ -73,9 +72,7 @@ const Entidad = () =>{
                     latitud:lat.toString(),
                     address:address,
                  })
-                console.log("PAYLOAD",req)
                 const res = await UpdateEmpresaAddress(req)
-                console.log(res)
                 setEmpresaDetail({
                     ...empresaDetail,
                     empresa:{
@@ -90,7 +87,6 @@ const Entidad = () =>{
                 toast.success("¡Los cambios realizados han sido guardados exitosamente!")
         }catch(err){
             setLoading(false)
-            console.log(err)
             toast.error("¡Los cambios realizados han sido guardados exitosamente!")
         }
     }

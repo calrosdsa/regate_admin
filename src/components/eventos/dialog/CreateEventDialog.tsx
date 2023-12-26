@@ -38,7 +38,6 @@ const CreateEventDialog = ({open,close,establecimientoId,addEvento}:{
                 description:formData.description,
                 establecimiento_id:establecimientoId
             } 
-            console.log(request,"DATA")
             const res:Evento = await CreateEvento(request)
             addEvento(res)
             setLoading(false)
@@ -48,7 +47,6 @@ const CreateEventDialog = ({open,close,establecimientoId,addEvento}:{
         }catch(err){
             toast.error(unexpectedError)
             setLoading(false)
-            console.log(err)
         }
     }
     return(

@@ -42,7 +42,6 @@ export async function GetInstalaciones(uuid:string){
         throw new Error('Failed to fetch data')
       }
      
-    //   console.log(res)
       return res.json()
 }
 
@@ -53,7 +52,6 @@ export async function GetInstalacion(uuid:string){
         throw new Error('Failed to fetch data')
       }
      
-      console.log(res)
       return res.json()
 }
 
@@ -65,7 +63,6 @@ export async function getInstalacionById(id:number){
       throw new Error('Failed to fetch data')
     }
    
-    console.log(res)
     return res.json()
 }
 
@@ -77,7 +74,6 @@ export async function getInstalacionDayHorario(instalacionId:number,dayWeek:numb
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')
       }
-      // console.log(res)
       return res.json()
 }
 

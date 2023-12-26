@@ -39,7 +39,6 @@ const AddAmenityDialog = ({amenities,close,open,establecimientoId,setNewAmenitie
             close()
             const res:Label[] = await AddAmenities(req)
             setNewAmenitiesEstablecimiento(res)
-            console.log(res)
             dispatch(uiActions.setLoaderDialog(false))
             toast.success("¡Los cambios realizados han sido guardados exitosamente!")
         }catch(err){

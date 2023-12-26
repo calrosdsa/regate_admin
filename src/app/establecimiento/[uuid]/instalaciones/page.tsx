@@ -76,22 +76,18 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                     instalacion_id:instalacionId
                 }
             }
-            console.log(filterData)
             const data = await GetCupoReservaInstalciones(filterData)
-            console.log(data)
             setCuposReservas(data)
             setLoadingReservas(false)
             setSelectedCupos([])
         }catch(err){
             setLoadingReservas(false)
-            console.log(err)
         }
     }
     const getReservaDetail = async(id:number) => {
         try{
             dispatch(uiActions.setLoaderDialog(true))
             const res = await GetReservaDetail(id)
-            console.log(res)
             setReservaDetail(res)
             dispatch(uiActions.setLoaderDialog(false))
         }catch(err){
@@ -109,7 +105,6 @@ const Page = ({ params }: { params: { uuid: string } })=>{
             setLoadingHorarios(false)
         }catch(err){
             setLoadingHorarios(false)
-            console.log(err)
         }
     }
 
@@ -136,12 +131,10 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         if(instalacion == undefined) return
         if(tabIndex!= null){
             if(tabIndex == "2"){
-                console.log("UPDATED INSTALACION RESERVAS")
                 // getCupos(res.id,true)
                 setInstalacion(instalacion)
                 getCuposReservaInstalacion(instalacion.id)
             }else if(tabIndex == "1"){
-                // console.log(tabIndex,"TABINDEX")
                 getHorariosDay(currentDay,instalacion.id)
                 setInstalacion(instalacion)
             }else if(tabIndex == "0"){
@@ -156,26 +149,22 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         try{
             setLoadingInstalacion(true)
             const res:Instalacion = await GetInstalacion(uuid)
-            // console.log(res)
             setInstalacion(res)
             appendSerachParams("id",res.uuid)
             setLoadingInstalacion(false)
         }catch(err){
-            console.log(err)
             setLoadingInstalacion(false)
         }
     }
 
     
     const selectReservaCupo = (cupo:CupoReserva) => {
-        console.log(cupo,"CUPO SELECTED")
         if(selectedCupos.map((item=>item.time)).includes(cupo.time)){
             const newList = selectedCupos.filter(item=>item.time != cupo.time)
             setSelectedCupos(newList)
         }else{
             setSelectedCupos(v=>[...v,cupo])
         }
-        // console.log(selectedCupos)
     }
 
     useEffect(()=>{
@@ -188,12 +177,10 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                 getCuposReservaInstalacion(instalacion.id)
 
             }
-            console.log("UPDATED")
         }
     },[instalacion])
 
     useEffect(()=>{
-        console.log(startDate,"START DATE")
         if(startDate != null){
             if(instalacion != null){
                 getCuposReservaInstalacion(instalacion.id)
@@ -215,7 +202,6 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         });
     return () => {
         window.removeEventListener("popstate", (e)=>{
-            console.log("Remove listener")
         });
     };
     },[])
@@ -362,7 +348,6 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                         </svg>
                     <input type="date" 
                      onChange={(e)=>{
-                        console.log(e.target.value)
                         const date = new Date(e.target.value)
                         date.setTime(date.getTime()+ (10*60*60*1000))
                         setStartDate(date)}}
@@ -371,7 +356,6 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                                 {/* <input type="date" id="date" 
                                 value={startDate == null ? new Date().toJSON().slice(0,10) :startDate.toJSON().slice(0,10)}
                                 onChange={(e)=>{
-                                    console.log(e.target.value)
                                     const date = new Date(e.target.value)
                                     date.setTime(date.getTime()+ (10*60*60*1000))
                                     setStartDate(date)}}

@@ -51,7 +51,6 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             setLoading(false)
         }catch(err){
             setLoading(false)
-            console.log(err)
         }
     }
     const onPrev = () => {

@@ -15,7 +15,6 @@ export async function POST(request:Request) {
     // console.log("TOKEN",token)
   try{
       const body = await request.text()
-    //   console.log(body.get("name"))
       const res = await fetch(`${API_URL}/evento/create/`,{
             method:'POST',
             body:body,
@@ -25,10 +24,8 @@ export async function POST(request:Request) {
             }
         })
         const data = await res.json()
-        console.log("RESPONSE",data)
       return NextResponse.json(data,{status:res.status})
    }catch(err){
-      console.log(err)
       return NextResponse.json("Error Request",{status:500})
    }
 }

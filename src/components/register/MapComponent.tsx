@@ -36,9 +36,7 @@ export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,address,setAdd
             setLatitud(lat)
             setLongitud(lng)
             // setPlace(data)
-            console.log(data)
         }catch(e){
-            console.log(e)
         }
     }
 

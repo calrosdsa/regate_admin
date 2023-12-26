@@ -36,7 +36,6 @@ const EditUserEmpresaDialog = ({open,close,userEmpresa,onUpdate}:{
         }catch(err){
             toast.error(unexpectedError)
             setLoading(false)
-            console.log(err)
         }
     }
 

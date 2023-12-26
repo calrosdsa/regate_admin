@@ -22,7 +22,6 @@ export async function POST(request:Request) {
       // console.log("BODY-RES",data)
       return NextResponse.json(data,{status:res.status})
    }catch(err){
-      console.log("error request",err)
       return NextResponse.json("Error Request",{status:500})
    }
  

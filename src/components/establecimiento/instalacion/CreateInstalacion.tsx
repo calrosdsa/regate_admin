@@ -44,7 +44,6 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
       }
 
       const onChangeCustomPrecio = (name:string,value:string,index:number)=>{
-        console.log(value,"VALUE CHANGE")
         const updateList = customPrecioInstalacion.map((item,idx)=>{
             if(index == idx){
                 item[name as keyof CustomPrecioInstalacion] = value
@@ -57,30 +56,22 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
     const getTimeRangeFromCustomPrecioInstalacion = ():string[] => {
         let timeRange:string[] = []
         customPrecioInstalacion.map((item)=>{
-          console.log("Loop",item)
           const startM = moment(item.start_time)
           const endM = moment(item.end_time)
-          console.log("RANGE TIME",startM.format(),endM.format())
           const minutesDifference = ((endM.hour()*60) + moment(endM).minute()) - ((startM.hour()*60) + moment(startM).minute()) 
           for(let t =0;t < (minutesDifference/30)+1;t++){
-            // console.log(moment(startM).add(30*t,"minutes").format())``
             timeRange.push(moment(startM).add(30*t,"minutes").format("HH:mm:ss"))
         }
       })
-      console.log("TIME RANGE",timeRange)
       return timeRange
     }
 
     // const checkCustomPrecioInstalacion = () => {
     //   if(customPrecioInstalacion.length == 0) {
-    //     console.log("is empty")
     //     return false
     //   }
     //   for(let i=0;i<customPrecioInstalacion.length;i++){
 
-    //       console.log(customPrecioInstalacion[i].precio == "")
-    //       console.log(customPrecioInstalacion[i].start_time == "")
-    //       console.log(customPrecioInstalacion[i].end_time == "")
           
     //       if(customPrecioInstalacion[i].precio == "") return true
     //       if(customPrecioInstalacion[i].start_time == "") return true
@@ -195,7 +186,6 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
                           label="Inicio"
                           time={moment(item.start_time).format("HH:mm")}
                           setTime={(e)=>{
-                            console.log(e)
                             const today = moment().format("yyyy-MM-DD")
                             onChangeCustomPrecio("start_time",moment(today +" "+e).format("yyyy-MM-DD HH:mm"),index)
                           }}

@@ -6,7 +6,6 @@ export async function POST(request:Request) {
    try{
       const nextCookies = cookies(); // Get cookies object      
       const body = await request.json();
-      console.log(body)
       const res = await fetch(`${API_URL}/account/admin/login/`,{
             method:"post",
             body:JSON.stringify(body),
@@ -15,9 +14,7 @@ export async function POST(request:Request) {
             }
       }
       )
-      console.log(res.status,"ESTATUS")
       const data =await res.json()
-      console.log(data)
       if(res.status == 200){
             //  console.log(data)
             const oneDay = 24 * 60 * 60 * 1000
@@ -42,8 +39,6 @@ export async function POST(request:Request) {
             return NextResponse.json(data,{status:res.status})
       }
       }catch(e){
-            console.log(e)
-      console.log("error")
       return NextResponse.json("NO data",{status:500})
       }
 }

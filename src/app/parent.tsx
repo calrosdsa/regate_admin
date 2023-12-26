@@ -20,7 +20,6 @@ export function Parent({ children }:any) {
   useEffect(()=>{
     const userLocal = localStorage.getItem("user") 
     const user:User | null = userLocal != null ? JSON.parse(userLocal) : null
-    console.log(user)
     if(user != null) {
       connection.current =  new WebSocket(`${WS_URL}/v1/ws/suscribe/user/admin/?id=${user.id}`)
       connection.current.onmessage = (e) => {
@@ -31,7 +30,6 @@ export function Parent({ children }:any) {
             // connection.current?.send("My data")
             break;
         }
-        console.log(data)
         // const payload:MessagePayload = JSON.parse(e.data)
         // switch(payload.type){
         //     case MessageEvent.Message:

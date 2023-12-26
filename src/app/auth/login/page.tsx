@@ -26,7 +26,6 @@ const Login = () =>{
         dispatch(login(email.trim(),password.trim()))
         // window.location.assign("/admin/establecimientos")
       }catch(err){
-        console.log(err)
       }
       // window.location.assign("http://localhost:3000/establecimiento/1469058c-6084-4e1e-a191-de1d5fa3b9c5/instalaciones")
     }  

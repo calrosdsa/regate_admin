@@ -22,7 +22,6 @@ const StackedBarChart = ({data,firstKey,secondKey,thirdKey,fontSize=12,loading}:
   const handleMouseEnter = (o:any) => {
     const { dataKey } = o;
     const { opacity } = state;
-    console.log(o)
     setState({
       opacity: { ...opacity, [dataKey]: 0.3 },
     });

@@ -39,7 +39,6 @@ export const downloadReporteDeposito = (depositoId: number,reporteId:ReporteId) 
             dispatch(uiActions.removeOngoingProcessFromQueue(reporteId))
             }
         }catch(err:any){
-            console.log(err)
             if (axios.isCancel(err)) {
                 toast.update(id, {render:"Descarga Cancelada", type: "info", isLoading: false ,autoClose:5000});
                 dispatch(uiActions.removeOngoingProcessFromQueue(reporteId))                
@@ -66,8 +65,8 @@ export const downloadReporteReservasExcel = (
     return async(dispatch,getState)=>{
         try{
             const uiState = getState().ui
-            dispatch(uiActions.setOngoingDownloadProcess([data.establecimiento_id]))
-            if(uiState.ongoingDownloadProcess.includes(data.establecimiento_id)){
+            dispatch(uiActions.setOngoingDownloadProcess([-1]))
+            if(uiState.ongoingDownloadProcess.includes(-1)){
                     toast.info("Hay una descarga en curso.")
                 }else{
                     id = toast.loading("Generando reporte, por favor espere...")
@@ -83,15 +82,14 @@ export const downloadReporteReservasExcel = (
                         toast.update(id, {render: "Se ha completado la descarga", type: "success", isLoading: false,autoClose:5000});
                         link.click();
                     })
-            dispatch(uiActions.removeOngoingProcessFromQueue(data.establecimiento_id))
+            dispatch(uiActions.removeOngoingProcessFromQueue(-1))
             }
         }catch(err:any){
-            console.log(err)
             if (axios.isCancel(err)) {
                 toast.update(id, {render:"Descarga Cancelada", type: "info", isLoading: false ,autoClose:5000});
-                dispatch(uiActions.removeOngoingProcessFromQueue(data.establecimiento_id))                
+                dispatch(uiActions.removeOngoingProcessFromQueue(-1))                
             }else{
-                dispatch(uiActions.removeOngoingProcessFromQueue(data.establecimiento_id))                
+                dispatch(uiActions.removeOngoingProcessFromQueue(-1))                
                 toast.update(id, {render:err.response.message, type: "error", isLoading: false ,autoClose:5000});
                 // dispatch(uiActions.setLoading(false))
                 if(err.response.status == 401){
@@ -134,7 +132,6 @@ export const exportDashboardDataExcel = (
             dispatch(uiActions.removeOngoingProcessFromQueue(identifier))
             }
         }catch(err:any){
-            console.log(err)
             if (axios.isCancel(err)) {
                 toast.update(id, {render:"Descarga Cancelada", type: "info", isLoading: false ,autoClose:5000});
                 dispatch(uiActions.removeOngoingProcessFromQueue(identifier))                

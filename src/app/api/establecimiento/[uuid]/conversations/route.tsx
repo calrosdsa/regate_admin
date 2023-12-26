@@ -6,7 +6,6 @@ export async function GET(request:Request,
     { params }: { params: { uuid: string } }) {
    const nextCookies = cookies(); // Get cookies object
    const token = nextCookies.get('access_token')?.value
-   console.log(token)
    if(token == undefined){
     return NextResponse.json("Usuario no authorizado",{status:401})
   }
@@ -18,10 +17,8 @@ export async function GET(request:Request,
          'Authorization':`Bearer ${token}`
       }})
       const data =await res.json()
-      // console.log(data)
       return NextResponse.json(data,{status:res.status})
    }catch(err){
-      // console.log(err)
       return NextResponse.json("Error Request",{status:500})
    }
 }

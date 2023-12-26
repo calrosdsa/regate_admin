@@ -7,9 +7,6 @@ const MessageData = ({data,type_message}:{
     data:string
     type_message:number
 }) =>{
-    useEffect(()=>{
-        console.log(data)    
-    },[])
     if(type_message == MessageType.INSTALACION){
         const payload:MessageTypeInstalacion = JSON.parse(data)
         const totalPrice = payload.cupos.reduce((accum,current)=>accum + (current.price || 0),0)

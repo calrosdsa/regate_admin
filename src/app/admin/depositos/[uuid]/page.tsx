@@ -58,7 +58,6 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         try{
             dispatch(uiActions.setLoaderDialog(true))
             const res = await GetReservaDetail(id)
-            console.log(res)
             setReservaDetail(res)
             dispatch(uiActions.setLoaderDialog(false))
         }catch(err){
@@ -83,7 +82,6 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             setLoading(false)
         }catch(err){
             setLoading(false)
-            console.log(err)
         }
     }
     const getDeposito = async() =>{
@@ -100,7 +98,6 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
 
     const applyChange = (data:ReservaDataFilter) =>{
         setFilterData(data)
-        console.log("FILTER DATA",data)
         if(page != null){
             getReservas(data,Number(page))
         }else{
@@ -294,6 +291,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         open={openReservaDetailDialog}
         close={()=>setOpenReservaDetailDialog(false)}
         data={reservaDetail}
+        update={()=>{}}
         />
         }
         </>

@@ -8,7 +8,6 @@ export async function GetBanks(){
         throw new Error('Failed to fetch data')
       }
      
-    //   console.log(res)
       return res.json()
 }
 
@@ -19,7 +18,6 @@ export async function GetBankAccounts(){
         throw new Error('Failed to fetch data')
       }
      
-    //   console.log(res)
       return res.json()
 }
 
@@ -30,7 +28,6 @@ export async function GetBankAccountEstablecimiento(uuid:string){
       throw new Error('Failed to fetch data')
     }
    
-  //   console.log(res)
     return res.json()
 }
 
@@ -41,7 +38,6 @@ export async function GetDepositosEmpresa(page:number){
         throw new Error('Failed to fetch data')
       }
      
-    //   console.log(res)
       return res.json()
 }
 
@@ -52,7 +48,6 @@ export async function GetDepositosFromDepositoEmpresa(id:number){
         throw new Error('Failed to fetch data')
       }
      
-    //   console.log(res)
       return res.json()
 }
 
@@ -63,7 +58,6 @@ export async function GetDepositos(page:number,uuid:string){
         throw new Error('Failed to fetch data')
       }
      
-    //   console.log(res)
       return res.json()
 }
 export async function GetDeposito(uuid:string){
@@ -73,7 +67,6 @@ export async function GetDeposito(uuid:string){
       throw new Error('Failed to fetch data')
     }
    
-  //   console.log(res)
     return res.json()
 }
 
@@ -87,7 +80,6 @@ export async function GetReservasPagadas(data:ReservaDataFilter,page:number){
       throw new Error('Failed to fetch data')
     }
    
-  //   console.log(res)
     return res.json()
 }
 
@@ -101,7 +93,6 @@ export async function UpdateBankAccount(data:AccountBank){
         throw new Error('Failed to fetch data')
       }
      
-    //   console.log(res)
       return res.json()
 }
 
@@ -115,7 +106,6 @@ export async function CreateBankAccount(data:AccountBank){
       throw new Error('Failed to fetch data')
     }
    
-  //   console.log(res)
     return res.json()
 }
 
@@ -129,7 +119,6 @@ export async function AssignBankAccount(data:AssignBankAccountRequest){
       throw new Error('Failed to fetch data')
     }
    
-  //   console.log(res)
     return res.json()
 }
 

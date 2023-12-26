@@ -57,11 +57,9 @@ const CreateUserNegocioDialog:React.FC<Props>=({
             dispatch(uiActions.setInnerLoading(true))
             const data:EstablecimientoData[] = await GetEstablecimientos()
             dispatch(uiActions.setInnerLoading(false))
-            console.log("RESPONSE",data)
             setEstablecimientos(data)
         }catch(err){
             dispatch(uiActions.setInnerLoading(false))
-            console.log("ERROR",err)
         }
             // setReservas(data)
     }
@@ -99,7 +97,6 @@ const CreateUserNegocioDialog:React.FC<Props>=({
     const data = await res.json()
     switch(res.status){
       case 400:
-        console.log(data)
         toast.error(data.message)
         break;
       case 200:  
@@ -111,7 +108,6 @@ const CreateUserNegocioDialog:React.FC<Props>=({
     setLaoding(false)
     }catch(err:any){
       setLaoding(false)
-      console.log("ERROR")
     }
   }
 
@@ -134,13 +130,11 @@ const CreateUserNegocioDialog:React.FC<Props>=({
           establecimientos:[]
       }
       const res = await CreateUser(request)
-      console.log(res)
       refreshUsers()
       toast.success("Se ha agragado un nuevo usuario")
       closeModal()
       setLaoding(false)
     }catch(err){
-      console.log(err)
       
       setLaoding(false)
     }

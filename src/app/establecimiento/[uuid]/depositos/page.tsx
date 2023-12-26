@@ -40,7 +40,6 @@ const Page = ({params}:{params:{uuid:string}}) => {
             setLoadingAccountBank(false)
         }catch(err){
             setLoadingAccountBank(false)
-            console.log(err)
         }
     }
     const getDeposits = async(page:number) =>{
@@ -56,7 +55,6 @@ const Page = ({params}:{params:{uuid:string}}) => {
                 nextPage:res.next_page,
                 currentPage:Number(page)
             })
-            console.log(res)
             setDepositosResponse(res)
             setLoadingDepositos(false)
         }catch(err){

@@ -50,12 +50,10 @@ const UpdatePayMethodDialog = ({open,close,establecimiento_id,update,currentMeth
                 methods:methods,
                 establecimiento_id:establecimiento_id
             }
-            console.log(data)
             setShowDialogConfirmation(false)
             close()
             const res = await UpdatePayMethod(JSON.stringify(data),establecimiento_id)
             update(methods)
-            console.log(res)
             // appendIntervals(res.methods)
             dispatch(uiActions.setLoaderDialog(false))
             toast.success("¡Los cambios realizados han sido guardados exitosamente!")

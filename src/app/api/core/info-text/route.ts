@@ -15,10 +15,8 @@ export async function GET(request:Request) {
     //   const body:Cupo = await request.json()
       const res = await fetch(`${API_URL_CORE}/info/${id}/`)
       const data =await res.json()
-      console.log(data)
       return NextResponse.json(data,{status:res.status})
    }catch(err){
-      console.log(err)
       return NextResponse.json("Error Request",{status:500})
    }
 }

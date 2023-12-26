@@ -11,7 +11,6 @@ export const getReservasAmountData  = (data:FilterChartData) :ThunkAction<void,R
         try{
             dispatch(chartActions.setChartLoading(true))
             const res:NameValueData[] = await GetReservaAmount(data)
-            console.log(res)
             const newResevasAmount = res.map(item=>{
                 item = {
                   name:moment(item.name).utc().format("ll"),
@@ -24,7 +23,6 @@ export const getReservasAmountData  = (data:FilterChartData) :ThunkAction<void,R
             dispatch(chartActions.setChartLoading(false))
         }catch(err){
             dispatch(chartActions.setChartLoading(false))
-            console.log(err)
         }
     }
 }
@@ -34,7 +32,6 @@ export const getReservasHoursAverage  = (data:FilterChartData) :ThunkAction<void
         try{
             dispatch(chartActions.setChartLoading(true))
             const res:NameValueData[] = await GetReservasHoursAverage(data)
-            console.log(res,data)
             let newReservaAverage:NameValueData[] = []
             switch(data.type_date){
                 case TypeOfDate.hour:
@@ -58,24 +55,19 @@ export const getReservasHoursAverage  = (data:FilterChartData) :ThunkAction<void
                     break;
                     case TypeOfDate.month:
                         newReservaAverage = res.map((item,idx)=>{
-                        console.log(item.name,item.value,idx)
                         item = {
                             name:months[idx].month,
                             value:(item.value/2)
                         }
-                        console.log(item.name,item.value,"//2")
-
                         return item
                       }) 
                       newReservaAverage = newReservaAverage.filter(item=>item.name != "")
-                      console.log(newReservaAverage)
                 break;                               
             }
             dispatch(chartActions.setData(newReservaAverage))
             dispatch(chartActions.setChartLoading(false))
         }catch(err){
             dispatch(chartActions.setChartLoading(false))
-            console.log(err)
         }
     }
 }
@@ -97,7 +89,6 @@ export const getReservasHoursData  = (data:FilterChartData) :ThunkAction<void,Ro
             dispatch(chartActions.setChartLoading(false))
         }catch(err){
             dispatch(chartActions.setChartLoading(false))
-            console.log(err)
         }
     }
 }
@@ -107,7 +98,6 @@ export const getReservasAverageAmount  = (data:FilterChartData) :ThunkAction<voi
         try{
             dispatch(chartActions.setChartLoading(true))
             const res:NameValueData[] = await GetReservaAmountAverage(data)
-            console.log(res)
               let newReservaAverage:NameValueData[] = []
             switch(data.type_date){
                 case TypeOfDate.hour:
@@ -133,25 +123,21 @@ export const getReservasAverageAmount  = (data:FilterChartData) :ThunkAction<voi
                     break;
                     case TypeOfDate.month:
                         newReservaAverage = res.map((item,idx)=>{
-                        // console.log(item.name,item.value,idx)
                         item = {
                             name:months[idx].month,
                             value:item.value,
                             value2:item.value2
                         }
-                        // console.log(item.name,item.value,"//2")
 
                         return item
                       }) 
                       newReservaAverage = newReservaAverage.filter(item=>item.name != "")
-                      console.log(newReservaAverage)
                 break;                               
             }
             dispatch(chartActions.setData(newReservaAverage))
             dispatch(chartActions.setChartLoading(false))
         }catch(err){
             dispatch(chartActions.setChartLoading(false))
-            console.log(err)
         }
     }
 }
@@ -167,7 +153,6 @@ export const getReservaCountHoursBase  = (data:FilterChartData) :ThunkAction<voi
             dispatch(chartActions.setChartLoading(false))
         }catch(err){
             dispatch(chartActions.setChartLoading(false))
-            console.log(err)
         }
     }
 }
@@ -181,7 +166,6 @@ export const getReservaAverageAmountBase  = (data:FilterChartData) :ThunkAction<
             dispatch(chartActions.setChartLoading(false))
         }catch(err){
             dispatch(chartActions.setChartLoading(false))
-            console.log(err)
         }
     }
 }
@@ -195,7 +179,6 @@ export const getReservaUserFrequency  = (data:FilterChartData) :ThunkAction<void
             dispatch(chartActions.setChartLoading(false))
         }catch(err){
             dispatch(chartActions.setChartLoading(false))
-            console.log(err)
         }
     }
 }
@@ -238,7 +221,6 @@ export const getChartData  = (data:FilterChartData) :ThunkAction<void,RootState,
                 }
                 return item
               })
-              console.log(res)
              const newResponse:ChartDataResponse = {
                 reserva_count_hours:newResevasCountHours,
                 reserva_amount_average:newReservaDayAverageAmount,
@@ -253,7 +235,6 @@ export const getChartData  = (data:FilterChartData) :ThunkAction<void,RootState,
             dispatch(chartActions.setChartLoading(false))
         }catch(err){
             dispatch(chartActions.setChartLoading(false))
-            console.log(err)
         }
     }
 }

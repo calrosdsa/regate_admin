@@ -39,7 +39,6 @@ const DeleteAmenityDialog = ({amenities,close,open,establecimientoId,setNewAmeni
             close()
             const res:Label[] = await DeleteAmenities(req)
             setNewAmenitiesEstablecimiento(res)
-            console.log(res)
             dispatch(uiActions.setLoaderDialog(false))
             toast.success("¡Los cambios realizados han sido guardados exitosamente!")
         }catch(err){
