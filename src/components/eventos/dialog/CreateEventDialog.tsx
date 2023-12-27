@@ -52,7 +52,7 @@ const CreateEventDialog = ({open,close,establecimientoId,addEvento}:{
     return(
         <div>
             <DialogLayout
-            title="Editar usuario"
+            title="Crear Evento"
             open={open}
             className="max-w-sm"
             close={close}

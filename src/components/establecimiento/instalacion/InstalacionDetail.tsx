@@ -97,14 +97,14 @@ const InstalacionDetail = ({instalacion,update,uuid}:{
                     updateInstalacion("description",value,addLoader,removeLoader)
                 }}
                 />
-            <EditComponent
+            {/* <EditComponent
                 label="Maxima cantidad de personas"
                 content={`${instalacion.max_cupos}`}
                 edit={(addLoader,removeLoader,value)=>{
                     updateInstalacion("max_cupos",value,addLoader,removeLoader)
                 }}
                 type="tel"
-                />
+                /> */}
 
             <EditComponentSelect
             label="Categoria"

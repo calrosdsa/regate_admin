@@ -104,7 +104,19 @@ export async function getEstablecimientoReservas(data:ReservaDataFilter,page:num
   }
 
   export async function CancelReserva(data:ReservaCancelRequest) {
-    const res = await fetch(`${LOCAL_URL}/api/reservas/cancel`,{
+    const res = await fetch(`${LOCAL_URL}/api/reservas/reserva-cancel`,{
+      method:"post",
+      body:JSON.stringify(data)
+    })
+    if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error('Failed to fetch data')
+    }
+    return res.json()
+  }
+
+  export async function ConfirmReserva(data:ConfirmReservaRequest) {
+    const res = await fetch(`${LOCAL_URL}/api/reservas/reserva-confirm`,{
       method:"post",
       body:JSON.stringify(data)
     })

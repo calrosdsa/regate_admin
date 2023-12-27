@@ -43,15 +43,15 @@ const ConfirmationDialog = ({open,close,title,description,descartar=close,perfor
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900 flex justify-between items-center p-2"
                   >
-                    <span>Porfavor confirme si desea continuar</span>
+                    <span className="text-base">Porfavor confirme si desea continuar</span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                     className="w-6 h-6 cursor-pointer" onClick={close}>
+                     className="w-8 h-8 icon-button noSelect" onClick={close}>
   <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
              </svg>
 
                      </Dialog.Title>
               <p className='px-2 pb-1 text-sm'>{description}</p>
-                   <div className='grid grid-cols-2 place-items-center border-t-[1px] subtitle text-base'>
+                   <div className='grid grid-cols-2 place-items-center border-t-[1px] subtitle text-sm'>
                        <span  onClick={()=>descartar()}
                         className='cursor-pointer hover:bg-gray-200 w-full rounded-bl-lg justify-center border-r-[1px] flex p-2'>Descartar</span>
                        <span onClick={()=>{

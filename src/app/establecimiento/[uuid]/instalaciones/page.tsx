@@ -175,7 +175,6 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         if(instalacion != null){
             if(tabIndex == "2"){
                 getCuposReservaInstalacion(instalacion.id)
-
             }
         }
     },[instalacion])

@@ -1,32 +1,69 @@
 import ButtonSubmit from "@/components/util/button/ButtonSubmit";
 import DialogLayout from "@/components/util/dialog/DialogLayout";
 import InputWithIcon from "@/components/util/input/InputWithIcon";
+import MultiSelectComponent from "@/components/util/input/MultiSelectComponent";
+import SelectComponent from "@/components/util/input/SelectCompenent";
+import { downloadReporteReservasExcel } from "@/context/actions/download-actions";
+import { useAppDispatch } from "@/context/reduxHooks";
+import { ReservaEstado } from "@/core/type/enums";
 import { ChangeEvent, FormEvent, useState } from "react";
 
 
-const RequestReporteReservaDialog = ({uuid,open,close}:{
+const RequestReporteReservaDialog = ({uuid,open,close,instalacionOptions}:{
     uuid:string
     open:boolean
     close:()=>void
+    instalacionOptions:Instalacion[]
 }) => {
+    const reservaEstados:SelectItem[] = [
+        {
+            name:"Todo",
+            value:"-1"
+        },
+        {
+            name:"Valido",
+            value:ReservaEstado.Valid.toString()
+        },
+        {
+            name:"Pendiente",
+            value:ReservaEstado.Pendiente.toString()
+        },
+        {
+            name:"Cancelado",
+            value:ReservaEstado.Cancel.toString()
+        },
+    ]
+    const dispatch = useAppDispatch()
     const [loading,setLoading] = useState(false)
-    const [filterDataReporte,setFilterDateReporte] = useState<ReservaReporteRequest>({
+    const [filterDataReporte,setFilterDataReporte] = useState<ReservaReporteRequest>({
         start_date:"",
         end_date:"",
         instalaciones:[],
-        establecimiento_uuid:uuid
+        establecimiento_uuid:uuid,
+        estado:undefined
     })
-    const {end_date,start_date,instalaciones,establecimiento_uuid} = filterDataReporte
+    const {end_date,start_date,instalaciones} = filterDataReporte
 
     const onChange = (e:ChangeEvent<HTMLInputElement>) => {
-
+        setFilterDataReporte({
+            ...filterDataReporte,
+            [e.target.name]:e.target.value
+        })
     }
 
     const onSubmit = (e:FormEvent<HTMLFormElement>)=>{
         try{
-            // dispatch(downloadReporteReservasExcel(filterDataReporte))
+            e.preventDefault()
+            if(filterDataReporte.estado == -1){
+                filterDataReporte.estado = undefined
+            }
+            if(filterDataReporte.instalaciones.includes(0)){
+                console.log("include 0")
+                filterDataReporte.instalaciones = []
+            }
+            console.log(filterDataReporte)
+            dispatch(downloadReporteReservasExcel(filterDataReporte))
         }catch(e){
-
         }
     }
 
@@ -35,10 +72,10 @@ const RequestReporteReservaDialog = ({uuid,open,close}:{
       open={open}
       close={close}
       title="Exportar excel"
-      className="max-w-sm"
+      className="max-w-md"
       >
         <form onSubmit={onSubmit}>
-            <div className="grid grid-cols-1  sm:grid-cols-2">
+            <div className="grid grid-cols-1  sm:grid-cols-2 gap-x-2">
 
             <InputWithIcon
             type="date"
@@ -50,12 +87,34 @@ const RequestReporteReservaDialog = ({uuid,open,close}:{
              <InputWithIcon
             type="date"
             label="Fin"
-            value={start_date}
+            value={end_date}
             onChange={onChange}
-            name="start_date"
+            name="end_date"
             />
             </div>
 
+            <MultiSelectComponent
+            options={[...instalacionOptions.map((item)=>{ return {value:item.id.toString(),name:item.name}}),{name:"Todo",value:"0"}]}
+            label="Canchas"
+            allValue="0"
+            allName="Todo"
+            setInstalaciones={(e)=>setFilterDataReporte({
+                ...filterDataReporte,
+                instalaciones:e
+            })}
+            />
+
+            <SelectComponent
+            label="Estado"
+            items={reservaEstados}
+            onChange={(e)=>{
+                const v = e.target.value
+                console.log(v,Number(v))
+                setFilterDataReporte({...filterDataReporte,estado:v == "undefinded"? undefined:Number(v)})
+            }}
+            name="estado"
+            value={filterDataReporte.estado?.toString()||"-1"}
+            />
             
 
             <div className="flex justify-end pb-2">
@@ -71,4 +130,5 @@ const RequestReporteReservaDialog = ({uuid,open,close}:{
 }
 
 export default RequestReporteReservaDialog;
+
 

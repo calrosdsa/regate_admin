@@ -35,6 +35,7 @@ import { getInfoText } from '@/context/actions/system-actions';
 import Photos from '@/components/util/image/Photos';
 import { days } from '@/context/actions/chart-actions';
 import AttentionScheduleComponent from '@/components/establecimiento/setting/AttentionScheduleComponent';
+import TitleWithInfo from '@/components/util/info-bar/SubtitleWithInfo';
 
 const Page = ({ params }: { params: { uuid: string } }) =>{
     const establecimientoEstados = [{value:"true",name:"Visible"}
@@ -294,13 +295,14 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             <span className="text-xl py-2 font-medium">Sucursal Info</span>
 
             <div>
-            <div className='flex space-x-3 items-center'>
-                <span className="label">Estado de la sucursal</span>
-                <span onClick={()=>{
-                    dispatch(systemActions.setOpenInfoBar(!openInfoBar))
-                    dispatch(getInfoText(InfoTextId.SUCURSAL_ESTADO_ID))
-                    }} className='info-label'>Información</span>
-            </div>
+            <TitleWithInfo
+            onClick={()=>{
+                dispatch(systemActions.setOpenInfoBar(!openInfoBar))
+                dispatch(getInfoText(InfoTextId.SUCURSAL_ESTADO_ID))
+            }}
+            title='Estado de la sucursal'
+            />
+
             {data.establecimiento.estado == EstablecimientoEstado.ESTABLECIMIENTO_VERIFICADO &&
             <div className="flex space-x-2 text-green-600 items-center">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -475,7 +477,14 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 />
             }
 
-            <span className='label'>Intervalos de Tiempo para Reservar</span>
+            <TitleWithInfo
+            onClick={()=>{
+                dispatch(systemActions.setOpenInfoBar(!openInfoBar))
+                dispatch(getInfoText(InfoTextId.RESERVA_INTERVAL_TIME))
+            }}
+            title='Intervalo de tiempo para reservar'
+            />
+
             <div className='flex flex-wrap gap-3'>
             {data?.setting_establecimiento.horario_interval.sort((a,b)=>a.minutes-b.minutes).map((item)=>{
                 return(

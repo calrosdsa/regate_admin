@@ -12,8 +12,12 @@ const InfoBar = ({open,close,infoText,loading}:{
 
     useEffect(()=>{
         if(infoText != undefined){
-            const newData:InfoTextContent = JSON.parse(infoText.content)
-            setData(newData.data)
+            try{
+                const newData:InfoTextContent = JSON.parse(infoText.content)
+                setData(newData.data)
+            }catch(err){
+                
+            }
         }
     },[infoText])
 

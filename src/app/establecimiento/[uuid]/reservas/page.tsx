@@ -9,11 +9,12 @@ import Pagination from "@/components/util/pagination/Pagination";
 import { downloadReporteReservasExcel } from "@/context/actions/download-actions";
 import { useAppDispatch } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
+import { GetInstalaciones } from "@/core/repository/instalacion";
 import { GetReservaDetail, getEstablecimientoReservas, getEstablecimientoReservasCount } from "@/core/repository/reservas";
 import { Order, OrderQueue } from "@/core/type/enums";
 import { appendSerachParams } from "@/core/util/routes";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 
 export default function Page({params}:{params:{uuid:string}}){
@@ -39,12 +40,32 @@ export default function Page({params}:{params:{uuid:string}}){
         order:Order.DESC,
         queue:OrderQueue.CREATED
     })
+
+    const [instalaciones,setInstalaciones] = useState<Instalacion[]>([])
    const [openRequestReporteDialog,setOpenRequestReporteDialog] = useState(false)
     const appendSerachParams = (key:string,value:string)=>{
         current.set(key,value);
         const search = current.toString();
         const url  = window.location.pathname + '?' + search;
         history.pushState(null,'',url)
+    }
+    const openExportReservasDialog = () =>{
+        if(instalaciones.length == 0){
+            getInstalaciones()
+        }else{
+            setOpenRequestReporteDialog(true)
+        }
+    }
+    const getInstalaciones = async() =>{
+        try{
+            dispatch(uiActions.setLoaderDialog(true))
+            const res:Instalacion[] = await GetInstalaciones(params.uuid)
+            setInstalaciones(res)
+            setOpenRequestReporteDialog(true)
+            dispatch(uiActions.setLoaderDialog(false))
+        }catch(err){
+            dispatch(uiActions.setLoaderDialog(false))
+        }
     }
     const getReservaDetail = async(id:number) => {
         try{
@@ -163,6 +184,7 @@ export default function Page({params}:{params:{uuid:string}}){
         open={openRequestReporteDialog}
         close={()=>setOpenRequestReporteDialog(false)}
         uuid={params.uuid}
+        instalacionOptions={instalaciones}
         />
         }
         <div className="p-2 overflow-auto h-screen">
@@ -182,7 +204,7 @@ export default function Page({params}:{params:{uuid:string}}){
                 </button>
 
                 <button className="button-inv flex space-x-3" disabled={loading}  onClick={()=>{
-                   setOpenRequestReporteDialog(true)
+                  openExportReservasDialog()
                     }}>
                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                 <path d="M10.75 2.75a.75.75 0 0 0-1.5 0v8.614L6.295 8.235a.75.75 0 1 0-1.09 1.03l4.25 4.5a.75.75 0 0 0 1.09 0l4.25-4.5a.75.75 0 0 0-1.09-1.03l-2.955 3.129V2.75Z" />

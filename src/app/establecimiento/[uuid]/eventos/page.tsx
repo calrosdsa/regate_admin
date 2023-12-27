@@ -3,16 +3,21 @@ import EventoListTable from "@/components/eventos/EventoListTable"
 import CreateEventDialog from "@/components/eventos/dialog/CreateEventDialog"
 import UserListTable from "@/components/user/UserListTable"
 import EditUserEmpresaDialog from "@/components/user/dialog/EditUserEmpresaDialog"
+import ConfirmationDialog from "@/components/util/dialog/ConfirmationDialog"
 import SearchInput from "@/components/util/input/SearchInput"
 import Pagination from "@/components/util/pagination/Pagination"
-import { useAppSelector } from "@/context/reduxHooks"
-import { GetEventos } from "@/core/repository/evento"
+import { successfulMessage, unexpectedError } from "@/context/config"
+import { useAppDispatch, useAppSelector } from "@/context/reduxHooks"
+import { uiActions } from "@/context/slices/uiSlice"
+import { DeleteEvento, GetEventos } from "@/core/repository/evento"
 import { GetUsersEmpresaPagination } from "@/core/repository/users"
 import { Evento, EventoPaginationResponse } from "@/core/type/evento"
 import useEffectOnce from "@/core/util/hooks/useEffectOnce"
 import { useSearchParams } from "next/navigation"
 import { useState } from "react"
+import { toast } from "react-toastify"
 const Page = ({ params }: { params: { uuid: string } }) =>{
+    const dispatch = useAppDispatch()
     const searchParams = useSearchParams();
     const current = new URLSearchParams(Array.from(searchParams.entries()))
     const [loading,setLoading] = useState(false)
@@ -21,6 +26,26 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
     const [eventos,setEventos] = useState<Evento[]>([])
     const [createEventoDialog,setCreateEventoDialog] = useState(false)
     const establecimientos = useAppSelector(state=>state.account.establecimientos)
+
+    const [selectedId,setSelectedId] = useState<number | undefined>(undefined)
+    const [deleteEventoConfirmationDialog,setDeleteConfirmationDialog] = useState(false)
+
+    const deleteEvento = async() =>{
+        try{
+            dispatch(uiActions.setLoaderDialog(true))
+            if(selectedId != undefined){
+                setDeleteConfirmationDialog(false)
+                await DeleteEvento(selectedId)
+                const filterList = eventos.filter(item=>item.id != selectedId)
+                setEventos(filterList)
+                toast.success(successfulMessage)
+            }
+            dispatch(uiActions.setLoaderDialog(false))
+        }catch(err){
+            toast.error(unexpectedError)
+            dispatch(uiActions.setLoaderDialog(false))
+        }
+    }
 
     const appendSerachParams = (key:string,value:string)=>{
         current.set(key,value);
@@ -40,13 +65,6 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 nextPage:res.next_page,
                 currentPage:page
             })
-            // if(data.query != ""){
-            //     setReservasCount(res.count)
-            // }else{
-            //     if(totalCount != null){
-            //         setReservasCount(Number(totalCount))
-            //     }
-            // }
             setEventos(res.results)
             setLoading(false)
         }catch(err){
@@ -78,6 +96,14 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
     })
     return(
         <>
+        {deleteEventoConfirmationDialog&&
+        <ConfirmationDialog
+        open={deleteEventoConfirmationDialog}
+        close={()=>setDeleteConfirmationDialog(false)}
+        performAction={()=>deleteEvento()}
+        
+        />
+        }
         {createEventoDialog &&
         <CreateEventDialog
         addEvento={(e)=>setEventos([e,...eventos])}
@@ -157,6 +183,10 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             eventos={eventos}
             loading={loading}
             uuid={params.uuid}
+            deleteEvento={(id:number)=>{
+                setSelectedId(id)
+                setDeleteConfirmationDialog(true)
+            }}
             />
         </div>
 

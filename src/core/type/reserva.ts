@@ -17,7 +17,7 @@ type ReservaReporteRequest = {
     start_date:string
     end_date:string
     estado?:number
-    instalaciones:[]
+    instalaciones:number[]
 }
 
 type ReservaDetail = {
@@ -72,4 +72,9 @@ type ReservaCancelRequest = {
     profile_id?:number
     user_local_id?:number
     admin_id?:string 
+}
+
+type ConfirmReservaRequest = {
+    reserva_id:number
+    amount_added:number
 }

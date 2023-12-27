@@ -1,5 +1,5 @@
 type SelectItem = {
-    value:string
+    value?:string
     name:string
 }
 
@@ -7,3 +7,4 @@ type DayWeek = {
     name:string
     day:number
 }
+

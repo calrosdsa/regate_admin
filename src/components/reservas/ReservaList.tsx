@@ -7,9 +7,9 @@ import { Order, OrderQueue, ReservaEstado } from "@/core/type/enums";
 export const getEstadoReserva = (estado:ReservaEstado)=>{
     switch(estado){
         case ReservaEstado.Valid:
-            return "-"
-        case ReservaEstado.Expired:
-            return "-"
+            return "Pagada"
+        case ReservaEstado.Pendiente:
+            return "Pendiente"
         case ReservaEstado.Cancel:
             return "Cancelada"
     }

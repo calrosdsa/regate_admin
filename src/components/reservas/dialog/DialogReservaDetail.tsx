@@ -7,6 +7,7 @@ import {useRef, useState} from "react"
 import CancelReservaDialog from "./CancelReservaDialog";
 import { getEstadoReserva } from "../ReservaList";
 import { ReservaEstado } from "@/core/type/enums";
+import ConfirmReservaDialog from "./ConfirmReservaDialog";
 const DialogReservaDetail = ({open,close,data,update}:{
     open:boolean
     close:()=>void
@@ -14,6 +15,7 @@ const DialogReservaDetail = ({open,close,data,update}:{
     update:()=>void
 }) => {
     const [cancelReservaDialog,setCancelReservaDialog] = useState(false)
+    const [confirmReservaDialog,setConfirmReservaDialog] = useState(false)
 
     // const options: any | undefined = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
@@ -27,6 +29,18 @@ const DialogReservaDetail = ({open,close,data,update}:{
      update={()=>{
         update()
         close()
+     }}
+     />
+     }
+     {confirmReservaDialog &&
+     <ConfirmReservaDialog
+     open={confirmReservaDialog}
+     reserva={data.reserva}
+     close={()=>setConfirmReservaDialog(false)}
+     update={(amount:number)=>{
+        close()
+        data.reserva.paid =  data.reserva.paid + amount
+        data.reserva.estado =  ReservaEstado.Valid
      }}
      />
      }
@@ -47,12 +61,12 @@ const DialogReservaDetail = ({open,close,data,update}:{
             </div> */}
 
         <div className=" border-b-[1px] pb-2">
-                    <div className="grid sm:grid-cols-2 sm:gap-x-2">
+                    <div className="flex space-x-2 items-center">
                     <CommonImage
                         src={data.instalacion.portada}
                         h={100}
-                        w={170}
-                        className="rounded-lg h-48 w-full"
+                        w={100}
+                        className="rounded-full h-14 w-14 object-cover"
                         />
                         <div className="flex flex-col gap-y-2">
                         <span className="text-sm font-semibold">{data.instalacion.name}</span>
@@ -112,12 +126,21 @@ const DialogReservaDetail = ({open,close,data,update}:{
                                 </div>
 
                                 <>
-                                {data.reserva.estado == ReservaEstado.Valid &&
-                                <div className={`button flex justify-center h-10 `}
-                                onClick={()=>setCancelReservaDialog(true)} >
-                                Cancelar reserva
+                                <div className="flex space-x-2">
+                                    {data.reserva.estado == ReservaEstado.Pendiente &&
+                                    <div className={`button-hover flex justify-center text-sm `}
+                                    onClick={()=>setConfirmReservaDialog(true)} >
+                                        Completar monto de la reserva
+                                    </div>
+                                    }
+
+                                    {(data.reserva.estado == ReservaEstado.Valid || data.reserva.estado == ReservaEstado.Pendiente) &&
+                                    <div className={`button-hover flex justify-center h-10 `}
+                                    onClick={()=>setCancelReservaDialog(true)} >
+                                    Cancelar reserva
+                                    </div>
+                                    }
                                 </div>
-                                }
       </>
                                 {/* <button onClick={()=>setCancelReservaDialog(true)}
                                 className="button">Cancelar reserva</button> */}
