@@ -38,11 +38,11 @@ const CommonImage = ({src,h,w,className}:{
   }) => {
     return(
       <>
-      {src != undefined ?
+      {(src != undefined && src != "") ?
         <Image
         src={src}
         placeholder="blur"
-        alt="sdmkas"
+        alt=""
         blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(w, h))}`}
         // blurDataURL={rgbDataURL(233, 233, 233)}
         width={w}

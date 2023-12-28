@@ -6,7 +6,9 @@ import SelectComponent from "@/components/util/input/SelectCompenent";
 import { downloadReporteReservasExcel } from "@/context/actions/download-actions";
 import { useAppDispatch } from "@/context/reduxHooks";
 import { ReservaEstado } from "@/core/type/enums";
+import { reservaEstados } from "@/core/util/data";
 import { ChangeEvent, FormEvent, useState } from "react";
+
 
 
 const RequestReporteReservaDialog = ({uuid,open,close,instalacionOptions}:{
@@ -15,24 +17,6 @@ const RequestReporteReservaDialog = ({uuid,open,close,instalacionOptions}:{
     close:()=>void
     instalacionOptions:Instalacion[]
 }) => {
-    const reservaEstados:SelectItem[] = [
-        {
-            name:"Todo",
-            value:"-1"
-        },
-        {
-            name:"Valido",
-            value:ReservaEstado.Valid.toString()
-        },
-        {
-            name:"Pendiente",
-            value:ReservaEstado.Pendiente.toString()
-        },
-        {
-            name:"Cancelado",
-            value:ReservaEstado.Cancel.toString()
-        },
-    ]
     const dispatch = useAppDispatch()
     const [loading,setLoading] = useState(false)
     const [filterDataReporte,setFilterDataReporte] = useState<ReservaReporteRequest>({

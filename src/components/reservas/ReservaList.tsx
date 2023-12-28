@@ -108,8 +108,15 @@ const ReservaList = ({reservas,loading,order,changeOrder,getReservaDetail}:{
                         <td className="rowTable">{moment(item.start_date).utc().format('ll')} de
                          {moment(item.start_date).utc().format('LT')} a {moment(item.end_date).utc().format('LT')}</td>
                          <td className="rowTable">{moment(item.created_at).format("lll")}</td>
-                        <td onClick={()=>getReservaDetail(item.id)}
-                        className="rowTable font-medium underline text-primary cursor-pointer">Ver</td>
+                        <td 
+                        className="rowTable noSelect">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" 
+                                    className="w-[26px] h-[26px] noSelect icon-button text-primary"
+                                    onClick={()=>getReservaDetail(item.id)}>
+                                    <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
+                                    <path fillRule="evenodd" d="M1.38 8.28a.87.87 0 0 1 0-.566 7.003 7.003 0 0 1 13.238.006.87.87 0 0 1 0 .566A7.003 7.003 0 0 1 1.379 8.28ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" clipRule="evenodd" />
+                                    </svg>
+                        </td>
                     </tr>
                 )
             })}

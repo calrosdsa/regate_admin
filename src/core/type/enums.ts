@@ -116,3 +116,18 @@ export enum TypeChat {
 export enum MessageEvent {
     Message = "message"
 }
+
+export enum TypeEntity {
+    ENTITY_NONE    = 0,
+	ENTITY_SALA    = 1,
+	ENTITY_GRUPO   = 2,
+	ENTITY_ACCOUNT = 3,
+	ENTITY_BILLING = 4,
+	ENTITY_RESERVA = 5,
+	ENTITY_ESTABLECIMIENTO = 6,
+	ENTITY_URI = 7 ,
+	ENTITY_SALA_COMPLETE = 8,
+	ENTITY_INVITATION = 9,
+	ENTITY_INSTALACION = 10,
+	ENTITY_PHOTO = 11,
+}

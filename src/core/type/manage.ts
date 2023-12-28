@@ -9,6 +9,7 @@ type EstablecimientoUser = {
     uuid:string
     id:number
     name:string
+    admin_id?:string
 }
 
 type UpdateUserRequest = {

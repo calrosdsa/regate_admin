@@ -92,12 +92,12 @@ const CreateReservaDialog = ({open,close,instalacion,reservaCupos,refresh,uuid}:
             setLoading(false)
         }
     }
-    useEffect(()=>{
-        setFormData({
-            ...formData,
-            paid:totalPrice.toString()
-        })
-    },[totalPrice])
+    // useEffect(()=>{
+    //     setFormData({
+    //         ...formData,
+    //         paid:totalPrice.toString()
+    //     })
+    // },[totalPrice])
     useEffect(()=>{
         if(totalPrice == 0){
             setTotalPrice(reservaCupos.map(item=>item.precio).reduce((prev,curr)=>prev + curr) )

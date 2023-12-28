@@ -55,6 +55,8 @@ export async function POST(request:Request) {
 export async function PUT(request:Request) {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('instalacion_id')
+    const instalacionUuid = searchParams.get('instalacionUuid')
+    const uuid = searchParams.get('uuid')
     const nextCookies = cookies(); // Get cookies object
     const token = nextCookies.get('access_token')?.value
     if(token == undefined){
@@ -64,7 +66,7 @@ export async function PUT(request:Request) {
   try{
       const body = await request.text()
     //   console.log(body.get("name"))
-      const res = await fetch(`${API_URL}/instalacion/admin/?instalacion_id=${id}`,{
+      const res = await fetch(`${API_URL}/instalacion/admin/?instalacion_id=${id}&uuid=${uuid}&instalacionUuid=${instalacionUuid}`,{
             method:'PUT',
             body:body,
             headers:{

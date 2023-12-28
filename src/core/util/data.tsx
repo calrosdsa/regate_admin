@@ -1,4 +1,4 @@
-import { DayMonthPosition, EstadoVisibility } from "../type/enums";
+import { DayMonthPosition, EstadoVisibility, ReservaEstado } from "../type/enums";
 
 
 export const estadoVisibility:SelectItem[] = [
@@ -33,5 +33,25 @@ export const dayMonth = [
     {
         name:"Ultimo",
         value:DayMonthPosition.LAST
+    },
+]
+
+
+export const reservaEstados:SelectItem[] = [
+    {
+        name:"Todo",
+        value:"-1"
+    },
+    {
+        name:"Valido",
+        value:ReservaEstado.Valid.toString()
+    },
+    {
+        name:"Pendiente",
+        value:ReservaEstado.Pendiente.toString()
+    },
+    {
+        name:"Cancelado",
+        value:ReservaEstado.Cancel.toString()
     },
 ]

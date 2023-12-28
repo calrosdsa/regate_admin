@@ -12,7 +12,7 @@ export async function GetBanks(){
 }
 
 export async function GetBankAccounts(){
-    const res = await fetch(`../../api/admin/billing/bank-account`)
+    const res = await fetch(`${LOCAL_URL}/api/admin/billing/bank-account`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')
@@ -22,7 +22,7 @@ export async function GetBankAccounts(){
 }
 
 export async function GetBankAccountEstablecimiento(uuid:string){
-  const res = await fetch(`../../api/admin/billing/bank-account/establecimiento?uuid=${uuid}`)
+  const res = await fetch(`${LOCAL_URL}/api/admin/billing/bank-account/establecimiento?uuid=${uuid}`)
   if (!res.ok) {
       // This will activate the closest `error.js` Error Boundary
       throw new Error('Failed to fetch data')
@@ -32,7 +32,7 @@ export async function GetBankAccountEstablecimiento(uuid:string){
 }
 
 export async function GetDepositosEmpresa(page:number){
-  const res = await fetch(`../../api/admin/billing/depositos-empresa?page=${page}`)
+  const res = await fetch(`${LOCAL_URL}/api/admin/billing/depositos-empresa?page=${page}`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')
@@ -42,7 +42,7 @@ export async function GetDepositosEmpresa(page:number){
 }
 
 export async function GetDepositosFromDepositoEmpresa(id:number){
-  const res = await fetch(`../../api/admin/billing/depositos-empresa/depositos?id=${id}`)
+  const res = await fetch(`${LOCAL_URL}/api/admin/billing/depositos-empresa/depositos?id=${id}`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')
@@ -84,7 +84,7 @@ export async function GetReservasPagadas(data:ReservaDataFilter,page:number){
 }
 
 export async function UpdateBankAccount(data:AccountBank){
-    const res = await fetch(`../../api/admin/billing/bank-account?id=${data.id}`,{
+    const res = await fetch(`${LOCAL_URL}/api/admin/billing/bank-account?id=${data.id}`,{
         method:'POST',
         body:JSON.stringify(data)
     })
@@ -97,7 +97,7 @@ export async function UpdateBankAccount(data:AccountBank){
 }
 
 export async function CreateBankAccount(data:AccountBank){
-  const res = await fetch(`../../../api/admin/billing/bank-account/create/`,{
+  const res = await fetch(`${LOCAL_URL}/../api/admin/billing/bank-account/create/`,{
     method:'post',
     body:JSON.stringify(data)
   })
@@ -110,7 +110,7 @@ export async function CreateBankAccount(data:AccountBank){
 }
 
 export async function AssignBankAccount(data:AssignBankAccountRequest){
-  const res = await fetch(`../../../api/admin/billing/bank-account/assign/`,{
+  const res = await fetch(`${LOCAL_URL}/../api/admin/billing/bank-account/assign/`,{
     method:'post',
     body:JSON.stringify(data)
   })

@@ -1,7 +1,8 @@
+import { LOCAL_URL } from "@/context/config"
 import { FilterChartData } from "../type/chart"
 
 export async function GetReservasHoursAverage(data:FilterChartData){
-    const res = await fetch(`../../api/establecimiento/chart/average-hours`,{
+    const res = await fetch(`${LOCAL_URL}/api/establecimiento/chart/average-hours`,{
         method:'POST',
         body:JSON.stringify(data)
     })
@@ -13,7 +14,7 @@ export async function GetReservasHoursAverage(data:FilterChartData){
 }
 
 export async function GetReservasHoursData(data:FilterChartData){
-    const res = await fetch(`../../api/establecimiento/chart/count-hours`,{
+    const res = await fetch(`${LOCAL_URL}/api/establecimiento/chart/count-hours`,{
         method:'POST',
         body:JSON.stringify(data)
     })
@@ -25,7 +26,7 @@ export async function GetReservasHoursData(data:FilterChartData){
 }
 
 export async function GetReservaAmount(data:FilterChartData){
-    const res = await fetch(`../../api/establecimiento/chart/amount`,{
+    const res = await fetch(`${LOCAL_URL}/api/establecimiento/chart/amount`,{
         method:'POST',
         body:JSON.stringify(data)
     })
@@ -37,7 +38,7 @@ export async function GetReservaAmount(data:FilterChartData){
 }
 
 export async function GetReservaAmountAverage(data:FilterChartData){
-    const res = await fetch(`../../api/establecimiento/chart/average-amount`,{
+    const res = await fetch(`${LOCAL_URL}/api/establecimiento/chart/average-amount`,{
         method:'POST',
         body:JSON.stringify(data)
     })
@@ -49,7 +50,7 @@ export async function GetReservaAmountAverage(data:FilterChartData){
 }
 
 export async function GetReservaCountHoursBase(data:FilterChartData){
-    const res = await fetch(`../../api/establecimiento/chart/count-hours/base`,{
+    const res = await fetch(`${LOCAL_URL}/api/establecimiento/chart/count-hours/base`,{
         method:'POST',
         body:JSON.stringify(data)
     })
@@ -61,7 +62,7 @@ export async function GetReservaCountHoursBase(data:FilterChartData){
 }
 
 export async function GetReservaAverageAmountBase(data:FilterChartData){
-    const res = await fetch(`../../api/establecimiento/chart/average-amount/base`,{
+    const res = await fetch(`${LOCAL_URL}/api/establecimiento/chart/average-amount/base`,{
         method:'POST',
         body:JSON.stringify(data)
     })
@@ -73,7 +74,7 @@ export async function GetReservaAverageAmountBase(data:FilterChartData){
 }
 
 export async function GetUserFrequency(data:FilterChartData){
-    const res = await fetch(`../../api/establecimiento/chart/user-frequency`,{
+    const res = await fetch(`${LOCAL_URL}/api/establecimiento/chart/user-frequency`,{
         method:'POST',
         body:JSON.stringify(data)
     })
@@ -85,7 +86,7 @@ export async function GetUserFrequency(data:FilterChartData){
 }
 
 export async function GetE(data:FilterChartData){
-    const res = await fetch(`../../api/establecimiento/chart/establecimiento`,{
+    const res = await fetch(`${LOCAL_URL}/api/establecimiento/chart/establecimiento`,{
         method:'POST',
         body:JSON.stringify(data)
     })
@@ -97,7 +98,7 @@ export async function GetE(data:FilterChartData){
 }
 
 export async function GetChartData(data:FilterChartData){
-    const res = await fetch(`../../api/establecimiento/chart/establecimiento`,{
+    const res = await fetch(`${LOCAL_URL}/api/establecimiento/chart/establecimiento`,{
         method:'POST',
         body:JSON.stringify(data)
     })

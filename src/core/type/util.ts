@@ -15,5 +15,6 @@ type Photo = {
     id:number
     parent_id:number
     uuid:string
-    url:string
+    url?:string
+    type_entity:number
 }

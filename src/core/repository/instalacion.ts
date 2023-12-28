@@ -1,8 +1,8 @@
 import { API_URL, LOCAL_URL } from "@/context/config"
 
 
-export async function UpdateInstalacion(data:string,id:number) {
-  const res = await fetch(`${LOCAL_URL}/api/establecimiento/instalacion?instalacion_id=${id}`,{
+export async function UpdateInstalacion(data:string,id:number,uuid:string,instalacionUuid:string) {
+  const res = await fetch(`${LOCAL_URL}/api/establecimiento/instalacion?instalacion_id=${id}&uuid=${uuid}&instalacionUuid=${instalacionUuid}`,{
     method:"PUT",
     body:data,
   })

@@ -8,7 +8,7 @@ import { uiActions } from '@/context/slices/uiSlice';
 import { AddEstablecimientoPhoto, DeleteEstablecimientoPhoto, UpdateEstablecimiento, UpdateEstablecimientoAddress, UpdateEstablecimientoPhoto, getEstablecimiento } from '@/core/repository/establecimiento';
 import EditComponent from '@/components/util/input/EditComponent';
 import EditComponentImage from '@/components/util/input/EditComponentImage';
-import { DepositoEstado, EstablecimientoEstado, PaidType } from '@/core/type/enums';
+import { DepositoEstado, EstablecimientoEstado, PaidType, TypeEntity } from '@/core/type/enums';
 import { getIntervaloString, getPaymentMethod } from '@/core/util/converter';
 import AddHorarioIntervalDialog from '@/components/establecimiento/setting/AddHorarioIntervalDialog';
 import DeleteHorarioIntervalDialog from '@/components/establecimiento/setting/DeleteHorarioIntervalDialog';
@@ -207,6 +207,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             formData.append("uuid",data?.establecimiento.uuid)
             formData.append("establecimiento_id",data?.establecimiento.id.toString())
             const res:Photo = await AddEstablecimientoPhoto(formData)
+            res.type_entity = TypeEntity.ENTITY_PHOTO
             setData({
                 ...data,
                 establecimiento_photos:[...data.establecimiento_photos,res]
@@ -399,7 +400,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             <span className="label pb-1">Imagenes</span>
             <div className='flex gap-3 w-full flex-wrap'>
             <Photos
-            items={data.establecimiento_photos}
+            items={data.establecimiento_photos.filter(item=>item.url != undefined && item.url != "")}
             uuid={params.uuid}
             deletePhoto={deleteEstablecimientoPhoto}
             />

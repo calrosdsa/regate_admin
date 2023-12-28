@@ -63,7 +63,7 @@ const EventoListTable = ({eventos,loading,uuid,deleteEvento}:{
                         <td className="rowTable">
                             <div className="flex space-x-2 items-center">
                                 <Link href={getRouteEstablecimiento(uuid,`eventos/${item.uuid}?name=${item.name}&id=${item.id}`)}
-                                className="font-medium underline text-primary cursor-pointer noSelect">
+                                className="font-medium underline noSelect">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" 
                                     className="w-[26px] h-[26px] noSelect icon-button text-primary">
                                     <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />

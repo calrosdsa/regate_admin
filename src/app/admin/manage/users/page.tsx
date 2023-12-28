@@ -1,15 +1,17 @@
 "use client"
 
-import CreateUserNegocioDialog from "@/components/manage/users/CreateUserNegocioDialog"
+import AddEstablecimientoUserDialog from "@/components/manage/users/dialog/AddEstablecimientoUser"
+import CreateUserNegocioDialog from "@/components/manage/users/dialog/CreateUserNegocioDialog"
 import UserOptionDialog from "@/components/manage/users/UserOptionDialog"
 import MenuLayout from "@/components/util/button/MenuLayout"
 import MenuOption from "@/components/util/button/MenuOption"
 import ConfirmationDialog from "@/components/util/dialog/ConfirmationDialog"
 import Loading from "@/components/util/loaders/Loading"
+import { successfulMessage, unexpectedError } from "@/context/config"
 import { useAppDispatch } from "@/context/reduxHooks"
 import { uiActions } from "@/context/slices/uiSlice"
 import { GetEstablecimientosUserByUuid } from "@/core/repository/account"
-import { GetUsersEmpresa, UpdateUserEstado } from "@/core/repository/manage"
+import { DeleteEstablecimientoUser, GetUsersEmpresa, UpdateUserEstado } from "@/core/repository/manage"
 import { UserEstado, UserRol } from "@/core/type/enums"
 import { appendSerachParams } from "@/core/util/routes"
 import moment from "moment"
@@ -28,11 +30,14 @@ export default function Page(){
     const [loadingUsers,setLoadingUsers] = useState(false)
     const [currentUser,setCurrentUser] = useState<User | null>(null)
     const [openDialogCreateUser,setOpenDialogCreateUser] = useState(false)
-    const [openUserOptionDialog,setOpenUserOptionDialog] = useState(false)
     const [currentUserEstablecimientos,setCurrentUserEstablecimientos] = useState<EstablecimientoUser[]>([])
+    const [establecimientosUser,setEstablecimientosUser] = useState<EstablecimientoUser[]>([])
     const [loadingEstablecimientos,setLoadingEstablecimientos] = useState(false)
     const [openConfirmationDialog,setOpenConfirmationDialog] = useState(false)
     const [currentUserEstado,setCurrentUserEstado] = useState<UserEstado | null>(null)
+    const [userEstablecimiento,setUserEstablecimiento] = useState<EstablecimientoUser | null>(null)
+    const [openAddEstablecimientoDialog,setOpenAddEstablecimientoDialog] = useState(false)
+
     const selectUserEstado = (estado:UserEstado) => {
         setCurrentUserEstado(estado)
         setOpenConfirmationDialog(true)
@@ -82,13 +87,56 @@ export default function Page(){
                 rol:user.rol
             }
             setLoadingEstablecimientos(true)
-            const establecimintosUser:EstablecimientoUser[] = await GetEstablecimientosUserByUuid(JSON.stringify(dataRequest))
-            setCurrentUserEstablecimientos(establecimintosUser)
+            const res:EstablecimientoUser[] = await GetEstablecimientosUserByUuid(JSON.stringify(dataRequest))
+            setCurrentUserEstablecimientos(res)
             setLoadingEstablecimientos(false)
         }catch(err){
             setLoadingEstablecimientos(false)
         }
     }
+
+    const getAllEstablecientos = async() => {
+        try{
+            if(currentUser == null) return
+            if(establecimientosUser.length > 0) {
+                setOpenAddEstablecimientoDialog(true)
+                return
+            }
+            dispatch(uiActions.setLoaderDialog(true))
+            const dataRequest = {
+                uuid:"",
+                empresa_id:currentUser.empresa_id,
+                rol:UserRol.ADMIN_USER_ROL
+            }
+            const res:EstablecimientoUser[] = await GetEstablecimientosUserByUuid(JSON.stringify(dataRequest))
+            setEstablecimientosUser(res)
+            setOpenAddEstablecimientoDialog(true)
+            dispatch(uiActions.setLoaderDialog(false))
+
+        }catch(err){
+            dispatch(uiActions.setLoaderDialog(false))
+
+        }
+    }
+
+    const deleteUserEstableciento = async() => {
+        try{
+            if(userEstablecimiento == null) return
+            if(userEstablecimiento.admin_id == undefined) return
+            dispatch(uiActions.setLoaderDialog(true))
+            await DeleteEstablecimientoUser(userEstablecimiento.uuid,userEstablecimiento.admin_id)
+            setUserEstablecimiento(null)
+            dispatch(uiActions.setLoaderDialog(false))
+            toast.success(successfulMessage)
+            const f = currentUserEstablecimientos.filter(item=>item.uuid != userEstablecimiento.uuid)
+            setCurrentUserEstablecimientos(f)
+        }catch(err){
+            toast.success(unexpectedError)
+            dispatch(uiActions.setLoaderDialog(false))
+            console.log(err)
+        }
+    }
+
 
     useEffect(()=>{
         getUsersEmpresa()
@@ -102,7 +150,7 @@ export default function Page(){
                 uuid:currentUser.user_id,
                 estado:e
             }
-            const res = await UpdateUserEstado(JSON.stringify(dataR))
+            await UpdateUserEstado(JSON.stringify(dataR))
             switch(e){
                 case UserEstado.DELETED:
                     const newUsers = users.filter(item=>item.user_id != currentUser.user_id)
@@ -121,7 +169,6 @@ export default function Page(){
                     })
                     setUsers(updateUsers)
             }
-            setOpenUserOptionDialog(false)
             // getUsersEmpresa()
             dispatch(uiActions.setLoaderDialog(false))
         }catch(err){
@@ -131,13 +178,29 @@ export default function Page(){
 
     return(
         <>
+        {userEstablecimiento != null &&
+        <ConfirmationDialog
+        open={userEstablecimiento != null}
+        close={()=>setUserEstablecimiento(null)}
+        performAction={deleteUserEstableciento}
+        />
+        }
         {openDialogCreateUser&&
         <CreateUserNegocioDialog
         openModal={openDialogCreateUser}
         closeModal={()=>setOpenDialogCreateUser(false)}
         refreshUsers={()=>getUsersEmpresa()}
         />
-    }
+        }
+        {(openAddEstablecimientoDialog && currentUser != null)&&
+        <AddEstablecimientoUserDialog
+        open={openAddEstablecimientoDialog}
+        close={()=>setOpenAddEstablecimientoDialog(false)}
+        currentUserUuid={currentUser.user_id}
+        establecimientosUser={establecimientosUser.filter(item=>!currentUserEstablecimientos.map(t=>t.id).includes(item.id))}
+        updateCurrentList={(e)=>setCurrentUserEstablecimientos([...currentUserEstablecimientos,e])}
+        />
+        }
         <div className="">
 
         <div className="px-2 h-screen xl:pt-0">
@@ -241,7 +304,14 @@ export default function Page(){
                     </div>
                     
 
-                <div className="title p-2 mt-4">Complejos administrados por este usuario.</div>
+                <div className="title p-2 mt-4 flex justify-between">
+                    <span className="subtitle text-base">Complejos asignados</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" 
+                    className="w-7 h-7 icon-button noSelect" onClick={()=>getAllEstablecientos()}>
+                    <path fillRule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm.75-10.25v2.5h2.5a.75.75 0 0 1 0 1.5h-2.5v2.5a.75.75 0 0 1-1.5 0v-2.5h-2.5a.75.75 0 0 1 0-1.5h2.5v-2.5a.75.75 0 0 1 1.5 0Z" clipRule="evenodd" />
+                    </svg>
+
+                </div>
                 <div className="mt-2">
                 <Loading
               loading={loadingEstablecimientos}
@@ -249,8 +319,15 @@ export default function Page(){
               />
                 {currentUserEstablecimientos.map((item)=>{
                     return(
-                        <div className="record" key={item.id}>
-                            <span>{item.name}</span>
+                        <div className="flex items-center p-2 text-gray-600 justify-between cursor-default 
+                         border-b" key={item.id}>
+                            <span className=" subtitle">{item.name}</span>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" 
+                            className="w-7 h-7 icon-button noSelect" onClick={()=>setUserEstablecimiento(item)}>
+                            <path fillRule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clipRule="evenodd" />
+                            </svg>
+
                         </div>
                     )
                 })}

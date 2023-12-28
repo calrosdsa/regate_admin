@@ -122,7 +122,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 <span className="subtitle">Usuarios</span>
             </div>
 
-            <div className="pt-10 xl:pt-2">
+            <div className="pt-2 ">
                 <span className="text-xl">Usuarios({paginationProps?.count})</span>
 
             <div className="flex space-x-3 py-2">

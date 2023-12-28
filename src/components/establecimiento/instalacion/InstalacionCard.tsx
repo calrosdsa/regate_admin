@@ -18,10 +18,10 @@ const InstalacionCard = ({instalacion}:Props) =>{
             />
             :
             <Image
-            src={instalacion.portada as string}
+            src={instalacion.portada+`?time=${new Date().getMilliseconds()}`}
             height={100}
             width={150}
-            alt={instalacion.name} 
+            alt={instalacion.name}
             className=" rounded-full h-12 w-12 object-cover"
             />
         }

@@ -12,6 +12,7 @@ import EditComponentSelect from "@/components/util/input/EditComponentSelect"
 import { Tooltip } from 'react-tooltip';
 import { estadoVisibility } from "@/core/util/data"
 import { EstadoVisibility } from "@/core/type/enums"
+import { successfulMessage, unexpectedError } from "@/context/config"
 
 
 const InstalacionDetail = ({instalacion,update,uuid}:{
@@ -44,15 +45,15 @@ const InstalacionDetail = ({instalacion,update,uuid}:{
                 addLoader()
                 const req = JSON.stringify({[name]:value})
                 console.log(JSON.stringify(req))
-                const res = await UpdateInstalacion(req,instalacion.id)
+                const res = await UpdateInstalacion(req,instalacion.id,uuid,instalacion.uuid)
                 console.log(res)
                 update(name,value)
                 removeLoader()
-                toast.success("¡Los cambios realizados han sido guardados exitosamente!")
+                toast.success(successfulMessage)
             }catch(err){
                 console.log(err)
                 removeLoader()
-                toast.error("¡Los cambios realizados han sido guardados exitosamente!")
+                toast.error(unexpectedError)
             }
     }
     const uploadImage = async(setLoading:(e:boolean)=>void) =>{
@@ -68,11 +69,11 @@ const InstalacionDetail = ({instalacion,update,uuid}:{
                 update("portada",res)
                 setLoading(false)
                 // setOpenMap(false)
-                toast.success("¡Los cambios realizados han sido guardados exitosamente!")
+                toast.success(successfulMessage)
             }catch(err){
                 setLoading(false)
                 console.log(err)
-                toast.error("¡Los cambios realizados han sido guardados exitosamente!")
+                toast.error(unexpectedError)
             }
         }
     }

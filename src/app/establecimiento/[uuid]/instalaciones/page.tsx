@@ -25,7 +25,6 @@ const Page = ({ params }: { params: { uuid: string } })=>{
     const searchParams = useSearchParams();
     const instalacionId = searchParams.get("id")
     const tabIndex = searchParams.get("tabIndex")
-    const isDialogOpen = searchParams.get("dialog")
     const current = new URLSearchParams(Array.from(searchParams.entries()))
     const currentDay = new Date().getDay()
     const dispatch = useAppDispatch()
@@ -148,6 +147,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
     const getInstalacion=async(uuid:string) =>{
         try{
             setLoadingInstalacion(true)
+            setInstalacion(null)
             const res:Instalacion = await GetInstalacion(uuid)
             setInstalacion(res)
             appendSerachParams("id",res.uuid)

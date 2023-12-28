@@ -1,7 +1,7 @@
 import { API_URL_MESSAGE, LOCAL_URL } from "@/context/config"
 
 export async function GetConversations(uuid:string) {
-    const res = await fetch(`../../api/establecimiento/${uuid}/conversations/`)
+    const res = await fetch(`${LOCAL_URL}/api/establecimiento/${uuid}/conversations/`)
     if (!res.ok) {
       // This will activate the closest `error.js` Error Boundary
       throw new Error('Failed to fetch data')

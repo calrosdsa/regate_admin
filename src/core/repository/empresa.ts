@@ -1,5 +1,7 @@
+import { LOCAL_URL } from "@/context/config"
+
 export async function GetEmpresaDetail(){
-    const res = await fetch(`../../api/admin/empresa/`)
+    const res = await fetch(`${LOCAL_URL}/api/admin/empresa/`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')
@@ -9,7 +11,7 @@ export async function GetEmpresaDetail(){
   }  
   
   export async function UpdateEmpresaDetail(data:string){
-      const res = await fetch(`../../api/admin/empresa/update`,{
+      const res = await fetch(`${LOCAL_URL}/api/admin/empresa/update`,{
           method:'POST',
           body:data
       })
@@ -22,7 +24,7 @@ export async function GetEmpresaDetail(){
   }
 
   export async function UpdateEmpresaAddress(data:string){
-    const res = await fetch(`../../api/admin/empresa/update/address`,{
+    const res = await fetch(`${LOCAL_URL}/api/admin/empresa/update/address`,{
         method:'POST',
         body:data
     })

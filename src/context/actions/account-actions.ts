@@ -8,7 +8,7 @@ import { accountActions } from "../slices/accountSlice"
 import { adminRoutes, rootEstablecimiento } from "@/core/util/routes"
 import { toast } from "react-toastify"
 import { redirectToLogin } from "."
-import { unexpectedError } from "../config"
+import { LOCAL_URL, unexpectedError } from "../config"
 
 
 
@@ -28,7 +28,7 @@ export const getUser  = () :ThunkAction<void,RootState,undefined,AnyAction> =>{
 export const logout  = () :ThunkAction<void,RootState,undefined,AnyAction> =>{
     return async()=>{
         try{
-            const res = await fetch("../../api/account/auth/logout")
+            const res = await fetch(`${LOCAL_URL}/api/account/auth/logout`)
             if(res.ok){
                 redirectToLogin()
             }
@@ -65,10 +65,13 @@ export const login = (email:string,password:string) :ThunkAction<void,RootState,
                            window.location.assign(adminRoutes.manage.establecimientos)
                            break;
                        case UserRol.CLIENT_USER_ROL:
-                           const res = await fetch("../../api/account/establecimientos")
+                           const res = await fetch(`${LOCAL_URL}/api/account/establecimientos`)
                            const data:EstablecimientoUser[] = await res.json()
-                           if(data.length >0){
+                           if(data.length == 0){
                                window.location.assign(`${rootEstablecimiento}/${data[0].uuid}`)
+                           }
+                           if(data.length > 1) {
+                                window.location.replace(`/auth/establecimientos`)
                            }
                            break;
                     }
@@ -94,17 +97,28 @@ export const login = (email:string,password:string) :ThunkAction<void,RootState,
         }
     }
 }
-export const getEstablecimientosUser = () :ThunkAction<void,RootState,undefined,AnyAction> =>{
+export const getEstablecimientosUser = (uuid:string) :ThunkAction<void,RootState,undefined,AnyAction> =>{
     return async(dispatch)=>{
         try{
             dispatch(uiActions.setInnerLoading(true))
-            const res = await fetch("../../api/account/establecimientos")
+            const res = await fetch(`${LOCAL_URL}/api/account/establecimientos`)
+            if (!res.ok) {
+                // This will activate the closest `error.js` Error Boundary
+                throw new Error('Failed to fetch data')
+              }
             const data:EstablecimientoUser[] = await res.json()
             if(res.status == 401){
                 redirectToLogin()
             }
             dispatch(accountActions.setEstablecimientos(data))
+            // console.log(current)
             dispatch(uiActions.setInnerLoading(false))
+
+            //Check if the user has been assigned to any of the establishments.
+            const isExist = data.map(item=>item.uuid).includes(uuid)
+            if(!isExist){
+                redirectToLogin()
+            }
         }catch(e){
             dispatch(uiActions.setInnerLoading(false))
         }

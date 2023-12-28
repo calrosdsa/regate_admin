@@ -1,9 +1,9 @@
 import { redirectToLogin } from "@/context/actions"
-import { API_URL, MB_API_KEY } from "@/context/config"
+import { API_URL, LOCAL_URL, MB_API_KEY } from "@/context/config"
 
 
 export async function GetEstablecimientos() {
-  const res = await fetch("../../api/establecimiento")
+  const res = await fetch(`${LOCAL_URL}/api/establecimiento`)
   if(res.status == 401) {
     redirectToLogin()
     throw new Error('Failed to fetch data')
@@ -16,7 +16,7 @@ export async function GetEstablecimientos() {
 }
 
 export async function getEstablecimiento(uuid:string){
-    const res = await fetch(`../../api/establecimiento/${uuid}`)
+    const res = await fetch(`${LOCAL_URL}/api/establecimiento/${uuid}`)
     if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data')
@@ -35,7 +35,7 @@ export async function getPlaces(lng:string,lat:string){
 }
 
 export async function CreateEstablecimiento(data:FormData) {
-  const res = await fetch(`../../api/establecimiento`,{
+  const res = await fetch(`${LOCAL_URL}/api/establecimiento`,{
     method:"POST",
     body:data,
   })
@@ -49,7 +49,7 @@ export async function CreateEstablecimiento(data:FormData) {
 }
 
 export async function UpdateEstablecimiento(data:string,id:number) {
-  const res = await fetch(`../../api/establecimiento/update?establecimiento_id=${id}`,{
+  const res = await fetch(`${LOCAL_URL}/api/establecimiento/update?establecimiento_id=${id}`,{
     method:"POST",
     body:data,
   })
@@ -64,7 +64,7 @@ export async function UpdateEstablecimiento(data:string,id:number) {
 }
 
 export async function UpdateEstablecimientoPhoto(data:FormData) {
-  const res = await fetch(`../../api/establecimiento/update/photo`,{
+  const res = await fetch(`${LOCAL_URL}/api/establecimiento/update/photo`,{
     method:"POST",
     body:data,
   })
@@ -78,7 +78,7 @@ export async function UpdateEstablecimientoPhoto(data:FormData) {
 }
 
 export async function AddEstablecimientoPhoto(data:FormData) {
-  const res = await fetch(`../../api/establecimiento/photo/add`,{
+  const res = await fetch(`${LOCAL_URL}/api/establecimiento/photo/add`,{
     method:"POST",
     body:data,
   })
@@ -92,7 +92,7 @@ export async function AddEstablecimientoPhoto(data:FormData) {
 }
 
 export async function DeleteEstablecimientoPhoto(data:Photo) {
-  const res = await fetch(`../../api/establecimiento/photo/delete`,{
+  const res = await fetch(`${LOCAL_URL}/api/establecimiento/photo/delete`,{
     method:"POST",
     body:JSON.stringify(data),
   })
@@ -106,7 +106,7 @@ export async function DeleteEstablecimientoPhoto(data:Photo) {
 }
 
 export async function UpdateEstablecimientoAddress(data:string) {
-  const res = await fetch(`../../api/establecimiento/update/address`,{
+  const res = await fetch(`${LOCAL_URL}/api/establecimiento/update/address`,{
     method:"POST",
     body:data,
   })

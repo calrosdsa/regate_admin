@@ -15,9 +15,7 @@ const Photos = ({
                 return(
                     <div className="w-40" key={index}>
                         <ImageOption
-                        parent_id={item.parent_id}
-                        id={item.id}
-                        url={item.url}
+                        photo={item}
                         establecimiento_uuid={uuid}
                         deletePhoto={deletePhoto}
                         />

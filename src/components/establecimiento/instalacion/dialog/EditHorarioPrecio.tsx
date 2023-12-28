@@ -32,9 +32,10 @@ export const EditHorarioPrecio = ({open,close,cupos,updateCupos}:{
         e.preventDefault()
         const request:CreateUpdateCuposRequest =  {
           cupos:cupos,
-          precio:Number(price),
+          precio:Math.floor(Number(price) /2),
           available:available
         }
+        console.log(request)
         const res:Cupo[] = await CreateUpdateCupos(request)
         updateCupos(res)
         toast.success(successfulMessage)
@@ -92,11 +93,7 @@ export const EditHorarioPrecio = ({open,close,cupos,updateCupos}:{
         <form onSubmit={onSubmit}>
             <div className='grid grid-cols-2 gap-3'>
             <div>
-            <TooltipIcon
-            title='Precio'
-            helpText='Asigna un precio acorde a la hora y la disponibilidad'
-            
-            />
+           <span className='label'>Precio por hora</span>
              <div className={`relative`}>
         <input id="password" type='telnet'
         required
