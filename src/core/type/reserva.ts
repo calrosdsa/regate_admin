@@ -78,3 +78,9 @@ type ConfirmReservaRequest = {
     reserva_id:number
     amount_added:number
 }
+
+type ReservaEditRequest = {
+    id:number
+    estado:number
+    amount:number
+}

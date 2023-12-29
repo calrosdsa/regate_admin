@@ -150,14 +150,14 @@ const DialogReservaDetail = ({open,close,data,update}:{
                                 <>
                                 <div className="flex space-x-2">
                                     {data.reserva.estado == ReservaEstado.Pendiente &&
-                                    <div className={`button-hover flex justify-center text-sm `}
+                                    <div className={`button flex justify-center text-sm `}
                                     onClick={()=>setConfirmReservaDialog(true)} >
                                         Completar monto de la reserva
                                     </div>
                                     }
 
                                     {(data.reserva.estado == ReservaEstado.Valid || data.reserva.estado == ReservaEstado.Pendiente) &&
-                                    <div className={`button-hover flex justify-center h-10 `}
+                                    <div className={`button flex justify-center h-10 `}
                                     onClick={()=>setCancelReservaDialog(true)} >
                                     Cancelar reserva
                                     </div>

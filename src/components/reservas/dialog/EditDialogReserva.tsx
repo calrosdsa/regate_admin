@@ -5,6 +5,9 @@ import { getEstadoReserva } from "../ReservaList"
 import SelectComponent from "@/components/util/input/SelectCompenent"
 import { reservaEstados } from "@/core/util/data"
 import ButtonSubmit from "@/components/util/button/ButtonSubmit"
+import { EditReserva } from "@/core/repository/reservas"
+import { toast } from "react-toastify"
+import { successfulMessage, unexpectedError } from "@/context/config"
 
 const EditReservaDialog = ({open,close,reserva}:{
     open:boolean
@@ -18,11 +21,24 @@ const EditReservaDialog = ({open,close,reserva}:{
     })
     const {paid,estado} = formData
 
-    const onSubmit = (e:FormEvent<HTMLFormElement>) => {
+    const onSubmit = async(e:FormEvent<HTMLFormElement>) => {
         try{
             e.preventDefault()
-            console.log(formData)
+            setLoading(true)
+            const r:ReservaEditRequest = {
+                id:reserva.id,
+                amount:Number(paid),
+                estado:Number(estado)
+            }
+            await EditReserva(r)
+            reserva.paid = Number(paid)
+            reserva.estado = Number(estado)
+            setLoading(false)
+            close()
+            toast.success(successfulMessage)
         }catch(err){
+            setLoading(false)
+            toast.error(unexpectedError)
             console.log(err)
         }
     }

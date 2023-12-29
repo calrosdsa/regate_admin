@@ -12,6 +12,9 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import SearchInput from "@/components/util/input/SearchInput";
 import SearchUserDialog from "./SearchUserDialog";
+import { SearchUsersEmpresa } from "@/core/repository/users";
+import useDebounce from "@/core/util/hooks/useDebounce";
+import Loading from "@/components/util/loaders/Loading";
 
 
 type CupoRequest = {
@@ -34,11 +37,15 @@ const CreateReservaDialog = ({open,close,instalacion,reservaCupos,refresh,uuid}:
 }) => {
     const establecimientosUser = useAppSelector(state=>state.account.establecimientos)
     const [loading,setLoading] = useState(false)
+    const [loadingUsers,setLoadingUsers] = useState(false)
     const [totalPrice,setTotalPrice] = useState(0)
     const [userEmpresa,setUserEmpresa] = useState<null | UserEmpresa>(null)
     const [error,setError] = useState("")
+    const [users,setUsers] = useState<UserEmpresa[]>([])
+    const [searchQuery,setSearchQuery] = useState("")
+    const debouncedValue = useDebounce(searchQuery,500)
 
-    const [openSearchUserDialog,setOpenSearchUserDialog] = useState(false)
+    // const [openSearchUserDialog,setOpenSearchUserDialog] = useState(false)
     const [orderedCupo,setOrderedCupos] = useState<CupoReserva[]>([])
     const [formData,setFormData] = useState({
         paid:"",
@@ -46,6 +53,33 @@ const CreateReservaDialog = ({open,close,instalacion,reservaCupos,refresh,uuid}:
         phone_number:"",
     })
     const {paid,name,phone_number} = formData
+
+    const onSearch = async() =>{
+        try{
+            if(name == searchQuery) return
+            if(searchQuery == "") {
+                setUsers([])
+                return
+            }
+            setUsers([])
+            setLoadingUsers(true)
+            const q = searchQuery.trim().replaceAll(/\s+/g,":* & ") + ":*"
+            const res = await SearchUsersEmpresa(q)
+            setFormData({...formData,name:searchQuery})
+            setUsers(res)
+            setLoadingUsers(false)
+        }catch(err){
+            setLoadingUsers(false)
+        }
+    }
+
+    useEffect(() => {
+        onSearch()
+        // Do fetch here...
+        // Triggers when "debouncedValue" changes
+      }, [debouncedValue])
+  
+      
     const onChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         setFormData({...formData,
             [e.target.name]:e.target.value
@@ -111,7 +145,7 @@ const CreateReservaDialog = ({open,close,instalacion,reservaCupos,refresh,uuid}:
     },[])
     return(
         <>
-        {openSearchUserDialog &&
+        {/* {openSearchUserDialog &&
         <SearchUserDialog
         open={openSearchUserDialog}
         close={()=>setOpenSearchUserDialog(false)}
@@ -125,7 +159,7 @@ const CreateReservaDialog = ({open,close,instalacion,reservaCupos,refresh,uuid}:
             setOpenSearchUserDialog(false)
         }}
         />
-        }
+        } */}
      <DialogLayout
      allowFullScreen={true}
      className="max-w-lg"
@@ -158,31 +192,67 @@ const CreateReservaDialog = ({open,close,instalacion,reservaCupos,refresh,uuid}:
                         }
                     </div>
             </div>
-              <div onClick={()=>setOpenSearchUserDialog(true)}
+              {/* <div onClick={()=>setOpenSearchUserDialog(true)}
                 className="button flex space-x-2 mt-2 w-min whitespace-nowrap">
                     <span>Agregar usuario ya registrado</span>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} 
                     stroke="currentColor" className="w-5 h-5">
         <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
             </svg>
-                    </div>
+                    </div> */}
         <form onSubmit={onSubmit}>
-            <InputWithIcon
-            type="tel"
-            label="Monto pagado"
-            value={formData.paid}
-            name="paid"
-            error={error}
-            onChange={onChange}
-            /> 
-            <InputWithIcon
+
+        <div className="pt-2 w-full relative">
+    <span className="label">Nombre</span>
+            <SearchInput
+            value={searchQuery}
+            onChange={(e)=>setSearchQuery(e.target.value)}
+            clear={()=>{
+                setSearchQuery("")
+                setUsers([])
+            }}
+            className="h-10 rounded-lg items-center"
+            onEnter={()=>onSearch()}
+            placeholder=""
+            required={true}
+            />
+            {(loadingUsers || users.length > 0) &&
+                <div className="mt-2 overflow-auto absolute bg-white z-10 w-full h-36 shadow-lg">
+                <Loading
+                loading={loadingUsers}
+                className="flex justify-center mt-2"
+                />
+                {users.map((item,idx)=>{
+                    return(
+                        <div key={idx} className="record"
+                        onClick={()=>{
+                            setFormData({
+                                ...formData,
+                                name:item.name,
+                                phone_number:item.phone_number  
+                            })
+                            setSearchQuery(item.name)
+                            setUserEmpresa(item)
+                            setUsers([])
+                        }}>
+                            <span className="text-xs">{item.name}</span>
+                        </div>
+                    )
+                })}
+                </div>
+            }
+
+
+            </div>
+
+            {/* <InputWithIcon
             type="tel"
             label="Nombre Completo"
             value={formData.name}
             name="name"
             error={error}
             onChange={onChange}
-            />
+            /> */}
 
            <InputWithIcon
             type="tel"
@@ -193,6 +263,17 @@ const CreateReservaDialog = ({open,close,instalacion,reservaCupos,refresh,uuid}:
             error={error}
             onChange={onChange}
             />
+
+
+
+            <InputWithIcon
+            type="tel"
+            label="Monto pagado"
+            value={formData.paid}
+            name="paid"
+            error={error}
+            onChange={onChange}
+            /> 
              
             <ButtonSubmit
             loading={loading}
