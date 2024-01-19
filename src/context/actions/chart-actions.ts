@@ -45,13 +45,19 @@ export const getReservasHoursAverage  = (data:FilterChartData) :ThunkAction<void
                 })
                 break;
                 case TypeOfDate.day:
-                    newReservaAverage = res.map(item=>{
+                    const a = res.map(item=>{
                         item = {
                             name:days[Number(item.name)].day,
                             value:(item.value/2)
                         }
                         return item
                     })
+                    const b = a.shift() 
+                    if(b != undefined){
+                        a.push(b)
+                        newReservaAverage = a
+                    }
+
                     break;
                     case TypeOfDate.month:
                         newReservaAverage = res.map((item,idx)=>{
@@ -85,6 +91,7 @@ export const getReservasHoursData  = (data:FilterChartData) :ThunkAction<void,Ro
                 }
                 return item
               })
+              
             dispatch(chartActions.setData(newResevasCountHours))
             dispatch(chartActions.setChartLoading(false))
         }catch(err){
@@ -98,7 +105,7 @@ export const getReservasAverageAmount  = (data:FilterChartData) :ThunkAction<voi
         try{
             dispatch(chartActions.setChartLoading(true))
             const res:NameValueData[] = await GetReservaAmountAverage(data)
-              let newReservaAverage:NameValueData[] = []
+              let newReservaAverage:NameValueData[]  = []
             switch(data.type_date){
                 case TypeOfDate.hour:
                 newReservaAverage = res.map(item=>{
@@ -112,14 +119,26 @@ export const getReservasAverageAmount  = (data:FilterChartData) :ThunkAction<voi
                 })
                 break;
                 case TypeOfDate.day:
-                    newReservaAverage = res.map(item=>{
+                    const a = res.map(item=>{
                         item = {
                             name:days[Number(item.name)].day,
+                            // nameValue:Number(item.name),
                             value:item.value,
                             value2:item.value2
                         }
                         return item
                     })
+                    const b = a.shift() 
+                    if(b != undefined){
+                        a.push(b)
+                        newReservaAverage = a
+                    }
+                   
+                    // const n = (newReservaAverage.shift() || []) as NameValueData[]
+                    // .sort((a,b)=>{
+                    //     // if(a.nameValue == undefined && b.nameValue == undefined) return
+                    //     return (b.nameValue || 0) - (a.nameValue || 0)
+                    // })
                     break;
                     case TypeOfDate.month:
                         newReservaAverage = res.map((item,idx)=>{
@@ -205,7 +224,8 @@ export const getChartData  = (data:FilterChartData) :ThunkAction<void,RootState,
                 }
                 return item
               })
-              const newReservaDayAverageAmount = res?.reserva_amount_average.map(item=>{
+              let newReservaDayAverageAmount:NameValueData[] = []
+              const a = res?.reserva_amount_average.map(item=>{
                 item = {
                     name:days[Number(item.name)].day,
                     value:item.value,
@@ -213,6 +233,12 @@ export const getChartData  = (data:FilterChartData) :ThunkAction<void,RootState,
                 }
                 return item
               })
+              const b = a.shift() 
+              if(b != undefined){
+                  a.push(b)
+                  newReservaDayAverageAmount = a
+              }
+
               const newReservaHourAverage = res.reserva_hour_average.map(item=>{
                 item = {
                     name:moment(hours[Number(item.name)].hour).utc().format("LT"),

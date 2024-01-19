@@ -84,3 +84,13 @@ type ReservaEditRequest = {
     estado:number
     amount:number
 }
+
+type GenerateReservaCupoRequest = {
+    times:string[]
+    instalacion_id:number
+    establecimiento_uuid:string
+}
+
+type GenerateReservaCupoResponse = {
+    reserva_cupos:CupoReserva[]
+}

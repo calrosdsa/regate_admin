@@ -1,26 +1,36 @@
-import ButtonIcon from "@/components/util/button/ButtonIcon";
-import MenuLayout from "@/components/util/button/MenuLayout";
-import { chartActions } from "@/context/slices/chartSlice";
-import { FilterChartData } from "@/core/type/chart";
+import Loading from "@/components/util/loaders/Loading";
+import { ChartTypeData, FilterChartData } from "@/core/type/chart";
 import { TypeOfChart, TypeOfDate } from "@/core/type/enums";
-import { Menu, Popover } from "@headlessui/react";
+import { groupByToMap } from "@/core/util";
+import { Disclosure, Menu, Popover, Transition } from "@headlessui/react";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
 
+
+type InstalacionGroup = {
+  instalaciones:Instalacion[]
+  category:string
+}
+
 const FilterChartHeader = ({hideHeader,setTypeOfDate,setHideHeader,close,applyTypeChart,filterData,
-chartType,getNewData,allowedCharts,label,exportData}:{
+chartType,getNewData,allowedCharts,label,exportData,instalaciones,getInstalaciones,loadingInstalaciones,
+chartTypeData}:{
     close:()=>void
     hideHeader:boolean
+    chartType:TypeOfChart
     setHideHeader:(bool:boolean)=>void
     getNewData:(data:FilterChartData)=>void
-    chartType:TypeOfChart
     filterData:FilterChartData
     allowedCharts:TypeOfDate[]
     setTypeOfDate:(type_date:TypeOfDate)=>void
     applyTypeChart:(typeOfChart:TypeOfChart)=>void
     label:string
+    instalaciones:Instalacion[]
     exportData:()=>void
+    getInstalaciones:()=>void
+    loadingInstalaciones:boolean
+    chartTypeData:ChartTypeData
 }) =>{
     const [initialData,setInitialData ] = useState<FilterChartData | null>(null)
     const [typeChart,setTypeChart] = useState(chartType)
@@ -28,6 +38,8 @@ chartType,getNewData,allowedCharts,label,exportData}:{
         startDate: new Date(filterData.start_date as string) || new Date(),
         endDate: new Date(filterData.end_date as string) || new Date(),
     });
+    const [instalacionGroups,setInstalacionGroups] = useState<InstalacionGroup[]>([])
+    const [selectedIds,setSelectedIds] = useState<number[]>([])
     
     const handleValueChange = (value:DateValueType) => {
         const data:FilterChartData = {
@@ -53,9 +65,26 @@ chartType,getNewData,allowedCharts,label,exportData}:{
       }
     }
 
+    const groupInstalaciones = () =>{
+      setInstalacionGroups([])
+      const d = groupByToMap<Instalacion,string>(instalaciones,(item)=>item.category_name)
+      d.forEach((items,key)=>{
+        setInstalacionGroups(e=>[...e,{
+          category:key,
+          instalaciones:items
+        }])
+      })
+    }
+
     useEffect(()=>{
+      console.log("FILTER DATA",filterData)
       setInitialData(filterData)
+      groupInstalaciones()
     },[])
+
+    useEffect(()=>{
+      groupInstalaciones()
+    },[instalaciones])
 
     return(
         <>
@@ -69,25 +98,8 @@ chartType,getNewData,allowedCharts,label,exportData}:{
                   </div>
 
                   <div className='flex space-x-3'>
-                    <button onClick={()=>{reset()}}  className='smallButton h-8 grid place-content-center text-primary border-primary
-                    hover:bg-primary hover:bg-opacity-20'>
-                        <span>Reset</span>
-                    </button>
-                  <button onClick={()=>{
-                    close()
-                    //   closeModal()
-                    //   router.replace( {}, undefined, {})
-                      }} className='smallButton h-8 grid place-content-center whitespace-nowrap'>
-                      <span>Back to dashboard</span>
-                  </button>
-                  </div>
-              </div>
-                
-              </div>
-
-              <div className="flex overflow-auto pb-3 space-x-3 p-2">
-
-                <div className="smallButton px-2" onClick={()=>{
+                    
+               <div className="smallButton px-2" onClick={()=>{
                    const data:FilterChartData = {
                     ...filterData,
                     start_date:moment(value?.startDate?.toString()).utc().format(),
@@ -95,18 +107,37 @@ chartType,getNewData,allowedCharts,label,exportData}:{
                   }
                   getNewData(data)
                 }}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-gray-600">
-  <path fillRule="evenodd" d="M15.312 11.424a5.5 5.5 0 01-9.201 2.466l-.312-.311h2.433a.75.75 0 000-1.5H3.989a.75.75 0 00-.75.75v4.242a.75.75 0 001.5 0v-2.43l.31.31a7 7 0 0011.712-3.138.75.75 0 00-1.449-.39zm1.23-3.723a.75.75 0 00.219-.53V2.929a.75.75 0 00-1.5 0V5.36l-.31-.31A7 7 0 003.239 8.188a.75.75 0 101.448.389A5.5 5.5 0 0113.89 6.11l.311.31h-2.432a.75.75 0 000 1.5h4.243a.75.75 0 00.53-.219z" clipRule="evenodd" />
-                 </svg>
-                </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-gray-600">
+                  <path fillRule="evenodd" d="M15.312 11.424a5.5 5.5 0 01-9.201 2.466l-.312-.311h2.433a.75.75 0 000-1.5H3.989a.75.75 0 00-.75.75v4.242a.75.75 0 001.5 0v-2.43l.31.31a7 7 0 0011.712-3.138.75.75 0 00-1.449-.39zm1.23-3.723a.75.75 0 00.219-.53V2.929a.75.75 0 00-1.5 0V5.36l-.31-.31A7 7 0 003.239 8.188a.75.75 0 101.448.389A5.5 5.5 0 0113.89 6.11l.311.31h-2.432a.75.75 0 000 1.5h4.243a.75.75 0 00.53-.219z" clipRule="evenodd" />
+                  </svg>
+                </div>   
+                    <button onClick={()=>{reset()}}  className='smallButton h-8 grid place-content-center '>
+                        <span>Reset</span>
+                    </button>
+                  <button onClick={()=>{
+                    close()
+                    //   closeModal()
+                    //   router.replace( {}, undefined, {})
+                      }} className='smallButton h-8 grid place-content-center'>
+                      <span>Back to dashboard</span>
+                  </button>
+                  </div>
+              </div>
+                
+              </div>
+
+              <div className="flex overflow-auto space-x-3 p-2">
+
+                
 
                 {/* <div className=" smallButton">
                   dasdas
                 </div> */}
 
-                <div className=" ">
+                <div className="">
               <Datepicker value={value} onChange={handleValueChange} 
                         // showFooter={true}
+                        readOnly={true} 
                         containerClassName={"w-full"}
                         i18n="es"
                         configs={{
@@ -116,6 +147,13 @@ chartType,getNewData,allowedCharts,label,exportData}:{
                                 past: period => `Últimos ${period} días`,
                                 currentMonth: "Este mes" ,
                                 pastMonth: "El mes pasado",
+                                // currentYear:{
+                                //   text: "Este año",
+                                //   period: {
+                                //   start: "2024-01-01",
+                                //   end: "2025-01-01"
+                                //   }, 
+                                // }
                             }
                         }}
                         inputClassName={"w-[180px] smallButton outline-none text-sm p-2 cursor-pointer"}
@@ -124,6 +162,9 @@ chartType,getNewData,allowedCharts,label,exportData}:{
                         primaryColor="indigo"
                         />
                         </div>
+                  
+      
+
               <div className="flex w-full">
               {allowedCharts.includes(TypeOfDate.hour) &&
                 <button onClick={()=>setTypeOfDate(TypeOfDate.hour)}
@@ -243,6 +284,119 @@ chartType,getNewData,allowedCharts,label,exportData}:{
     </Popover>
 
               </div>
+
+              {chartTypeData != ChartTypeData.USUARIOS &&
+              <div className="overflow-auto pb-3 space-x-3 px-2">
+              <Popover className="">
+              <Popover.Button className="smallButton h-9" onClick={()=>getInstalaciones()}>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
+                    className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                  </svg>
+                  <span>
+                  Añadir filtro
+                  </span>
+              </Popover.Button>
+
+              
+
+              <Popover.Panel className="absolute z-20 bg-white shadow-md w-48 p-2 ">
+              {({ close }) => (
+                <>
+              <Disclosure defaultOpen  as="div" className="">
+                            <Disclosure.Button className="py-2 w-44">
+                              <div className="flex justify-between w-full items-center ">
+                                <span className=" subtitle text-base">Instalaciones</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" 
+                                className="w-5 h-5">
+                                  <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                                </svg>
+                              </div>
+                            </Disclosure.Button>
+                            <Transition
+                              enter="transition duration-100 ease-out"
+                              enterFrom="transform scale-95 opacity-0"
+                              enterTo="transform scale-100 opacity-100"
+                              leave="transition duration-75 ease-out"
+                              leaveFrom="transform scale-100 opacity-100"
+                              leaveTo="transform scale-95 opacity-0"
+                            >
+                            <Disclosure.Panel className="text-gray-500">
+                              {loadingInstalaciones ?
+                              <Loading
+                              loading={loadingInstalaciones}
+                              className="py-2"
+                              />
+                             : 
+                             instalacionGroups.map((item,idx)=>{
+                              return(
+                                <div className="pl-2" key={idx}>
+                                  <span className="subtitle">{item.category}</span>
+                                  <div className="grid">
+                                    {item.instalaciones.map((instalacion,idx2)=>{
+                                      return(
+                                        <div onClick={()=>{
+                                          if(selectedIds.includes(instalacion.id)){
+                                            const n = selectedIds.filter(t=>t != instalacion.id)
+                                            setSelectedIds(n)
+                                          }else{
+                                            setSelectedIds(e=>[...e,instalacion.id])
+                                          }
+                                        }}
+                                        key={idx2} className={`p-1  cursor-pointer hover:bg-gray-200
+                                        ${selectedIds.includes(instalacion.id) ?
+                                        "text-primary "
+                                        :""}`}>
+                                          {instalacion.name}
+                                        </div>
+                                      )
+                                    })}
+                                  </div>
+                                </div>
+                              )
+                             })
+
+                            // groupByToMap<Instalacion,string>(instalaciones,(item)=>item.category_name).map((items,key)=>{
+                            //   return(
+                            //     <div>
+                            //       {key}
+                            //     </div>
+                            //   )
+                            // })
+
+                             }
+                            </Disclosure.Panel>
+                            </Transition>
+                          </Disclosure>
+                            <div className="flex justify-end w-full border-t border-gray-400 pt-1">
+                            <button 
+                            onClick={()=>{
+                              const data:FilterChartData = {
+                                ...filterData,
+                                instalaciones:selectedIds
+                              }
+                              getNewData(data)
+                              close()
+                            }}
+                            className="button">Save</button>
+                            </div>
+                            </>
+                            )}
+              </Popover.Panel>
+            </Popover>
+     
+        </div>
+        }
+                {/* <button className="smallButton h-9">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
+                    className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                  </svg>
+                  <span>
+                  Añadir filtro
+                  </span>
+
+                  </button> */}
             </>
     )
 }

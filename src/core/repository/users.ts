@@ -9,6 +9,15 @@ export async function SearchUsersEmpresa(query:string) {
     return res.json()
   }
 
+export async function IsUserNameRepeat(name:string) {
+    const res = await fetch(`${LOCAL_URL}/api/users/empresa/name-repeat?name=${name}`)
+    if (!res.ok) {
+        // This will activate the closest `error.js` Error Boundary
+        throw new Error('Failed to fetch data')
+      }
+    return res.json()
+  }  
+
 
   export async function GetUsersEmpresaPagination(d:RequestUserEmpresaFilter,page:number) {
     const res = await fetch(`${LOCAL_URL}/api/users/empresa?page=${page}`,{

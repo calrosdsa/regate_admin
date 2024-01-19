@@ -17,7 +17,7 @@ const ImageOption = ({
     const [loading,setLoading] = useState(false)
 
     return(
-        <div className="relative  w-40 h-40 rounded-md">
+        <div className="relative  rounded-md">
             {photo.type_entity == TypeEntity.ENTITY_PHOTO &&
             <div className=" absolute right-1 top-1">
             <MenuLayout className=" bg-white rounded-full">

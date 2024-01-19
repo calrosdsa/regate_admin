@@ -16,7 +16,7 @@ const ConfirmReservaDialog = ({open,close,update,reserva}:{
     update:(amount:number)=>void
 }) =>{
     const [loading,setLoading] = useState(false)
-    const [value,setValue] = useState(`${reserva.total_price-reserva.paid}`)
+    const [value,setValue] = useState("")
 
     const onChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         setValue(e.target.value)
@@ -46,7 +46,7 @@ const ConfirmReservaDialog = ({open,close,update,reserva}:{
         <DialogLayout
         open={open}
         close={close}
-        title="Cancelar Reserva"
+        title="Confirmar reserva"
         className=" max-w-xl"
         >
             <form onSubmit={onSubmit} className="pt-1">
@@ -54,9 +54,10 @@ const ConfirmReservaDialog = ({open,close,update,reserva}:{
                 onChange={(e)=>onChange(e)}
                 value={value}
                 name="content"
-                type="number"
+                type="tel"
                 required={true}
-                label="Motivo de cancelación de la reserva."
+                placeholder={`${reserva.total_price - reserva.paid} para completar la reserva`}
+                label="Monto extra"
                 />
                 <div className=" flex justify-end">
                 <ButtonSubmit

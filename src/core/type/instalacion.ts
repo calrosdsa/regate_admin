@@ -74,6 +74,7 @@ type CupoReserva = {
 
 
 
+
 type CupoReservaRequest = {
     instalacion_id:number
     date:string

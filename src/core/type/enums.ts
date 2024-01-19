@@ -105,7 +105,9 @@ export enum EstablecimientoEstado {
 }
 
 export enum Http {
+    StatusOk = 200,
     StatusUnauthorized = 401,
+    StatusConflict                     = 409,
     StatusBadRequest = 400
 }
 

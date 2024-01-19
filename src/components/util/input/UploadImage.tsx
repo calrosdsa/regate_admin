@@ -15,11 +15,15 @@ const UploadImage = ({setFile,src,save,id="file",width="w-44",height="h-44",clea
     const [loading,setLoading] = useState(false)
     const [source,setSource] = useState("/images/img-default.png")
     const uploadImage = (e:ChangeEvent<HTMLInputElement>)=>{     
-        if(e.target.files?.length != undefined){
+        if(e.target.files != null){
+            console.log(e.target.files)
             const file = e.target.files[0]
-            setFile(file)
-            const fileUrl = URL.createObjectURL(file)
-            setSource(fileUrl)
+            if(file != undefined){    
+                console.log(file)
+                setFile(file)
+                const fileUrl = URL.createObjectURL(file)
+                setSource(fileUrl)
+            }
         }
     }
     useEffect(()=>{
@@ -43,7 +47,9 @@ const UploadImage = ({setFile,src,save,id="file",width="w-44",height="h-44",clea
             <div className="flex justify-between w-full mt-2 sm:w-max sm:grid sm:gap-y-2">
             <label htmlFor={id} className="button h-10">
                 Upload Image
-            <input id={id} className="hidden" type="file" onChange={uploadImage}/>
+            <input id={id} className="hidden" type="file" onChange={uploadImage}
+            accept="image/*"
+            />
             </label>
             {save != undefined &&
             <ButtonWithLoader

@@ -4,6 +4,7 @@ import accountSlice from './slices/accountSlice';
 import chartSlice from './slices/chartSlice';
 import systemSlice from './slices/systemSlice';
 import chatSlice from './slices/chatSlice';
+import dataSlice from './slices/dataSlice';
 
 const store = configureStore(
     {
@@ -12,7 +13,8 @@ const store = configureStore(
             account:accountSlice.reducer,
             chart:chartSlice.reducer,
             system:systemSlice.reducer,
-            chat:chatSlice.reducer
+            chat:chatSlice.reducer,
+            data:dataSlice.reducer,
         }
     }
 )

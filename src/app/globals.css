@@ -25,7 +25,7 @@
   }
   .smallButton {
     @apply   flex space-x-1 py-1 border-[1px] border-gray-300 items-center bg-white hover:bg-gray-200 
-    active:ring-blue-300 active:ring-2 px-3 text-sm
+    active:ring-blue-300 active:ring-2 px-3 text-sm whitespace-nowrap
   }
   .title {
     @apply text-base font-medium
@@ -46,7 +46,7 @@
     @apply p-2 border-[1px] shadow-md rounded-md cursor-pointer hover:opacity-70
   }
   .label {
-    @apply font-medium text-sm   
+    @apply font-medium text-sm
   }
   .help-text{
     @apply text-xs text-gray-500

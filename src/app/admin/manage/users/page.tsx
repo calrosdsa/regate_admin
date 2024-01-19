@@ -216,6 +216,8 @@ export default function Page(){
                 <path fillRule="evenodd" d="M4.755 10.059a7.5 7.5 0 0112.548-3.364l1.903 1.903h-3.183a.75.75 0 100 1.5h4.992a.75.75 0 00.75-.75V4.356a.75.75 0 00-1.5 0v3.18l-1.9-1.9A9 9 0 003.306 9.67a.75.75 0 101.45.388zm15.408 3.352a.75.75 0 00-.919.53 7.5 7.5 0 01-12.548 3.364l-1.902-1.903h3.183a.75.75 0 000-1.5H2.984a.75.75 0 00-.75.75v4.992a.75.75 0 001.5 0v-3.18l1.9 1.9a9 9 0 0015.059-4.035.75.75 0 00-.53-.918z" clipRule="evenodd" />
                                 </svg>
                 </button>
+
+              
                 <button onClick={()=>setOpenDialogCreateUser(true)}
                 className="button flex space-x-2">
                     <span>Agregar usuario</span>
@@ -224,6 +226,7 @@ export default function Page(){
         <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
             </svg>
                     </button>
+            
                 </div>
                 </div>
             
@@ -306,10 +309,13 @@ export default function Page(){
 
                 <div className="title p-2 mt-4 flex justify-between">
                     <span className="subtitle text-base">Complejos asignados</span>
+
+                    {(currentUser != undefined && currentUser.rol == UserRol.CLIENT_USER_ROL)&&
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" 
                     className="w-7 h-7 icon-button noSelect" onClick={()=>getAllEstablecientos()}>
                     <path fillRule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm.75-10.25v2.5h2.5a.75.75 0 0 1 0 1.5h-2.5v2.5a.75.75 0 0 1-1.5 0v-2.5h-2.5a.75.75 0 0 1 0-1.5h2.5v-2.5a.75.75 0 0 1 1.5 0Z" clipRule="evenodd" />
                     </svg>
+                    }
 
                 </div>
                 <div className="mt-2">
@@ -323,10 +329,12 @@ export default function Page(){
                          border-b" key={item.id}>
                             <span className=" subtitle">{item.name}</span>
 
+                    {(currentUser != undefined && currentUser.rol == UserRol.CLIENT_USER_ROL)&&
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" 
                             className="w-7 h-7 icon-button noSelect" onClick={()=>setUserEstablecimiento(item)}>
                             <path fillRule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clipRule="evenodd" />
                             </svg>
+                    }
 
                         </div>
                     )

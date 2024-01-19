@@ -1,4 +1,4 @@
-import { DayMonthPosition, EstadoVisibility, ReservaEstado } from "../type/enums";
+import { DayMonthPosition, EstadoVisibility, Repeat, ReservaEstado } from "../type/enums";
 
 
 export const estadoVisibility:SelectItem[] = [
@@ -53,5 +53,24 @@ export const reservaEstados:SelectItem[] = [
     {
         name:"Cancelado",
         value:ReservaEstado.Cancel.toString()
+    },
+]
+
+export  const repeatOptions = [
+    {
+        label:"Nunca",
+        repeat:Repeat.NEVER
+    },
+    {
+        label:"Diariamente",
+        repeat:Repeat.DAYLY
+    },
+    {
+        label:"Semanalmente",
+        repeat:Repeat.WEEKLY
+    },
+    {
+        label:"Mensualmente",
+        repeat:Repeat.MOTHTLY
     },
 ]

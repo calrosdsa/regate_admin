@@ -28,9 +28,8 @@ const Page= ({params}:{params:{uuid:string}})=>{
   const now = moment(new Date()).utc()
   const accountState = useAppSelector(state=>state.account)
   const chartState = useAppSelector(state=>state.chart)
-  const lastDays = 7
-  const startDate =  moment().subtract(7,'days').format("MMM D")
-  const endDate = moment().add(1,"days").format("MMM D")
+  const startDate =  now.startOf('month').format("MMM D")
+  const endDate = now.endOf('month').format("MMM D")
 
   const SimpleToolTip = ({ active, payload, label }:any) => {
   
@@ -152,19 +151,25 @@ const Page= ({params}:{params:{uuid:string}})=>{
     dispatch(chartActions.setCloseDialog(false))
     dispatch(chartActions.setTypeOfChart(typeOfChart))
     dispatch(chartActions.setFilterData({...chartState.filterData,type_date:typeDate,
-    end_date:now.add(1,"days").toISOString(),
-    start_date:now.subtract(7,"days").toISOString()}))
+    start_date:now.startOf('month').toISOString(),
+    end_date:now.endOf('month').toISOString()
+  }))
     appendSerachParams("_dialog","1",router,current,pathname)
     // dispatch(chartActions.setAllowedCharts([TypeOfDate.day,TypeOfDate.week,TypeOfDate.month,TypeOfDate.year]))
     // dispatch(chartActions.setData(chartState.response?.reserva_amount || []))
   }
 
   useEffect(()=>{
+    // console.log(now.startOf('week').format('YYYY-MM-DD'));
+    // console.log(now.endOf('week').format('YYYY-MM-DD'));
     const filterData:FilterChartData = {
       type_date:TypeOfDate.day,
-      end_date:now.add(1,"days").toISOString(),
-      start_date:now.subtract(7,"days").toISOString(),
-      uuid:params.uuid
+      // end_date:now.add(1,"days").toISOString(),
+      // start_date:now.subtract(7,"days").toISOString(),
+      uuid:params.uuid,
+      start_date:now.startOf('month').toISOString(),
+      end_date:now.endOf('month').subtract(1,"days").toISOString(),
+      // instalaciones:[1]
     }
     dispatch(chartActions.setFilterData(filterData))
     
@@ -374,8 +379,8 @@ const Page= ({params}:{params:{uuid:string}})=>{
 
 
       <ChartDropMenu
-      title="Ingresos"
-      subtitle={`Ingresos en los últimos (${startDate} - ${endDate})`}
+      title="Ingresos por día"
+      subtitle={`Ingresos por día (${startDate} - ${endDate})`}
       className='col-start-3 col-span-2'
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
       CustomToolTip={CustomTooltipAvergeHoursStacked}

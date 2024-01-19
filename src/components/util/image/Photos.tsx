@@ -10,10 +10,11 @@ const Photos = ({
 }) => {
     return(
         <>
+        <div  className=" flex flex-wrap">
         {items != null &&
             items.map((item,index)=>{
                 return(
-                    <div className="w-40" key={index}>
+                    <div className="" key={index}>
                         <ImageOption
                         photo={item}
                         establecimiento_uuid={uuid}
@@ -22,6 +23,7 @@ const Photos = ({
                     </div>
                 )
             })}
+        </div>
         </>
     )
 }

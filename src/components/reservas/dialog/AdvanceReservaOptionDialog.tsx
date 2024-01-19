@@ -1,47 +1,41 @@
-import InstalacionCard from "@/components/establecimiento/instalacion/InstalacionCard"
-import DialogLayout from "@/components/util/dialog/DialogLayout"
-import InputDateTime from "@/components/util/input/InputDateTime"
-import SelectTime from "@/components/util/select/SelectTime"
-import { days } from "@/context/actions/chart-actions"
-import { GetInstalaciones } from "@/core/repository/instalacion"
-import { Repeat, EndOptions, ReservaType, MonthDaySelectOption, DayMonthPosition, Http } from "@/core/type/enums"
-import { dayMonth, repeatOptions } from "@/core/util/data"
-import moment from "moment"
-import { ChangeEvent, useState } from "react"
-import Image from "next/image"
-import { CheckRervasCuposAvailables, CreateReservaCupos, DeleteReservaCupos } from "@/core/repository/reservas"
-import { ReservaFromEventoRequest } from "@/core/type/evento"
-import Loader from "@/components/util/loaders/Loader"
-import Spinner from "@/components/util/loaders/Spinner"
-import { toast } from "react-toastify"
-import { successfulMessage, unexpectedError } from "@/context/config"
-import ButtonWithLoader from "@/components/util/button/ButtonWithLoader"
-import Loading from "@/components/util/loaders/Loading"
-import TimeSelect from "@/components/util/input/TimeSelect"
+import ButtonSubmit from "@/components/util/button/ButtonSubmit";
+import ButtonWithLoader from "@/components/util/button/ButtonWithLoader";
+import DialogLayout from "@/components/util/dialog/DialogLayout";
+import TimeSelect from "@/components/util/input/TimeSelect";
+import Loading from "@/components/util/loaders/Loading";
+import Spinner from "@/components/util/loaders/Spinner";
+import { days } from "@/context/actions/chart-actions";
+import { successfulMessage, unexpectedError } from "@/context/config";
+import { GetInstalaciones } from "@/core/repository/instalacion";
+import { CheckRervasCuposAvailables, CreateReservaCupos, DeleteReservaCupos, GenerateReservaCupos } from "@/core/repository/reservas";
+import { EndOptions, Http, MonthDaySelectOption, Repeat, ReservaType } from "@/core/type/enums";
+import { ReservaFromEventoRequest } from "@/core/type/evento";
+import { repeatOptions } from "@/core/util/data";
+import moment from "moment";
+import Image from "next/image";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 
-const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type,uuidEvent,
-    updateDateWithCupos,eventoId,isForDelete}:{
-    close:()=>void
-    open:boolean
-    startDate?:string
-    startTime?:moment.Moment
-    uuid:string
-    reserva_type:ReservaType
-    uuidEvent:string
-    eventoId:number
-    updateDateWithCupos:(e:ReservaCupo[]) =>void
-    isForDelete:boolean
-}) =>{
+const AdvanceReservaOptionDialog = ({
+    close,open,startDate,startTime,uuid,instalacionId,generateCupos
+}:{
+        close:()=>void
+        open:boolean
+        uuid:string
+        startDate?:string
+        startTime?:moment.Moment
+        instalacionId:number
+        generateCupos:(e:CupoReserva[])=>void
+}) => {
+
     const [repeatOption,setRepeatOption] = useState(Repeat.NEVER)
     const [untilOption,setUntilOption] = useState(EndOptions.DATE)
     const [selectedDaysWeeks,setSelectedDaysWeeks] = useState<number[]>([])
-    const [tab,setTab] = useState(0)
     const [instalaciones,setInstalaciones] = useState<InstalacionWithReservaCupos[]>([])
     const [loadingInstalaciones,setLoadingInstalaciones] = useState<number[]>([])
     const [selectedInstalaciones,setSelectedInstalaciones] = useState<number[]>([])
     const [loadingSaveButton,setLoadingSaveButton] = useState(false)
-    const [loading,setLoading] = useState(false)
     const [start,setStart] = useState(startTime?.format("HH:mm"))
     const [times,setTimes] = useState<string[]>([])
     const [end,setEnd] = useState(startTime?.add(30,"minutes").format("HH:mm"))
@@ -75,29 +69,10 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
             [e.target.name]:e.target.value
         })
     }
-    // const onChangeSelect = (e:ChangeEvent<HTMLSelectElement>)=>{
-    //     setFilterData({
-    //         ...filterData,
-    //         [e.target.name]:e.target.value
-    //     })
-    // }
 
-    const getInstalaciones = async () =>{
-        try{
-            setLoading(true)
-            setInstalaciones([])
-            const res:Instalacion[] = await GetInstalaciones(uuid)
-            const instalacionWithReservaCupos = res.map((item):InstalacionWithReservaCupos=>{
-                return {instalacion:item,cupos:[]}
-            })
-            setLoading(false)
-            setInstalaciones(instalacionWithReservaCupos)
-        }catch(e){
-            setLoading(false)
-        }
-    }
+  
 
-    const validateToContinue = () =>{
+    const validateToContinue = async() =>{
         const startM = moment(startDate + " " + start)
         const endM = moment(startDate + " " + end)
         const minutesDifference = ((endM.hour()*60) + endM.minute()) - ((startM.hour()*60) + startM.minute()) 
@@ -130,7 +105,6 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
                   }  
                 break;
             case Repeat.WEEKLY:
-                // count = count * 7
                 for(let i=0;i<count;i=Number(repeat_every)+i){
                     for(let t =0;t < (minutesDifference/30);t++){
                         const today = moment(startM).add(i,'days').add(30*t,"minutes")
@@ -145,7 +119,6 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
                 }
                 break;
             case Repeat.MOTHTLY:
-                // count = count * 30
                 for(let i=0;i<count;i=Number(repeat_every)+i){
                     for(let t =0;t < (minutesDifference/30);t++){
                         const today = moment(startM).add(i,'days').add(30*t,"minutes") 
@@ -162,8 +135,6 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
                 break;
             }
             
-                setTab(1)
-        getInstalaciones()
     }
 
     const addInstalacionLoader = (instalacionId:number) =>{ setLoadingInstalaciones([...loadingInstalaciones,instalacionId]) }
@@ -180,18 +151,12 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
 
     const checkReservaCupoAvailables = async(instalacionId:number,establecimientoId:number) => {
         try{
-            if(isForDelete){
-                if(selectedInstalaciones.includes(instalacionId)){
-                    removeInstalacion(instalacionId)
-                    return
-                }
-                addInstalacion(instalacionId)
-            }else{
-                addInstalacionLoader(instalacionId)
-                if(selectedInstalaciones.includes(instalacionId)){
-                removeInstalacion(instalacionId)
-                removeInstalacionLoader(instalacionId)
-                return
+          
+            addInstalacionLoader(instalacionId)
+            if(selectedInstalaciones.includes(instalacionId)){
+            removeInstalacion(instalacionId)
+            removeInstalacionLoader(instalacionId)
+            return
             }
             const request:ReservaFromEventoRequest = {
                 times:times,
@@ -211,54 +176,24 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
                 setInstalaciones(updateInstalacionList)
             }
             removeInstalacionLoader(instalacionId)
-        }
+        
         }catch(err){
             removeInstalacionLoader(instalacionId)
         }
     }
 
-    const createReservaCupos = async() =>{
+    const generateReservaCupos = async() =>{
         try{
             if(times.length ==0) return
             setLoadingSaveButton(true)
-            const request:ReservaFromEventoRequest = {
+            const r:GenerateReservaCupoRequest = {
                 times:times,
-                evento_uuid:uuidEvent,
-                reserva_type:reserva_type,
-                instalaciones:selectedInstalaciones,
-                establecimiento_id:instalaciones[0].instalacion.establecimiento_id | 0,
-                day_week:moment(times[0]).day()
-            }
-            
-            if(isForDelete){
-                await DeleteReservaCupos(request)
-
-            }else{
-                const res:Response = await CreateReservaCupos(request)
-                switch(res.status){
-                    case Http.StatusConflict:
-                        const data:ResponseMessage =await res.json()
-                        toast.error(data.message)
-                        break;
-                    case Http.StatusOk:
-                        toast.success(successfulMessage)
-                        let reservasCupo:ReservaCupo[] = []
-                        for(let i = 0;i<selectedInstalaciones.length;i++){
-                            const l:ReservaCupo[] = times.map(item=>{
-                                return {
-                                    reserva_type:ReservaType.Evento,
-                                    start_date:item,
-                                    reserva_id:null,
-                                    evento_id:eventoId
-                                }
-                            })
-                            reservasCupo = [...reservasCupo,...l]
-                        }
-                        updateDateWithCupos(reservasCupo)
-                        break;
-
-                }
-            }
+                instalacion_id:instalacionId,
+                establecimiento_uuid:uuid
+            } 
+            const res:GenerateReservaCupoResponse = await GenerateReservaCupos(r)
+            console.log("RESPONSE",res)
+            generateCupos(res.reserva_cupos)
             setLoadingSaveButton(false)
             close()
         }catch(e){
@@ -267,19 +202,38 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
         }
     }
 
+    const onSubmit = async(e:FormEvent<HTMLFormElement>) =>{
+        try{
+            e.preventDefault()
+            await validateToContinue()
+        }catch(error){
 
-    return(
+        }
+    }
+    useEffect(()=>{
+        generateReservaCupos()
+    },[times])
+
+
+    return (
+        <>
         <DialogLayout
-        close={close}
         open={open}
-        className=" max-w-md "
-        title={isForDelete ? "Eliminar" :"Reservar"}
+        close={close}
+        className="max-w-lg"
         >
-            {tab == 0 &&
-        <div className="grid sm:grid-cols-2 gap-x-4 gap-y-4">
+        <form onSubmit={onSubmit}>
+            <div className="grid sm:grid-cols-2 gap-x-4 gap-y-4 ">
+
             <TimeSelect
             time={start}
-            setTime={(e)=>{setStart(e)}}
+            setTime={(e)=>{
+                setStart(e)
+                console.log(end)
+                if(end == undefined){
+                    // setEnd(e)
+                }
+            }}
             label="Inicio"
             />
              <TimeSelect
@@ -287,31 +241,7 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
             setTime={(e)=>{setEnd(e)}}
             label="Fin"
             />
-            {/* <InputDateTime
-            label="Inicio"
-            datetime={start}
-            setTime={(e)=>{
-                setStart({...start,time:e})
-            }}
-            setDate={(e)=>{
-                setStart({...start,date:e})
-            }}
-            /> */}
-            {/* <InputDateTime
-            label="Fin"
-            datetime={end}
-            setTime={(e)=>{
-                setEnd({...end,time:e})
-            }}
-            setDate={(e)=>{
-                setEnd({...end,date:e})
-            }}
-            /> */}
-
-            {/* <div className="flex space-x-2 items-center col-span-full">
-                <input id="all-day" type="checkbox" />
-                <label htmlFor="all-day" className="text-sm">Todo el dia</label>
-            </div> */}
+       
 
             <div className=" grid">
                 <span className="label">Repetir</span>
@@ -376,29 +306,6 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
                     /> 
                 </div>
 
-                {/* <div className="flex space-x-3 p-2">
-                    <input type="radio" name="month_day_select" 
-                    value={MonthDaySelectOption.BY_POSITION_DAY_OF_MONTH} onChange={onChange}/>
-                    <div className="grid gap-y-2">
-                    <select name="day_month_position" value={day_month_position} id="" className="select h-8 text-sm"
-                    onChange={onChangeSelect}>
-                        {dayMonth.map((item,idx)=>{
-                            return(
-                                <option key={idx} value={item.value}>{item.name}</option>
-                                )
-                            })}
-                    </select>
-
-                    <select name="day_week" id="" className="select h-8 text-sm" value={day_week}
-                    onChange={onChangeSelect}>
-                        {days.map((item,idx)=>{
-                            return(
-                                <option key={idx} value={item.value}>{item.day}</option>
-                                )
-                            })}
-                    </select>
-                    </div>
-                </div> */}
                 </>
                 }
 
@@ -454,119 +361,28 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
                 </div>
             </div>
         }
+            </div>
 
 
-        </div>
-        }
-        {tab == 1 &&
-        <div>
-            {loading && 
-            <Loading
-            className="flex w-full justify-center py-20"
-            loading={loading}
+        <div className=" mt-4 flex w-full justify-end space-x-2">
+            <ButtonSubmit
+            loading={loadingSaveButton}
+            className="w-24"
+            // disabled={loadingSaveButton}
+            title={"Continuar"}
             />
-            }
-            {instalaciones.map((item,index)=>{
-                return(
-                    <div key={index} >
-                            <div 
-                            onClick={()=>checkReservaCupoAvailables(item.instalacion.id,item.instalacion.establecimiento_id)}
-                            className="flex space-x-3 p-2 items-center cursor-pointer border-b relative
-                            hover:bg-gray-100 justify-between">
-                                <div className="flex items-center w-full">
-
-                                <div className="w-12">
-                                    {/* <CommonImage
-                                    src={item.instalacion.portada}
-                                    h={100} w={120} className={"h-20 w-36 object-cover rounded-lg"}/> */}
-                                {(item.instalacion.portada == null || item.instalacion.portada == "") ?
-                                <Image
-                                src="/images/img-default.png"
-                                height={100}
-                                width={150}
-                                alt={item.instalacion.name} 
-                                className=" rounded-full h-12 w-12   object-contain bg-gray-200 p-2"
-                                />
-                                :
-                                <Image
-                                src={item.instalacion.portada as string}
-                                height={100}
-                                width={150}
-                                alt={item.instalacion.name} 
-                                className=" rounded-full h-12 w-12  object-cover"
-                                />
-                            }
-                            </div>
-                        <span className="font-medium text-sm  line-clamp-2 w-1/2
-                        p-1 z-10 rounded-br-lg">{item.instalacion.name}</span>
-                        </div>
-                        {loadingInstalaciones.includes(item.instalacion.id)&&
-                        <Spinner/>
-                        }
-                        {selectedInstalaciones.includes(item.instalacion.id)&&
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
-                      </svg>
-                      
-                        }
-                    </div>
-
-                    {item.cupos.length > 0 &&
-                    <div className="flex flex-col">
-                        <span className="subtitle">No se pudo reservar porque hace conflicto con las siguientes horas:</span>
-
-                        {item.cupos.map((item,idx)=>{
-                            return (
-                                <div className="" key={idx}>
-                                    <span className="text-sm">{idx+1}.- {moment(item.start_date).utc().format("yyyy-MM-DD HH:mm")}</span>
-                                </div>
-                            )
-                        })}
-
-                    </div>
-                    }
-
-                    </div>
-                )
-            })}
+          
         </div>
-        }
+
+        </form>
+      
 
         
-        <div className=" mt-4 flex w-full justify-end space-x-2">
-            {tab == 1 && 
-            <button className="button2 "
-            onClick={()=>{
-                setSelectedInstalaciones([])
-                
-                setTab(0)
-            }}
-            >
-                Volver
-            </button>
-            }
-            <ButtonWithLoader
-            loading={loadingSaveButton}
-            disabled={loadingSaveButton}
-            title={tab == 0 ?"Continuar":"Guardar"}
-            onClick={()=>{
-                if(tab == 0){
-                    validateToContinue()
-                }else{
-                    createReservaCupos()
-                }
-            }}
-            />
-            {/* <button disabled={loadingSaveButton}
-             onClick={()=>validateToContinue()}
-             className={`button`}>
-                {tab == 0 && "Continuar"}
-                {tab == 1 && "Guardar"}
-             </button> */}
-        </div>
+
 
         </DialogLayout>
-        )
+        </>
+    )
 }
 
-export default CalendarDialogReserva;
+export default AdvanceReservaOptionDialog;

@@ -72,11 +72,13 @@ export async function getEstablecimientoReservas(data:ReservaDataFilter,page:num
       method:"post",
       body:JSON.stringify(data)
     })
-    if (!res.ok) {
-      // This will activate the closest `error.js` Error Boundary
-      throw new Error('Failed to fetch data')
-    }
-    return res.json()
+    // if (!res.ok) {
+    //   const b = await res.json()
+    //   console.log("sasas",b)
+    //   // This will activate the closest `error.js` Error Boundary
+    //   throw new Error('Failed to fetch data')
+    // }
+    return res
   }
 
   export async function DeleteReservaCupos(data:ReservaFromEventoRequest) {
@@ -129,6 +131,19 @@ export async function getEstablecimientoReservas(data:ReservaDataFilter,page:num
 
   export async function EditReserva(data:ReservaEditRequest) {
     const res = await fetch(`${LOCAL_URL}/api/reservas/reserva-edit`,{
+      method:"post",
+      body:JSON.stringify(data)
+    })
+    if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error('Failed to fetch data')
+    }
+    return res.json()
+  }
+
+
+  export async function GenerateReservaCupos(data:GenerateReservaCupoRequest) {
+    const res = await fetch(`${LOCAL_URL}/api/reservas/generate-cupos`,{
       method:"post",
       body:JSON.stringify(data)
     })

@@ -14,6 +14,8 @@ import { chartActions } from "@/context/slices/chartSlice";
 import { ChartExportRequest, ChartTypeData, FilterChartData, TypeValueChart } from "@/core/type/chart";
 import Loader from "@/components/util/loaders/Loader";
 import { exportDashboardDataExcel } from "@/context/actions/download-actions";
+import { useParams } from "next/navigation";
+import { fetchInstalaciones } from "@/context/actions/data-actions";
 
 const ChartDialog = ({open,close,CustomToolTip,getNewData,showLegend,legendLabels,singleColor,
 keyValue2,label,chartTypeData}:{
@@ -32,10 +34,13 @@ keyValue2,label,chartTypeData}:{
     // const [typeDate,setTypeDate] = useState(TypeOfDate.day)
     const [hideHeader,setHideHeader] = useState(false)
     const chartState = useAppSelector(state=>state.chart)
+    const loadingInstalaciones = useAppSelector(state=>state.ui.fetchLoading)
+    const instalaciones = useAppSelector(state=>state.data.instalaciones)
     const [ shouldShowSecondLabel,setShowSecondLabel ]= useState(false)
     const [labelName,setLabelName] = useState("")
     const [valueName,setValueName] = useState("")
     const [typeValue,setTypeValue] = useState(TypeValueChart.NONE)
+    const params = useParams()
 
     const getTypeValue = () =>{
         switch(typeValue){
@@ -146,9 +151,9 @@ keyValue2,label,chartTypeData}:{
                 leaveTo="opacity-0 scale-0"
               >
       <Dialog.Panel>
-                                   <div className='bg-gray-100 h-screen overflow-auto'>
-            <div className={`border-[1px] bg-white  m-3 border-gray-400  
-             ${hideHeader ? "mt-2" : "mt-20" }`}>
+                                   <div className='bg-gray-100 h-screen overflow-auto relative'>
+            <div className={`border-[1px] bg-white md:m-3   border-gray-400  
+             ${hideHeader ? "mt-2" : "mt-16 md:mt-16" }`}>
                             <FilterChartHeader
                             hideHeader={hideHeader}
                             chartType={chartState.typeOfChart}
@@ -172,9 +177,15 @@ keyValue2,label,chartTypeData}:{
                             setHideHeader={(bool)=>setHideHeader(bool)}
                             applyTypeChart={(type:TypeOfChart)=>dispatch(chartActions.setTypeOfChart(type))}
                             exportData={exportData}
+                            instalaciones={instalaciones}
+                            getInstalaciones={()=>{
+                                dispatch(fetchInstalaciones(params.uuid as string))
+                            }}
+                            loadingInstalaciones={loadingInstalaciones}
+                            chartTypeData={chartTypeData}
                             />
 
-               <div className='border-t-[1px] border-gray-400 p-3 relative'>
+               <div className='border-t-[1px] border-gray-400 p-2 sm:p-3 relative'>
                     {/* <div className='pb-5'>Total de casos creados</div> */}
                     {/* {JSON.stringify(chartState.data)} */}
                 {chartState.typeOfChart == TypeOfChart.bar && 
@@ -229,10 +240,10 @@ keyValue2,label,chartTypeData}:{
                 }
              </div>
 
-             <div className={`border-t-[1px] border-gray-400 p-3 relative `}>
-                {chartState.loading ?
+             <div className={`border-t-[1px] border-gray-400 sm:p-3 relative `}>
+                {/* {chartState.loading ?
           <Loader className=' absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 '/>
-                :
+                : */}
              <table className="w-full shadow-xl">
 
              <thead className=" bg-gray-200 text-left noselect">
@@ -268,7 +279,7 @@ keyValue2,label,chartTypeData}:{
             })}
         </tbody>
                 </table>
-        }
+        {/* } */}
              </div>
 
 

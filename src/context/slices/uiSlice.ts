@@ -5,7 +5,7 @@ import { ReporteId } from "@/core/type/enums";
 
 
 const uiState:UiState=  {
-    loading:false,
+    fetchLoading:false,
     innerLoading:false,
     loaded:false,
     loaderDialog:false,
@@ -20,6 +20,9 @@ const uiSlice = createSlice({
     reducers:{
         setInnerLoading(state,action:PayloadAction<boolean>){
             state.innerLoading = action.payload
+        },
+        setFetchLoading(state,action:PayloadAction<boolean>){
+            state.fetchLoading = action.payload
         },
         setLoaded(state,action:PayloadAction<boolean>){
             state.loaded = action.payload

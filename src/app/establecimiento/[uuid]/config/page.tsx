@@ -400,7 +400,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             <span className="label pb-1">Imagenes</span>
             <div className='flex gap-3 w-full flex-wrap'>
             <Photos
-            items={data.establecimiento_photos.filter(item=>item.url != undefined && item.url != "")}
+            items={[]}
             uuid={params.uuid}
             deletePhoto={deleteEstablecimientoPhoto}
             />

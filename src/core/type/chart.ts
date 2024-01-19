@@ -2,6 +2,7 @@ import { TypeOfChart, TypeOfDate } from "./enums"
 
 export type NameValueData = {
     name:string
+    nameValue?:number
     value:number
     value2?:number | null
     date?:string
@@ -43,6 +44,9 @@ export type FilterChartData = {
     type_date:TypeOfDate
     establecimiento_id?:number
     uuid?:string
+    instalaciones?:number[]
+    // start_week_date:string
+    // end_week_date:string
 }
 
 export type ChartDataResponse = {

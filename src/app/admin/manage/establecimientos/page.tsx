@@ -1,6 +1,7 @@
 "use client"
 
 import Loading from "@/components/util/loaders/Loading"
+import { LOCAL_URL } from "@/context/config"
 import { GetEstablecimientos } from "@/core/repository/establecimiento"
 import Link from "next/link"
 import { useEffect, useState } from "react"
@@ -64,12 +65,12 @@ import { useEffect, useState } from "react"
                 return(
                     <tr key={item.uuid} className={`${index % 2 && "bg-gray-100"}`}>
                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                    <Link href={`./establecimiento/${item.uuid}`}>
+                    <Link href={`${LOCAL_URL}/establecimiento/${item.uuid}`}>
                     {item.name}
                     </Link>
                 </th>
                 <td className="px-6 py-4 underline text-primary cursor-pointer">
-                <Link href={`./establecimiento/${item.uuid}`}>Ver</Link>
+                <Link href={`${LOCAL_URL}/establecimiento/${item.uuid}`}>Ver</Link>
                 </td>
             </tr>
        )})}

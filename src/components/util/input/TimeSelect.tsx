@@ -25,7 +25,7 @@ const TimeSelect = ({
       }
 
             <select name="" id="" required className="select h-8 mt-1"
-            value={time}
+            value={time} 
              onChange={(e)=>setTime(e.target.value)}>
                 <option value=""></option>
                 {hours.map((item,index)=>{

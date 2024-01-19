@@ -365,9 +365,8 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                                 disabled={selectedCupos.length != 0}
                                 >
                                     <button
-                                     className={`items-center justify-center h-10 w-36 flex space-x-1 whitespace-nowrap
-                                     ${selectedCupos.length == 0 ? "button-disabled":"button"}`}
-                                     disabled={selectedCupos.length == 0} onClick={()=>{
+                                     className={`items-center justify-center h-10 w-36 flex space-x-1 whitespace-nowrap button`}
+                                    onClick={()=>{
                                         appendSerachParams("dialog","1")
                                         setCreateReservaDialog(true)}}>
                                         <span>Crear Reserva</span>
@@ -424,10 +423,11 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         <CreateReservaDialog
         open={createReservaDialog}
         close={()=>setCreateReservaDialog(false)}
-        reservaCupos={selectedCupos}
+        cupos={selectedCupos}
         instalacion={instalacion}
         refresh={()=>getCuposReservaInstalacion(instalacion.id)}
         uuid={params.uuid}
+        useAdvanceOptions={selectedCupos.length == 0}
         />
         }
     </>

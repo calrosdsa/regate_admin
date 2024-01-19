@@ -7,12 +7,13 @@ import { getRouteEstablecimiento } from "@/core/util/routes";
 import moment from "moment";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
     const searchParams = useSearchParams();
     const name = searchParams.get("name")
     const id = searchParams.get("id")
-
+   
     return(
         <>
         <div className="p-2 overflow-auto h-screen">
@@ -28,8 +29,8 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
                 <span className="text-sm subtitle"> #{params.uuidEvento.slice(0,7)}</span>
                 </span>
                 </div>
-
-               
+                <div>
+               </div>
 
                 <Calendar
                 uuid={params.uuid}
@@ -46,3 +47,4 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
 }
 
 export default Page;
+

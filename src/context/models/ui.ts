@@ -1,5 +1,5 @@
 type UiState = {
-    loading:boolean
+    fetchLoading:boolean
     innerLoading:boolean
     loaded:boolean
     loaderDialog:boolean
