@@ -20,7 +20,7 @@ import { toast } from "react-toastify";
 const AdvanceReservaOptionDialog = ({
     close,open,startDate,startTime,uuid,instalacionId,generateCupos
 }:{
-        close:()=>void
+        close:(closeParentDialog:boolean)=>void
         open:boolean
         uuid:string
         startDate?:string
@@ -195,7 +195,7 @@ const AdvanceReservaOptionDialog = ({
             console.log("RESPONSE",res)
             generateCupos(res.reserva_cupos)
             setLoadingSaveButton(false)
-            close()
+            close(false)
         }catch(e){
             toast.error(unexpectedError)
             setLoadingSaveButton(false)
@@ -219,7 +219,8 @@ const AdvanceReservaOptionDialog = ({
         <>
         <DialogLayout
         open={open}
-        close={close}
+        allowFullScreen={true}
+        close={()=>close(true)}
         className="max-w-lg"
         >
         <form onSubmit={onSubmit}>

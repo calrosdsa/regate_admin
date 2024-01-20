@@ -17,6 +17,7 @@ import { exportDashboardDataExcel } from "@/context/actions/download-actions";
 import { useParams } from "next/navigation";
 import { fetchInstalaciones } from "@/context/actions/data-actions";
 
+
 const ChartDialog = ({open,close,CustomToolTip,getNewData,showLegend,legendLabels,singleColor,
 keyValue2,label,chartTypeData}:{
     open:boolean

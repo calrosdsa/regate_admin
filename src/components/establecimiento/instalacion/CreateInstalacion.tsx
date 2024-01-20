@@ -18,7 +18,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
     close:()=>void
 }) =>{
     const [formData,setFormData ] = useState({
-        name:"",
+        name_evento:"",
         description:"",
         cantidad_de_personas:20,
         category_id: 1,

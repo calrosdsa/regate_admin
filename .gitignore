@@ -12,6 +12,12 @@
 /.next/
 /out/
 
+
+/r_backend
+/regate-admin
+/regate-chat
+/regate-core
+/regate-notification
 # production
 /build
 

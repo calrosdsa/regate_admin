@@ -15,7 +15,7 @@ const CreateBankAccountDialog = ({close,open,items,setAccountBank}:{
     setAccountBank:(e:AccountBank)=>void
 }) =>{
     const [formData,setFormData] = useState({
-        name:"",
+        name_evento:"",
         account_number:"",
         account_name:"",
         bank_id:""

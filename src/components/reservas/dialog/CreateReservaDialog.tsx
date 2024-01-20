@@ -19,6 +19,7 @@ import ConfirmationDialog from "@/components/util/dialog/ConfirmationDialog";
 import { unexpectedError } from "@/context/config";
 import { Tab } from "@headlessui/react";
 import AdvanceReservaOptionDialog from "./AdvanceReservaOptionDialog";
+import SeeMore from "@/components/util/button/SeeMore";
 
 
 type CreateReservaRequest = {
@@ -117,20 +118,34 @@ const CreateReservaDialog = ({open,close,instalacion,cupos,refresh,uuid,useAdvan
             let cupoIntervals:CupoInterval[] = []
             console.log("Reserva Intervals",reservaIntervals)
             for(let i = 0;i < reservaIntervals.length;i++){
-                const cupos:CupoR[] = reservaIntervals[i].interval.map(item=>{
-                    return {
-                        start_date:item.time,
-                        instalacion_id:instalacion.id,
-                        precio:item.precio
+                const cupos:(CupoR | undefined)[] = reservaIntervals[i].interval.map(item=>{
+                    // if(item.available){}
+                    if(item.available &&     item.evento_id == undefined && item.reserva_id == null){
+                        const c:CupoR = {
+                            start_date:item.time,
+                            instalacion_id:instalacion.id,
+                            precio:item.precio
+                        }
+                        return  c
+                    }else{
+                        return undefined
                     }
                 })
-                const r:CupoInterval = {
-                    interval:cupos,
+                console.log(cupos)
+                if(cupos.includes(undefined)){
+                    console.log("No available for reservations")
+                    // return
+                }else{
+
+                    // const n = cupos.filter(item=>item != undefined)
+                    const r:CupoInterval = {
+                    interval:cupos as CupoR[],
                     paid:Number(reservaIntervals[i].paid),
                     total:reservaIntervals[i].interval.map(t=>t.precio).reduce((prev,curr)=>prev + curr)
                 }
                 console.log("Cupo Interval",r)
                 cupoIntervals = cupoIntervals.concat(r)
+                }
             }
             
             const requestData:CreateReservaRequest = {
@@ -225,7 +240,7 @@ const CreateReservaDialog = ({open,close,instalacion,cupos,refresh,uuid,useAdvan
                 return "No podrás reservar en este horario porque no está configurado como parte del horario disponible para la cancha."
             }
             if(items[i].reserva_id != null || items[i].evento_id != undefined){
-                return "No se puede reservar porque ya existe una reserva que hace conflicto en este rango de hora"
+                return "No se puede reservar porque ya existe una reserva que hace conflicto en este rango de hora."
             }
         }
         return "-"
@@ -271,7 +286,14 @@ const CreateReservaDialog = ({open,close,instalacion,cupos,refresh,uuid,useAdvan
       {openAdvanceOptions ?
       <AdvanceReservaOptionDialog
       open={openAdvanceOptions}
-      close={()=>setOpenAdvanceOptions(false)}
+      close={(closeParentDialog)=>{
+        setOpenAdvanceOptions(false)
+        if(closeParentDialog){
+            if(reservaCupos.length == 0){
+                close()
+            }
+        }
+    }}
       startTime={moment()}
       startDate={moment().format("yyyy-MM-DD")}
       uuid={uuid}
@@ -294,6 +316,15 @@ const CreateReservaDialog = ({open,close,instalacion,cupos,refresh,uuid,useAdvan
                         />
                         <span className="font-semibold">{instalacion.name}</span>
                     </div>
+                    <div className="h-2"/>
+                    <div className=" smallButton w-min px-1 items-center noSelect">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                     className="w-[15px] h-[15px] ">
+                    <path d="M10 3.75a2 2 0 1 0-4 0 2 2 0 0 0 4 0ZM17.25 4.5a.75.75 0 0 0 0-1.5h-5.5a.75.75 0 0 0 0 1.5h5.5ZM5 3.75a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 .75.75ZM4.25 17a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5h1.5ZM17.25 17a.75.75 0 0 0 0-1.5h-5.5a.75.75 0 0 0 0 1.5h5.5ZM9 10a.75.75 0 0 1-.75.75h-5.5a.75.75 0 0 1 0-1.5h5.5A.75.75 0 0 1 9 10ZM17.25 10.75a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5h1.5ZM14 10a2 2 0 1 0-4 0 2 2 0 0 0 4 0ZM10 16.25a2 2 0 1 0-4 0 2 2 0 0 0 4 0Z" />
+                    </svg>
+                    <span onClick={()=>setOpenAdvanceOptions(!openAdvanceOptions)} className="text-xs font-medium">Seleccionar hora</span>
+                    </div>
+  
 
                     
                     <Tab.Group>
@@ -325,7 +356,7 @@ const CreateReservaDialog = ({open,close,instalacion,cupos,refresh,uuid,useAdvan
                         <Tab.Panels className={""}>
                         {reservaIntervals.map((item,idx)=>{
                                 return (
-                            <Tab.Panel className={""}>
+                            <Tab.Panel key={idx} className={""}>
                                 <div className="grid ">
                                 <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
                                     <span className="label">Precio de la reserva</span>
@@ -333,7 +364,16 @@ const CreateReservaDialog = ({open,close,instalacion,cupos,refresh,uuid,useAdvan
                                 </div>
                                 <div className="grid sm:grid-cols-2 items-center sm:space-x-10 border-b-[1px] py-2">
                                     <span className="label">Disponibilidad</span>
-                                    <span className="text-xs ">{getMessageAvailable(item.interval)}</span>
+                                    {/* <div className="text-xs ">
+                                        <span className="">{getMessageAvailable(item.interval)}
+                                    <span>Ver mas</span>
+                                        </span>
+                                    </div> */}
+                                    <SeeMore
+                                    text={getMessageAvailable(item.interval)}
+                                    maxLength={62}
+                                    className="text-xs"
+                                    />
                                 </div>
                                 {item.interval.length > 0 &&
                                 <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
@@ -395,7 +435,7 @@ const CreateReservaDialog = ({open,close,instalacion,cupos,refresh,uuid,useAdvan
             required={true}
             />
             {(loadingUsers || users.length > 0) &&
-                <div className="mt-2 overflow-auto absolute bg-white z-10 w-full h-36 shadow-lg">
+                <div className="pt-2 overflow-auto absolute bg-white z-10 w-full h-36 shadow-lg">
                 <div className="flex justify-end px-3">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
                 className="w-7 h-7 icon-button noSelect p-1" onClick={()=>setUsers([])}>
