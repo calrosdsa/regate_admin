@@ -25,7 +25,7 @@ const Page = ({ params }: { params: { uuidUser: string,uuid:string } }) => {
     const phone = searchParams.get("phone")
     const [userEmpresa,setUserEmpresa] = useState<UserEmpresa>({
         id:Number(id),
-        name_evento:name || "", 
+        name:name || "", 
         phone_number:phone || ""
     })
     const [openEditUserDialog,setOpenUserDialog] = useState(false)
@@ -80,7 +80,7 @@ const Page = ({ params }: { params: { uuidUser: string,uuid:string } }) => {
         open={openEditUserDialog}
         close={()=>setOpenUserDialog(false)}
         userEmpresa={userEmpresa}
-        onUpdate={(name,phone)=>setUserEmpresa({...userEmpresa,name_evento:name,phone_number:phone})}
+        onUpdate={(name,phone)=>setUserEmpresa({...userEmpresa,name:name,phone_number:phone})}
         />
         }
         <div className="p-2 overflow-auto h-screen">

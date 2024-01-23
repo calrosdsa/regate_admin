@@ -7,7 +7,7 @@ import { GetInstalaciones } from "@/core/repository/instalacion"
 import { Repeat, EndOptions, ReservaType, MonthDaySelectOption, DayMonthPosition, Http } from "@/core/type/enums"
 import { dayMonth, repeatOptions } from "@/core/util/data"
 import moment from "moment"
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import Image from "next/image"
 import { CheckRervasCuposAvailables, CreateReservaCupos, DeleteReservaCupos } from "@/core/repository/reservas"
 import { ReservaFromEventoRequest } from "@/core/type/evento"
@@ -21,7 +21,7 @@ import TimeSelect from "@/components/util/input/TimeSelect"
 
 
 const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type,uuidEvent,
-    updateDateWithCupos,eventoId,isForDelete}:{
+    updateDateWithCupos,eventoId}:{
     close:()=>void
     open:boolean
     startDate?:string
@@ -30,8 +30,7 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
     reserva_type:ReservaType
     uuidEvent:string
     eventoId:number
-    updateDateWithCupos:(e:ReservaCupo[]) =>void
-    isForDelete:boolean
+    updateDateWithCupos:(e:ReservaCupo[],deleteCupos:boolean) =>void
 }) =>{
     const [repeatOption,setRepeatOption] = useState(Repeat.NEVER)
     const [untilOption,setUntilOption] = useState(EndOptions.DATE)
@@ -41,10 +40,12 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
     const [loadingInstalaciones,setLoadingInstalaciones] = useState<number[]>([])
     const [selectedInstalaciones,setSelectedInstalaciones] = useState<number[]>([])
     const [loadingSaveButton,setLoadingSaveButton] = useState(false)
+    const [loadingDeleteButton,setLoadingDeleteButton] = useState(false)
     const [loading,setLoading] = useState(false)
-    const [start,setStart] = useState(startTime?.format("HH:mm"))
     const [times,setTimes] = useState<string[]>([])
+    const [start,setStart] = useState(startTime?.format("HH:mm"))
     const [end,setEnd] = useState(startTime?.add(30,"minutes").format("HH:mm"))
+    const [isForDelete,setIsForDelete] = useState(false)
     const [filterData,setFilterData] = useState({
         repeat_every:"1",
         until_date:startDate,
@@ -98,6 +99,7 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
     }
 
     const validateToContinue = () =>{
+        setTimes([])
         const startM = moment(startDate + " " + start)
         const endM = moment(startDate + " " + end)
         const minutesDifference = ((endM.hour()*60) + endM.minute()) - ((startM.hour()*60) + startM.minute()) 
@@ -162,8 +164,7 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
                 break;
             }
             
-                setTab(1)
-        getInstalaciones()
+       
     }
 
     const addInstalacionLoader = (instalacionId:number) =>{ setLoadingInstalaciones([...loadingInstalaciones,instalacionId]) }
@@ -217,6 +218,46 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
         }
     }
 
+    const deleteReservaCupos = async() => {
+        try{
+            // validateToContinue()
+            const request:ReservaFromEventoRequest = {
+                times:times,
+                evento_uuid:uuidEvent,
+                reserva_type:reserva_type,
+                instalaciones:selectedInstalaciones,
+                // establecimiento_id:instalaciones[0].instalacion.establecimiento_id | 0,
+                day_week:moment(times[0]).day()
+            }
+            setLoadingDeleteButton(true)
+            await DeleteReservaCupos(request)
+            generateReservasCupo(true)
+            setLoadingDeleteButton(false)
+            toast.success(successfulMessage)
+            close()
+        }catch(err){
+            toast.error(unexpectedError)
+            setLoadingDeleteButton(false)
+            console.log(err)
+        }
+    }
+
+    const generateReservasCupo = (deleteCupos:boolean) => {
+        let reservasCupo:ReservaCupo[] = []
+        for(let i = 0;i<selectedInstalaciones.length;i++){
+            const l:ReservaCupo[] = times.map(item=>{
+                return {
+                    reserva_type:ReservaType.Evento,
+                    start_date:item,
+                    reserva_id:null,
+                    evento_id:eventoId
+                }
+            })
+            reservasCupo = [...reservasCupo,...l]
+        }
+        updateDateWithCupos(reservasCupo,deleteCupos)
+    }
+    
     const createReservaCupos = async() =>{
         try{
             if(times.length ==0) return
@@ -230,10 +271,6 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
                 day_week:moment(times[0]).day()
             }
             
-            if(isForDelete){
-                await DeleteReservaCupos(request)
-
-            }else{
                 const res:Response = await CreateReservaCupos(request)
                 switch(res.status){
                     case Http.StatusConflict:
@@ -242,23 +279,9 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
                         break;
                     case Http.StatusOk:
                         toast.success(successfulMessage)
-                        let reservasCupo:ReservaCupo[] = []
-                        for(let i = 0;i<selectedInstalaciones.length;i++){
-                            const l:ReservaCupo[] = times.map(item=>{
-                                return {
-                                    reserva_type:ReservaType.Evento,
-                                    start_date:item,
-                                    reserva_id:null,
-                                    evento_id:eventoId
-                                }
-                            })
-                            reservasCupo = [...reservasCupo,...l]
-                        }
-                        updateDateWithCupos(reservasCupo)
+                        generateReservasCupo(false)
                         break;
-
                 }
-            }
             setLoadingSaveButton(false)
             close()
         }catch(e){
@@ -267,13 +290,17 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
         }
     }
 
+    useEffect(()=>{
+        validateToContinue()
+    },[start,end])
+
 
     return(
         <DialogLayout
         close={close}
         open={open}
         className=" max-w-md "
-        title={isForDelete ? "Eliminar" :"Reservar"}
+        title={"Reservar"}
         >
             {tab == 0 &&
         <div className="grid sm:grid-cols-2 gap-x-4 gap-y-4">
@@ -538,25 +565,48 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
             <button className="button2 "
             onClick={()=>{
                 setSelectedInstalaciones([])
-                
+                setIsForDelete(false)
                 setTab(0)
             }}
             >
                 Volver
             </button>
             }
+
+            {(tab == 0 || isForDelete) &&
+                <ButtonWithLoader
+                loading={loadingDeleteButton}
+                onClick={()=>{
+                    if(tab ==0){
+                        setIsForDelete(true)
+                        setTab(1)
+                        getInstalaciones()
+                    }else{
+                        deleteReservaCupos()
+                    }
+                }}
+                title="Eliminar"
+                className="w-20"
+                />
+            }
+
+            {!isForDelete &&
             <ButtonWithLoader
             loading={loadingSaveButton}
             disabled={loadingSaveButton}
-            title={tab == 0 ?"Continuar":"Guardar"}
+            className="w-24"
+            title={tab == 0 ?"Reservar":"Guardar"}
             onClick={()=>{
                 if(tab == 0){
-                    validateToContinue()
+                    // validateToContinue()
+                    setTab(1)
+                    getInstalaciones()
                 }else{
                     createReservaCupos()
                 }
             }}
             />
+            }
             {/* <button disabled={loadingSaveButton}
              onClick={()=>validateToContinue()}
              className={`button`}>

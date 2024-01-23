@@ -142,8 +142,8 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId}:{
         startDate={startDate}
         reserva_type={reserva_type}
         uuidEvent={uuidEvent}
-        updateDateWithCupos={(e: ReservaCupo[])=>{
-            if(deleteEventoCupos){
+        updateDateWithCupos={(e: ReservaCupo[],deleteCupos:boolean)=>{
+            if(deleteCupos){
                 const filterList = reservasCupo.filter(item=>!e.map(t=>t.start_date).includes(item.start_date))
                 setReservasCupo(filterList)
             }else{
@@ -151,7 +151,7 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId}:{
             }
         }}
         eventoId={eventoId}
-        isForDelete={deleteEventoCupos}
+        // isForDelete={deleteEventoCupos}
         />
         }
         <div className="grid gap-y-2">

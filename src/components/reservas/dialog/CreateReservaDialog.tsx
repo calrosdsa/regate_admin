@@ -435,7 +435,7 @@ const CreateReservaDialog = ({open,close,instalacion,cupos,refresh,uuid,useAdvan
             required={true}
             />
             {(loadingUsers || users.length > 0) &&
-                <div className="pt-2 overflow-auto absolute bg-white z-10 w-full h-36 shadow-lg">
+                <div className="pt-2 overflow-auto absolute bg-white z-10 w-full  shadow-lg">
                 <div className="flex justify-end px-3">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
                 className="w-7 h-7 icon-button noSelect p-1" onClick={()=>setUsers([])}>

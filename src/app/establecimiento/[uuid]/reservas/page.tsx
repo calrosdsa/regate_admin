@@ -1,10 +1,10 @@
-
 "use client"
 import ReservaList from "@/components/reservas/ReservaList";
 import CreateReservaDialog from "@/components/reservas/dialog/CreateReservaDialog";
 import DialogReservaDetail from "@/components/reservas/dialog/DialogReservaDetail";
 import RequestReporteReservaDialog from "@/components/reservas/dialog/RequestReporteReservaDialog";
 import SearchInput from "@/components/util/input/SearchInput";
+import SelectComponent from "@/components/util/input/SelectCompenent";
 import Pagination from "@/components/util/pagination/Pagination";
 import { downloadReporteReservasExcel } from "@/context/actions/download-actions";
 import { useAppDispatch } from "@/context/reduxHooks";
@@ -31,9 +31,10 @@ export default function Page({params}:{params:{uuid:string}}){
         query:"",
         order:Order.DESC,
         order_queue:OrderQueue.CREATED,
+        instalacion_id:""
     })
     const [paginationProps,setPaginationProps] = useState<PaginationProps | undefined>(undefined)
-    const [reservasCount,setReservasCount] = useState<number | undefined>(undefined)
+    // const [reservasCount,setReservasCount] = useState<number | undefined>(undefined)
     const [loading,setLoading] = useState(false)
     const [openReservaDetailDialog,setOpenReservaDetailDialog] = useState(false)
     const [order,setOrder] = useState<ReservaOrder>({
@@ -42,7 +43,8 @@ export default function Page({params}:{params:{uuid:string}}){
     })
 
     const [instalaciones,setInstalaciones] = useState<Instalacion[]>([])
-   const [openRequestReporteDialog,setOpenRequestReporteDialog] = useState(false)
+    const [selectedInstalacion,setSelectedInstalacion]= useState("")
+    const [openRequestReporteDialog,setOpenRequestReporteDialog] = useState(false)
     const appendSerachParams = (key:string,value:string)=>{
         current.set(key,value);
         const search = current.toString();
@@ -58,11 +60,13 @@ export default function Page({params}:{params:{uuid:string}}){
     }
     const getInstalaciones = async() =>{
         try{
-            dispatch(uiActions.setLoaderDialog(true))
-            const res:Instalacion[] = await GetInstalaciones(params.uuid)
-            setInstalaciones(res)
-            setOpenRequestReporteDialog(true)
-            dispatch(uiActions.setLoaderDialog(false))
+            if(instalaciones.length == 0){
+                dispatch(uiActions.setLoaderDialog(true))
+                const res:Instalacion[] = await GetInstalaciones(params.uuid)
+                setInstalaciones(res)
+                setOpenRequestReporteDialog(true)
+                dispatch(uiActions.setLoaderDialog(false))
+            }
         }catch(err){
             dispatch(uiActions.setLoaderDialog(false))
         }
@@ -77,15 +81,15 @@ export default function Page({params}:{params:{uuid:string}}){
             dispatch(uiActions.setLoaderDialog(false))
         }
     }
-    const getReservasCount = async()=>{
-        try{
-            const res:number = await getEstablecimientoReservasCount(params.uuid)
-            setReservasCount(res)
-            appendSerachParams("totalCount",`${res}`)
-        }catch(err){
-            console.log(err)
-        }
-    }
+    // const getReservasCount = async()=>{
+    //     try{
+    //         const res:number = await getEstablecimientoReservasCount(params.uuid)
+    //         setReservasCount(res)
+    //         appendSerachParams("totalCount",`${res}`)
+    //     }catch(err){
+    //         console.log(err)
+    //     }
+    // }
 
     const searchQuery = (query:string) =>{
         if(query == "") return
@@ -102,12 +106,13 @@ export default function Page({params}:{params:{uuid:string}}){
                 count:paginationProps.pageSize
             })
         }
-        setFilterData(filterD)
+        // setFilterData(filterD)
         getReservas(filterD,1)
     }
     const getReservas = async(data:ReservaDataFilter,page:number) =>{
         try{
             setReservas([])
+            setFilterData(data)
             setLoading(true)
             const res:ReservaPaginationResponse =await getEstablecimientoReservas(data,page)
             setPaginationProps({
@@ -116,13 +121,7 @@ export default function Page({params}:{params:{uuid:string}}){
                 nextPage:res.next_page,
                 currentPage:page
             })
-            if(data.query != ""){
-                setReservasCount(res.count)
-            }else{
-                if(totalCount != null){
-                    setReservasCount(Number(totalCount))
-                }
-            }
+            console.log(res)
             setReservas(res.results)
             setLoading(false)
         }catch(err){
@@ -169,7 +168,7 @@ export default function Page({params}:{params:{uuid:string}}){
     },[reservaDetail])
 
     useEffect(()=>{
-        getReservasCount()
+        getInstalaciones()
         if(page != null){
             getReservas(filterData,Number(page))
         }else{
@@ -189,14 +188,13 @@ export default function Page({params}:{params:{uuid:string}}){
         }
         <div className="p-2 overflow-auto h-screen">
             <div className="pt-10 xl:pt-2">
-                <span className="text-xl">Reservas({reservasCount})</span>
+                <span className="text-xl">Reservas({paginationProps?.count})</span>
 
             <div className="flex space-x-3 py-2">
           
                 <button className="button-inv" disabled={loading}  onClick={()=>{
                     setQuery("")
                     getReservas(filterData,1)
-                    getReservasCount()
                     }}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
   <path fillRule="evenodd" d="M4.755 10.059a7.5 7.5 0 0112.548-3.364l1.903 1.903h-3.183a.75.75 0 100 1.5h4.992a.75.75 0 00.75-.75V4.356a.75.75 0 00-1.5 0v3.18l-1.9-1.9A9 9 0 003.306 9.67a.75.75 0 101.45.388zm15.408 3.352a.75.75 0 00-.919.53 7.5 7.5 0 01-12.548 3.364l-1.902-1.903h3.183a.75.75 0 000-1.5H2.984a.75.75 0 00-.75.75v4.992a.75.75 0 001.5 0v-3.18l1.9 1.9a9 9 0 0015.059-4.035.75.75 0 00-.53-.918z" clipRule="evenodd" />
@@ -212,6 +210,28 @@ export default function Page({params}:{params:{uuid:string}}){
                 </svg>
 
                 </button>
+
+                <SelectComponent
+                value={selectedInstalacion}
+                items={instalaciones.map((t)=>{
+                    return {
+                        value:t.id.toString(),
+                        name:t.name
+                    } 
+                })}
+                onChange={(e)=>{
+                    console.log(e.target.value)
+                    const filterD:ReservaDataFilter = {
+                        ...filterData,
+                        instalacion_id:e.target.value
+                    }
+                    setSelectedInstalacion(e.target.value)
+                    getReservas(filterD,1)
+                }}
+                name={"Instalaciones"}
+                containerClassName=""
+                defaultItem={{name:"Todas las canchas",value:"0"}}
+                />
                 
                 {/* <button className="button-inv flex space-x-1" disabled={loading}  onClick={()=>setCreateReservaDialog(true)}>
                         <span>Crear Reserva</span>
@@ -223,7 +243,7 @@ export default function Page({params}:{params:{uuid:string}}){
 
             </div>
             <div className="pt-2 pb-4 sm:flex md:justify-between md:items-center grid gap-2 relative">
-                <div className="flex space-x-2 items-center">
+                {/* <div className="flex space-x-2 items-center">
                 <SearchInput
                 className=" sm:w-64"
                 placeholder="Buscar por nombre"
@@ -245,7 +265,7 @@ export default function Page({params}:{params:{uuid:string}}){
                 {(paginationProps != undefined && paginationProps.count > 0 && query != "") &&
                 <span>{paginationProps.count} {paginationProps.count > 1 ? "coincidencias":"coincidencia"}</span>
                 }
-                </div>
+                </div> */}
                 {paginationProps != undefined &&
                     <Pagination
                     currentPage={paginationProps.currentPage}
@@ -258,7 +278,7 @@ export default function Page({params}:{params:{uuid:string}}){
                             currentPage:page
                         })
                     }}
-                    totalCount={reservasCount || 0}
+                    totalCount={paginationProps.count || 0}
                     pageSize={paginationProps.pageSize}
                     onPrev={onPrev}
                     onNext={onNext}

@@ -15,7 +15,7 @@ const EditUserEmpresaDialog = ({open,close,userEmpresa,onUpdate}:{
 }) => {
     const [loading,setLoading] = useState(false)
     const [formData,setFormData] = useState<UserEmpresa>({
-        name_evento:userEmpresa.name,
+        name:userEmpresa.name,
         phone_number:userEmpresa.phone_number,
         id:userEmpresa.id
     })

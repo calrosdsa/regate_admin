@@ -396,7 +396,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             />
             </div>
 
-            <div>
+            {/* <div>
             <span className="label pb-1">Imagenes</span>
             <div className='flex gap-3 w-full flex-wrap'>
             <Photos
@@ -414,7 +414,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             id='photos'
             />
             </div>
-            </div>
+            </div> */}
        
             {openMap&&
                 <MapComponent 

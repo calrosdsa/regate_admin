@@ -31,6 +31,7 @@ type ReservaDataFilter = {
     query?:string
     order:number
     order_queue?:number
+    instalacion_id:string
 }
 
 

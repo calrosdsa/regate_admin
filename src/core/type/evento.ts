@@ -25,7 +25,7 @@ export type EventoPaginationResponse = {
 
 export type ReservaFromEventoRequest = {
     times:string[]
-    establecimiento_id:number
+    establecimiento_id?:number
     instalaciones:number[]
     reserva_type?:ReservaType
     evento_uuid?:string
