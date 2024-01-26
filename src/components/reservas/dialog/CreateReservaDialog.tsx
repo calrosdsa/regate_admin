@@ -162,7 +162,7 @@ const CreateReservaDialog = ({open,close,instalacion,cupos,refresh,uuid,useAdvan
                 }
             }
             console.log(requestData)
-            await CreateReserva(JSON.stringify(requestData))
+            // await CreateReserva(JSON.stringify(requestData))
             toast.success("Se ha creado exitosamente la reserva")
             refresh()
             close()

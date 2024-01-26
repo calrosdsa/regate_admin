@@ -53,22 +53,21 @@ export default function Page({params}:{params:{uuid:string}}){
     }
     const openExportReservasDialog = () =>{
         if(instalaciones.length == 0){
-            getInstalaciones()
-        }else{
-            setOpenRequestReporteDialog(true)
+        //     getInstalaciones()
         }
+            setOpenRequestReporteDialog(true)
     }
     const getInstalaciones = async() =>{
         try{
             if(instalaciones.length == 0){
-                dispatch(uiActions.setLoaderDialog(true))
+                // dispatch(uiActions.setLoaderDialog(true))
                 const res:Instalacion[] = await GetInstalaciones(params.uuid)
                 setInstalaciones(res)
-                setOpenRequestReporteDialog(true)
-                dispatch(uiActions.setLoaderDialog(false))
+                // setOpenRequestReporteDialog(true)
+                // dispatch(uiActions.setLoaderDialog(false))
             }
         }catch(err){
-            dispatch(uiActions.setLoaderDialog(false))
+            // dispatch(uiActions.setLoaderDialog(false))
         }
     }
     const getReservaDetail = async(id:number) => {
@@ -229,7 +228,7 @@ export default function Page({params}:{params:{uuid:string}}){
                     getReservas(filterD,1)
                 }}
                 name={"Instalaciones"}
-                containerClassName=""
+                containerClassName="h-9"
                 defaultItem={{name:"Todas las canchas",value:"0"}}
                 />
                 

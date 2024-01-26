@@ -3,6 +3,8 @@ import CommonImage from "../util/image/CommonImage";
 import { getFullName } from "@/core/util";
 import Loading from "../util/loaders/Loading";
 import { Order, OrderQueue, ReservaEstado } from "@/core/type/enums";
+import SeeMore from "../util/button/SeeMore";
+import TruncateText from "../util/text/TruncateText";
 
 export const getEstadoReserva = (estado:ReservaEstado)=>{
     switch(estado){
@@ -37,6 +39,9 @@ const ReservaList = ({reservas,loading,order,changeOrder,getReservaDetail}:{
                 </th>
                 <th className="headerTable w-72">
                     Usuario
+                </th>
+                <th className="headerTable">
+                    Cancha
                 </th>
                 <th className="headerTable">
                     Precio Total
@@ -100,10 +105,23 @@ const ReservaList = ({reservas,loading,order,changeOrder,getReservaDetail}:{
                         w={30}
                         className="rounded-full w-9 h-9"
                         />
-                        <span className="rowTable truncate ">{getFullName(item.nombre,item.apellido)}</span>
+                        <TruncateText
+                        maxLength={30}
+                        text={getFullName(item.nombre,item.apellido)}
+                        classNameText="rowTable truncate"
+                        />
                         </td>
-                        <td className="rowTable">{item.total_price}</td>
-                        <td className="rowTable">{item.paid}</td>
+
+                        <td className="rowTable">
+                                <TruncateText
+                                maxLength={20}
+                                text={item.instalacion_name}
+                                classNameText="rowTable"
+                                />
+                        </td>
+
+                        <td className="rowTable">{item.total_price} BOB</td>
+                        <td className="rowTable">{item.paid} BOB</td>
                         <td className="rowTable">{getEstadoReserva(item.estado)}</td>
                         <td className="rowTable">{moment(item.start_date).utc().format('ll')} de
                          {moment(item.start_date).utc().format('LT')} a {moment(item.end_date).utc().format('LT')}</td>

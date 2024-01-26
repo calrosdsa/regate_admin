@@ -47,6 +47,7 @@ export const login = (email:string,password:string) :ThunkAction<void,RootState,
                  body:JSON.stringify({email,password,fcm_token})
             })
             const data =await res.json()
+            console.log(data)
             switch(res.status){
                 case 200:
                     localStorage.setItem("user",JSON.stringify(data.user))
@@ -59,13 +60,13 @@ export const login = (email:string,password:string) :ThunkAction<void,RootState,
                             toast.info("Le informamos que su cuenta ha sido eliminada. Como resultado, no podrá iniciar sesión.")
                             return    
                     }
-                    // if(data.user.estado == UserEstado.DISABLED)
+
                     switch(data.user.rol){
                        case UserRol.ADMIN_USER_ROL:
                            window.location.assign(adminRoutes.manage.establecimientos)
                            break;
                        case UserRol.CLIENT_USER_ROL:
-                           const res = await fetch(`${LOCAL_URL}/api/account/establecimientos`)
+                           const res = await fetch(`/api/account/establecimientos`)
                            const data:EstablecimientoUser[] = await res.json()
                            if(data.length == 0){
                                window.location.assign(`${rootEstablecimiento}/${data[0].uuid}`)
@@ -75,13 +76,6 @@ export const login = (email:string,password:string) :ThunkAction<void,RootState,
                            }
                            break;
                     }
-                    // if(typeof window != undefined){
-                    //     const urlParams = new URLSearchParams(window.location.search);
-                    //     const redirect = urlParams.get('redirect');
-                    //     if(redirect != null){
-                    //         window.location.replace(redirect as string)
-                    //     }
-                    // }
                    dispatch(uiActions.setInnerLoading(false))
                    break;
                 case 400:
@@ -97,7 +91,7 @@ export const login = (email:string,password:string) :ThunkAction<void,RootState,
         }
     }
 }
-export const getEstablecimientosUser = (uuid:string) :ThunkAction<void,RootState,undefined,AnyAction> =>{
+export const getEstablecimientosUser = () :ThunkAction<void,RootState,undefined,AnyAction> =>{
     return async(dispatch)=>{
         try{
             dispatch(uiActions.setInnerLoading(true))
@@ -107,6 +101,7 @@ export const getEstablecimientosUser = (uuid:string) :ThunkAction<void,RootState
                 throw new Error('Failed to fetch data')
               }
             const data:EstablecimientoUser[] = await res.json()
+            console.log(res.status,"STATUS",data)
             if(res.status == 401){
                 redirectToLogin()
             }
@@ -115,10 +110,11 @@ export const getEstablecimientosUser = (uuid:string) :ThunkAction<void,RootState
             dispatch(uiActions.setInnerLoading(false))
 
             //Check if the user has been assigned to any of the establishments.
-            const isExist = data.map(item=>item.uuid).includes(uuid)
-            if(!isExist){
-                redirectToLogin()
-            }
+            // const isExist = data.map(item=>item.uuid).includes(uuid)
+            // console.log(isExist)
+            // if(!isExist){
+            //     redirectToLogin()
+            // }
         }catch(e){
             dispatch(uiActions.setInnerLoading(false))
         }

@@ -15,10 +15,10 @@ export async function CreateUser(body:CreateUserRequest) {
       method:"POST",
       body:JSON.stringify(body)
     })
-    if (!res.ok) {
-      // This will activate the closest `error.js` Error Boundary
-      throw new Error('Failed to fetch data')
-    }
+    // if (!res.ok) {
+    //   // This will activate the closest `error.js` Error Boundary
+    //   throw new Error('Failed to fetch data')
+    // }
     return res
 } 
 

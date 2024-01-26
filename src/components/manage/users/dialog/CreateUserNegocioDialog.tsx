@@ -5,7 +5,7 @@ import ButtonSubmit from '@/components/util/button/ButtonSubmit'
 import { useAppDispatch, useAppSelector } from '@/context/reduxHooks'
 import { toast } from 'react-toastify'
 import DialogHeader from '@/components/util/dialog/DialogHeader'
-import { UserRol } from '@/core/type/enums'
+import { Http, UserRol } from '@/core/type/enums'
 import { getEstablecimientos } from '@/context/actions/account-actions'
 import Image from 'next/image'
 import Loading from '@/components/util/loaders/Loading'
@@ -129,13 +129,19 @@ const CreateUserNegocioDialog:React.FC<Props>=({
           rol:rol as number,
           establecimientos:[]
       }
-      const res = await CreateUser(request)
-      refreshUsers()
-      toast.success("Se ha agragado un nuevo usuario")
-      closeModal()
-      setLaoding(false)
+      const res:Response = await CreateUser(request)
+      switch(res.status){
+        case Http.StatusOk:          
+          refreshUsers()
+          toast.success("Se ha agragado un nuevo usuario")
+          closeModal()
+          setLaoding(false)
+        case Http.StatusBadRequest:  
+          const data:ResponseMessage  = await res.json()
+          toast.error(data.message)
+      }
     }catch(err){
-      
+      toast.error(unexpectedError)
       setLaoding(false)
     }
   }

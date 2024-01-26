@@ -36,6 +36,7 @@ import Photos from '@/components/util/image/Photos';
 import { days } from '@/context/actions/chart-actions';
 import AttentionScheduleComponent from '@/components/establecimiento/setting/AttentionScheduleComponent';
 import TitleWithInfo from '@/components/util/info-bar/SubtitleWithInfo';
+import Loading from '@/components/util/loaders/Loading';
 
 const Page = ({ params }: { params: { uuid: string } }) =>{
     const establecimientoEstados = [{value:"true",name:"Visible"}
@@ -60,7 +61,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
     const [openUpdateMethodDialog,setOpenUpdateMethodDialog] = useState(false)
     const [establecimientoPhoto,setEstablecimientoPhoto] = useState<File | undefined>(undefined)
     const [photo,setPhoto] = useState<File | undefined>(undefined)
-    
+    const [loading,setLoading] = useState(false)
     // const {establecimiento,setting_establecimiento} = data as EstablecimientoDetail
     const dispatch = useAppDispatch()
     const loaded = useAppSelector(state=>state.ui.loaded)
@@ -103,6 +104,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
     
     const getEstablecimientoDetail = async() =>{
         try{
+            setLoading(true)
             const res:EstablecimientoDetail =await getEstablecimiento(params.uuid)
             const week = days.map(day=>{
                 const scheduleDay = res.attention_schedule_week.find(item=>item.day_week == day.value)
@@ -123,8 +125,9 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 ...res,
                 attention_schedule_week:week
             })
-
+            setLoading(false)
         }catch(err){
+            setLoading(false)
         }
         // console.log(data)
     }
@@ -291,10 +294,9 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
        <>
        <div className='grid xl:grid-cols-2 gap-2 h-screen w-full'>
         {/* <button onClick={()=>setOpenMap(true)}>Open Map</button> */}
-        {data?.establecimiento != null &&
         <div className='p-4 flex flex-col space-y-6 xl:overflow-auto'>
             <span className="text-xl py-2 font-medium">Sucursal Info</span>
-
+            {data != null ?
             <div>
             <TitleWithInfo
             onClick={()=>{
@@ -332,7 +334,6 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             
             </div>
             }
-            </div>
 
             {data.establecimiento.estado == EstablecimientoEstado.ESTABLECIMIENTO_VERIFICADO &&
             <EditComponentSelect
@@ -435,12 +436,24 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 update={(lng,lat,address,setLoading)=>updateAddress(lng,lat,address,setLoading)}
                 />
             }
-        </div>
-        }
+            </div>
+            :
+            <div>
+                <Loading
+                loading={loading}
+                className='w-full flex justify-center'
+                />
+            </div>
+            }
 
-        {data?.setting_establecimiento != undefined &&
+        </div>
+        
+
             <div className='p-4 flex flex-col gap-y-4 xl:overflow-auto'>
             <span className="text-xl py-2 font-medium">Establecimiento Ajustes</span>
+
+        {data?.setting_establecimiento != undefined ?
+            <div>
 
             <span className='label'>Horario de atención</span>
             <AttentionScheduleComponent
@@ -530,7 +543,17 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             </div>
 
             </div>
-        }
+            :
+            <div>
+                <Loading
+                loading={loading}
+                className='w-full flex justify-center'
+                />
+            </div>
+            }
+
+
+            </div>
 
 
        </div>   
