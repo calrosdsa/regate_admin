@@ -131,7 +131,7 @@ export default function Page(){
             const f = currentUserEstablecimientos.filter(item=>item.uuid != userEstablecimiento.uuid)
             setCurrentUserEstablecimientos(f)
         }catch(err){
-            toast.success(unexpectedError)
+            toast.error(unexpectedError)
             dispatch(uiActions.setLoaderDialog(false))
             console.log(err)
         }

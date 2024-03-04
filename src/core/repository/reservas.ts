@@ -47,11 +47,7 @@ export async function getEstablecimientoReservas(data:ReservaDataFilter,page:num
       method:"post",
       body:data
     })
-    if (!res.ok) {
-      // This will activate the closest `error.js` Error Boundary
-      throw new Error('Failed to fetch data')
-    }
-    return res.json()
+    return res
   }
 
   

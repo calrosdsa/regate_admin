@@ -27,7 +27,9 @@ export const enum Order {
 
 export const enum OrderQueue {
     CREATED = 1,
-    RESERVA_CREATED
+    RESERVA_CREATED =2,
+    USERNAME_ORDER =3
+
 }
 
 export const enum UserEstado {

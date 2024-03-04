@@ -39,6 +39,7 @@ type CustomPrecioInstalacion = {
     start_time:string
     end_time:string
     precio:string
+    // complete:boolean
 }
 
 type Cupo = {
@@ -70,6 +71,7 @@ type CupoReserva = {
     apellido:string
     evento_id?:number
     profile_id:number
+    reserva_count:number
 }
 
 

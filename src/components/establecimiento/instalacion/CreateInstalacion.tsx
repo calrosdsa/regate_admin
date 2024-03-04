@@ -11,6 +11,7 @@ import moment from "moment"
 import Image from "next/image"
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { toast } from "react-toastify"
+import { log } from "console"
 
 const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
     uuid:string
@@ -18,7 +19,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
     close:()=>void
 }) =>{
     const [formData,setFormData ] = useState({
-        name_evento:"",
+        name:"",
         description:"",
         cantidad_de_personas:20,
         category_id: 1,
@@ -29,6 +30,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
       const [photo,setPhoto] = useState<File | undefined>()
       const {name,description,category_id,cantidad_de_personas,precio_hora} = formData
       const [customPrecioInstalacion,setCustomPrecuoInstalacion] = useState<CustomPrecioInstalacion[]>([])
+      const [disabledHours,setDisabledHours] = useState<string[]>([])
       const onChange = (e:ChangeEvent<HTMLInputElement>)=>{
       //   dispatch(authActions.setErrrorLogin(undefined))
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -38,7 +40,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
         const n:CustomPrecioInstalacion = {
           precio:"",
           start_time:"",
-          end_time:""
+          end_time:"",
         } 
         setCustomPrecuoInstalacion(e=>[...e,n])
       }
@@ -66,6 +68,8 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
       return timeRange
     }
 
+
+
     // const checkCustomPrecioInstalacion = () => {
     //   if(customPrecioInstalacion.length == 0) {
     //     return false
@@ -87,13 +91,25 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
         try{
             e.preventDefault()
             setUploadingLoading(true)
-            const timeRange = getTimeRangeFromCustomPrecioInstalacion()
+            let timeRange = getTimeRangeFromCustomPrecioInstalacion()
+            console.log(timeRange)
             const uploadData = new FormData()
+            let priceHour:string;
+            priceHour = precio_hora 
+            // console.log("------",priceHour,customPrecioInstalacion.length)
+            if(customPrecioInstalacion.length > 0){
+              priceHour = "0"
+            }
+            timeRange =  Array.from(new Set(timeRange))
+            // console.log("SET",timeRange)
+            // console.log(customPrecioInstalacion)
+            // return
+            // console.log(priceHour)
             uploadData.append("name",name)
             uploadData.append("description",description)
             uploadData.append("category_id",category_id.toString())
             uploadData.append("cantidad_de_personas",cantidad_de_personas.toString())
-            uploadData.append("precio_hora",precio_hora)
+            uploadData.append("precio_hora",priceHour)
             // uploadData.append("establecimiento_id",id.toString())
             uploadData.append("establecimiento_uuid",uuid)
             uploadData.append("custom_precio_instalacion",JSON.stringify(customPrecioInstalacion))
@@ -113,6 +129,35 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
       useEffect(()=>{
         getCategories()
       },[])
+
+
+      const checkIsHoursIsDisabled = () =>{
+        try{
+        let timeRange:string[] = []
+        console.log(customPrecioInstalacion)
+          customPrecioInstalacion.map((item)=>{
+            const startM = moment(item.start_time)
+          const endM = moment(item.end_time)
+          const minutesDifference = ((endM.hour()*60) + moment(endM).minute()) - ((startM.hour()*60) + moment(startM).minute()) 
+          console.log("MINUTES DIFFERENCE",minutesDifference)
+          for(let t =0;t < ((minutesDifference)/30)+1;t++){
+            const r = moment(startM).add(30*t,"minutes").format("HH:mm")
+            if(!timeRange.includes(r)){
+              timeRange.push(r)
+            }
+        }
+          })
+          setDisabledHours(timeRange)
+          console.log("TIME RANGE",timeRange)
+        }catch(err){
+          console.log(err)
+        }
+      }
+
+      useEffect(()=>{
+        console.log("customprecio instalacion")
+        checkIsHoursIsDisabled()
+      },[customPrecioInstalacion])
    
     return(
         <div className=" max-w-xl ">
@@ -159,6 +204,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
           </select>
             </div>
 
+          {customPrecioInstalacion.length == 0 &&
           <InputWithMaxLength
           value={precio_hora.toString()}
           name="precio_hora"
@@ -171,6 +217,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
           required
           type="number"
           />
+        }
 
           <div>
             <span className="help-text">
@@ -189,6 +236,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
                             const today = moment().format("yyyy-MM-DD")
                             onChangeCustomPrecio("start_time",moment(today +" "+e).format("yyyy-MM-DD HH:mm"),index)
                           }}
+                          disabledHours={disabledHours}
                           />
                            <TimeSelect
                           label="Fin"
@@ -197,6 +245,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
                             const today = moment().format("yyyy-MM-DD")
                             onChangeCustomPrecio("end_time",moment(today +" "+e).format("yyyy-MM-DD HH:mm"),index)
                           }}
+                          disabledHours={disabledHours}
                           />
                             {/* <input type="time" className="input" value={item.start_time}
                             name="start_time"
@@ -213,7 +262,10 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
                             />
                             </div>
                             </div>
-                            <svg  onClick={()=>{}}
+                            <svg  onClick={()=>{
+                              const newItems = customPrecioInstalacion.filter((t,i)=>i != index)
+                              setCustomPrecuoInstalacion(newItems)
+                            }}
                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
                             className="icon-button noSelect">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

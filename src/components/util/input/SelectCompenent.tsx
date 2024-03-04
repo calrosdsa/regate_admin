@@ -9,7 +9,7 @@ defaultItem}:{
     name:string
     defaultItem?:SelectItem
     label?:string
-    containerClassName:string
+    containerClassName?:string
 }) =>{
     
     return(

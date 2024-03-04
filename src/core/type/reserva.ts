@@ -1,5 +1,6 @@
 interface Reserva extends Profile {
     id:number
+    uuid:string
     instalacion_id:number
     establecimiento_id:number
     instalacion_name:string
@@ -69,6 +70,7 @@ type CupoR = {
 type ReservaCancelRequest = {
     reserva_id:number
     content:string
+    reserva_uuid:string
     establecimiento_id:number
     profile_id?:number
     user_local_id?:number
@@ -77,11 +79,13 @@ type ReservaCancelRequest = {
 
 type ConfirmReservaRequest = {
     reserva_id:number
+    reserva_uuid:string
     amount_added:number
 }
 
 type ReservaEditRequest = {
     id:number
+    reserva_uuid:string
     estado:number
     amount:number
 }

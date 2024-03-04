@@ -9,10 +9,11 @@ import { EditReserva } from "@/core/repository/reservas"
 import { toast } from "react-toastify"
 import { successfulMessage, unexpectedError } from "@/context/config"
 
-const EditReservaDialog = ({open,close,reserva}:{
+const EditReservaDialog = ({open,close,reserva,update}:{
     open:boolean
     close:()=>void
     reserva:Reserva
+    update:(paid:number,estado:number)=>void
 }) =>{
     const [loading,setLoading] = useState(false)
     const [formData,setFormData] = useState({
@@ -28,11 +29,13 @@ const EditReservaDialog = ({open,close,reserva}:{
             const r:ReservaEditRequest = {
                 id:reserva.id,
                 amount:Number(paid),
-                estado:Number(estado)
+                estado:Number(estado),
+                reserva_uuid:reserva.uuid
             }
             await EditReserva(r)
-            reserva.paid = Number(paid)
-            reserva.estado = Number(estado)
+            // reserva.paid = Number(paid)
+            // reserva.estado = Number(estado)
+            update( Number(paid), Number(estado))
             setLoading(false)
             close()
             toast.success(successfulMessage)

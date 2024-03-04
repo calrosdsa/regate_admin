@@ -1,5 +1,6 @@
 type DataSlice = {
     instalaciones:Instalacion[]
+    reservas:Reserva[]
 }
 
 

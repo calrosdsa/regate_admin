@@ -35,6 +35,7 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
                 <Calendar
                 uuid={params.uuid}
                 uuidEvent={params.uuidEvento}
+                eventoName={name || "Este evento"}
                 reserva_type={ReservaType.Evento}
                 eventoId={Number(id || 0)}
                 />

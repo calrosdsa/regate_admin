@@ -31,7 +31,10 @@ const UserListTable = ({usersEmpresa,loading,uuid,selectUser}:{
                     Usuario
                 </th>
                 <th className="headerTable">
-                    Numero de telefono
+                    Número de Teléfono
+                </th>
+                <th className="headerTable w-72">
+                    Tipo de Usuario
                 </th>
                 {/* <th className="headerTable">
                     Precio pagado
@@ -55,9 +58,11 @@ const UserListTable = ({usersEmpresa,loading,uuid,selectUser}:{
                         w={30}
                         className="rounded-full w-9 h-9"
                         />
-                        <span className="rowTable truncate ">{item.name}</span>
+                        <span className="rowTable truncate font-medium">{item.name}</span>
                         </td>
                         <td className="rowTable">{item.phone_number}</td>
+                        <td className="rowTable">{(item.reservas_count != undefined && item.reservas_count > 1 ) 
+                        ? "Usuario Frecuente":"Usuario Nuevo"}</td>
                         {/* <td className="rowTable">{item.name}</td> */}
                         <td className="rowTable font-medium underline text-primary  noSelect">
                             <div className="flex space-x-2">

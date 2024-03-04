@@ -5,12 +5,13 @@ import { hours } from "@/context/actions/chart-actions";
 
 
 const TimeSelect = ({
-    label,className,time,setTime
+    label,className,time,setTime,disabledHours
 }:{
     className?:string
     label:string
     time: string | undefined
     setTime:(e:string)=>void
+    disabledHours?:string[]
     
 })=>{
     // const [date,setDate] = useState(datetime.date)
@@ -30,11 +31,15 @@ const TimeSelect = ({
                 <option value=""></option>
                 {hours.map((item,index)=>{
                     const t =moment(item.hour).utc().format("HH:mm")
+                    const value2 = moment(item.hour).utc().add(30,"minutes").format("HH:mm")
                     return (
                         <>
-                        <option key={index} value={t}>{t}</option>
-                        <option key={index +100} value={moment(item.hour).utc().add(30,"minutes").format("HH:mm")}>
-                            {moment(item.hour).utc().add(30,"minutes").format("HH:mm")}</option>
+                        <option key={index} value={t} disabled={disabledHours?.includes(t)}>{t}</option>
+                        <option key={index +100} disabled={disabledHours?.includes(value2)}
+                        value={value2}>
+                            {/* {item.hour} */}
+                            {value2}
+                            </option>
                         </>
                     )
                 })}

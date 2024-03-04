@@ -28,7 +28,8 @@ const CancelReservaDialog = ({open,close,update,reserva}:{
             const request:ReservaCancelRequest = {
                 content:value,
                 establecimiento_id:reserva.establecimiento_id,
-                reserva_id:reserva.id,
+                reserva_uuid:reserva.uuid,
+                reserva_id:reserva.id,  
                 profile_id:reserva.profile_id,
                 user_local_id:reserva.user_local_id
             }

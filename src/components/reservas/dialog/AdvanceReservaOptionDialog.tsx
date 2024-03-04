@@ -337,7 +337,7 @@ const AdvanceReservaOptionDialog = ({
         <label className="relative flex items-center input h-8 p-0 w-full ">
             <input
             type="text"
-            value={moment(until_date).format("MM/DD/YY")}
+            value={moment(until_date).format("DD/MM/YY")}
             onChange={()=>{}}
             className=" outline-none px-2 w-full text-xs"/>
             <label htmlFor={"until-date"} className="h-8 border-l  border-gray-400 px-1

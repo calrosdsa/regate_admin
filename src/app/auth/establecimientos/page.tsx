@@ -28,7 +28,7 @@ const Page = ({params}:{
             className="py-5"
             />
             <div className="grid gap-y-2 mt-2">
-                {establecimientos.length == 0 ?
+            {(establecimientos.length == 0 && !uiState.innerLoading) ?
                 <div className="flex flex-col justify-center mt-10">
                 <span className="title">No tienes establecimientos para administrar</span>
 

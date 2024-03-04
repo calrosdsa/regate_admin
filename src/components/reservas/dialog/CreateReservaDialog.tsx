@@ -20,6 +20,7 @@ import { unexpectedError } from "@/context/config";
 import { Tab } from "@headlessui/react";
 import AdvanceReservaOptionDialog from "./AdvanceReservaOptionDialog";
 import SeeMore from "@/components/util/button/SeeMore";
+import { Http } from "@/core/type/enums";
 
 
 type CreateReservaRequest = {
@@ -158,14 +159,29 @@ const CreateReservaDialog = ({open,close,instalacion,cupos,refresh,uuid,useAdvan
                 user_empresa:{
                     id:userEmpresa?.id || 0,
                     phone_number:phone_number,
-                    name:name
+                    name:name,
+                    uuid:userEmpresa?.uuid
                 }
             }
             console.log(requestData)
-            // await CreateReserva(JSON.stringify(requestData))
-            toast.success("Se ha creado exitosamente la reserva")
-            refresh()
-            close()
+            const res = await CreateReserva(JSON.stringify(requestData))
+            switch(res.status){
+                case Http.StatusOk:
+                    toast.success("Se ha creado exitosamente la reserva")
+                    refresh()
+                    close()
+                    setLoading(false)
+                break;    
+                case Http.StatusConflict:
+                    toast.error("No es posible registrar usuarios con nombres duplicados. Intenta cambiar el nombre de usuario.")    
+                    // setConfirmUserRepeat(false)
+                    break;
+                default:
+                    toast.error(unexpectedError)               
+            }
+            // toast.success("Se ha creado exitosamente la reserva")
+            // refresh()
+            // close()
             setLoading(false)
         }catch(err){
             toast.error(unexpectedError)
@@ -186,6 +202,7 @@ const CreateReservaDialog = ({open,close,instalacion,cupos,refresh,uuid,useAdvan
             // }
             console.log(userEmpresa)
             // if(userEmpresa?.id )
+
             if(userEmpresa == null){
                 const q = searchQuery.trim()
                 const res:UserNameIsRepeat = await IsUserNameRepeat(q)
@@ -243,7 +260,7 @@ const CreateReservaDialog = ({open,close,instalacion,cupos,refresh,uuid,useAdvan
                 return "No se puede reservar porque ya existe una reserva que hace conflicto en este rango de hora."
             }
         }
-        return "-"
+        return "Disponible"
     }
     const checkIsAvailable = (items:CupoReserva[]):boolean => {
         for(let i = 0;i<items.length;i++){
@@ -279,7 +296,7 @@ const CreateReservaDialog = ({open,close,instalacion,cupos,refresh,uuid,useAdvan
       close={()=>setConfirmUserRepeat(false)}
       performAction={()=>createReserva()}
       title={`Ya existe un usuario con el nombre ${searchQuery}`}
-      description={`Si continúa, se creará un usuario con el mismo nombre que ${searchQuery}.`}
+      description={`No es posible crear usuarios con el mismo nombre.`}
       />
       }
       <>
@@ -303,7 +320,7 @@ const CreateReservaDialog = ({open,close,instalacion,cupos,refresh,uuid,useAdvan
       :
      <DialogLayout
      allowFullScreen={true}
-     className="max-w-lg"
+     className="max-w-xl"
       open={open} close={close} title="Crear reserva">
         <div className='rounded-lg bg-white overflow-auto max-w-xl'>
             <div className="py-2">
@@ -355,12 +372,13 @@ const CreateReservaDialog = ({open,close,instalacion,cupos,refresh,uuid,useAdvan
 
                         <Tab.Panels className={""}>
                         {reservaIntervals.map((item,idx)=>{
+                            const totalPrice = item.interval.map(t=>t.precio).reduce((prev,curr)=>prev + curr)
                                 return (
                             <Tab.Panel key={idx} className={""}>
                                 <div className="grid ">
                                 <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
                                     <span className="label">Precio de la reserva</span>
-                                    <span className="text-xs ">{item.interval.map(t=>t.precio).reduce((prev,curr)=>prev + curr)}</span>
+                                    <span className="text-xs ">{totalPrice}</span>
                                 </div>
                                 <div className="grid sm:grid-cols-2 items-center sm:space-x-10 border-b-[1px] py-2">
                                     <span className="label">Disponibilidad</span>
@@ -372,7 +390,7 @@ const CreateReservaDialog = ({open,close,instalacion,cupos,refresh,uuid,useAdvan
                                     <SeeMore
                                     text={getMessageAvailable(item.interval)}
                                     maxLength={62}
-                                    className="text-xs"
+                                    className={`text-sm font-medium ${getMessageAvailable(item.interval) != "Disponible" && "text-red-500"}`}
                                     />
                                 </div>
                                 {item.interval.length > 0 &&
@@ -394,6 +412,11 @@ const CreateReservaDialog = ({open,close,instalacion,cupos,refresh,uuid,useAdvan
                             value={item.paid || ""}
                             name="paid"
                             error={error}
+                            onBlur={()=>{
+                                if(Number(item.paid) > totalPrice){
+                                    alert("El monto pagado no debe exceder el precio de la reserva de la cancha.")
+                                }
+                            }}
                             className="mt-0"
                             onChange={(e)=>{
                                 const f = reservaIntervals.filter(t=>t.id != item.id)

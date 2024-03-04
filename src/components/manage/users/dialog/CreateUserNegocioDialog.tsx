@@ -46,8 +46,8 @@ const CreateUserNegocioDialog:React.FC<Props>=({
     const [establecimientosIds,setEstablecimientoIds] = useState<EstablecimientoUser[]>([])
     // const loading = useAppSelector(state=>state.ui.loading)
     const [formData,setFormData]=useState<Data>({
-        username:"Daniel Miranda",
-        email:"jorgemiranda0180@gmail.com",
+        username:"",
+        email:"",
         rol:UserRol.CLIENT_USER_ROL
     })
     const {username,email,rol} = formData
@@ -136,9 +136,12 @@ const CreateUserNegocioDialog:React.FC<Props>=({
           toast.success("Se ha agragado un nuevo usuario")
           closeModal()
           setLaoding(false)
+          break;
         case Http.StatusBadRequest:  
           const data:ResponseMessage  = await res.json()
           toast.error(data.message)
+          setLaoding(false)
+          break;
       }
     }catch(err){
       toast.error(unexpectedError)

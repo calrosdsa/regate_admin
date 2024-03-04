@@ -6,6 +6,7 @@ export function middleware(request: NextRequest) {
   const access_token = request.cookies.get("access_token")
   const rol = request.cookies.get("rol")
   if(access_token == undefined){
+    console.log("URL",request.nextUrl)
     return NextResponse.redirect(new URL('/auth/login', request.url))
   }
   console.log(request.nextUrl.pathname)

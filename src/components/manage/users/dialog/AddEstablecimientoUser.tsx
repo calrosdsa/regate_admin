@@ -3,8 +3,6 @@ import DialogLayout from "@/components/util/dialog/DialogLayout";
 import SelectComponent from "@/components/util/input/SelectCompenent";
 import { successfulMessage, unexpectedError } from "@/context/config";
 import { AddEstablecimientoUser } from "@/core/repository/manage";
-import { log } from "console";
-import { validateConfig } from "next/dist/server/config-shared";
 import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 

@@ -19,8 +19,9 @@ type DateWeekWithCupos = {
     cupose_reserva:ReservaCupo[]
     index:number
 }
-const Calendar = ({uuid,uuidEvent,reserva_type,eventoId}:{
+const Calendar = ({uuid,uuidEvent,reserva_type,eventoId,eventoName}:{
     eventoId:number
+    eventoName:string
     uuid:string
     uuidEvent:string
     reserva_type:ReservaType
@@ -256,7 +257,6 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId}:{
                     </div>
                     }
 
-
                 </div>
 
                     <button onClick={()=>{
@@ -267,6 +267,17 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId}:{
                         Hoy
                     </button>
             </div>    
+
+            <div>
+                <div className="flex space-x-3 items-center">
+                <div className="h-4 w-4 bg-green-600"/>
+                <span className="flex space-x-1 text-sm font-medium">Horas reservadas para ({eventoName})</span>
+                </div>
+                <div className="flex space-x-3 items-center">
+                <div className="h-4 w-4 bg-primary"/>
+                <span className="flex space-x-1 text-sm font-medium">Horas reservadas fuera del evento</span>
+                </div>
+            </div>
            
            <div className="relative overflow-x-auto mt-3 shadow-md">
 

@@ -220,7 +220,6 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
 
     const deleteReservaCupos = async() => {
         try{
-            // validateToContinue()
             const request:ReservaFromEventoRequest = {
                 times:times,
                 evento_uuid:uuidEvent,
@@ -270,18 +269,18 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
                 establecimiento_id:instalaciones[0].instalacion.establecimiento_id | 0,
                 day_week:moment(times[0]).day()
             }
-            
-                const res:Response = await CreateReservaCupos(request)
-                switch(res.status){
-                    case Http.StatusConflict:
-                        const data:ResponseMessage =await res.json()
-                        toast.error(data.message)
-                        break;
-                    case Http.StatusOk:
-                        toast.success(successfulMessage)
-                        generateReservasCupo(false)
-                        break;
-                }
+            // console.log(request)
+            const res:Response = await CreateReservaCupos(request)
+            switch(res.status){
+                case Http.StatusConflict:
+                    const data:ResponseMessage =await res.json()
+                    toast.error(data.message)
+                    break;
+                case Http.StatusOk:
+                    toast.success(successfulMessage)
+                    generateReservasCupo(false)
+                    break;
+            }
             setLoadingSaveButton(false)
             close()
         }catch(e){
@@ -290,9 +289,9 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
         }
     }
 
-    useEffect(()=>{
-        validateToContinue()
-    },[start,end])
+    // useEffect(()=>{
+    //     validateToContinue()
+    // },[start,end])
 
 
     return(
@@ -598,7 +597,7 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
             title={tab == 0 ?"Reservar":"Guardar"}
             onClick={()=>{
                 if(tab == 0){
-                    // validateToContinue()
+                    validateToContinue()
                     setTab(1)
                     getInstalaciones()
                 }else{

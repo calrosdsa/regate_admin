@@ -9,11 +9,12 @@ interface Props{
     type?:string
     error?:string 
     placeholder?:string
+    onBlur?:()=>void
     icon?:()=>JSX.Element
     className?:string
 }
 const InputWithIcon = ({onChange,value,label,name,type="text",error,icon,className,placeholder="",
-required= true}:Props) =>{
+required= true,onBlur=()=>{}}:Props) =>{
 
   return(
     <div className={`relative mt-3 ${className}`}>
@@ -28,6 +29,7 @@ required= true}:Props) =>{
         onChange={onChange} 
         autoFocus
         value={value}
+        onBlur={onBlur}
         // minLength={8}
         className={`input
         ${icon != undefined && "pl-7"}`}

@@ -12,7 +12,7 @@ const SeeMore = ({
 
     return(
         <div className={className}>
-            <span className={``}>
+            <span className={className}>
                 {text.slice(0,mxLength)}
                 {mxLength < text.length ? "... ":"  "}
                 </span>

@@ -376,15 +376,18 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                     appendSerachParams("map","1",router,current,pathname)
                 }} className=" underline font-medium cursor-pointer">Edit</span>
             </div>
+                {(data?.establecimiento.address_photo != undefined && data?.establecimiento.address_photo != "")&&
             <div className=" mt-2 mb-2">
-            <CommonImage
-            src={data?.establecimiento?.address_photo + `?${Date.now()}`}
-            w={250}
-            h={200}
-            className={`rounded object-cover`}
-            // alt={""}
-            />
+                    {/* {data?.establecimiento?.address_photo} */}
+                    <CommonImage
+                    src={data?.establecimiento?.address_photo + `?${Date.now()}`}
+                    w={250}
+                    h={200}
+                    className={`rounded object-cover`}
+                    // alt={""}
+                    />
             </div>
+                }
             </div>
 
             <div>
@@ -423,8 +426,8 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 setLoaded={(b:boolean)=>dispatch(uiActions.setLoaded(b))}
                 open={openMap}
                 close={()=>setOpenMap(false)}
-                lng={Number(data?.establecimiento.longitud)}
-                lat={Number(data?.establecimiento.latitud)}
+                lng={Number(data?.establecimiento.longitud || -63.17857704132275)}
+                lat={Number(data?.establecimiento.latitud || -17.782807679925792)}
                 address={data?.establecimiento.address}
                 setAddress={(e)=>{
                     console.log("ADDRESS ----",e)
@@ -500,7 +503,8 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             />
 
             <div className='flex flex-wrap gap-3'>
-            {data?.setting_establecimiento.horario_interval.sort((a,b)=>a.minutes-b.minutes).map((item)=>{
+            {(data?.setting_establecimiento.horario_interval != undefined &&  data.setting_establecimiento.horario_interval.length > 0)&& 
+            data.setting_establecimiento.horario_interval.sort((a,b)=>a.minutes-b.minutes).map((item)=>{
                 return(
                     <div key={item.minutes} className='card'>
                         <span className='label'>{getIntervaloString(item.minutes)}</span>

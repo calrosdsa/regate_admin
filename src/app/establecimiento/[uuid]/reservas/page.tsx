@@ -7,7 +7,8 @@ import SearchInput from "@/components/util/input/SearchInput";
 import SelectComponent from "@/components/util/input/SelectCompenent";
 import Pagination from "@/components/util/pagination/Pagination";
 import { downloadReporteReservasExcel } from "@/context/actions/download-actions";
-import { useAppDispatch } from "@/context/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
+import { dataActions } from "@/context/slices/dataSlice";
 import { uiActions } from "@/context/slices/uiSlice";
 import { GetInstalaciones } from "@/core/repository/instalacion";
 import { GetReservaDetail, getEstablecimientoReservas, getEstablecimientoReservasCount } from "@/core/repository/reservas";
@@ -23,7 +24,8 @@ export default function Page({params}:{params:{uuid:string}}){
     const totalCount = searchParams.get("totalCount")
     const dispatch = useAppDispatch()
     const current = new URLSearchParams(Array.from(searchParams.entries()))
-    const [reservas ,setReservas ] = useState<Reserva[]>([])
+    const reservas = useAppSelector(state=>state.data.reservas)
+    // const [reservas ,setReservas ] = useState<Reserva[]>([])
     const [query,setQuery] = useState("")
     const [reservaDetail,setReservaDetail] = useState<ReservaDetail | null>(null)
     const [filterData,setFilterData] = useState<ReservaDataFilter>({
@@ -110,7 +112,7 @@ export default function Page({params}:{params:{uuid:string}}){
     }
     const getReservas = async(data:ReservaDataFilter,page:number) =>{
         try{
-            setReservas([])
+            dispatch(dataActions.setReservas([]))
             setFilterData(data)
             setLoading(true)
             const res:ReservaPaginationResponse =await getEstablecimientoReservas(data,page)
@@ -121,7 +123,7 @@ export default function Page({params}:{params:{uuid:string}}){
                 currentPage:page
             })
             console.log(res)
-            setReservas(res.results)
+            dispatch(dataActions.setReservas(res.results))
             setLoading(false)
         }catch(err){
             setLoading(false)

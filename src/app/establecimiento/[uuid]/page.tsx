@@ -168,7 +168,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
       // start_date:now.subtract(7,"days").toISOString(),
       uuid:params.uuid,
       start_date:now.startOf('month').toISOString(),
-      end_date:now.endOf('month').subtract(1,"days").toISOString(),
+      end_date:now.endOf('month').toISOString(),
       // instalaciones:[1]
     }
     dispatch(chartActions.setFilterData(filterData))

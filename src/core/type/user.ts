@@ -3,6 +3,7 @@ type UserEmpresa = {
     uuid?:string
     name:string
     phone_number:string
+    reservas_count?:number
 }
 
 type PaginationUserEmpresaResponse = {

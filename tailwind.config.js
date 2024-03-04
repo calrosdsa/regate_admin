@@ -19,6 +19,7 @@ module.exports = {
         'hoverPrimary':'#1b03c3',
         'teclu2':'#e50108',
         'secondary':'F2BE22',
+        'error':'#ED4337'
       }
     },
   },

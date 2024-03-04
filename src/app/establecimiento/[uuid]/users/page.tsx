@@ -147,7 +147,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             </div>
             <div className="pt-2 pb-4 sm:flex md:justify-between md:items-center grid gap-2 relative">
                 <div className="flex space-x-2 items-center">
-                <SearchInput
+                {/* <SearchInput
                 className=" sm:w-64"
                 placeholder="Buscar por nombre"
                 onChange={onChange}
@@ -164,7 +164,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                     })
                 }}
                 onEnter={(query)=>searchQuery(query)}
-                />
+                /> */}
                 {/* {(paginationProps != undefined && paginationProps.count > 0 && query != "") &&
                 <span>{paginationProps.count} {paginationProps.count > 1 ? "coincidencias":"coincidencia"}</span>
                 } */}

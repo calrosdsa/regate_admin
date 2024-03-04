@@ -37,8 +37,24 @@ const ReservaList = ({reservas,loading,order,changeOrder,getReservaDetail}:{
             <tr>
                 <th className="headerTable w-10">
                 </th>
-                <th className="headerTable w-72">
-                    Usuario
+                <th className="headerTable w-72" onClick={()=>{
+                    if(order == undefined) return
+                    changeOrder({
+                        ...order,
+                        queue:OrderQueue.USERNAME_ORDER
+                    })
+                    }}>
+                     <div className="flex space-x-2 items-center">
+                  <span>Usuario</span>
+                  {order?.queue == OrderQueue.USERNAME_ORDER ?
+                  order?.order == Order.DESC ?
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true" className="h-5 w-5"><path d="M4 5h8l-4 6-4-6z"></path></svg>
+                  :
+                  <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path d="M4 11h8L8 5l-4 6z"></path></svg>
+                    :
+                    <svg className="h-5 w-5 opacity-40" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path  d="M4 5h8l-4 6-4-6z"></path></svg>
+                }
+                </div>
                 </th>
                 <th className="headerTable">
                     Cancha
@@ -47,7 +63,10 @@ const ReservaList = ({reservas,loading,order,changeOrder,getReservaDetail}:{
                     Precio Total
                 </th>
                 <th className="headerTable">
-                    Precio pagado
+                    Saldo por pagar
+                </th>
+                <th className="headerTable">
+                    Monto pagado
                 </th>
                 <th className="headerTable">
                     Estado
@@ -120,8 +139,9 @@ const ReservaList = ({reservas,loading,order,changeOrder,getReservaDetail}:{
                                 />
                         </td>
 
-                        <td className="rowTable">{item.total_price} BOB</td>
-                        <td className="rowTable">{item.paid} BOB</td>
+                        <td className="rowTable">{Math.round(item.total_price * 100) / 100} BOB</td>
+                        <td className="rowTable">{item.total_price > item.paid ? Math.round((item.total_price-item.paid)*100)/100: "0"} BOB</td>
+                        <td className="rowTable">{Math.round(item.paid * 100) / 100} BOB</td>
                         <td className="rowTable">{getEstadoReserva(item.estado)}</td>
                         <td className="rowTable">{moment(item.start_date).utc().format('ll')} de
                          {moment(item.start_date).utc().format('LT')} a {moment(item.end_date).utc().format('LT')}</td>

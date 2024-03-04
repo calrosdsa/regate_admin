@@ -3,12 +3,14 @@ import DialogLayout from "@/components/util/dialog/DialogLayout";
 import CommonImage from "@/components/util/image/CommonImage";
 import { getFullName } from "@/core/util";
 import moment from "moment";
-import {useRef, useState} from "react"
+import {useEffect, useRef, useState} from "react"
 import CancelReservaDialog from "./CancelReservaDialog";
 import { getEstadoReserva } from "../ReservaList";
 import { ReservaEstado } from "@/core/type/enums";
 import ConfirmReservaDialog from "./ConfirmReservaDialog";
 import EditReservaDialog from "./EditDialogReserva";
+import { useAppDispatch } from "@/context/reduxHooks";
+import { dataActions } from "@/context/slices/dataSlice";
 const DialogReservaDetail = ({open,close,data,update}:{
     open:boolean
     close:()=>void
@@ -16,10 +18,15 @@ const DialogReservaDetail = ({open,close,data,update}:{
     update:()=>void
 }) => {
     const [cancelReservaDialog,setCancelReservaDialog] = useState(false)
+    const [detail,setDetail] = useState<ReservaDetail>(data)
     const [confirmReservaDialog,setConfirmReservaDialog] = useState(false)
     const [editReservaDialog,setEditReservaDialog] = useState(false)
-
+    const dispatch = useAppDispatch()
     // const options: any | undefined = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+    useEffect(()=>{
+        setDetail(data)
+    },[data])
 
     return(
         <>
@@ -27,29 +34,50 @@ const DialogReservaDetail = ({open,close,data,update}:{
         <EditReservaDialog
         open={editReservaDialog}
         close={()=>setEditReservaDialog(false)}
-        reserva={data.reserva}
+        reserva={detail.reserva}
+        update={(paid,estado)=>{
+            const n:ReservaDetail = {...detail,reserva:{
+                ...detail.reserva,
+                estado:estado,
+                paid:paid
+            }}
+            setDetail(n)
+            dispatch(dataActions.updateReservas(n.reserva))
+        }}
         />
         }
      {cancelReservaDialog &&
      <CancelReservaDialog
      open={cancelReservaDialog}
-     reserva={data.reserva}
+     reserva={detail.reserva}
      close={()=>setCancelReservaDialog(false)}
      update={()=>{
         update()
         close()
+        const n:ReservaDetail = {...detail,reserva:{
+            ...detail.reserva,
+            estado:ReservaEstado.Cancel,
+            // paid:paid
+        }}
+        setDetail(n)
+        dispatch(dataActions.updateReservas(n.reserva))
      }}
      />
      }
      {confirmReservaDialog &&
      <ConfirmReservaDialog
      open={confirmReservaDialog}
-     reserva={data.reserva}
+     reserva={detail.reserva}
      close={()=>setConfirmReservaDialog(false)}
      update={(amount:number)=>{
         close()
-        data.reserva.paid =  data.reserva.paid + amount
-        data.reserva.estado =  ReservaEstado.Valid
+        const n:ReservaDetail = {...detail,reserva:{
+            ...detail.reserva,
+            estado:ReservaEstado.Valid,
+            paid:detail.reserva.paid + amount
+        }}
+        setDetail(n)
+        dispatch(dataActions.updateReservas(n.reserva))
      }}
      />
      }
@@ -72,19 +100,19 @@ const DialogReservaDetail = ({open,close,data,update}:{
         <div className=" border-b-[1px] pb-2">
                     <div className="flex space-x-2 items-center">
                     <CommonImage
-                        src={data.instalacion.portada}
+                        src={detail.instalacion.portada}
                         h={100}
                         w={100}
                         className="rounded-full h-14 w-14 object-cover"
                         />
                         <div className="flex flex-col gap-y-2">
-                        <span className="text-sm font-semibold">{data.instalacion.name}</span>
+                        <span className="text-sm font-semibold">{detail.instalacion.name}</span>
                         <div className="flex w-40 space-x-2 items-center border-[1px] p-1 rounded-lg cursor-default">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
                                     className="w-3 h-3">
                                     <path fillRule="evenodd" d="M5.25 2.25a3 3 0 00-3 3v4.318a3 3 0 00.879 2.121l9.58 9.581c.92.92 2.39 1.186 3.548.428a18.849 18.849 0 005.441-5.44c.758-1.16.492-2.629-.428-3.548l-9.58-9.581a3 3 0 00-2.122-.879H5.25zM6.375 7.5a1.125 1.125 0 100-2.25 1.125 1.125 0 000 2.25z" clipRule="evenodd" />
                                 </svg>
-                                <span className="text-xs font-medium">{data.instalacion.category_name}</span>
+                                <span className="text-xs font-medium">{detail.instalacion.category_name}</span>
                         </div>
                         </div>
                     </div>
@@ -95,68 +123,70 @@ const DialogReservaDetail = ({open,close,data,update}:{
                        
             </div>
             
-        {data.reserva.nombre != undefined &&
+        {detail.reserva.nombre != undefined &&
                 <div className=" flex justify-between items-center">
                         <div className="flex space-x-2 items-center pt-2">
                             <CommonImage
-                            src={data.reserva.profile_photo || "/images/profile.png"}
+                            src={detail.reserva.profile_photo || "/images/profile.png"}
                             h={30}
                             w={30}
                             className="rounded-full"
                             />
-                            <span className="text-sm truncate ">{getFullName(data.reserva.nombre,data.reserva.apellido)}</span>
+                            <span className="text-sm truncate ">{getFullName(detail.reserva.nombre,detail.reserva.apellido)}</span>
                         </div>
 
+                        {detail.reserva.estado != ReservaEstado.Cancel &&
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" 
-                            className="w-7 h-7 noSelect icon-button" onClick={()=>setEditReservaDialog(true)}>
+                        className="w-7 h-7 noSelect icon-button" onClick={()=>setEditReservaDialog(true)}>
                             <path d="M13.488 2.513a1.75 1.75 0 0 0-2.475 0L6.75 6.774a2.75 2.75 0 0 0-.596.892l-.848 2.047a.75.75 0 0 0 .98.98l2.047-.848a2.75 2.75 0 0 0 .892-.596l4.261-4.262a1.75 1.75 0 0 0 0-2.474Z" />
                             <path d="M4.75 3.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h6.5c.69 0 1.25-.56 1.25-1.25V9A.75.75 0 0 1 14 9v2.25A2.75 2.75 0 0 1 11.25 14h-6.5A2.75 2.75 0 0 1 2 11.25v-6.5A2.75 2.75 0 0 1 4.75 2H7a.75.75 0 0 1 0 1.5H4.75Z" />
                             </svg>
+                        }
 
                 </div>
                     }                                
                          <div className=" my-4 ">
                                 <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
                                         <span className="label">Fecha y hora de la reserva</span>
-                                        <span className="text-xs  sm:whitespace-nowrap">{moment.utc(data.reserva.start_date).format("ll")} de {' '}
-                                {moment.utc(data.reserva.start_date).format("LT")} a {' '}
-                                {moment.utc(data.reserva.end_date).format("LT")} </span>
+                                        <span className="text-xs  sm:whitespace-nowrap">{moment.utc(detail.reserva.start_date).format("ll")} de {' '}
+                                {moment.utc(detail.reserva.start_date).format("LT")} a {' '}
+                                {moment.utc(detail.reserva.end_date).format("LT")} </span>
                                     </div>
 
                                     <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
                                         <span className="label">Estado de la reserva</span>
-                                        <span className="text-xs ">{getEstadoReserva(data.reserva.estado)}</span>
+                                        <span className="text-xs ">{getEstadoReserva(detail.reserva.estado)}</span>
                                     </div>
 
                                     <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
                                         <span className="label">Precio de la reserva</span>
-                                        <span className="text-xs ">{data.reserva.total_price}</span>
+                                        <span className="text-xs ">{detail.reserva.total_price}</span>
                                     </div>
 
                                     <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
                                         <span className="label">Cantidad pagada</span>
-                                        <span className="text-xs ">{data.reserva.paid}</span>
+                                        <span className="text-xs ">{detail.reserva.paid}</span>
                                     </div>
 
 
                                     <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
                                         <span className="label">Hora en la que se hizo la reserva</span>
                                         <span className="text-xs ">
-                                            {moment.utc(data.reserva.created_at).format("lll")}
+                                            {moment.utc(detail.reserva.created_at).format("lll")}
                                         </span>
                                     </div>
                                 </div>
 
                                 <>
                                 <div className="flex space-x-2">
-                                    {data.reserva.estado == ReservaEstado.Pendiente &&
+                                    {detail.reserva.estado == ReservaEstado.Pendiente &&
                                     <div className={`button flex justify-center text-sm `}
                                     onClick={()=>setConfirmReservaDialog(true)} >
                                         Completar monto de la reserva
                                     </div>
                                     }
 
-                                    {(data.reserva.estado == ReservaEstado.Valid || data.reserva.estado == ReservaEstado.Pendiente) &&
+                                    {(detail.reserva.estado == ReservaEstado.Valid || detail.reserva.estado == ReservaEstado.Pendiente) &&
                                     <div className={`button flex justify-center h-10 `}
                                     onClick={()=>setCancelReservaDialog(true)} >
                                     Cancelar reserva

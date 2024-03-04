@@ -28,7 +28,8 @@ const ConfirmReservaDialog = ({open,close,update,reserva}:{
             setLoading(true)
             const request:ConfirmReservaRequest = {
                 amount_added:Number(value),
-                reserva_id:reserva.id
+                reserva_id:reserva.id,
+                reserva_uuid:reserva.uuid
             }
              await ConfirmReserva(request)
              setLoading(false)
