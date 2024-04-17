@@ -1,8 +1,11 @@
 import DialogLayout from "@/components/util/dialog/DialogLayout"
+import TimeSelect from "@/components/util/input/TimeSelect"
+import TimeSelect2 from "@/components/util/input/TimeSelect2"
 import Spinner from "@/components/util/loaders/Spinner"
 import { days } from "@/context/actions/chart-actions"
 import { successfulMessage, unexpectedError } from "@/context/config"
 import { UpdateAttentionSchedule } from "@/core/repository/setting"
+import moment from "moment"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 
@@ -30,10 +33,10 @@ const AttentionScheduleDialog = ({open,close,currentScheduleDay,setCurrentSchedu
         })
     }
 
-    const onStartTimeChange = (e:React.ChangeEvent<HTMLInputElement>,index:number)=>{
+    const onStartTimeChange = (e:string,index:number)=>{
         const updateList = data.schedule_interval.map((item,idx)=>{
             if(index == idx){
-                item['start_time'] = e.target.value
+                item['start_time'] = e
             }
             return item
         })
@@ -43,10 +46,10 @@ const AttentionScheduleDialog = ({open,close,currentScheduleDay,setCurrentSchedu
         })
     }
 
-    const onEndTimeChange = (e:React.ChangeEvent<HTMLInputElement>,index:number)=>{
+    const onEndTimeChange = (e:string,index:number)=>{
         const updateList = data.schedule_interval.map((item,idx)=>{
             if(index == idx){
-                item['end_time'] = e.target.value
+                item['end_time'] = e
             }
             return item
         })
@@ -74,8 +77,9 @@ const AttentionScheduleDialog = ({open,close,currentScheduleDay,setCurrentSchedu
     const save = async() =>{
         try{
             setLoading(true)
-            await UpdateAttentionSchedule(data)
-            updateData(data)
+            const res:AttentionSchedule = await UpdateAttentionSchedule(data)
+            res.day_name = data.day_name
+            updateData(res)
             setLoading(false)
             close()
             toast.success(successfulMessage)
@@ -98,7 +102,6 @@ const AttentionScheduleDialog = ({open,close,currentScheduleDay,setCurrentSchedu
         >
             <div className="flex justify-center text-lg border-b-[1px] pb-3 pt-1 border-gray-400">
                 Selecciona el día y la hora</div>
-
             <div className="">
 
             <div className="flex space-x-3 w-full justify-center pt-2">
@@ -125,7 +128,6 @@ const AttentionScheduleDialog = ({open,close,currentScheduleDay,setCurrentSchedu
                             open:false,
                         })
                     }else{
-
                         setData({
                             ...data,
                             open:e.target.value == "on" ?true : false,
@@ -167,12 +169,34 @@ const AttentionScheduleDialog = ({open,close,currentScheduleDay,setCurrentSchedu
                         <>
                         {!item.deleted &&
                         <div key={index} className="flex space-x-2 items-center">
-                            <input type="time" className="input w-[120px]" value={item.start_time}
+                            <TimeSelect2
+                          time={item.start_time}
+                          setTime={(e)=>{
+                            console.log("HORA",e)
+                            onStartTimeChange(e,index)
+                            // const today = moment().format("yyyy-MM-DD")
+                            // onChangeCustomPrecio("start_time",moment(today +" "+e).format("yyyy-MM-DD HH:mm"),index)
+                          }}
+                        //   disabledHours={disabledHours}
+                          />
+
+                            {/* <input type="time" className="input w-[120px]" value={item.start_time}
                             name="start_time"
-                            onChange={(e)=>onStartTimeChange(e,index)}/>
-                            <input type="time" className="input w-[120px]" value={item.end_time}
+                            onChange={(e)=>onStartTimeChange(e,index)}/> */}
+
+                            {/* <input type="time" className="input w-[120px]" value={item.end_time}
                             name="end_time" onChange={(e)=>onEndTimeChange(e,index)}
-                            />
+                            /> */}
+
+                         <TimeSelect2
+                          time={item.end_time}
+                          setTime={(e)=>{
+                            // console.log("HORA",e)
+                          onEndTimeChange(e,index)
+                            // const today = moment().format("yyyy-MM-DD")
+                            // onChangeCustomPrecio("start_time",moment(today +" "+e).format("yyyy-MM-DD HH:mm"),index)
+                          }}/>
+
                             <svg onClick={()=>deleteScheduleTime(index)}
                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
                             className="icon-button">

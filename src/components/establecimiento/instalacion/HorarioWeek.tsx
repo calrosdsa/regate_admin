@@ -39,8 +39,7 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
     const dispatch = useAppDispatch()
     const [editHorarioDialog,setEditHorarioDialog] = useState(false)
     const [openCopyInstalacion,setOpenCopyInstalacion] = useState(false)
-    const [cupo,setCupo] = useState<Cupo | undefined>(undefined)
-    const currentDay = new Date().getDay()
+    // const [cupo,setCupo] = useState<Cupo | undefined>(undefined)
     const [resetDayConfirmationDialog,setResetDayConfirmationDialog] = useState(false)
     const [selectedCupos,setSelectedCupos] = useState<Cupo[]>([])
     const [confirmDeleteDialog,setConfirmDeleteDialog] = useState(false)
@@ -120,8 +119,8 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
 //    }
 
     useEffect(()=>{
-        if(currentDay != undefined){
-            getHorarioDay(currentDay)
+        if(selectedDay != undefined){
+            getHorarioDay(selectedDay)
         }
     },[instalacionId])
 

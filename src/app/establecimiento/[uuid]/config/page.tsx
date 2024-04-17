@@ -119,6 +119,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 }
                 return schedule
             })
+            console.log("HORARIO",res.attention_schedule_week)
             getEstablecimientoAmenities(res.establecimiento.id)
             getEstablecimientoRules(res.establecimiento.id)
             setData({
@@ -529,7 +530,6 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             />
             </div>
             <span className='label'>Reglas</span>
-
             <div>
             {rulesEstablecimiento.map((item)=>{
                 return(

@@ -25,6 +25,8 @@ const AttentionScheduleComponent = ({attention_schedue_week,updateList}:{
         updateData={(e)=>{
             const newList = attention_schedue_week.map((item)=>{
                 if(item.day_week == e.day_week){
+                    const n = e.schedule_interval.filter(t => t.deleted == false)
+                    e.schedule_interval = n
                     item = e
                 }
                 return item
@@ -37,10 +39,10 @@ const AttentionScheduleComponent = ({attention_schedue_week,updateList}:{
             {/* {JSON.stringify(attention_schedue_week)} */}
             {attention_schedue_week.map((item,index)=>{
                 return(
-                    <div key={index} className="flex w-full justify-between items-center">
+                    <div key={index} className="flex w-full justify-between items-center border-b ">
                         <span className="">{item.day_name}</span>
 
-                        <div className="flex space-x-2 items-center">
+                        <div className="flex space-x-2 items-center ">
                             {(!item.open &&!item.closed && item.schedule_interval.length > 0 )&&
                                     <div className="grid">
                                     {item.schedule_interval.map((item,index)=>{
