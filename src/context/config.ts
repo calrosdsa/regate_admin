@@ -1,6 +1,8 @@
 
 export const LOCAL_URL = "https://regate.vercel.app"
 export const API_URL = "http://api.regate.site:9000/v1"
+
+
 export const API_URL_CORE = process.env.API_URL_CORE
 export const MB_API_KEY = process.env.MB_API_KEY
 export const API_URL_MESSAGE = process.env.API_URL_MESSAGE
