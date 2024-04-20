@@ -11,7 +11,7 @@ interface Props{
     placeholder?:string
     onBlur?:()=>void
     icon?:()=>JSX.Element
-    className?:string
+    className?:string,
 }
 const InputWithIcon = ({onChange,value,label,name,type="text",error,icon,className,placeholder="",
 required= true,onBlur=()=>{}}:Props) =>{
@@ -24,8 +24,10 @@ required= true,onBlur=()=>{}}:Props) =>{
       {icon != undefined &&
         icon()
         }
-    <input name={name}  type={type}
-      required={required}
+    <input 
+        name={name}  
+        type={type}
+        required={required}
         onChange={onChange} 
         autoFocus
         value={value}
@@ -33,7 +35,8 @@ required= true,onBlur=()=>{}}:Props) =>{
         // minLength={8}
         className={`input
         ${icon != undefined && "pl-7"}`}
-        placeholder={placeholder} />
+        placeholder={placeholder} 
+        />
           <span className="text-red-500 pl-2 absolute left-0 -bottom-4 font-medium text-xs truncate"
          >{error}</span>
       </div>  

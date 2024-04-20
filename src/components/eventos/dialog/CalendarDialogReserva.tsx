@@ -10,7 +10,6 @@ import moment from "moment"
 import { ChangeEvent, useEffect, useState } from "react"
 import Image from "next/image"
 import { CheckRervasCuposAvailables, CreateReservaCupos, DeleteReservaCupos } from "@/core/repository/reservas"
-import { ReservaFromEventoRequest } from "@/core/type/evento"
 import Loader from "@/components/util/loaders/Loader"
 import Spinner from "@/components/util/loaders/Spinner"
 import { toast } from "react-toastify"
@@ -289,9 +288,9 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
         }
     }
 
-    // useEffect(()=>{
-    //     validateToContinue()
-    // },[start,end])
+    useEffect(()=>{
+        getInstalaciones()
+    },[])
 
 
     return(

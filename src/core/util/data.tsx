@@ -43,7 +43,7 @@ export const reservaEstados:SelectItem[] = [
         value:"-1"
     },
     {
-        name:"Valido",
+        name:"Pagado",
         value:ReservaEstado.Valid.toString()
     },
     {

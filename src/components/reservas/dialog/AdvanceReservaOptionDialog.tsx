@@ -9,7 +9,6 @@ import { successfulMessage, unexpectedError } from "@/context/config";
 import { GetInstalaciones } from "@/core/repository/instalacion";
 import { CheckRervasCuposAvailables, CreateReservaCupos, DeleteReservaCupos, GenerateReservaCupos } from "@/core/repository/reservas";
 import { EndOptions, Http, MonthDaySelectOption, Repeat, ReservaType } from "@/core/type/enums";
-import { ReservaFromEventoRequest } from "@/core/type/evento";
 import { repeatOptions } from "@/core/util/data";
 import moment from "moment";
 import Image from "next/image";
@@ -221,11 +220,11 @@ const AdvanceReservaOptionDialog = ({
         open={open}
         allowFullScreen={true}
         close={()=>close(true)}
+        title={moment(startTime).format("LL")}
         className="max-w-lg"
         >
         <form onSubmit={onSubmit}>
             <div className="grid sm:grid-cols-2 gap-x-4 gap-y-4 ">
-
             <TimeSelect
             time={start}
             setTime={(e)=>{

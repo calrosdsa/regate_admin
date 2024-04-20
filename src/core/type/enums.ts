@@ -29,6 +29,10 @@ export const enum OrderQueue {
     CREATED = 1,
     RESERVA_CREATED =2,
     USERNAME_ORDER =3
+}
+export const enum OrderQueueUserEmpresa {
+    CREATED = 1,
+    NAME =2
 
 }
 

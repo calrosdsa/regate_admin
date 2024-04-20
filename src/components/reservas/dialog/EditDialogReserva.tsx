@@ -8,19 +8,21 @@ import ButtonSubmit from "@/components/util/button/ButtonSubmit"
 import { EditReserva } from "@/core/repository/reservas"
 import { toast } from "react-toastify"
 import { successfulMessage, unexpectedError } from "@/context/config"
+import moment from "moment"
 
 const EditReservaDialog = ({open,close,reserva,update}:{
     open:boolean
     close:()=>void
     reserva:Reserva
-    update:(paid:number,estado:number)=>void
+    update:(paid:number,estado:number,endTime:string)=>void
 }) =>{
     const [loading,setLoading] = useState(false)
     const [formData,setFormData] = useState({
         paid:reserva.paid.toString(),
-        estado:reserva.estado.toString()
+        estado:reserva.estado.toString(),
+        extra_time:"0"
     })
-    const {paid,estado} = formData
+    const {paid,estado,extra_time} = formData
 
     const onSubmit = async(e:FormEvent<HTMLFormElement>) => {
         try{
@@ -30,19 +32,17 @@ const EditReservaDialog = ({open,close,reserva,update}:{
                 id:reserva.id,
                 amount:Number(paid),
                 estado:Number(estado),
-                reserva_uuid:reserva.uuid
+                reserva_uuid:reserva.uuid,
+                extra_time:Number(extra_time)
             }
             await EditReserva(r)
-            // reserva.paid = Number(paid)
-            // reserva.estado = Number(estado)
-            update( Number(paid), Number(estado))
             setLoading(false)
-            close()
             toast.success(successfulMessage)
+            update( Number(paid), Number(estado), moment(reserva.end_date).add("minutes",Number(extra_time)).format())
+            close()
         }catch(err){
             setLoading(false)
             toast.error(unexpectedError)
-            console.log(err)
         }
     }
     return(
@@ -76,6 +76,25 @@ const EditReservaDialog = ({open,close,reserva,update}:{
             }}
             name="estado"
             value={estado}
+            />
+
+            <SelectComponent
+            label="Tiempo extra"
+            required={false}
+            items={[
+                {value:"30",name:"30 minutos"},
+                {value:"60",name:"1 hora"},
+                {value:"90",name:"1.5 horas"},
+                {value:"120",name:"2 horas"}
+            ]}
+            onChange={(e)=>{
+                setFormData({
+                 ...formData,
+                 extra_time:e.target.value
+                })
+             }}
+             name="extra_time"
+             value={extra_time}
             />
             
             <ButtonSubmit

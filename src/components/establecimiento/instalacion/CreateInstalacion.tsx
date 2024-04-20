@@ -84,8 +84,14 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
     // }
 
     const getCategories = async() => {
+      try{
+
         const res:Label[] = await GetCategories()
+        console.log("categories",res)
         setCategories(res)
+      }catch(err){
+        console.log("categoriea",err)
+      }
       }
       const onSubmit = async(e:FormEvent<HTMLFormElement>) => {
         try{

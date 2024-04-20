@@ -7,7 +7,6 @@ import Loading from "@/components/util/loaders/Loading";
 import { successfulMessage, unexpectedError } from "@/context/config";
 import { CreateEvento } from "@/core/repository/evento";
 import { SearchUsersEmpresa } from "@/core/repository/users";
-import { CreateEventoRequest, Evento, EventoPaginationResponse } from "@/core/type/evento";
 import useDebounce from "@/core/util/hooks/useDebounce";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";

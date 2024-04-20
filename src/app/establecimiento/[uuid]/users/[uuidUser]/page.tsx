@@ -15,6 +15,7 @@ import { useAppDispatch } from "@/context/reduxHooks";
 import { GetReservaDetail } from "@/core/repository/reservas";
 import { uiActions } from "@/context/slices/uiSlice";
 import DialogReservaDetail from "@/components/reservas/dialog/DialogReservaDetail";
+import { dataActions } from "@/context/slices/dataSlice";
 
 
 const Page = ({ params }: { params: { uuidUser: string,uuid:string } }) => {
@@ -146,7 +147,17 @@ const Page = ({ params }: { params: { uuidUser: string,uuid:string } }) => {
         open={openReservaDetailDialog}
         close={()=>setOpenReservaDetailDialog(false)}
         data={reservaDetail}
-        update={()=>{}}
+        update={(reserva)=>{
+            if(reserva == undefined) return
+            const n = reservas.map((item)=>{
+                if(item.id == reserva.id){
+                    item = reserva
+                }
+                return item
+            })
+            setReservas(n)
+        }}
+        uuid={params.uuid}
         />
         }
         </>

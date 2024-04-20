@@ -1,5 +1,4 @@
 import { API_URL, LOCAL_URL } from "@/context/config"
-import { ReservaFromEventoRequest } from "../type/evento"
 
 export async function getEstablecimientoReservasCount(uuid:string) {
   const res = await fetch(`${LOCAL_URL}/api/reservas/establecimiento/count?uuid=${uuid}`)

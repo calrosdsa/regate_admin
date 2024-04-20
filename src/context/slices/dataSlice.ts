@@ -24,9 +24,12 @@ const dataSlice = createSlice({
         updateReservas(state,action:PayloadAction<Reserva>){
             const n = state.reservas.map(item=>{
                 if(item.id == action.payload.id){
-                    action.payload.instalacion_name = item.instalacion_name
-                    item = action.payload
-                    // item.instalacion_name = canchaName
+                    const instalacionName = item.instalacion_name
+                    // action.payload.instalacion_name = item.instalacion_name
+                    item = {
+                        ...action.payload,
+                        instalacion_name:instalacionName
+                    }
                 }
                 return item
             })

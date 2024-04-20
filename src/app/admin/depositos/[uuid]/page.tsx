@@ -42,7 +42,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         uuid:params.uuid,
         query:"",
         order:Order.DESC,
-        order_queue:OrderQueue.CREATED,
+        order_queue:OrderQueue.CREATED
     })
     // const [totalAmountReservas,setTotalAmountReserva] = useState(0)
     const appendSerachParams = (key:string,value:string)=>{
@@ -292,6 +292,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         close={()=>setOpenReservaDetailDialog(false)}
         data={reservaDetail}
         update={()=>{}}
+        uuid={params.uuid}
         />
         }
         </>

@@ -8,6 +8,7 @@ import { GetReservasCupo } from "@/core/repository/reservas"
 import Spinner from "@/components/util/loaders/Spinner"
 import { toast } from "react-toastify"
 import { unexpectedError } from "@/context/config"
+import CreateReservaDialog from "@/components/reservas/dialog/CreateReservaDialog"
 
 type WeekDay = {
     day:string
@@ -28,7 +29,7 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId,eventoName}:{
 }) =>{
     const [openReservaDialog,setOpenReservaDialog] = useState(false)
     const [startDate,setStartDate] = useState("")
-    const [startTime,setStartTime] = useState(moment(new Date()))
+    const [startTime,setStartTime] = useState<moment.Moment | undefined>(undefined)
     const [days,setDays] = useState<WeekDay[]>([])
     const [dateWeekWithCupos,setDateWeekWithCupos] = useState<DateWeekWithCupos[]>([])
     const [reservasCupo,setReservasCupo] = useState<ReservaCupo[]>([])
@@ -37,18 +38,14 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId,eventoName}:{
     const [loadingSpinner,setLoadingSpinner] = useState(false)
     const [deleteEventoCupos,setDeleteEventoCupos] = useState(false)
 
-    const openDialog = (startDate:string,startTime:Date,shouldAdd:boolean) => {
-        setDeleteEventoCupos(false)
-        setStartDate(startDate)
-        const t = moment(startTime).utc()
+    const openDialog = (startDate:string,time:Date,shouldAdd:boolean) => {
+        const t = moment(time).utc()
         if(shouldAdd){
             t.add(30, 'minutes')
-            setStartTime(t)
-        }else{
-            setStartTime(t)
-
         }
-        setOpenReservaDialog(true)
+        console.log(t.format("HH:mm"))
+        console.log(moment(`${startDate} ${t.format("HH:mm")}`).format())
+        setStartTime(moment(`${startDate} ${t.format("HH:mm")}`))
     }
 
     const getReservasCupo = async(daysWeek:WeekDay[]) =>{
@@ -129,31 +126,48 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId,eventoName}:{
         }
     },[reservasCupo])
 
-    useEffectOnce(()=>{
-        generateDaysWeek(dateFilter)
-    })
+    useEffect(()=>{
+        if(reservasCupo.length == 0){
+            generateDaysWeek(dateFilter)
+        }
+    },[])
+    useEffect(()=>{
+        if(startTime != undefined){
+            setOpenReservaDialog(true)
+        }
+    },[startTime])
     return(
         <>
         {openReservaDialog &&
-        <CalendarDialogReserva
+        <CreateReservaDialog
         uuid={uuid}
+        isEvento={true}
         open={openReservaDialog}
         close={()=>setOpenReservaDialog(false)}
-        startTime={startTime}
-        startDate={startDate}
-        reserva_type={reserva_type}
-        uuidEvent={uuidEvent}
-        updateDateWithCupos={(e: ReservaCupo[],deleteCupos:boolean)=>{
-            if(deleteCupos){
-                const filterList = reservasCupo.filter(item=>!e.map(t=>t.start_date).includes(item.start_date))
-                setReservasCupo(filterList)
-            }else{
-                setReservasCupo([...reservasCupo,...e])
-            }
-        }}
+        cupos={[]}
+        refresh={()=>{}}
+        useAdvanceOptions={false}
         eventoId={eventoId}
-        // isForDelete={deleteEventoCupos}
+        startTime={startTime}
         />
+        // <CalendarDialogReserva
+        // uuid={uuid}
+        // open={openReservaDialog}
+        // close={()=>setOpenReservaDialog(false)}
+        // startTime={startTime}
+        // startDate={startDate}
+        // reserva_type={reserva_type}
+        // uuidEvent={uuidEvent}
+        // updateDateWithCupos={(e: ReservaCupo[],deleteCupos:boolean)=>{
+        //     if(deleteCupos){
+        //         const filterList = reservasCupo.filter(item=>!e.map(t=>t.start_date).includes(item.start_date))
+        //         setReservasCupo(filterList)
+        //     }else{
+        //         setReservasCupo([...reservasCupo,...e])
+        //     }
+        // }}
+        // eventoId={eventoId}
+        // isForDelete={deleteEventoCupos}
         }
         <div className="grid gap-y-2">
         <div className="flex pt-2 items-center space-x-2">

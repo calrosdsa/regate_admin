@@ -3,6 +3,7 @@ type UserEmpresa = {
     uuid?:string
     name:string
     phone_number:string
+    created_at?:string
     reservas_count?:number
 }
 
@@ -15,4 +16,6 @@ type PaginationUserEmpresaResponse = {
 
 type RequestUserEmpresaFilter = {
     query:string
+    order:number
+    order_queue:number
 }

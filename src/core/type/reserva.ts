@@ -1,3 +1,4 @@
+
 interface Reserva extends Profile {
     id:number
     uuid:string
@@ -11,6 +12,7 @@ interface Reserva extends Profile {
     end_date:string
     created_at:string
     user_local_id?:number
+    evento:Evento
 }
 
 type ReservaReporteRequest = {
@@ -32,7 +34,9 @@ type ReservaDataFilter = {
     query?:string
     order:number
     order_queue?:number
-    instalacion_id:string
+    instalacion_id?:string
+    evento_id?:number | null 
+    evento_uuid?:string
 }
 
 
@@ -88,6 +92,7 @@ type ReservaEditRequest = {
     reserva_uuid:string
     estado:number
     amount:number
+    extra_time:number
 }
 
 type GenerateReservaCupoRequest = {

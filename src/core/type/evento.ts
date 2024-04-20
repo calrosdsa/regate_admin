@@ -1,12 +1,11 @@
-import { Repeat, EndOptions, DayMonthPosition, ReservaType } from "./enums"
 
-export type CreateEventoRequest = {
+type CreateEventoRequest = {
     name:string
     description:string
     establecimiento_id:number
 }
 
-export type Evento = {
+type Evento = {
     id:number
     uuid:string
     name:string
@@ -15,7 +14,7 @@ export type Evento = {
 }
 
 
-export type EventoPaginationResponse = {
+type EventoPaginationResponse = {
     results:Evento[]
     next_page:number
     count:number
@@ -23,11 +22,11 @@ export type EventoPaginationResponse = {
 }
 
 
-export type ReservaFromEventoRequest = {
+type ReservaFromEventoRequest = {
     times:string[]
     establecimiento_id?:number
     instalaciones:number[]
-    reserva_type?:ReservaType
+    reserva_type?:number
     evento_uuid?:string
     reserva_id?:number
     day_week?:number

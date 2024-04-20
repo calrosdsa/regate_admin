@@ -60,8 +60,8 @@ const UserReservaTable = ({reservas,loading,selectReserva}:{
                         <td className="rowTable">{item.paid}</td>
                         <td className="rowTable">{getEstadoReserva(item.estado)}</td>
 
-                        <td className="rowTable">{moment(item.start_date).utc().format('ll')}</td>
-
+                        <td className="rowTable">{moment(item.start_date).utc().format('ll')} de
+                         {moment(item.start_date).utc().format('LT')} a {moment(item.end_date).utc().format('LT')}</td>
 
                         {/* <td className="rowTable">{item.name}</td> */}
                         <td className="rowTable font-medium underline text-primary cursor-pointer 

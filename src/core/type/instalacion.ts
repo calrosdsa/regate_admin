@@ -74,6 +74,11 @@ type CupoReserva = {
     reserva_count:number
 }
 
+type DeleteInstalacionRequest = {
+    id:number
+    uuid:string
+    establecimiento_uuid:string
+}
 
 
 

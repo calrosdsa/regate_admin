@@ -114,11 +114,11 @@ const Page = ({ params }: { params: { uuid: string } })=>{
             const instalaciones:Instalacion[] = await GetInstalaciones(params.uuid)
             setInstalaciones(instalaciones)
             if(instalaciones.length > 0){
-                if(instalacionId != null){
-                    getInstalacionData(instalacionId,instalaciones)
-                }else{
+                // if(instalacionId != null){
+                //     getInstalacionData(instalacionId,instalaciones)
+                // }else{
                     getInstalacionData(instalaciones[0].uuid,instalaciones)
-                }
+                // }
             }
             setLoadingInstalaciones(false)
         }catch(err){
@@ -302,6 +302,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                             <InstalacionDetail 
                             uuid={params.uuid}
                             instalacion={instalacion}
+                            refresh={getData}
                             update={(name,value)=>{
                                 setInstalacion({...instalacion,[name]:value})
                             }}
@@ -391,7 +392,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
 
                             <Loading
                             loading={loadingReservas}
-                             className="flex justify-center mb-2"
+                            className="flex justify-center mb-2"
                             />
                             <ReservaInstalacionCupos
                             cupos={cuposReservas}
@@ -419,6 +420,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         close={()=>setOpenReservaDetailDialog(false)}
         data={reservaDetail}
         update={()=>getCuposReservaInstalacion(reservaDetail.instalacion.id)}
+        uuid={params.uuid}
         />
         }
 
@@ -427,10 +429,11 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         open={createReservaDialog}
         close={()=>setCreateReservaDialog(false)}
         cupos={selectedCupos}
-        instalacion={instalacion}
+        cancha={instalacion}
         refresh={()=>getCuposReservaInstalacion(instalacion.id)}
         uuid={params.uuid}
         useAdvanceOptions={selectedCupos.length == 0}
+        eventoId={null}
         />
         }
     </>

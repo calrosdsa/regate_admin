@@ -2,17 +2,19 @@ import moment from "moment";
 import CommonImage from "../util/image/CommonImage";
 import { getFullName } from "@/core/util";
 import Loading from "../util/loaders/Loading";
-import { Order, OrderQueue, ReservaEstado } from "@/core/type/enums";
+import { Order, OrderQueue, OrderQueueUserEmpresa, ReservaEstado } from "@/core/type/enums";
 import Link from "next/link";
 import { getRouteEstablecimiento } from "@/core/util/routes";
 
 
 
-const UserListTable = ({usersEmpresa,loading,uuid,selectUser}:{
+const UserListTable = ({usersEmpresa,loading,uuid,selectUser,order,changeOrder}:{
     usersEmpresa:UserEmpresa[]
     selectUser:(userEmpresa:UserEmpresa)=>void
     loading:boolean
     uuid:string
+    changeOrder:(order:ReservaOrder)=>void
+    order?:ReservaOrder
 }) =>{
     
 
@@ -27,12 +29,50 @@ const UserListTable = ({usersEmpresa,loading,uuid,selectUser}:{
             <tr>
                 <th className="headerTable w-10">
                 </th>
-                <th className="headerTable w-72">
-                    Usuario
+                <th className="headerTable w-72" onClick={()=>{
+                    if(order == undefined) return
+                    changeOrder({
+                        ...order,
+                        queue:OrderQueueUserEmpresa.NAME
+                    })
+                    }}>
+                    <div className="flex space-x-2 items-center cursor-pointer">
+                        <span>Usuario</span>
+                        {order?.queue == OrderQueueUserEmpresa.NAME ?
+                        order?.order == Order.DESC ?
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true" className="h-5 w-5"><path d="M4 5h8l-4 6-4-6z"></path></svg>
+                        :
+                        <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path d="M4 11h8L8 5l-4 6z"></path></svg>
+                            :
+                            <svg className="h-5 w-5 opacity-40" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path  d="M4 5h8l-4 6-4-6z"></path></svg>
+                    }
+                </div>
                 </th>
+
                 <th className="headerTable">
                     Número de Teléfono
                 </th>
+                <th className="headerTable" onClick={()=>{
+                    if(order == undefined) return
+                    changeOrder({
+                        ...order,
+                        queue:OrderQueueUserEmpresa.CREATED
+                    })
+                    }}>
+                        <div className="flex space-x-2 items-center">
+
+                    <span>Fecha de creación</span>
+                    {order?.queue == OrderQueue.CREATED ?
+                    order?.order == Order.DESC ?
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true" className="h-5 w-5"><path d="M4 5h8l-4 6-4-6z"></path></svg>
+                    :
+                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path d="M4 11h8L8 5l-4 6z"></path></svg>
+                    :
+                    <svg className="h-5 w-5 opacity-40" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path  d="M4 5h8l-4 6-4-6z"></path></svg>
+                    }
+                        </div>
+                </th>
+
                 <th className="headerTable w-72">
                     Tipo de Usuario
                 </th>
@@ -61,6 +101,7 @@ const UserListTable = ({usersEmpresa,loading,uuid,selectUser}:{
                         <span className="rowTable truncate font-medium">{item.name}</span>
                         </td>
                         <td className="rowTable">{item.phone_number}</td>
+                        <td className="rowTable">{moment(item.created_at).format("lll")}</td>
                         <td className="rowTable">{(item.reservas_count != undefined && item.reservas_count > 1 ) 
                         ? "Usuario Frecuente":"Usuario Nuevo"}</td>
                         {/* <td className="rowTable">{item.name}</td> */}

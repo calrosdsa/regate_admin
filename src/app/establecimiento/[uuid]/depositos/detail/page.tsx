@@ -294,6 +294,7 @@ const Page = ({params}:{params:{uuid:string}}) =>{
         close={()=>setOpenReservaDetailDialog(false)}
         data={reservaDetail}
         update={()=>{}}
+        uuid={params.uuid}
         />
         }
         </>

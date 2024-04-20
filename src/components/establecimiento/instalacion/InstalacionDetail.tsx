@@ -2,7 +2,7 @@ import Image from "next/image"
 import EditComponentImage from "../../util/input/EditComponentImage"
 import EditComponent from "@/components/util/input/EditComponent"
 import UploadImage from "@/components/util/input/UploadImage"
-import { UpdateInstalacion, UpdateInstalacionPhoto } from "@/core/repository/instalacion"
+import { DeleteInstalacion, UpdateInstalacion, UpdateInstalacionPhoto } from "@/core/repository/instalacion"
 import { toast } from "react-toastify"
 import { useEffect, useState } from "react"
 import ButtonWithLoader from "@/components/util/button/ButtonWithLoader"
@@ -13,18 +13,25 @@ import { Tooltip } from 'react-tooltip';
 import { estadoVisibility } from "@/core/util/data"
 import { EstadoVisibility } from "@/core/type/enums"
 import { successfulMessage, unexpectedError } from "@/context/config"
+import { IconButton } from "@mui/material"
+import DeleteIcon from '@mui/icons-material/Delete';
+import ConfirmationDialog from "@/components/util/dialog/ConfirmationDialog"
+import { uiActions } from "@/context/slices/uiSlice"
+import { useAppDispatch } from "@/context/reduxHooks"
 
-
-const InstalacionDetail = ({instalacion,update,uuid}:{
+const InstalacionDetail = ({instalacion,update,uuid,refresh}:{
     instalacion:Instalacion
     update:(name:string,value:string)=>void
+    refresh:()=>void
     uuid:string
 }) =>{
+    const dispatch = useAppDispatch()
     const [show,setShow] = useState(false)
     const [category,setCategory] = useState<number>(instalacion.category_id)
     const [photo,setPhoto] = useState<File | undefined>(undefined)
     const [ categories,setCategories ] = useState<Label[]>([])
     const [loadingUpdate,setLoadingUpdate] = useState(false)
+    const [deleteConfirmationDialog,setDeleteConfirmationDialog] = useState(false)
 
     // const itemsSelected:SelectItem[] = categories.map(item=>{
     //     return( {value:item.name,name:item.id.toString()} )
@@ -38,6 +45,24 @@ const InstalacionDetail = ({instalacion,update,uuid}:{
             setShow(!show)
         }catch(err){
             console.log(err)
+        }
+    }
+    const deleteInstalacion = async() =>{
+        try{
+            dispatch(uiActions.setLoaderDialog(true))
+            const d:DeleteInstalacionRequest = {
+                id:instalacion.id,
+                uuid:instalacion.uuid,
+                establecimiento_uuid:uuid
+            }
+            await DeleteInstalacion(d)
+            refresh()
+            setDeleteConfirmationDialog(false)
+            dispatch(uiActions.setLoaderDialog(false))
+            toast.success(successfulMessage)
+        }catch(err){
+            dispatch(uiActions.setLoaderDialog(false))
+            toast.error(unexpectedError)
         }
     }
     const updateInstalacion = async(name:string,value:string,addLoader:()=>void,removeLoader:()=>void) =>{
@@ -81,9 +106,23 @@ const InstalacionDetail = ({instalacion,update,uuid}:{
       
     },[instalacion])
     return(
+        <>
+        {deleteConfirmationDialog &&
+        <ConfirmationDialog
+        open={deleteConfirmationDialog}
+        close={()=>setDeleteConfirmationDialog(true)}
+        performAction={()=>deleteInstalacion()}
+        description={`Se eliminar la cancha (${instalacion.name})`}
+        />
+        }
         <div className="grid gap-y-3 w-full">
             {/* <button className="button w-min rounded-lg">Editar</button> */}
+            <div className="flex justify-between space-x-3">
             <span className="text-xl py-2 font-medium">Instalacion Info</span>
+            <IconButton onClick={()=>setDeleteConfirmationDialog(true)}>
+                <DeleteIcon/>
+            </IconButton>
+            </div>
            <EditComponent
                 label="Titulo"
                 content={instalacion.name}
@@ -132,7 +171,7 @@ const InstalacionDetail = ({instalacion,update,uuid}:{
                 // update("estado",currentName)
             }}
             contentToolTip={
-                    <div className="grid">
+                <div className="grid">
                         <span>Habilitado: Sera visible en la aplicación </span>
                         <span>Deshabilitado: No sera visible en la aplicacion</span>
                     </div>
@@ -152,6 +191,7 @@ const InstalacionDetail = ({instalacion,update,uuid}:{
           />
            
         </div>
+          </>
     )
 }
 export default InstalacionDetail

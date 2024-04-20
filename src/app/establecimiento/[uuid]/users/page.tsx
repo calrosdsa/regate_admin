@@ -4,6 +4,7 @@ import EditUserEmpresaDialog from "@/components/user/dialog/EditUserEmpresaDialo
 import SearchInput from "@/components/util/input/SearchInput"
 import Pagination from "@/components/util/pagination/Pagination"
 import { GetUsersEmpresaPagination } from "@/core/repository/users"
+import { Order, OrderQueueUserEmpresa } from "@/core/type/enums"
 import useEffectOnce from "@/core/util/hooks/useEffectOnce"
 import { useSearchParams } from "next/navigation"
 import { useState } from "react"
@@ -17,8 +18,12 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
     const [openEditUserDialog,setOpenEditUserDialog] = useState(false)
     const [filterData,setFilterData] = useState<RequestUserEmpresaFilter>({
         query:"",
-        // order:Order.DESC,
-        // order_queue:OrderQueue.CREATED,
+        order:Order.DESC,
+        order_queue:OrderQueueUserEmpresa.CREATED,
+    })
+    const [order,setOrder] = useState<ReservaOrder>({
+        order:Order.DESC,
+        queue:OrderQueueUserEmpresa.CREATED
     })
     const [userEmpresa,setUserEmpresa] = useState<UserEmpresa | undefined>(undefined)
 
@@ -69,6 +74,14 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         }catch(err){
             setLoading(false)
             console.log(err)
+        }
+    }
+    const applyChange = (data:RequestUserEmpresaFilter) =>{
+        setFilterData(data)
+        if(paginationProps != undefined){
+            getUsersEmpresa(data,Number(paginationProps.currentPage))
+        }else{
+            getUsersEmpresa(data,1)
         }
     }
 
@@ -201,6 +214,32 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             selectUser={(e:UserEmpresa)=>{
                 setUserEmpresa(e)
                 setOpenEditUserDialog(true)
+            }}
+            order={order}
+            changeOrder={(order)=>{
+                if(order.order == Order.DESC){
+                    setOrder({
+                        ...order,
+                        order:Order.ASC
+                    })
+                    const data = {
+                        ...filterData,
+                        order:Order.ASC,
+                        order_queue:order.queue
+                    }
+                    applyChange(data)
+                }else{
+                    setOrder({
+                        ...order,
+                        order:Order.DESC
+                    })
+                    const data = {
+                        ...filterData,
+                        order:Order.DESC,
+                        order_queue:order.queue
+                    }
+                    applyChange(data)
+                }
             }}
             />
         </div>

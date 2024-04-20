@@ -333,7 +333,11 @@ export default function Page({params}:{params:{uuid:string}}){
         open={openReservaDetailDialog}
         close={()=>setOpenReservaDetailDialog(false)}
         data={reservaDetail}
-        update={()=>{}}
+        uuid={params.uuid}
+        update={(reserva?:Reserva)=>{
+            if(reserva == undefined) return
+            dispatch(dataActions.updateReservas(reserva))
+        }}
         />
         }
         </>

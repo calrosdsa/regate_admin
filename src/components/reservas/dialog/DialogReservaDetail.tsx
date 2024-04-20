@@ -11,23 +11,28 @@ import ConfirmReservaDialog from "./ConfirmReservaDialog";
 import EditReservaDialog from "./EditDialogReserva";
 import { useAppDispatch } from "@/context/reduxHooks";
 import { dataActions } from "@/context/slices/dataSlice";
-const DialogReservaDetail = ({open,close,data,update}:{
+import Link from "next/link";
+import { getRouteEstablecimiento } from "@/core/util/routes";
+const DialogReservaDetail = ({open,close,data,update,uuid}:{
     open:boolean
     close:()=>void
     data:ReservaDetail,
-    update:()=>void
+    update:(reserva?:Reserva)=>void
+    uuid:string
+    
 }) => {
     const [cancelReservaDialog,setCancelReservaDialog] = useState(false)
     const [detail,setDetail] = useState<ReservaDetail>(data)
     const [confirmReservaDialog,setConfirmReservaDialog] = useState(false)
     const [editReservaDialog,setEditReservaDialog] = useState(false)
+    const [showReservaDetail,setShowReservaDetail] = useState(true)
+
     const dispatch = useAppDispatch()
     // const options: any | undefined = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-
     useEffect(()=>{
+        setShowReservaDetail(true)
         setDetail(data)
     },[data])
-
     return(
         <>
         {editReservaDialog &&
@@ -35,14 +40,17 @@ const DialogReservaDetail = ({open,close,data,update}:{
         open={editReservaDialog}
         close={()=>setEditReservaDialog(false)}
         reserva={detail.reserva}
-        update={(paid,estado)=>{
-            const n:ReservaDetail = {...detail,reserva:{
+        update={(paid,estado,endDate)=>{
+            const reserva = {
                 ...detail.reserva,
                 estado:estado,
-                paid:paid
-            }}
+                paid:paid,
+                end_date:endDate
+            }
+            const n:ReservaDetail = {...detail,reserva:reserva}
             setDetail(n)
             dispatch(dataActions.updateReservas(n.reserva))
+            update(reserva)
         }}
         />
         }
@@ -52,13 +60,13 @@ const DialogReservaDetail = ({open,close,data,update}:{
      reserva={detail.reserva}
      close={()=>setCancelReservaDialog(false)}
      update={()=>{
-        update()
-        close()
-        const n:ReservaDetail = {...detail,reserva:{
-            ...detail.reserva,
-            estado:ReservaEstado.Cancel,
-            // paid:paid
-        }}
+         close()
+         const reserva = {
+             ...detail.reserva,
+             estado:ReservaEstado.Cancel,
+            }
+        const n:ReservaDetail = {...detail,reserva:reserva}
+        update(reserva)
         setDetail(n)
         dispatch(dataActions.updateReservas(n.reserva))
      }}
@@ -74,7 +82,7 @@ const DialogReservaDetail = ({open,close,data,update}:{
         const n:ReservaDetail = {...detail,reserva:{
             ...detail.reserva,
             estado:ReservaEstado.Valid,
-            paid:detail.reserva.paid + amount
+            paid:detail.reserva.paid + amount,
         }}
         setDetail(n)
         dispatch(dataActions.updateReservas(n.reserva))
@@ -85,7 +93,7 @@ const DialogReservaDetail = ({open,close,data,update}:{
      className=" max-w-md sm:max-w-lg md:max-w-xl"
      title="Detalles de la Reserva"
      allowFullScreen={true}
-     open={open} close={close}>
+     open={showReservaDetail} close={()=>setShowReservaDetail(false)}>
 
         <div className='rounded-lg bg-white overflow-auto pt-2'>
 
@@ -137,14 +145,19 @@ const DialogReservaDetail = ({open,close,data,update}:{
 
                         {detail.reserva.estado != ReservaEstado.Cancel &&
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" 
-                        className="w-7 h-7 noSelect icon-button" onClick={()=>setEditReservaDialog(true)}>
+                        className="w-7 h-7 noSelect icon-button" onClick={()=>{
+                            setEditReservaDialog(true)
+                            // setShowReservaDetail(false)
+                        }}>
                             <path d="M13.488 2.513a1.75 1.75 0 0 0-2.475 0L6.75 6.774a2.75 2.75 0 0 0-.596.892l-.848 2.047a.75.75 0 0 0 .98.98l2.047-.848a2.75 2.75 0 0 0 .892-.596l4.261-4.262a1.75 1.75 0 0 0 0-2.474Z" />
                             <path d="M4.75 3.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h6.5c.69 0 1.25-.56 1.25-1.25V9A.75.75 0 0 1 14 9v2.25A2.75 2.75 0 0 1 11.25 14h-6.5A2.75 2.75 0 0 1 2 11.25v-6.5A2.75 2.75 0 0 1 4.75 2H7a.75.75 0 0 1 0 1.5H4.75Z" />
                             </svg>
                         }
 
                 </div>
-                    }                                
+                    }
+                    
+
                          <div className=" my-4 ">
                                 <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
                                         <span className="label">Fecha y hora de la reserva</span>
@@ -175,6 +188,17 @@ const DialogReservaDetail = ({open,close,data,update}:{
                                             {moment.utc(detail.reserva.created_at).format("lll")}
                                         </span>
                                     </div>
+
+                                    {detail.reserva.evento.uuid != "" &&
+                                    <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
+                                        <span className="label">Evento</span>
+                                        <Link  href={getRouteEstablecimiento(uuid,`eventos/${detail.reserva.evento.uuid}?name=${detail.reserva.evento.name}&id=${detail.reserva.evento.id}`)} 
+                                        className="text-xs link">
+                                            {detail.reserva.evento.name}
+                                        </Link>
+                                    </div>
+                                    }
+                                    
                                 </div>
 
                                 <>

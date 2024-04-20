@@ -5,7 +5,6 @@ import Loading from "../util/loaders/Loading";
 import { Order, OrderQueue, ReservaEstado } from "@/core/type/enums";
 import Link from "next/link";
 import { getRouteEstablecimiento } from "@/core/util/routes";
-import { Evento } from "@/core/type/evento";
 
 
 
