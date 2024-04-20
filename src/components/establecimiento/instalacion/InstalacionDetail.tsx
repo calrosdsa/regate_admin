@@ -110,7 +110,7 @@ const InstalacionDetail = ({instalacion,update,uuid,refresh}:{
         {deleteConfirmationDialog &&
         <ConfirmationDialog
         open={deleteConfirmationDialog}
-        close={()=>setDeleteConfirmationDialog(true)}
+        close={()=>setDeleteConfirmationDialog(false)}
         performAction={()=>deleteInstalacion()}
         description={`Se eliminar la cancha (${instalacion.name})`}
         />

@@ -20,7 +20,7 @@ const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCup
     loading:boolean
     selecReservaCupo:(e:CupoReserva)=>void
     getReservaDetail:(id:number)=>void
-    date:Date
+    date:moment.Moment
 }) =>{ 
     const [hoursCupo,setHoursCupo] = useState<HoraCupo[]>([])
     const cupoTime = cupos.map(item=>moment(item.time).utc().format("LT"))

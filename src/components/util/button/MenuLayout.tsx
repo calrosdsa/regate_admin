@@ -1,5 +1,7 @@
 import { Menu, Transition } from '@headlessui/react'
+import { IconButton } from '@mui/material'
 import { Fragment, useEffect, useRef, useState } from 'react'
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 export default function MenuLayout({children,className=""}:{
   className?:string
@@ -10,10 +12,10 @@ export default function MenuLayout({children,className=""}:{
       <Menu as="div" className={`relative inline-block text-left ${className}`}>
         <div>
           <Menu.Button className="rounded-full noSelect hover:bg-gray-200 cursor-pointer flex justify-center">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
-                className="w-8 h-8 p-1">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
-            </svg>
+            <IconButton>
+              <MoreVertIcon/>
+            </IconButton>
+          
           </Menu.Button>
         </div>
         <Transition

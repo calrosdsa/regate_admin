@@ -222,7 +222,7 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
         scrollButtons="auto"
         aria-label="scrollable auto tabs example"
       >
-        <Tab label="Reservas" />
+        <Tab label="Reservas" onClick={()=>console.log("RESERVAS")}/>
         <Tab  label="Calendario" />
       </Tabs>
           

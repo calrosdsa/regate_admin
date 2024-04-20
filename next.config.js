@@ -46,7 +46,6 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // output: 'standalone',
 }
   
 

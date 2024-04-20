@@ -5,15 +5,18 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "node server.js",
+    "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@headlessui/react": "^1.7.15",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
+    "@mui/material-nextjs": "^5.15.11",
+    "@mui/x-date-pickers": "^7.2.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/node": "20.2.5",
     "@types/react": "18.2.9",
