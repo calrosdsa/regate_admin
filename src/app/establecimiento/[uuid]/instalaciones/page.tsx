@@ -227,6 +227,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         <DialogConfigureHorarioInstalaciones
         openModal={openConfigureInstalacionesHorario}
         closeModal={()=>setOpenCofigureInstalaciones(false)}
+        instalaciones={instalaciones}
         />
         }
         {openCalendar &&
@@ -259,7 +260,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                     }} className="w-min h-10 whitespace-nowrap">Crear Cancha</Button>
 
                 <div className="flex space-x-2">
-                    <Button variant="contained"
+                    <Button variant="contained" disabled={loadingInstalaciones}             
                     onClick={()=>setOpenCofigureInstalaciones(true)}
                     >
                         <SettingsIcon/>

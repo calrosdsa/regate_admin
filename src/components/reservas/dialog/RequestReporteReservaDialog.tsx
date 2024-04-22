@@ -58,8 +58,8 @@ const RequestReporteReservaDialog = ({uuid,open,close,instalacionOptions}:{
       title="Exportar excel"
       className="max-w-md"
       >
-        <form onSubmit={onSubmit}>
-            <div className="grid grid-cols-1  sm:grid-cols-2 gap-x-2">
+        <form onSubmit={onSubmit} className="w-full">
+            <div className="grid grid-cols-1  sm:grid-cols-2 gap-x-2 w-full">
 
             <InputWithIcon
             type="date"

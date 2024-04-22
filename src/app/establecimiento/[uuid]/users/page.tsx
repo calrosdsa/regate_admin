@@ -88,26 +88,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
     const onChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
         setQuery(e.target.value)
     }
-    const onPrev = () => {
-        if(paginationProps == undefined) return
-        if(paginationProps.currentPage == 1){
-            return
-        }else {
-            const pagePrev = paginationProps.currentPage -1
-            // appendSerachParams("page",pagePrev.toString
-            getUsersEmpresa(filterData,pagePrev)
-        }
-    }
-    const onNext = () => {
-        if(paginationProps == undefined) return
-        if(paginationProps.nextPage == 0){
-            return
-        }else {
-            const nextPage = paginationProps.currentPage + 1
-            // appendSerachParams("page",nextPage.toString
-            getUsersEmpresa(filterData,nextPage)
-        }
-    }
+   
     useEffectOnce(()=>{
         getUsersEmpresa(filterData,1)
     })
@@ -196,8 +177,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                     }}
                     totalCount={paginationProps.count || 0}
                     pageSize={paginationProps.pageSize}
-                    onPrev={onPrev}
-                    onNext={onNext}
+                  
                     />
                 }
             </div>

@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import useEffectOnce from "@/core/util/hooks/useEffectOnce";
 import moment from "moment";
-import { hours } from "@/context/actions/chart-actions";
+import { hoursTime } from "@/context/actions/chart-actions";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 
 const TimeSelect = ({
@@ -20,33 +21,36 @@ const TimeSelect = ({
 
 
     return(
-        <div className={`relative mt-1 grid  ${className}`}>
-             {label != undefined &&
-        <span className="label">{label}</span>
-      }
-
-            <select name="" id="" required className="select h-8 mt-1"
+        <>
+         {/* <div className={`relative  grid  ${className}`}>
+              {label != undefined &&
+         <span className="label">{label}</span>
+       } */}
+      <FormControl sx={{width:104}}>
+        <InputLabel id={label}>{label}</InputLabel>
+            <Select
+            name=""
+            id=""
+            labelId={label}
+            label={label}
+            size="small"
+            required 
             value={time} 
-             onChange={(e)=>setTime(e.target.value)}>
-                <option value=""></option>
-                {hours.map((item,index)=>{
+             onChange={(e,v)=>{
+                console.log(e.target.value)
+                setTime(e.target.value)}}>
+                <MenuItem value=""></MenuItem>
+                {hoursTime.map((item,index)=>{
                     const t =moment(item.hour).utc().format("HH:mm")
-                    const value2 = moment(item.hour).utc().add(30,"minutes").format("HH:mm")
                     return (
-                        <>
-                        <option key={index} value={t} disabled={disabledHours?.includes(t)}>{t}</option>
-                        <option key={index +100} disabled={disabledHours?.includes(value2)}
-                        value={value2}>
-                            {/* {item.hour} */}
-                            {value2}
-                            </option>
-                        </>
+                        <MenuItem key={index}  value={t} disabled={disabledHours?.includes(t)}>{t}</MenuItem>
                     )
                 })}
                 {/* <option value="24:00">
                     24:00
                 </option> */}
-            </select>
+            </Select>
+        </FormControl>
             
             {/* <TimeSelect
             setTime={(e)=>{
@@ -54,17 +58,18 @@ const TimeSelect = ({
                 setTime(t)
             }}
             currentTime={time}
-            /> */}
+        /> */}
 
-          
-{/*             
-            <input
+        
+        {/*             
+        <input
             type="text"
             value={time}
             onChange={(e)=>{}}
-            className=" outline-none px-2 w-full"/> */}
+        className=" outline-none px-2 w-full"/> */}
 
-        </div>
+         {/* </div> */}
+        </>
     )
 }
 

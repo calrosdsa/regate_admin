@@ -207,6 +207,7 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
                 getHorarioDay(Number(e.target.value))
                 setSelectedCupos([])
                 }}
+            defaultValue={selectedDay?.toString()}
             >
                  {dayWeek.map((item)=>{
                 return(

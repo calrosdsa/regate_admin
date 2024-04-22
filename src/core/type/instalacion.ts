@@ -80,11 +80,18 @@ type DeleteInstalacionRequest = {
     establecimiento_uuid:string
 }
 
-
-
 type CupoReservaRequest = {
     instalacion_id:number
     date:string
     day_week:number
     end_date:string
+}
+
+type EditInstalacionesPreciosRequest = {
+    instalaciones_id:number[]
+    days_week:number[]
+    times:string[]
+    available:boolean
+    action_type:number
+    custom_precio_instalacion:CustomPrecioInstalacion[]
 }

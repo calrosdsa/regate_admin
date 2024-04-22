@@ -5,7 +5,7 @@ import DialogReservaDetail from "@/components/reservas/dialog/DialogReservaDetai
 import RequestReporteReservaDialog from "@/components/reservas/dialog/RequestReporteReservaDialog";
 import SearchInput from "@/components/util/input/SearchInput";
 import SelectComponent from "@/components/util/input/SelectCompenent";
-import Pagination from "@/components/util/pagination/Pagination";
+// import Pagination from "@/components/util/pagination/Pagination";
 import { downloadReporteReservasExcel } from "@/context/actions/download-actions";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { dataActions } from "@/context/slices/dataSlice";
@@ -14,13 +14,17 @@ import { GetInstalaciones } from "@/core/repository/instalacion";
 import { GetReservaDetail, getEstablecimientoReservas, getEstablecimientoReservasCount } from "@/core/repository/reservas";
 import { Order, OrderQueue } from "@/core/type/enums";
 import { appendSerachParams } from "@/core/util/routes";
+import { Button } from "@mui/material";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { use, useEffect, useState } from "react";
+import RefreshIcon from '@mui/icons-material/Refresh';
+import DownloadIcon from '@mui/icons-material/Download';
+import Pagination from "@/components/util/pagination/Pagination";
 
 
 export default function Page({params}:{params:{uuid:string}}){
     const searchParams = useSearchParams();
-    const page = searchParams.get("page")
+    const pageParam = searchParams.get("page")
     const totalCount = searchParams.get("totalCount")
     const dispatch = useAppDispatch()
     const current = new URLSearchParams(Array.from(searchParams.entries()))
@@ -45,7 +49,7 @@ export default function Page({params}:{params:{uuid:string}}){
     })
 
     const [instalaciones,setInstalaciones] = useState<Instalacion[]>([])
-    const [selectedInstalacion,setSelectedInstalacion]= useState("")
+    const [selectedInstalacion,setSelectedInstalacion]= useState("0")
     const [openRequestReporteDialog,setOpenRequestReporteDialog] = useState(false)
     const appendSerachParams = (key:string,value:string)=>{
         current.set(key,value);
@@ -131,8 +135,8 @@ export default function Page({params}:{params:{uuid:string}}){
     }
     const applyChange = (data:ReservaDataFilter) =>{
         setFilterData(data)
-        if(page != null){
-            getReservas(data,Number(page))
+        if(pageParam != null){
+            getReservas(data,Number(pageParam))
         }else{
             getReservas(data,1)
         }
@@ -141,26 +145,7 @@ export default function Page({params}:{params:{uuid:string}}){
     const onChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
         setQuery(e.target.value)
     }
-    const onPrev = () => {
-        if(paginationProps == undefined) return
-        if(paginationProps.currentPage == 1){
-            return
-        }else {
-            const pagePrev = paginationProps.currentPage -1
-            // appendSerachParams("page",pagePrev.toString
-            getReservas(filterData,pagePrev)
-        }
-    }
-    const onNext = () => {
-        if(paginationProps == undefined) return
-        if(paginationProps.nextPage == 0){
-            return
-        }else {
-            const nextPage = paginationProps.currentPage + 1
-            // appendSerachParams("page",nextPage.toString
-            getReservas(filterData,nextPage)
-        }
-    }
+
 
     useEffect(()=>{
         if(reservaDetail != null){
@@ -170,8 +155,8 @@ export default function Page({params}:{params:{uuid:string}}){
 
     useEffect(()=>{
         getInstalaciones()
-        if(page != null){
-            getReservas(filterData,Number(page))
+        if(pageParam != null){
+            getReservas(filterData,Number(pageParam))
         }else{
             getReservas(filterData,1)
         }
@@ -193,25 +178,18 @@ export default function Page({params}:{params:{uuid:string}}){
 
             <div className="flex space-x-3 py-2">
           
-                <button className="button-inv" disabled={loading}  onClick={()=>{
+                <Button variant="outlined"  disabled={loading}  onClick={()=>{
                     setQuery("")
                     getReservas(filterData,1)
                     }}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-  <path fillRule="evenodd" d="M4.755 10.059a7.5 7.5 0 0112.548-3.364l1.903 1.903h-3.183a.75.75 0 100 1.5h4.992a.75.75 0 00.75-.75V4.356a.75.75 0 00-1.5 0v3.18l-1.9-1.9A9 9 0 003.306 9.67a.75.75 0 101.45.388zm15.408 3.352a.75.75 0 00-.919.53 7.5 7.5 0 01-12.548 3.364l-1.902-1.903h3.183a.75.75 0 000-1.5H2.984a.75.75 0 00-.75.75v4.992a.75.75 0 001.5 0v-3.18l1.9 1.9a9 9 0 0015.059-4.035.75.75 0 00-.53-.918z" clipRule="evenodd" />
-                 </svg>
-                </button>
+                        <RefreshIcon/>
+                </Button>
 
-                <button className="button-inv flex space-x-3" disabled={loading}  onClick={()=>{
+                <Button variant="outlined" disabled={loading}  onClick={()=>{
                   openExportReservasDialog()
                     }}>
-               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                <path d="M10.75 2.75a.75.75 0 0 0-1.5 0v8.614L6.295 8.235a.75.75 0 1 0-1.09 1.03l4.25 4.5a.75.75 0 0 0 1.09 0l4.25-4.5a.75.75 0 0 0-1.09-1.03l-2.955 3.129V2.75Z" />
-                <path d="M3.5 12.75a.75.75 0 0 0-1.5 0v2.5A2.75 2.75 0 0 0 4.75 18h10.5A2.75 2.75 0 0 0 18 15.25v-2.5a.75.75 0 0 0-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5Z" />
-                </svg>
-
-                </button>
-
+                        <DownloadIcon/>
+                </Button>
                 <SelectComponent
                 value={selectedInstalacion}
                 items={instalaciones.map((t)=>{
@@ -221,7 +199,6 @@ export default function Page({params}:{params:{uuid:string}}){
                     } 
                 })}
                 onChange={(e)=>{
-                    console.log(e.target.value)
                     const filterD:ReservaDataFilter = {
                         ...filterData,
                         instalacion_id:e.target.value
@@ -267,6 +244,7 @@ export default function Page({params}:{params:{uuid:string}}){
                 <span>{paginationProps.count} {paginationProps.count > 1 ? "coincidencias":"coincidencia"}</span>
                 }
                 </div> */}
+
                 {paginationProps != undefined &&
                     <Pagination
                     currentPage={paginationProps.currentPage}
@@ -281,8 +259,6 @@ export default function Page({params}:{params:{uuid:string}}){
                     }}
                     totalCount={paginationProps.count || 0}
                     pageSize={paginationProps.pageSize}
-                    onPrev={onPrev}
-                    onNext={onNext}
                     />
                 }
             </div>

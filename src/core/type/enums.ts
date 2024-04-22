@@ -139,3 +139,4 @@ export enum TypeEntity {
 	ENTITY_INSTALACION = 10,
 	ENTITY_PHOTO = 11,
 }
+

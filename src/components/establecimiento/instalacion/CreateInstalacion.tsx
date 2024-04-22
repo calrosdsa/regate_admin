@@ -11,7 +11,8 @@ import moment from "moment"
 import Image from "next/image"
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { toast } from "react-toastify"
-import { log } from "console"
+import { Button, IconButton, TextField } from "@mui/material"
+import CloseIcon from '@mui/icons-material/Close';
 
 const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
     uuid:string
@@ -43,6 +44,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
           end_time:"",
         } 
         setCustomPrecuoInstalacion(e=>[...e,n])
+        checkIsHoursIsDisabled()
       }
 
       const onChangeCustomPrecio = (name:string,value:string,index:number)=>{
@@ -160,10 +162,10 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
         }
       }
 
-      useEffect(()=>{
-        console.log("customprecio instalacion")
-        checkIsHoursIsDisabled()
-      },[customPrecioInstalacion])
+      // useEffect(()=>{
+      //   console.log("customprecio instalacion")
+      //   checkIsHoursIsDisabled()
+      // },[customPrecioInstalacion])
    
     return(
         <div className=" max-w-xl ">
@@ -230,11 +232,11 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
               Configurar precio por rango de hora
             </span>
 
-          <div className="grid  pt-1 w-full overflow-auto">
+          <div className="grid  pt-2 w-full overflow-auto">
                 {customPrecioInstalacion.map((item,index)=>{
                     return(
                         <>
-                        <div key={index} className="flex space-x-2 items-end pb-2 min-w-[380px]">
+                        <div key={index} className="flex space-x-2 items-center py-2 min-w-[380px]">
                           <TimeSelect
                           label="Inicio"
                           time={moment(item.start_time).format("HH:mm")}
@@ -253,39 +255,30 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
                           }}
                           disabledHours={disabledHours}
                           />
-                            {/* <input type="time" className="input" value={item.start_time}
-                            name="start_time"
-                            onChange={(e)=>onChangeCustomPrecio(e,index)}/>
-                            <input type="time" className="input" value={item.end_time}
-                            name="end_time" onChange={(e)=>onChangeCustomPrecio(e,index)}
-                            /> */}
-                            <div className="mt-1">
-
-                            <span className="label">Monto</span>
-                            <div className="mt-1">
-                            <input required type="number" className="input h-8 w-20" value={item.precio} name="precio"
+                            <TextField
+                            required type="number" className="w-20" value={item.precio} name="precio"
+                            label="Monto" size="small"
+                            InputLabelProps={{ shrink: true }}
                             onChange={(e)=>onChangeCustomPrecio(e.target.name,e.target.value,index)}
                             />
-                            </div>
-                            </div>
-                            <svg  onClick={()=>{
+                            <IconButton onClick={()=>{
                               const newItems = customPrecioInstalacion.filter((t,i)=>i != index)
                               setCustomPrecuoInstalacion(newItems)
-                            }}
-                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
-                            className="icon-button noSelect">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
+                            }}>
+                              <CloseIcon/>
+                            </IconButton>
+                            
                         </div>
                         </>
                     )
                 })}
             </div>
 
-          <div className=" flex flex-col space-y-4  pt-1 w-min whitespace-nowrap">
-                <span onClick={()=>addCustomPrecioInstalcion()}
-                 className="text-button noSelect">Agregar horas</span>
-                </div>
+            <Button onClick={()=>addCustomPrecioInstalcion()}>
+            Agregar horas
+            </Button>
+
+          
           </div>
          
          {/* <InputWithMaxLength

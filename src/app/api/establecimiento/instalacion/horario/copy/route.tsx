@@ -10,7 +10,7 @@ export async function POST(request:Request) {
   }
   try{
       const body = await request.text()
-      const res = await fetch(`${API_URL}/instalacion/admin/horarios/copy/`,
+      const res = await fetch(`${API_URL}/instalacion/admin/horario/copy/`,
       {
         method:'POST',
         body:body,

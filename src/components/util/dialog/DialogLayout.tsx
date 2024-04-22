@@ -1,6 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react"
+import { IconButton } from "@mui/material"
 import {  Fragment, ReactNode, useRef } from 'react'
-
+import CloseIcon from '@mui/icons-material/Close';
 
 const DialogLayout = ({open,close,children,title ="",className="",allowClose=false,allowFullScreen=false,
 showHeader=true}:{
@@ -35,7 +36,7 @@ showHeader=true}:{
             <div className="fixed inset-0 bg-black bg-opacity-25" />
           </Transition.Child>
     
-          <div className="fixed inset-0 overflow-y-auto">
+          <div className="fixed inset-0 overflow-y-auto ">
             <div className={`flex min-h-full items-center justify-center ${!allowFullScreen && "p-4"} text-center`}>
               <Transition.Child
                 as={Fragment}
@@ -54,10 +55,9 @@ showHeader=true}:{
                   className="text-lg font-medium leading-6 text-gray-900 flex justify-between items-center space-x-12"
                   >
                     <span>{title}</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                     className="noSelect icon-button" onClick={close}>
-  <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-             </svg>
+                    <IconButton onClick={close}>
+                      <CloseIcon/>
+                       </IconButton>
 
                      </Dialog.Title>
                     }

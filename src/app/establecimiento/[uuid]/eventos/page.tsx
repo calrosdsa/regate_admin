@@ -70,26 +70,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             setLoading(false)
         }
     }
-    const onPrev = () => {
-        if(paginationProps == undefined) return
-        if(paginationProps.currentPage == 1){
-            return
-        }else {
-            const pagePrev = paginationProps.currentPage -1
-            // appendSerachParams("page",pagePrev.toString
-            getUsersEmpresa(pagePrev)
-        }
-    }
-    const onNext = () => {
-        if(paginationProps == undefined) return
-        if(paginationProps.nextPage == 0){
-            return
-        }else {
-            const nextPage = paginationProps.currentPage + 1
-            // appendSerachParams("page",nextPage.toString
-            getUsersEmpresa(nextPage)
-        }
-    }
+
     useEffectOnce(()=>{
         getUsersEmpresa(1)
     })
@@ -167,8 +148,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                     }}
                     totalCount={paginationProps.count || 0}
                     pageSize={paginationProps.pageSize}
-                    onPrev={onPrev}
-                    onNext={onNext}
+                   
                     />
                 }
             </div>

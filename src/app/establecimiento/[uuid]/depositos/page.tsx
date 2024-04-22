@@ -71,39 +71,7 @@ const Page = ({params}:{params:{uuid:string}}) => {
         }
     }
 
-    
-    const onPrev = () => {
-        if(paginationProps == undefined) return
-        if(paginationProps.currentPage == 1){
-            return
-        }else {
-            const pagePrev = paginationProps.currentPage -1
-            appendSerachParams("page",pagePrev.toString())
-                        // getReservas(filterData,page)
-                        setPaginationProps({
-                            ...paginationProps,
-                            currentPage:pagePrev
-                        })
-                        getDeposits(Number(pagePrev))
-            // appendSerachParams("page",pagePrev.toString
-            // getReservas(filterData,pagePrev)
-        }
-    }
-    const onNext = () => {
-        if(paginationProps == undefined) return
-        if(paginationProps.nextPage == 0){
-            return
-        }else {
-            const nextPage = paginationProps.currentPage + 1
-            appendSerachParams("page",nextPage.toString())
-            // getReservas(filterData,page)
-            setPaginationProps({
-                ...paginationProps,
-                currentPage:nextPage
-            })
-            getDeposits(Number(nextPage))
-        }
-    }
+  
 
     const getData = (tab:string) =>{
         switch(tab){
@@ -186,8 +154,7 @@ const Page = ({params}:{params:{uuid:string}}) => {
                     }}
                     totalCount={paginationProps.count}
                     pageSize={paginationProps.pageSize}
-                    onPrev={onPrev}
-                    onNext={onNext}
+                   
                     />
                 }
 
