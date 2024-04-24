@@ -14,7 +14,7 @@ import { uiActions } from "@/context/slices/uiSlice";
 import { GetCupoReservaInstalciones, GetInstalacion, GetInstalaciones, getInstalacionDayHorario } from "@/core/repository/instalacion";
 import { GetReservaDetail, getInstalacionReservas } from "@/core/repository/reservas";
 // import { Tab } from "@headlessui/react";
-import { Box, Button, Tab, Tabs } from "@mui/material";
+import { Box, Button, List, ListItem, ListItemButton, ListItemText, Tab, Tabs } from "@mui/material";
 import moment from "moment";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -25,6 +25,8 @@ import AddIcon from '@mui/icons-material/Add';
 import DialogCalendar from "@/components/util/dialog/DialogCalendar";
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import DialogConfigureHorarioInstalaciones from "@/components/establecimiento/instalacion/dialog/ConfigureHorarioInstalaciones";
+import { dataActions } from "@/context/slices/dataSlice";
+import CommonImage from "@/components/util/image/CommonImage";
 // import { Tooltip } from 'react-tooltipp
 
 enum TabInstalacion {
@@ -41,12 +43,12 @@ const Page = ({ params }: { params: { uuid: string } })=>{
     const dispatch = useAppDispatch()
     const pathname = usePathname();
     const router = useRouter()
+    const instalaciones = useAppSelector(state=>state.data.instalaciones)
     const [createReservaDialog,setCreateReservaDialog] = useState(false)
     const [startDate, setStartDate] = useState<moment.Moment | null>(moment());
     const [loadingInstalacion,setLoadingInstalacion] = useState(false)
     const [loadingReservas,setLoadingReservas] = useState(false)
     const [loadingInstalaciones,setLoadingInstalaciones] = useState(false)
-    const [instalaciones,setInstalaciones] = useState<Instalacion[]>([])
     const [instalacion,setInstalacion] = useState<Instalacion | null>(null)
     const [reservaDetail,setReservaDetail] = useState<ReservaDetail | null>(null)
     const [cupos,setCupos] = useState<Cupo[]>([])
@@ -122,7 +124,9 @@ const Page = ({ params }: { params: { uuid: string } })=>{
             setLoadingHorarios(false)
         }
     }
-
+    const setInstalaciones = (d:Instalacion[])=>{
+        dispatch(dataActions.setInstalaciones(d))
+    }
     const getData = async()=>{
         try{
             setLoadingInstalaciones(true)
@@ -228,6 +232,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         openModal={openConfigureInstalacionesHorario}
         closeModal={()=>setOpenCofigureInstalaciones(false)}
         instalaciones={instalaciones}
+        uuid={params.uuid}
         />
         }
         {openCalendar &&
@@ -251,7 +256,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
             <div className="md:grid md:grid-cols-8 gap-x-3 xl:pt-0">
                 
             <div className="flex flex-col w-full col-span-2 p-2 border-[1px] shadow-lg md:h-screen overflow-auto ">
-                <div className="flex justify-between">
+                <div className="flex justify-between flex-wrap gap-2">
                 <Button 
                 variant="outlined"
                 onClick={()=>{
@@ -280,7 +285,33 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                     loading={loadingInstalaciones}
                     className="flex justify-center mb-2"
                     />
-                {instalaciones.map((item)=>{
+                    <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                    {instalaciones.map((item,idx) => (
+                        <ListItem
+                        key={idx}
+                        disablePadding
+                        secondaryAction={
+                            item.portada != null &&
+                            <CommonImage 
+                            src={item.portada}
+                            h={70}
+                            w={70}
+                            className="h-10 w-10 object-cover rounded-full"
+                            />
+                        }
+                        >
+                        <ListItemButton
+                        selected={instalacion?.id == item.id}
+                        onClick={()=>{
+                            setInstalacion(null)
+                            getInstalacion(item.uuid)
+                            }}>
+                        <ListItemText primary={item.name} />
+                        </ListItemButton>
+                        </ListItem>
+                    ))}
+                    </List>
+                {/* {instalaciones.map((item)=>{
                     return(
                         <div key={item.uuid} 
                         className={`hover:bg-gray-200  border-[1px] rounded-lg ${instalacion?.id == item.id && "bg-gray-200"}`}
@@ -292,14 +323,14 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                         instalacion={item}
                         />
                         </div>
-                    )})}
+                    )})} */}
                         </div>
                     </div>
 
-            <div className="flex flex-col col-start-3 col-span-full  md:border-[1px] md:shadow-lg h-screen md:overflow-auto">
+            <div className="flex relative flex-col col-start-3 col-span-full  md:border-[1px] md:shadow-lg h-screen md:overflow-auto">
                 <div>
                 <Tabs
-                className="fixed bg-white z-10 w-full pb-2"
+                className="sticky top-0 bg-white z-10 w-full pb-2"
                 value={currentTab}
                 onChange={(e,v)=>setCurrentTab(v)}
                 variant="scrollable"
@@ -332,7 +363,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
             </Tabs>
 
             {currentTab == TabInstalacion.INFO &&
-                            <div className={"mx-auto flex justify-center w-full sm:w-3/4 pt-16"}>
+                            <div className={"mx-auto flex justify-center w-full sm:w-3/4"}>
                             {/* {JSON.stringify(instalacion)} */}
                             <Loading
                             loading={loadingInstalacion}
@@ -352,7 +383,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
 
             {currentTab == TabInstalacion.HORARIO &&
                         instalacion != null && 
-                        <div className="pt-14 p-2">
+                        <div className="px-2">
                             <HorarioWeek
                             instalacionId={instalacion.id}
                             selectedDay={selectedDay}
@@ -366,9 +397,9 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                     }
             {currentTab == TabInstalacion.RESERVAS && 
                     instalacion != null && 
-                           <div className="p-2 pt-14">
+                           <div className="px-2">
 
-                            <Box  className="bg-gray-50 w-full z-10 sticky top-14 ">
+                            <Box  className="bg-white w-full z-10 sticky top-14 ">
 
                            <div className="flex gap-2  pb-2 flex-wrap items-end ">
                                 <Button variant="contained" className="w-min" disabled={loadingReservas} onClick={()=>{
@@ -383,26 +414,6 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                                 }>
                                     {startDate?.format("DD MMMM")}
                                 </Button>
-                             
-                                {/* <div className="mx-2 ">          
-                                <label htmlFor="date-calendar"  className="px-2 h-10 button  items-center flex space-x-2 relative
-                                w-full">
-                                    <span className="text-sm">{moment(startDate).format("MMMM DD")}
-                                    </span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                                    <path fillRule="evenodd" d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z" clipRule="evenodd" />
-                                    </svg>
-                                <input type="date" 
-                                
-                                onChange={(e)=>{
-                                    const date = new Date(e.target.value)
-                                    date.setTime(date.getTime()+ (10*60*60*1000))
-                                    setStartDate(date)}}
-                                id="date-calendar" className="w-0 h-0"/>
-                                </label>
-                           
-                                </div> */}
-
 
                                 <TooltipContainer 
                                 helpText="Intenta seleccionar las casillas que no hayan sido reservadas."
@@ -415,8 +426,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                                         setCreateReservaDialog(true)}}
                                      endIcon={
                                         <AddIcon/>
-                                     }   
-                                        >
+                                     }>
                                         Crear Reserva
                                     </Button>
                                 </TooltipContainer>
@@ -467,7 +477,9 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         <CreateReservaDialog
         open={createReservaDialog}
         close={()=>setCreateReservaDialog(false)}
-        cupos={selectedCupos}
+        cupos={selectedCupos.map(item=>{
+            return {...item,instalacion_id:instalacion.id}
+        })}
         cancha={instalacion}
         refresh={()=>getCuposReservaInstalacion(instalacion.id)}
         uuid={params.uuid}

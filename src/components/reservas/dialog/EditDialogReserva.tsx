@@ -85,7 +85,12 @@ const EditReservaDialog = ({open,close,reserva,update}:{
                 {value:"30",name:"30 minutos"},
                 {value:"60",name:"1 hora"},
                 {value:"90",name:"1.5 horas"},
-                {value:"120",name:"2 horas"}
+                {value:"120",name:"2 horas"},
+                {value:"150",name:"2.5 horas"},
+                {value:"180",name:"3 horas"},
+                {value:"210",name:"3.5 horas"},
+                {value:"240",name:"4 horas"},
+
             ]}
             onChange={(e)=>{
                 setFormData({

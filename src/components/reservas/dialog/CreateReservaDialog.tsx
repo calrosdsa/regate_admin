@@ -3,8 +3,8 @@ import DialogHeader from "@/components/util/dialog/DialogHeader";
 import DialogLayout from "@/components/util/dialog/DialogLayout";
 import CommonImage from "@/components/util/image/CommonImage";
 import InputWithIcon from "@/components/util/input/InputWithIcon";
-import { useAppSelector } from "@/context/reduxHooks";
-import { CreateReserva } from "@/core/repository/reservas";
+import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
+import { CheckInstalacionIsAvailable, CreateReserva } from "@/core/repository/reservas";
 import { getFullName } from "@/core/util";
 import ReactCountryFlag from "react-country-flag"
 import moment from "moment";
@@ -20,10 +20,13 @@ import ConfirmationDialog from "@/components/util/dialog/ConfirmationDialog";
 import { unexpectedError } from "@/context/config";
 import AdvanceReservaOptionDialog from "./AdvanceReservaOptionDialog";
 import SeeMore from "@/components/util/button/SeeMore";
-import { Http } from "@/core/type/enums";
+import { Http, HttpStatusCode } from "@/core/type/enums";
 import { Tab } from "@headlessui/react";
 import { GetInstalaciones } from "@/core/repository/instalacion";
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, Button, TextField, Typography } from "@mui/material";
+import { fetchInstalaciones } from "@/context/actions/data-actions";
+import { LoadingButton } from "@mui/lab";
+import InstalacionesDialog from "@/components/establecimiento/instalacion/dialog/InstalacionesDialog";
 
 
 type CreateReservaRequest = {
@@ -67,8 +70,12 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
     eventoId:number | null
     startTime?:moment.Moment
 }) => {
+    const dispatch = useAppDispatch()
+    const instalaciones = useAppSelector(state=>state.data.instalaciones)
+    const fetchLoading = useAppSelector(state=>state.ui.fetchLoading)
     const [tab,setTab] = useState(isEvento ? Tabs.Instalaciones : Tabs.ReservaForm)
     const establecimientosUser = useAppSelector(state=>state.account.establecimientos)
+    // const instalaciones = useAppSelector(state=>state.data.instalaciones)
     const [loading,setLoading] = useState(false)
     const [loadingUsers,setLoadingUsers] = useState(false)
     const [userEmpresa,setUserEmpresa] = useState<null | UserEmpresa>(null)
@@ -81,7 +88,8 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
     const [openAdvanceOptions,setOpenAdvanceOptions] = useState(useAdvanceOptions)
     const [reservaCupos,setReservaCupos] = useState<CupoReserva[]>(cupos)
     const [instalacion,setInstalacion] = useState<Instalacion | undefined>(cancha)
-    const [instalaciones,setInstalaciones] = useState<Instalacion[]>([])
+    const [openInstalacionesDialog,setOpenInstalacionesDialog] = useState(false)
+    const [selectReservaInterval,setSelectecReservaInterval] = useState<ReservaInterval | null>(null)
     // const [currentInterval,setCurrentInterval] = useState<CupoReserva[]>([])
 
 
@@ -93,18 +101,6 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
         phone_number:"",
     })
     const {paid,name,phone_number} = formData
-
-    const getInstalaciones = async () =>{
-        try{
-            setLoading(true)
-            setInstalaciones([])
-            const res:Instalacion[] = await GetInstalaciones(uuid)
-            setLoading(false)
-            setInstalaciones(res)
-        }catch(e){
-            setLoading(false)
-        }
-    }
  
 
     const onSearch = async() =>{
@@ -126,6 +122,16 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
         }
     }
 
+    const getInstalacionName = (id:number)=> {
+        let name = ""
+        instalaciones.map(item=>{
+            if(item.id == id){
+                name = item.name
+            }
+        })
+        return name
+    }
+
     useEffect(() => {
         onSearch()
         // Do fetch here...
@@ -144,11 +150,10 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
             setLoading(true)
             if(instalacion == undefined) return
             let cupoIntervals:CupoInterval[] = []
-            console.log("Reserva Intervals",reservaIntervals)
             for(let i = 0;i < reservaIntervals.length;i++){
                 const cupos:(CupoR | undefined)[] = reservaIntervals[i].interval.map(item=>{
                     // if(item.available){}
-                    if(item.available &&     item.evento_id == undefined && item.reserva_id == null){
+                    if(item.available && item.evento_id == undefined && item.reserva_id == null){
                         const c:CupoR = {
                             start_date:item.time,
                             instalacion_id:instalacion.id,
@@ -159,7 +164,6 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
                         return undefined
                     }
                 })
-                console.log(cupos)
                 if(cupos.includes(undefined)){
                     console.log("No available for reservations")
                     // return
@@ -190,7 +194,6 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
                 },
                 evento_id:eventoId
             }
-            console.log(requestData)
             const res = await CreateReserva(JSON.stringify(requestData))
             switch(res.status){
                 case Http.StatusOk:
@@ -300,7 +303,61 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
         }
         return true
     }
-  
+
+    const selectInstalacionFromDialog = (item:ReservaInterval) =>{
+        setSelectecReservaInterval(item)
+        setOpenInstalacionesDialog(true)
+    }
+
+    const checkInstalacionIsAvailable = async(instalacion:Instalacion,addLoader:(b:boolean)=>void)=>{
+        try{
+            addLoader(true)
+            if(selectReservaInterval?.interval.length ==0) return
+            const times = selectReservaInterval?.interval.map(item=>{
+                return item.time.slice(11,16)
+            })
+            const timestamps = selectReservaInterval?.interval.map(item=>{
+                return item.time
+            })
+            const dayWeek = moment(selectReservaInterval?.interval[0].time).day()
+            if(times == undefined) return 
+            if(timestamps == undefined) return 
+            
+            const body:CheckInstalacionIsAvailableRequest =  {
+                times:times,
+                instalacion_id:instalacion.id,
+                timestamps:timestamps,
+                day_week:dayWeek
+            }
+            console.log("BODY",body)
+            const res = await CheckInstalacionIsAvailable(body)
+            switch(res.status){
+                case HttpStatusCode.Ok:
+                    const n = selectReservaInterval?.interval.map(item=>{
+                        item.available = true
+                    item.reserva_id = null
+                    item.instalacion_id = instalacion.id
+                    return item
+                    })
+                    break;
+                case HttpStatusCode.NotAcceptable:
+                    const data:ResponseMessage =await res.json()
+                    console.log("RESPONSE",data)
+                    toast.error(data.message)
+                    break;
+                default:
+                    toast.error(unexpectedError)        
+            }
+            addLoader(false)
+            setOpenInstalacionesDialog(false)
+        }catch(err){
+            toast.error(unexpectedError)        
+            addLoader(false)
+            console.log(err)
+        }
+    }
+
+
     useEffect(()=>{
        
         // if(orderedCupo.length == 0){
@@ -317,12 +374,19 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
     },[reservaCupos])
 
     useEffect(()=>{
-        if(tab == Tabs.Instalaciones){
-            getInstalaciones()
-        }
+        dispatch(fetchInstalaciones(uuid))
+        
     },[])
     return(
         <>
+        {openInstalacionesDialog &&
+        <InstalacionesDialog
+        openModal={openInstalacionesDialog}
+        closeModal={()=>setOpenInstalacionesDialog(false)}
+        instalaciones={instalaciones}
+        onAccept={checkInstalacionIsAvailable}
+        />
+        }
       {confirmUserRepeat &&
       <ConfirmationDialog
       open={confirmUserRepeat}
@@ -348,7 +412,10 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
       startDate={moment().format("yyyy-MM-DD")}
       uuid={uuid}
       instalacionId={instalacion?.id || 0}
-      generateCupos={(e)=>setReservaCupos(e)}
+      generateCupos={(e)=>{
+        console.log(e)
+        setReservaCupos(e)
+    }}
       />
       :
      <DialogLayout
@@ -359,10 +426,10 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
             <>
             {tab == Tabs.Instalaciones &&
                         <div className="h-96">
-                        {loading && 
+                        {fetchLoading && 
                         <Loading
                         className="flex w-full justify-center h-full"
-                        loading={loading}
+                        loading={fetchLoading}
                         />
                         }
                         {instalaciones.map((item,index)=>{
@@ -415,7 +482,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
             {tab == Tabs.ReservaForm &&
             <>
             <div className="py-2">
-                    <div className="flex space-x-3 items-center">
+                    {/* <div className="flex space-x-3 items-center">
                     <CommonImage
                         src={instalacion?.portada}
                         h={140}
@@ -423,7 +490,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
                         className="rounded-full h-12 w-12 object-cover"
                         />
                         <span className="font-semibold">{instalacion?.name}</span>
-                    </div>
+                    </div> */}
                     <div className="h-2"/>
                     <div className=" smallButton w-min px-1 items-center noSelect">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
@@ -465,13 +532,29 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
                         {reservaIntervals.map((item,idx)=>{
                             const totalPrice = item.interval.map(t=>t.precio).reduce((prev,curr)=>prev + curr)
                                 return (
-                            <Tab.Panel key={idx} className={""}>
+                                    <Tab.Panel key={idx} className={""}>
                                 <div className="grid ">
+                                {item.interval.length > 0 &&
+                                <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
+                                    <span className="label">Cancha</span>
+                                    <div className="flex space-x-2 items-center">
+                                        <Button size="small" onClick={()=>selectInstalacionFromDialog(item)}>
+                                            <Typography variant="caption">
+
+                                        Seleccionar otra cancha
+                                            </Typography>
+                                        </Button>
+                                    {item.interval[0].instalacion_id != null &&
+                                        <Typography variant="caption">{getInstalacionName(item.interval[0].instalacion_id)}</Typography>
+                                    }
+                                    </div>
+                                </div>
+                                }
                                 <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
                                     <span className="label">Precio de la reserva</span>
                                     <span className="text-xs ">{totalPrice}</span>
                                 </div>
-                                <div className="grid sm:grid-cols-2 items-center sm:space-x-10 border-b-[1px] py-2">
+                                <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
                                     <span className="label">Disponibilidad</span>
                                     {/* <div className="text-xs ">
                                         <span className="">{getMessageAvailable(item.interval)}
@@ -607,10 +690,11 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
             onChange={onChange}
             />    
              
-            <ButtonSubmit
-            loading={loading}
-            title="Crear Reserva"
-            />
+            <LoadingButton
+            type="submit"
+            variant="contained"
+            sx={{width:"100%"}}
+            loading={loading}>Crear Reserva</LoadingButton>
         </form>
         </>
             }
@@ -625,131 +709,3 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
 }
 
 export default CreateReservaDialog;
-
-
-const top100Films = [
-    { label: 'The Shawshank Redemption', year: 1994 },
-    { label: 'The Godfather', year: 1972 },
-    { label: 'The Godfather: Part II', year: 1974 },
-    { label: 'The Dark Knight', year: 2008 },
-    { label: '12 Angry Men', year: 1957 },
-    { label: "Schindler's List", year: 1993 },
-    { label: 'Pulp Fiction', year: 1994 },
-    {
-      label: 'The Lord of the Rings: The Return of the King',
-      year: 2003,
-    },
-    { label: 'The Good, the Bad and the Ugly', year: 1966 },
-    { label: 'Fight Club', year: 1999 },
-    {
-      label: 'The Lord of the Rings: The Fellowship of the Ring',
-      year: 2001,
-    },
-    {
-      label: 'Star Wars: Episode V - The Empire Strikes Back',
-      year: 1980,
-    },
-    { label: 'Forrest Gump', year: 1994 },
-    { label: 'Inception', year: 2010 },
-    {
-      label: 'The Lord of the Rings: The Two Towers',
-      year: 2002,
-    },
-    { label: "One Flew Over the Cuckoo's Nest", year: 1975 },
-    { label: 'Goodfellas', year: 1990 },
-    { label: 'The Matrix', year: 1999 },
-    { label: 'Seven Samurai', year: 1954 },
-    {
-      label: 'Star Wars: Episode IV - A New Hope',
-      year: 1977,
-    },
-    { label: 'City of God', year: 2002 },
-    { label: 'Se7en', year: 1995 },
-    { label: 'The Silence of the Lambs', year: 1991 },
-    { label: "It's a Wonderful Life", year: 1946 },
-    { label: 'Life Is Beautiful', year: 1997 },
-    { label: 'The Usual Suspects', year: 1995 },
-    { label: 'Léon: The Professional', year: 1994 },
-    { label: 'Spirited Away', year: 2001 },
-    { label: 'Saving Private Ryan', year: 1998 },
-    { label: 'Once Upon a Time in the West', year: 1968 },
-    { label: 'American History X', year: 1998 },
-    { label: 'Interstellar', year: 2014 },
-    { label: 'Casablanca', year: 1942 },
-    { label: 'City Lights', year: 1931 },
-    { label: 'Psycho', year: 1960 },
-    { label: 'The Green Mile', year: 1999 },
-    { label: 'The Intouchables', year: 2011 },
-    { label: 'Modern Times', year: 1936 },
-    { label: 'Raiders of the Lost Ark', year: 1981 },
-    { label: 'Rear Window', year: 1954 },
-    { label: 'The Pianist', year: 2002 },
-    { label: 'The Departed', year: 2006 },
-    { label: 'Terminator 2: Judgment Day', year: 1991 },
-    { label: 'Back to the Future', year: 1985 },
-    { label: 'Whiplash', year: 2014 },
-    { label: 'Gladiator', year: 2000 },
-    { label: 'Memento', year: 2000 },
-    { label: 'The Prestige', year: 2006 },
-    { label: 'The Lion King', year: 1994 },
-    { label: 'Apocalypse Now', year: 1979 },
-    { label: 'Alien', year: 1979 },
-    { label: 'Sunset Boulevard', year: 1950 },
-    {
-      label: 'Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb',
-      year: 1964,
-    },
-    { label: 'The Great Dictator', year: 1940 },
-    { label: 'Cinema Paradiso', year: 1988 },
-    { label: 'The Lives of Others', year: 2006 },
-    { label: 'Grave of the Fireflies', year: 1988 },
-    { label: 'Paths of Glory', year: 1957 },
-    { label: 'Django Unchained', year: 2012 },
-    { label: 'The Shining', year: 1980 },
-    { label: 'WALL·E', year: 2008 },
-    { label: 'American Beauty', year: 1999 },
-    { label: 'The Dark Knight Rises', year: 2012 },
-    { label: 'Princess Mononoke', year: 1997 },
-    { label: 'Aliens', year: 1986 },
-    { label: 'Oldboy', year: 2003 },
-    { label: 'Once Upon a Time in America', year: 1984 },
-    { label: 'Witness for the Prosecution', year: 1957 },
-    { label: 'Das Boot', year: 1981 },
-    { label: 'Citizen Kane', year: 1941 },
-    { label: 'North by Northwest', year: 1959 },
-    { label: 'Vertigo', year: 1958 },
-    {
-      label: 'Star Wars: Episode VI - Return of the Jedi',
-      year: 1983,
-    },
-    { label: 'Reservoir Dogs', year: 1992 },
-    { label: 'Braveheart', year: 1995 },
-    { label: 'M', year: 1931 },
-    { label: 'Requiem for a Dream', year: 2000 },
-    { label: 'Amélie', year: 2001 },
-    { label: 'A Clockwork Orange', year: 1971 },
-    { label: 'Like Stars on Earth', year: 2007 },
-    { label: 'Taxi Driver', year: 1976 },
-    { label: 'Lawrence of Arabia', year: 1962 },
-    { label: 'Double Indemnity', year: 1944 },
-    {
-      label: 'Eternal Sunshine of the Spotless Mind',
-      year: 2004,
-    },
-    { label: 'Amadeus', year: 1984 },
-    { label: 'To Kill a Mockingbird', year: 1962 },
-    { label: 'Toy Story 3', year: 2010 },
-    { label: 'Logan', year: 2017 },
-    { label: 'Full Metal Jacket', year: 1987 },
-    { label: 'Dangal', year: 2016 },
-    { label: 'The Sting', year: 1973 },
-    { label: '2001: A Space Odyssey', year: 1968 },
-    { label: "Singin' in the Rain", year: 1952 },
-    { label: 'Toy Story', year: 1995 },
-    { label: 'Bicycle Thieves', year: 1948 },
-    { label: 'The Kid', year: 1921 },
-    { label: 'Inglourious Basterds', year: 2009 },
-    { label: 'Snatch', year: 2000 },
-    { label: '3 Idiots', year: 2009 },
-    { label: 'Monty Python and the Holy Grail', year: 1975 },
-  ];

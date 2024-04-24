@@ -95,6 +95,17 @@ type ReservaEditRequest = {
     extra_time:number
 }
 
+type CheckInstalacionIsAvailableRequest = {
+    instalacion_id:number
+    times:string[]
+    timestamps:string[]
+    day_week:number
+}
+type ChangeInstalacionRequest = {
+    instalacion_id:number
+}
+
+
 type GenerateReservaCupoRequest = {
     times:string[]
     instalacion_id:number

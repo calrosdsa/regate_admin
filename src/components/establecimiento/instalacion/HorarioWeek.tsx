@@ -198,10 +198,11 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
         }
         <div className="relative">
 
-        <div className=" w-full z-10 sticky top-14 bg-gray-50 flex  space-x-3   justify-between items-center ">
-            <div className="flex space-x-2 items-end overflow-x-auto ">    
+        <div className=" w-full z-10 sticky top-14 bg-white flex  space-x-3   justify-between items-center ">
+            <div className="flex space-x-2  items-center overflow-x-auto  pb-2 ">    
             <Select
             size="small"
+            sx={{height:35}}
             value={selectedDay?.toString()} 
             onChange={(e)=>{
                 getHorarioDay(Number(e.target.value))
@@ -211,7 +212,7 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
             >
                  {dayWeek.map((item)=>{
                 return(
-                    <MenuItem  key={item.dayWeek} value={item.dayWeek}>{item.dayName}</MenuItem>
+                    <MenuItem  key={item.dayWeek} value={item.dayWeek.toString()}>{item.dayName}</MenuItem>
                     // <option key={item.dayWeek} value={item.dayWeek}>{item.dayName}</option>
                     // <div key={item.dayWeek} onClick={()=>getHorarioDay(item.dayWeek)}
                     // className={`${selectedDay == item.dayWeek ? 'button':'button-inv'}`}>
@@ -220,21 +221,7 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
                     )
                 })}
             </Select>
-            {/* <select className="input w-min h-9" value={selectedDay?.toString()} 
-            onChange={(e)=>{
-                getHorarioDay(Number(e.target.value))
-                setSelectedCupos([])
-                }}>    
-            {dayWeek.map((item)=>{
-                return(
-                    <option key={item.dayWeek} value={item.dayWeek}>{item.dayName}</option>
-                    // <div key={item.dayWeek} onClick={()=>getHorarioDay(item.dayWeek)}
-                    // className={`${selectedDay == item.dayWeek ? 'button':'button-inv'}`}>
-                    //     {item.dayName}
-                    // </div>
-                    )
-                })}
-            </select> */}
+          
 
                                <TooltipContainer 
                                 helpText="Intenta seleccionar la hora que deseas editar."
@@ -242,6 +229,7 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
                                 >
                                     <Button
                                     variant="contained"
+                                    sx={{height:35}}
                                      disabled={selectedCupos.length == 0} onClick={()=>{
                                         setEditHorarioDialog(true)
                                         // appendSerachParams("dialog","1")
@@ -254,7 +242,8 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
                                 </TooltipContainer>
 
                     <Button 
-                    variant="contained"                  
+                    variant="contained"      
+                    sx={{height:35}}
                     disabled={selectedCupos.length == 0} onClick={()=>{
                     setConfirmDeleteDialog(true)
                     // appendSerachParams("dialog","1")
@@ -266,7 +255,9 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
                     </Button>
 
                     {selectedCupos.length > 0 &&
-                    <Button onClick={()=>setSelectedCupos([])}
+                    <Button
+                    sx={{height:35}}
+                    onClick={()=>setSelectedCupos([])}
                     endIcon={<CloseIcon/>}
                     variant="contained"
                     >
@@ -276,7 +267,7 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
 
             </div>
 
-            <div className="flex space-x-2 items-center">
+            <div className="flex space-x-2 items-center pb-5">
 
              {/* <div className="rounded-full noSelect hover:bg-gray-200 cursor-pointer flex justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-8 h-8 p-[6px]">

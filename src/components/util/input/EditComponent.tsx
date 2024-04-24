@@ -1,28 +1,33 @@
 import { Transition } from "@headlessui/react"
 import { useState } from "react"
 import ButtonWithLoader from "../button/ButtonWithLoader"
+import { Button, TextField, Typography } from "@mui/material"
+import { LoadingButton } from "@mui/lab"
 
 
-const EditComponent =  ({label,content,edit,type="text",isTextArea=false,enableEdit=true}:{
+const EditComponent =  ({label,content,edit,type="text",multiline=false,enableEdit=true,disabled=false}:{
     label:string
     content:string
     type?:string
+    disabled?:boolean
     enableEdit?:boolean
-    isTextArea?:boolean
-    edit:(addLoader:()=>void,removeLoader:()=>void,value:string)=>void
+    multiline?:boolean
+    edit?:(addLoader:()=>void,removeLoader:()=>void,value:string)=>void
 }) =>{
     const [show,setShow] = useState(false)
     const [loading,setLoading] = useState(false)
     const [value,setValue] = useState(content)
     return(
         <div>
-             <div className=" flex justify-between items-center space-x-5 py-3 divider">
+             <div className=" flex justify-between items-center space-x-5 py-3">
                 <div className="grid">
-                    <span className="label">{label}</span>
-                    <span className="text-sm">{content}</span>
+                    <Typography fontWeight={500} fontSize={16.5}>{label}</Typography>
+                    <Typography variant="subtitle1" >{content}</Typography>
                 </div>
                 {enableEdit &&
-                    <span onClick={()=>setShow(!show)} className=" underline font-medium cursor-pointer">Edit</span>
+                    <Button disabled={disabled} onClick={()=>setShow(!show)} color="inherit">
+                        <span className=" underline font-medium">Editar</span>
+                    </Button>
                 }
             </div>
             <Transition
@@ -34,8 +39,24 @@ const EditComponent =  ({label,content,edit,type="text",isTextArea=false,enableE
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
             >
-
-            {isTextArea ?
+                <div>
+                <TextField
+                size="small"
+                value={value}
+                onChange={(e)=>setValue(e.target.value)}
+                multiline={multiline}
+                sx={{width:"100%"}}
+                onKeyDown={(e)=>{
+                    if(e.key == "Enter"){
+                        if(edit == undefined) return
+                        edit(()=>setLoading(true),()=>{
+                        setLoading(false)
+                        setShow(false)
+                },value)
+                    }
+                }}
+                />
+            {/* {multiline ?
                 <textarea autoFocus className="textarea mt-4" value={value} onChange={(e)=>setValue(e.target.value)}
                 rows={5}/> 
                 :
@@ -49,20 +70,24 @@ const EditComponent =  ({label,content,edit,type="text",isTextArea=false,enableE
                     }
                 }}
                 />
-            }
+            } */}
 
 
-              <ButtonWithLoader
-              onClick={()=>edit(()=>setLoading(true),()=>{
+              <LoadingButton
+              variant="contained"
+              onClick={()=>{
+                if(edit == undefined) return
+                edit(()=>setLoading(true),()=>{
                 setLoading(false)
                 setShow(false)
-            },value)}
-              title="Guardar"
+            },value)
+              }}
               loading={loading}
-              className="mt-2 w-28"
-              />
+              sx={{mt:1}}
+              >Guardar</LoadingButton>
               {/* <button onClick={()=>edit(()=>setLoading(true),()=>setLoading(false),value)} */}
                {/* className=" button">Guardar Cambios</button> */}
+              </div>
             </Transition>
         </div>
     )

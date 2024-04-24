@@ -34,7 +34,7 @@ const ReservaList = ({reservas,loading,order,changeOrder,getReservaDetail}:{
             />
              <table className="w-full shadow-xl">
         <thead className=" bg-gray-200 text-left noselect">
-            <tr>
+            <tr className="">
                 <th className="headerTable w-10">
                 </th>
                 <th className="headerTable w-72" onClick={()=>{

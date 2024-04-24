@@ -7,27 +7,26 @@ import { cookies } from 'next/headers'; // Import cookies
 
 
 export async function POST(request:Request) {
-    const nextCookies = cookies(); // Get cookies object
-    const token = nextCookies.get('access_token')?.value
-    if(token == undefined){
+  const nextCookies = cookies(); // Get cookies object
+  const token = nextCookies.get('access_token')?.value
+  if(token == undefined){
         return NextResponse.json("Usuario no authorizado",{status:401})
       }
     // console.log("TOKEN",token)
   try{
       const body = await request.text()
-      const res = await fetch(`${API_URL}/evento/edit/`,{
+      const res = await fetch(`${API_URL}/admin/reservas/change-instalacion/`,{
             method:'POST',
             body:body,
             headers:{
-                'Authorization':`Bearer ${token}`,
-                'Content-Type':'application/json'
+                'Content-Type' :'application/json',
+                'Authorization':`Bearer ${token}`
             }
         })
         const data = await res.json()
       return NextResponse.json(data,{status:res.status})
    }catch(err){
+      // console.log(err)
       return NextResponse.json("Error Request",{status:500})
    }
 }
-
-

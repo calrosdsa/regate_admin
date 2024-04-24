@@ -4,7 +4,7 @@ import DialogLayout from "@/components/util/dialog/DialogLayout"
 import MultiSelectComponent from "@/components/util/input/MultiSelectComponent"
 import { days } from "@/context/actions/chart-actions"
 import moment from "moment"
-import { Button, DialogActions, IconButton, MenuItem, TextField } from "@mui/material"
+import { Button, Checkbox, DialogActions, FormControlLabel, IconButton, MenuItem, TextField, Tooltip } from "@mui/material"
 import TimeSelect from "@/components/util/input/TimeSelect"
 import CloseIcon from '@mui/icons-material/Close';
 import { LoadingButton } from "@mui/lab"
@@ -18,15 +18,17 @@ enum ActionType {
   DELETED = 3,
 
 }
-const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones}:{
+const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones,uuid}:{
     openModal:boolean
     closeModal:()=>void
     instalaciones:Instalacion[]
+    uuid:string
 }) =>{
   const [loading,setLoading] = useState(false)
   const [instalacionesIds,setInstalacionesIds] = useState<number[]>([])
   const [daysWeek,setDaysWeek] = useState<number[]>([])
   const [available,setAvailable] = useState(true)
+  const [useDefinedPrice,setUseDefinedPrice] = useState(false)
   const [customPrecioInstalacion,setCustomPrecuoInstalacion] = useState<CustomPrecioInstalacion[]>([])
   const [disabledHours,setDisabledHours] = useState<string[]>([])
   const [actionType,setActionType] = useState(ActionType.UPDATED)
@@ -80,7 +82,6 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
       }
         })
         setDisabledHours(timeRange)
-        console.log("TIME RANGE",timeRange)
       }catch(err){
         console.log(err)
       }
@@ -91,13 +92,23 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
           e.preventDefault()
           setLoading(true)
           let times = getTimeRangeFromCustomPrecioInstalacion()
+
+          if(daysWeek.length == 0) return
+          let daysWeekDefault:number[] = []
+          if(daysWeek[0] == -1){
+            daysWeekDefault = [0,1,2,3,4,5,6]
+          }else{
+            daysWeekDefault = daysWeek
+          }
           const d:EditInstalacionesPreciosRequest = {
             instalaciones_id:instalacionesIds,
-            days_week:daysWeek,
+            days_week:daysWeekDefault,
             times:times,
             available:available,
             action_type:actionType,
-            custom_precio_instalacion:customPrecioInstalacion
+            custom_precio_instalacion:customPrecioInstalacion,
+            establecimiento_uuid:uuid,
+            use_defined_price:useDefinedPrice,
           }
           await EditInstalacionesHorario(d)
           toast.success(successfulMessage)
@@ -120,7 +131,7 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
        <DialogLayout title="Configurar horas disponible"
        className="max-w-lg"
        open={openModal} close={closeModal}>
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} className="px-1">
 
         <div>
             <span className="help-text">
@@ -150,12 +161,14 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
                           }}
                           disabledHours={disabledHours}
                           />
+                          {(!useDefinedPrice && actionType != ActionType.DELETED) &&
                             <TextField
                             required type="number" className="w-20" value={item.precio} name="precio"
                             label="Monto" size="small"
                             InputLabelProps={{ shrink: true }}
                             onChange={(e)=>onChangeCustomPrecio(e.target.name,e.target.value,index)}
                             />
+                          }
                             <IconButton onClick={()=>{
                               const newItems = customPrecioInstalacion.filter((t,i)=>i != index)
                               setCustomPrecuoInstalacion(newItems)
@@ -174,6 +187,13 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
             </Button>
 
           </div>
+
+          {actionType == ActionType.UPDATED &&
+            <div>
+            <FormControlLabel sx={{p:1}} control={<Checkbox value={useDefinedPrice} onChange={(e,v)=>setUseDefinedPrice(v)} />}
+            label="Usar precio previamente definido" />
+            </div> 
+          }
 
         <div>
         <MultiSelectComponent
@@ -225,11 +245,14 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
         sx={{minWidth:"100%",mt:2}}
         value={actionType.toString()} 
         name="estado"
-        label="Acción requerida"
+        label="Acción a realizar"
         size="small"
         InputLabelProps={{ shrink: true }}
         onChange={(e)=>{
           const v = e.target.value
+          if(Number(v) != ActionType.UPDATED){
+            setUseDefinedPrice(false)
+          }
           setActionType(Number(v))
         }}
         select>

@@ -178,14 +178,18 @@ export default function Page({params}:{params:{uuid:string}}){
 
             <div className="flex space-x-3 py-2">
           
-                <Button variant="outlined"  disabled={loading}  onClick={()=>{
+                <Button
+                sx={{height:35}}
+                variant="outlined"  disabled={loading}  onClick={()=>{
                     setQuery("")
                     getReservas(filterData,1)
                     }}>
                         <RefreshIcon/>
                 </Button>
 
-                <Button variant="outlined" disabled={loading}  onClick={()=>{
+                <Button 
+                sx={{height:35}}
+                variant="outlined" disabled={loading}  onClick={()=>{
                   openExportReservasDialog()
                     }}>
                         <DownloadIcon/>

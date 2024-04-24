@@ -12,9 +12,12 @@ import { uiActions } from "@/context/slices/uiSlice"
 import { DeleteEvento, GetEventos } from "@/core/repository/evento"
 import { GetUsersEmpresaPagination } from "@/core/repository/users"
 import useEffectOnce from "@/core/util/hooks/useEffectOnce"
+import { Button } from "@mui/material"
 import { useSearchParams } from "next/navigation"
 import { useState } from "react"
 import { toast } from "react-toastify"
+import RefreshIcon from '@mui/icons-material/Refresh';
+import AddIcon from '@mui/icons-material/Add';
 const Page = ({ params }: { params: { uuid: string } }) =>{
     const dispatch = useAppDispatch()
     const searchParams = useSearchParams();
@@ -103,21 +106,17 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
 
             <div className="flex space-x-3 py-2">
           
-                <button className="button-inv" disabled={loading}  onClick={()=>{
+                <Button variant="outlined" disabled={loading}  onClick={()=>{
                   setQuery("")
                   getUsersEmpresa(1)
                     }}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-  <path fillRule="evenodd" d="M4.755 10.059a7.5 7.5 0 0112.548-3.364l1.903 1.903h-3.183a.75.75 0 100 1.5h4.992a.75.75 0 00.75-.75V4.356a.75.75 0 00-1.5 0v3.18l-1.9-1.9A9 9 0 003.306 9.67a.75.75 0 101.45.388zm15.408 3.352a.75.75 0 00-.919.53 7.5 7.5 0 01-12.548 3.364l-1.902-1.903h3.183a.75.75 0 000-1.5H2.984a.75.75 0 00-.75.75v4.992a.75.75 0 001.5 0v-3.18l1.9 1.9a9 9 0 0015.059-4.035.75.75 0 00-.53-.918z" clipRule="evenodd" />
-                 </svg>
-                </button>
+                    <RefreshIcon/>
+                </Button>
 
-                <button onClick={()=>setCreateEventoDialog(true)} className="button-inv flex space-x-1">
+                <Button variant="outlined" onClick={()=>setCreateEventoDialog(true)} 
+                endIcon={<AddIcon/>}>
                     <span>Crear evento</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                    <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                    </svg>
-                </button>
+                </Button>
                 
                 {/* <button className="button-inv flex space-x-1" disabled={loading}  onClick={()=>setCreateReservaDialog(true)}>
                         <span>Crear Reserva</span>

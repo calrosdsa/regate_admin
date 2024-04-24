@@ -12,6 +12,10 @@ export function classNames(...classes:any) {
   export const formatterShorTime = (date:string):String=>{
       return  moment(date).format('LT');  
   }
+  export const formatDateTime = (date:string | null | undefined):string=>{
+    if(date == null || date == undefined) return "-"
+    return  moment(date).format('lll');  
+  }
 
   export const  getRandomInt = () => {
     return Date.now() + Math.floor(Math.random() * 1000);
@@ -34,4 +38,9 @@ export function classNames(...classes:any) {
     link.download = name
     // link.setAttribute('download', name); //or any other extension
     link.click()
+  }
+
+  export const formatBlankorNull = (v:number | string | null | undefined) :string=>{
+    if(v == "" || v == null || v == undefined) return "-"
+    return v.toString()
   }

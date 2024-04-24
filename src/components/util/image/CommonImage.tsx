@@ -30,11 +30,11 @@ const toBase64 = (str: string) =>
 //   `data:image/gif;base64,R0lGODlhAQABAPAA${
 //     triplet(0, r, g) + triplet(b, 255, 255)
 //   }/yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==`
-const CommonImage = ({src,h,w,className}:{
+const CommonImage = ({src,h,w,className=""}:{
     src:string | undefined
     h:number
     w:number
-    className:string
+    className?:string
   }) => {
     return(
       <>

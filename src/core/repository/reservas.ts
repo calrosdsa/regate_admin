@@ -62,6 +62,27 @@ export async function getEstablecimientoReservas(data:ReservaDataFilter,page:num
     return res.json()
   }
 
+  export async function CheckInstalacionIsAvailable(data:CheckInstalacionIsAvailableRequest):Promise<Response> {
+    const res = fetch(`${LOCAL_URL}/api/reservas/check-instalacion`,{
+      method:"post",
+      body:JSON.stringify(data)
+    })
+    return res
+  }
+
+  export async function ChangeInstalacion(data:ChangeInstalacionRequest) {
+    const res = await fetch(`${LOCAL_URL}/api/reservas/change-instalacion`,{
+      method:"post",
+      body:JSON.stringify(data)
+    })
+    if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error('Failed to fetch data')
+    }
+    return res.json()
+  }
+
+
   export async function CreateReservaCupos(data:ReservaFromEventoRequest) {
     const res = await fetch(`${LOCAL_URL}/api/reservas/create-cupos`,{
       method:"post",

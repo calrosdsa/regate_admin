@@ -1,15 +1,18 @@
 "use client"
 
+import EventoDetail from "@/components/eventos/EventoDetail";
 import Calendar from "@/components/eventos/calendar/Calendar";
 import ReservaList from "@/components/reservas/ReservaList";
 import DialogReservaDetail from "@/components/reservas/dialog/DialogReservaDetail";
 import RequestReporteReservaDialog from "@/components/reservas/dialog/RequestReporteReservaDialog";
 import SelectComponent from "@/components/util/input/SelectCompenent";
+import Loader from "@/components/util/loaders/Loader";
 import Pagination from "@/components/util/pagination/Pagination";
 import { hours } from "@/context/actions/chart-actions";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { dataActions } from "@/context/slices/dataSlice";
 import { uiActions } from "@/context/slices/uiSlice";
+import { GetEventoDetail } from "@/core/repository/evento";
 import { GetInstalaciones } from "@/core/repository/instalacion";
 import { GetReservaDetail, getEstablecimientoReservas } from "@/core/repository/reservas";
 import { Order, OrderQueue, ReservaType } from "@/core/type/enums";
@@ -21,23 +24,21 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 enum  TabEvento {
+    INFO,
     RESERVAS,
     CALENDARIO,
 }
 const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
     const searchParams = useSearchParams();
-    const [currentTab, setCurrentTab] = useState(TabEvento.RESERVAS);
+    const [currentTab, setCurrentTab] = useState(TabEvento.INFO);
     const name = searchParams.get("name")
     const eventoId = searchParams.get("id")
 
 
     const page = searchParams.get("page")
-    const totalCount = searchParams.get("totalCount")
     const dispatch = useAppDispatch()
     const current = new URLSearchParams(Array.from(searchParams.entries()))
     const reservas = useAppSelector(state=>state.data.reservas)
-    // const [reservas ,setReservas ] = useState<Reserva[]>([])
-    const [query,setQuery] = useState("")
     const [reservaDetail,setReservaDetail] = useState<ReservaDetail | null>(null)
     const [filterData,setFilterData] = useState<ReservaDataFilter>({
         uuid:params.uuid,
@@ -54,7 +55,8 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
         order:Order.DESC,
         queue:OrderQueue.CREATED
     })
-
+    const [loadingEvent,setLoadingEvent]=useState(false)
+    const [eventoDetail,setEventoDetail] = useState<Evento | null>(null)
     const [instalaciones,setInstalaciones] = useState<Instalacion[]>([])
     const [selectedInstalacion,setSelectedInstalacion]= useState("")
     const [openRequestReporteDialog,setOpenRequestReporteDialog] = useState(false)
@@ -73,14 +75,11 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
     const getInstalaciones = async() =>{
         try{
             if(instalaciones.length == 0){
-                // dispatch(uiActions.setLoaderDialog(true))
                 const res:Instalacion[] = await GetInstalaciones(params.uuid)
                 setInstalaciones(res)
-                // setOpenRequestReporteDialog(true)
-                // dispatch(uiActions.setLoaderDialog(false))
+               
             }
         }catch(err){
-            // dispatch(uiActions.setLoaderDialog(false))
         }
     }
     const getReservaDetail = async(id:number) => {
@@ -93,45 +92,27 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
             dispatch(uiActions.setLoaderDialog(false))
         }
     }
-    // const getReservasCount = async()=>{
-    //     try{
-    //         const res:number = await getEstablecimientoReservasCount(params.uuid)
-    //         setReservasCount(res)
-    //         appendSerachParams("totalCount",`${res}`)
-    //     }catch(err){
-    //         console.log(err)
-    //     }
-    // }
 
-    const searchQuery = (query:string) =>{
-        if(query == "") return
-        appendSerachParams("page","1")
-        // console.log(query.trim().replaceAll(/\s+/g,","))
-        const q = query.trim().replaceAll(/\s+/g,":* & ") + ":*"
-        const filterD:ReservaDataFilter = {
-            ...filterData,
-            query:q
+    const getEventoDetail = async() =>{
+        try{
+            setLoadingEvent(true)
+            const res:Evento =await GetEventoDetail(params.uuidEvento)
+            setEventoDetail(res)
+            setLoadingEvent(false)
+        }catch(err){
+            setLoadingEvent(false)
         }
-        if(paginationProps != undefined){
-            setPaginationProps({
-                ...paginationProps,
-                count:paginationProps.pageSize
-            })
-        }
-        // setFilterData(filterD)
-        getReservas(filterD,1)
     }
+
     const getReservas = async(data:ReservaDataFilter,page:number) =>{
         try{
             dispatch(dataActions.setReservas([]))
             setFilterData(data)
             setLoading(true)
-            console.log("EVENTO ID 2",eventoId)
             let eventId = null 
             if(eventoId != undefined){
                 eventId = Number(eventoId)
             }
-            console.log("EVENTO ID 2",eventId)
             const res:ReservaPaginationResponse =await getEstablecimientoReservas({...data,evento_id:eventId},page)
             setPaginationProps({
                 pageSize:res.page_size,
@@ -154,10 +135,7 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
         }
     }
 
-    const onChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
-        setQuery(e.target.value)
-    }
-   
+  
     useEffect(()=>{
         if(reservaDetail != null){
             setOpenReservaDetailDialog(true)
@@ -165,13 +143,18 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
     },[reservaDetail])
 
     useEffect(()=>{
-        getInstalaciones()
-        if(page != null){
-            getReservas(filterData,Number(page))
-        }else{
-            getReservas(filterData,1)
+        switch(currentTab){
+            case TabEvento.RESERVAS:
+                getInstalaciones()
+                if(page != null){
+                    getReservas(filterData,Number(page))
+                }else{
+                    getReservas(filterData,1)
+                }
+            case TabEvento.INFO:
+                getEventoDetail()    
         }
-    },[])
+    },[currentTab])
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setCurrentTab(newValue);
@@ -202,9 +185,26 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
         scrollButtons="auto"
         aria-label="scrollable auto tabs example"
       >
-        <Tab label="Reservas" onClick={()=>console.log("RESERVAS")}/>
+        <Tab label="Info" onClick={()=>console.log("")}/>
+        <Tab label="Reservas" onClick={()=>console.log("")}/>
         <Tab  label="Calendario" />
       </Tabs>
+            {currentTab == TabEvento.INFO &&
+            <>
+            {loadingEvent ?
+            <Loader
+            className="w-full flex justify-center pt-10"
+             />
+            :
+            eventoDetail != null &&
+            <EventoDetail
+            evento={eventoDetail}
+            uuid={params.uuid}
+            updateEvento={(e)=>setEventoDetail(e)}
+            />
+            }
+            </>
+            }
           
             {currentTab == TabEvento.RESERVAS &&
             <>
@@ -223,7 +223,6 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
                 <div className="flex space-x-3 py-2">
               
                     <button className="button-inv" disabled={loading}  onClick={()=>{
-                        setQuery("")
                         getReservas(filterData,1)
                         }}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">

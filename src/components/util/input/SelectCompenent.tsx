@@ -25,6 +25,7 @@ defaultItem}:{
             size="small"
             onChange={onChange}
             value={value}
+            sx={{height:35}}
             name={name}
             required={required}
             // displayEmpty

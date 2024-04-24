@@ -115,7 +115,7 @@ export default function RootLayout({
               <meta name="theme-color" content="#042940" />
       </head>
       <Providers>
-      <body className='bg-gray-50'>
+      <body className=''>
         <>
         {/* <button onClick={()=>getTokenFcm()}>
           GET TOKEN

@@ -14,7 +14,7 @@ const TextAreaWithMaxLength = ({max,value,onChangeValue,label,name}:{
            <div>
             <span className="help-text">{label}</span>
             <textarea  onChange={onChangeValue} className="textarea" value={value}
-            name={name} rows={5}/>
+            name={name} rows={3}/>
           </div>
         <span className="help-text absolute right-1">{`${value.length}/${max}`}</span>
         </div>

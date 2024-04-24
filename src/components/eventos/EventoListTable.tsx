@@ -1,6 +1,6 @@
 import moment from "moment";
 import CommonImage from "../util/image/CommonImage";
-import { getFullName } from "@/core/util";
+import { formatBlankorNull, formatDateTime, getFullName } from "@/core/util";
 import Loading from "../util/loaders/Loading";
 import { Order, OrderQueue, ReservaEstado } from "@/core/type/enums";
 import Link from "next/link";
@@ -32,7 +32,19 @@ const EventoListTable = ({eventos,loading,uuid,deleteEvento}:{
                     Evento
                 </th>
                 <th className="headerTable">
-                    Descripcion 
+                    Precio total 
+                </th>
+                <th className="headerTable">
+                    Monto pagado
+                </th>
+                <th className="headerTable">
+                    Estado
+                </th>
+                <th className="headerTable">
+                    Fecha de Inicio
+                </th>
+                <th className="headerTable">
+                    Fecha de finalización
                 </th>
                 {/* <th className="headerTable">
                     Precio pagado
@@ -57,7 +69,11 @@ const EventoListTable = ({eventos,loading,uuid,deleteEvento}:{
                         <Link href={getRouteEstablecimiento(uuid,`eventos/${item.uuid}?name=${item.name}&id=${item.id}`)} 
                         className="rowTable truncate underline font-medium ">{item.name}</Link>
                         </td>
-                        <td className="rowTable ">{item.description}</td>
+                        <td className="rowTable ">{formatBlankorNull(item.total_price)}</td>
+                        <td className="rowTable ">{formatBlankorNull(item.paid)}</td>
+                        <td className="rowTable ">{formatDateTime(item.start_date)}</td>
+                        <td className="rowTable ">{formatDateTime(item.end_date)}</td>
+
                         {/* <td className="rowTable">{item.name}</td> */}
                         <td className="rowTable">
                             <div className="flex space-x-2 items-center">

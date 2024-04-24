@@ -72,6 +72,7 @@ type CupoReserva = {
     evento_id?:number
     profile_id:number
     reserva_count:number
+    instalacion_id:number | null
 }
 
 type DeleteInstalacionRequest = {
@@ -94,4 +95,6 @@ type EditInstalacionesPreciosRequest = {
     available:boolean
     action_type:number
     custom_precio_instalacion:CustomPrecioInstalacion[]
+    establecimiento_uuid:string
+    use_defined_price:boolean
 }
