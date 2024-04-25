@@ -4,6 +4,7 @@ import { LoadingButton } from "@mui/lab"
 import { Button, DialogActions, List, ListItem, ListItemButton, ListItemText } from "@mui/material"
 import Image from "next/image"
 import { useState } from "react"
+import ListInstalaciones from "../ListInstalaciones"
 
 
 
@@ -23,31 +24,12 @@ const InstalacionesDialog = ({openModal,closeModal,instalaciones,onAccept}:{
        className="max-w-lg"
        open={openModal} close={closeModal}>
         <div>
-        <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-            {instalaciones.map((item,idx) => (
-                <ListItem
-                key={idx}
-                disablePadding
-                secondaryAction={
-                    item.portada != null &&
-                    <CommonImage 
-                    src={item.portada}
-                    h={70}
-                    w={70}
-                    className="h-10 w-10 object-cover rounded-full"
-                    />
-                }
-                >
-                <ListItemButton
-                selected={selected?.id == item.id}
-                 onClick={()=>{
-                    setSelected(item)
-                }}>
-                <ListItemText primary={item.name} secondary={item.category_name} />
-                </ListItemButton>
-                </ListItem>
-            ))}
-            </List>
+        <ListInstalaciones
+        instalaciones={instalaciones}
+        onClick={(e)=>setSelected(e)}
+        selected={(e)=>selected?.id == e.id}
+        />
+        
             <DialogActions>
                 <Button onClick={closeModal}>Descartar</Button>
                 <LoadingButton

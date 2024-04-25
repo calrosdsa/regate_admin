@@ -57,6 +57,7 @@ const DialogReservaDetail = ({open,close,data,update,uuid}:{
      {cancelReservaDialog &&
      <CancelReservaDialog
      open={cancelReservaDialog}
+     uuid={uuid}
      reserva={detail.reserva}
      close={()=>setCancelReservaDialog(false)}
      update={()=>{

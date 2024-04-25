@@ -1,3 +1,4 @@
+import { LoadingButton } from "@mui/lab"
 
 interface Props{
     loading:boolean
@@ -10,8 +11,16 @@ const ButtonWithLoader = ({loading,title,className="",onClick,disabled=false}:Pr
 
     return(
       <>
-        {/* <input type="submit" className='hidden' id="submitRegister"/> */}
-        <button disabled={disabled} className={`button flex justify-center h-10 ${className}`} onClick={onClick}
+      <LoadingButton
+      onClick={onClick}
+      variant="contained"
+      sx={{mt:2}}
+      loading={loading} className={className}
+      disabled={disabled}>
+        {title}
+      </LoadingButton>
+
+        {/* <button disabled={disabled} className={`button flex justify-center h-10 ${className}`} onClick={onClick}
          >
        {loading?
           <svg aria-hidden="true" className="w-6 h-6 text-gray-200 animate-spin 
@@ -22,7 +31,7 @@ const ButtonWithLoader = ({loading,title,className="",onClick,disabled=false}:Pr
         :
         <span className="px-2">{title}</span>
       }
-              </button>
+              </button> */}
       </>
       )
 }

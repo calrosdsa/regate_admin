@@ -69,7 +69,7 @@ type CupoReserva = {
     available:boolean
     nombre:string
     apellido:string
-    evento_id?:number
+    evento_id:number | null
     profile_id:number
     reserva_count:number
     instalacion_id:number | null

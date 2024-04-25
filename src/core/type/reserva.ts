@@ -1,5 +1,5 @@
 
-interface Reserva extends Profile {
+interface Reserva  {
     id:number
     uuid:string
     instalacion_id:number
@@ -11,8 +11,12 @@ interface Reserva extends Profile {
     start_date:string
     end_date:string
     created_at:string
-    user_local_id?:number
+    user_id:number
     evento:Evento
+    reserva_type:number
+    nombre?:string,
+    apellido?:string
+    profile_photo?:string
 }
 
 type ReservaReporteRequest = {
@@ -22,6 +26,13 @@ type ReservaReporteRequest = {
     estado?:number
     instalaciones:number[]
 }
+
+type CupoInterval = {
+    interval:CupoR[]
+    paid:number
+    total:number
+}
+
 
 type ReservaDetail = {
     instalacion:Instalacion
@@ -76,15 +87,26 @@ type ReservaCancelRequest = {
     content:string
     reserva_uuid:string
     establecimiento_id:number
+    establecimiento_uuid:string
     profile_id?:number
-    user_local_id?:number
+    user_id?:number
+    evento_id:number | null
     admin_id?:string 
+    reserva_type:number
+    reasignar_reserva_request:ReasignarReservaRequest | null
+}
+type ReasignarReservaRequest = {
+    evento_id?:number
+    evento_uuid?:string
+    intervals:CupoInterval
 }
 
 type ConfirmReservaRequest = {
     reserva_id:number
     reserva_uuid:string
     amount_added:number
+    start_date:string
+    end_date:string
 }
 
 type ReservaEditRequest = {
@@ -93,6 +115,8 @@ type ReservaEditRequest = {
     estado:number
     amount:number
     extra_time:number
+    start_date:string
+    end_date:string
 }
 
 type CheckInstalacionIsAvailableRequest = {

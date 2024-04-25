@@ -23,11 +23,11 @@ import SeeMore from "@/components/util/button/SeeMore";
 import { Http, HttpStatusCode } from "@/core/type/enums";
 import { Tab } from "@headlessui/react";
 import { GetInstalaciones } from "@/core/repository/instalacion";
-import { Autocomplete, Button, TextField, Typography } from "@mui/material";
+import { Autocomplete, Button, IconButton, TextField, Typography } from "@mui/material";
 import { fetchInstalaciones } from "@/context/actions/data-actions";
 import { LoadingButton } from "@mui/lab";
 import InstalacionesDialog from "@/components/establecimiento/instalacion/dialog/InstalacionesDialog";
-
+import CloseIcon from '@mui/icons-material/Close';
 
 type CreateReservaRequest = {
     intervals:CupoInterval[]
@@ -42,16 +42,11 @@ type UserNameIsRepeat = {
 }
 
 type ReservaInterval = {
-    id:number
+    id?:number
     interval:CupoReserva[]
     paid?:string
 }
 
-type CupoInterval = {
-    interval:CupoR[]
-    paid:number
-    total:number
-}
 
 enum Tabs {
     Instalaciones,
@@ -153,10 +148,10 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
             for(let i = 0;i < reservaIntervals.length;i++){
                 const cupos:(CupoR | undefined)[] = reservaIntervals[i].interval.map(item=>{
                     // if(item.available){}
-                    if(item.available && item.evento_id == undefined && item.reserva_id == null){
+                    if(item.available && item.evento_id == null && item.reserva_id == null&& item.instalacion_id != null){
                         const c:CupoR = {
                             start_date:item.time,
-                            instalacion_id:instalacion.id,
+                            instalacion_id:item.instalacion_id,
                             precio:item.precio
                         }
                         return  c
@@ -166,6 +161,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
                 })
                 if(cupos.includes(undefined)){
                     console.log("No available for reservations")
+                    toast.error("La reserva no pudo ser completada.")
                     // return
                 }else{
                     // const n = cupos.filter(item=>item != undefined)
@@ -194,6 +190,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
                 },
                 evento_id:eventoId
             }
+            console.log("CREATE RESERVA BODY",requestData)
             const res = await CreateReserva(JSON.stringify(requestData))
             switch(res.status){
                 case Http.StatusOk:
@@ -209,9 +206,6 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
                 default:
                     toast.error(unexpectedError)               
             }
-            // toast.success("Se ha creado exitosamente la reserva")
-            // refresh()
-            // close()
             setLoading(false)
         }catch(err){
             toast.error(unexpectedError)
@@ -331,17 +325,29 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
             }
             console.log("BODY",body)
             const res = await CheckInstalacionIsAvailable(body)
+            let data;
             switch(res.status){
                 case HttpStatusCode.Ok:
-                    const n = selectReservaInterval?.interval.map(item=>{
-                        item.available = true
-                    item.reserva_id = null
-                    item.instalacion_id = instalacion.id
-                    return item
+                    data = await res.json() as CupoReserva[]
+                    console.log("CUPOS DATA",data)
+                //     const timesCupoReserva
+                //    reservaCupos.map(item=>{
+                //     if(.includes())
+                //    }) 
+                    const nSelectedReservaInterval:ReservaInterval = {
+                        ...selectReservaInterval,
+                        interval:data
+                    }
+                    const nReservaIntervals = reservaIntervals.map(item=>{
+                        if(item.id == selectReservaInterval?.id){
+                            item = nSelectedReservaInterval
+                        }
+                        return item
                     })
+                    setReservaIntervals(nReservaIntervals)
                     break;
                 case HttpStatusCode.NotAcceptable:
-                    const data:ResponseMessage =await res.json()
+                    data =await res.json() as ResponseMessage
                     console.log("RESPONSE",data)
                     toast.error(data.message)
                     break;
@@ -355,6 +361,12 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
             addLoader(false)
             console.log(err)
         }
+    }
+
+    const removeReservaInterval = (id:number | undefined) =>{
+        if(id == undefined) return
+        const n = reservaIntervals.filter(item=>item.id!= id)
+        setReservaIntervals(n)
     }
 
 
@@ -492,15 +504,11 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
                         <span className="font-semibold">{instalacion?.name}</span>
                     </div> */}
                     <div className="h-2"/>
-                    <div className=" smallButton w-min px-1 items-center noSelect">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                     className="w-[15px] h-[15px] ">
-                    <path d="M10 3.75a2 2 0 1 0-4 0 2 2 0 0 0 4 0ZM17.25 4.5a.75.75 0 0 0 0-1.5h-5.5a.75.75 0 0 0 0 1.5h5.5ZM5 3.75a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 .75.75ZM4.25 17a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5h1.5ZM17.25 17a.75.75 0 0 0 0-1.5h-5.5a.75.75 0 0 0 0 1.5h5.5ZM9 10a.75.75 0 0 1-.75.75h-5.5a.75.75 0 0 1 0-1.5h5.5A.75.75 0 0 1 9 10ZM17.25 10.75a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5h1.5ZM14 10a2 2 0 1 0-4 0 2 2 0 0 0 4 0ZM10 16.25a2 2 0 1 0-4 0 2 2 0 0 0 4 0Z" />
-                    </svg>
-                    <span onClick={()=>setOpenAdvanceOptions(!openAdvanceOptions)} className="text-xs font-medium">Seleccionar hora</span>
-                    </div>
-  
 
+                    <Button size="small"
+                    color="inherit" variant="outlined" onClick={()=>setOpenAdvanceOptions(!openAdvanceOptions)}>
+                    Seleccionar hora
+                    </Button>
                     
                     <Tab.Group>
                         <Tab.List className={"w-full z-10 flex overflow-auto"}>
@@ -512,13 +520,22 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
                                             // setCurrentInterval(item.interval) 
                                         }}>
                                             <div className="flex space-x-1 items-center">
-                                                <span>Reserva {idx+1}</span>
                                                 {!checkIsAvailable(item.interval) &&
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" 
                                                 className="w-3 h-3">
                                                 <path fillRule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14ZM8 4a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0v-3A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clipRule="evenodd" />
                                                 </svg>
                                                 }
+                                                <span>Reserva {idx+1}</span>
+
+                                                <IconButton sx={{height:30}} size="small"
+                                                onClick={(e)=>{
+                                                    e.stopPropagation()
+                                                    removeReservaInterval(item.id)
+                                                }}
+                                                >
+                                                    <CloseIcon/>
+                                                </IconButton>
 
                                             </div>
                                             </Tab>
@@ -597,7 +614,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
                                 const n = [...f,{
                                     ...item,
                                     paid:e.target.value
-                                }].sort((a,b)=>a.id - b.id)
+                                }].sort((a,b)=>Number(a.id) - Number(b.id))
                                 setReservaIntervals(n)
                             }}
                             /> 

@@ -29,8 +29,11 @@ const ConfirmReservaDialog = ({open,close,update,reserva}:{
             const request:ConfirmReservaRequest = {
                 amount_added:Number(value),
                 reserva_id:reserva.id,
-                reserva_uuid:reserva.uuid
+                reserva_uuid:reserva.uuid,
+                start_date:reserva.start_date,
+                end_date:reserva.end_date
             }
+            // console.log("CONFIRMRESERVAREQUEST",request)
              await ConfirmReserva(request)
              setLoading(false)
              update(Number(value))

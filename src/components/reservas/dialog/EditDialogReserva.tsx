@@ -33,8 +33,11 @@ const EditReservaDialog = ({open,close,reserva,update}:{
                 amount:Number(paid),
                 estado:Number(estado),
                 reserva_uuid:reserva.uuid,
-                extra_time:Number(extra_time)
+                extra_time:Number(extra_time),
+                start_date:reserva.start_date,
+                end_date:reserva.end_date
             }
+            console.log("DATA",r)
             await EditReserva(r)
             setLoading(false)
             toast.success(successfulMessage)

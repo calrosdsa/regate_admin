@@ -27,6 +27,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import DialogConfigureHorarioInstalaciones from "@/components/establecimiento/instalacion/dialog/ConfigureHorarioInstalaciones";
 import { dataActions } from "@/context/slices/dataSlice";
 import CommonImage from "@/components/util/image/CommonImage";
+import ListInstalaciones from "@/components/establecimiento/instalacion/ListInstalaciones";
 // import { Tooltip } from 'react-tooltipp
 
 enum TabInstalacion {
@@ -104,6 +105,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         try{
             dispatch(uiActions.setLoaderDialog(true))
             const res = await GetReservaDetail(id)
+            // console.log("RESERVA DETAIL",res)
             setReservaDetail(res)
             dispatch(uiActions.setLoaderDialog(false))
         }catch(err){
@@ -285,45 +287,14 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                     loading={loadingInstalaciones}
                     className="flex justify-center mb-2"
                     />
-                    <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                    {instalaciones.map((item,idx) => (
-                        <ListItem
-                        key={idx}
-                        disablePadding
-                        secondaryAction={
-                            item.portada != null &&
-                            <CommonImage 
-                            src={item.portada}
-                            h={70}
-                            w={70}
-                            className="h-10 w-10 object-cover rounded-full"
-                            />
-                        }
-                        >
-                        <ListItemButton
-                        selected={instalacion?.id == item.id}
-                        onClick={()=>{
-                            setInstalacion(null)
-                            getInstalacion(item.uuid)
-                            }}>
-                        <ListItemText primary={item.name} />
-                        </ListItemButton>
-                        </ListItem>
-                    ))}
-                    </List>
-                {/* {instalaciones.map((item)=>{
-                    return(
-                        <div key={item.uuid} 
-                        className={`hover:bg-gray-200  border-[1px] rounded-lg ${instalacion?.id == item.id && "bg-gray-200"}`}
-                        onClick={()=>{
+                    <ListInstalaciones
+                    instalaciones={instalaciones}
+                    selected={(e)=>e.id == instalacion?.id}
+                    onClick={(e)=>{
                         setInstalacion(null)
-                        getInstalacion(item.uuid)
-                        }}>
-                        <InstalacionCard
-                        instalacion={item}
-                        />
-                        </div>
-                    )})} */}
+                        getInstalacion(e.uuid)
+                    }}
+                    />
                         </div>
                     </div>
 
