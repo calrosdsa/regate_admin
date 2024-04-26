@@ -9,6 +9,10 @@ import Spinner from "@/components/util/loaders/Spinner"
 import { toast } from "react-toastify"
 import { unexpectedError } from "@/context/config"
 import CreateReservaDialog from "@/components/reservas/dialog/CreateReservaDialog"
+import InstalacionesDialog from "@/components/establecimiento/instalacion/dialog/InstalacionesDialog"
+import { useAppDispatch, useAppSelector } from "@/context/reduxHooks"
+import { fetchInstalaciones } from "@/context/actions/data-actions"
+import { uiActions } from "@/context/slices/uiSlice"
 
 type WeekDay = {
     day:string
@@ -27,6 +31,8 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId,eventoName}:{
     uuidEvent:string
     reserva_type:ReservaType
 }) =>{
+    const dispatch = useAppDispatch()
+    const instalaciones = useAppSelector(state=>state.data.instalaciones)
     const [openReservaDialog,setOpenReservaDialog] = useState(false)
     const [startDate,setStartDate] = useState("")
     const [startTime,setStartTime] = useState<moment.Moment | undefined>(undefined)
@@ -37,6 +43,17 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId,eventoName}:{
     const [dateFilter,setDateFilter] = useState(moment())
     const [loadingSpinner,setLoadingSpinner] = useState(false)
     const [deleteEventoCupos,setDeleteEventoCupos] = useState(false)
+    const [openInstalacionesDialog,setOpenInstalacionesDialog] = useState(false)
+    const [instalacion,setInstalacion] = useState<Instalacion | null >(null)
+
+    const selectInstalacion = () =>{
+        dispatch(fetchInstalaciones(uuid,()=>{
+            dispatch(uiActions.setLoaderDialog(true))
+        },()=>{
+            setOpenInstalacionesDialog(true)
+            dispatch(uiActions.setLoaderDialog(false))
+        }))
+    }
 
     const openDialog = (startDate:string,time:Date,shouldAdd:boolean) => {
         const t = moment(time).utc()
@@ -46,6 +63,7 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId,eventoName}:{
         console.log(t.format("HH:mm"))
         console.log(moment(`${startDate} ${t.format("HH:mm")}`).format())
         setStartTime(moment(`${startDate} ${t.format("HH:mm")}`))
+        selectInstalacion()
     }
 
     const getReservasCupo = async(daysWeek:WeekDay[]) =>{
@@ -131,43 +149,37 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId,eventoName}:{
             generateDaysWeek(dateFilter)
         }
     },[])
-    useEffect(()=>{
-        if(startTime != undefined){
-            setOpenReservaDialog(true)
-        }
-    },[startTime])
+    // useEffect(()=>{
+    //     if(startTime != undefined){
+    //         setOpenReservaDialog(true)
+    //     }
+    // },[startTime])
     return(
         <>
+        {openInstalacionesDialog&&
+        <InstalacionesDialog
+        instalaciones={instalaciones}
+        onAccept={(e)=>{
+            setInstalacion(e)
+            setOpenInstalacionesDialog(false)
+            setOpenReservaDialog(true)
+        }}
+        openModal={openInstalacionesDialog}
+        closeModal={()=>setOpenInstalacionesDialog(false)}
+        />
+        }
         {openReservaDialog &&
         <CreateReservaDialog
         uuid={uuid}
-        isEvento={true}
         open={openReservaDialog}
         close={()=>setOpenReservaDialog(false)}
         cupos={[]}
-        refresh={()=>{}}
-        useAdvanceOptions={false}
+        onComplete={()=>{}}
+        cancha={instalacion}
+        useAdvanceOptions={true}
         eventoId={eventoId}
         startTime={startTime}
         />
-        // <CalendarDialogReserva
-        // uuid={uuid}
-        // open={openReservaDialog}
-        // close={()=>setOpenReservaDialog(false)}
-        // startTime={startTime}
-        // startDate={startDate}
-        // reserva_type={reserva_type}
-        // uuidEvent={uuidEvent}
-        // updateDateWithCupos={(e: ReservaCupo[],deleteCupos:boolean)=>{
-        //     if(deleteCupos){
-        //         const filterList = reservasCupo.filter(item=>!e.map(t=>t.start_date).includes(item.start_date))
-        //         setReservasCupo(filterList)
-        //     }else{
-        //         setReservasCupo([...reservasCupo,...e])
-        //     }
-        // }}
-        // eventoId={eventoId}
-        // isForDelete={deleteEventoCupos}
         }
         <div className="grid gap-y-2">
         <div className="flex pt-2 items-center space-x-2">
@@ -242,7 +254,7 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId,eventoName}:{
                     </label>
 
 
-                    <button onClick={()=>{
+                    {/* <button onClick={()=>{
                         setDeleteEventoCupos(true)
                         setOpenReservaDialog(true)
                     }}
@@ -250,7 +262,7 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId,eventoName}:{
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                         <path fillRule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.52.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4ZM8.58 7.72a.75.75 0 0 0-1.5.06l.3 7.5a.75.75 0 1 0 1.5-.06l-.3-7.5Zm4.34.06a.75.75 0 1 0-1.5-.06l-.3 7.5a.75.75 0 1 0 1.5.06l.3-7.5Z" clipRule="evenodd" />
                         </svg>
-                    </button>
+                    </button> */}
 
 
                     <button 

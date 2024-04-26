@@ -12,7 +12,7 @@ const TextAreaWithMaxLength = ({max,value,onChangeValue,label,name}:{
     return (
         <div className="relative">
            <div>
-            <span className="help-text">{label}</span>
+            <label className="label">{label}</label>
             <textarea  onChange={onChangeValue} className="textarea" value={value}
             name={name} rows={3}/>
           </div>

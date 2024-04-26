@@ -341,6 +341,8 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
                 if(reserva == undefined) return
                 dispatch(dataActions.updateReservas(reserva))
             }}
+            getReservas={()=>getReservas(filterData,Number(page))}
+
             />
             }
             </>

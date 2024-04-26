@@ -253,6 +253,7 @@ export default function Page({params}:{params:{uuid:string}}){
                     <Pagination
                     currentPage={paginationProps.currentPage}
                     setPage={(page)=>{
+                        
                         // console.log(Math.ceil(paginationProps.count/paginationProps.pageSize))
                         appendSerachParams("page",page.toString())
                         getReservas(filterData,page)
@@ -318,6 +319,7 @@ export default function Page({params}:{params:{uuid:string}}){
             if(reserva == undefined) return
             dispatch(dataActions.updateReservas(reserva))
         }}
+        getReservas={()=> getReservas(filterData,Number(pageParam))}
         />
         }
         </>

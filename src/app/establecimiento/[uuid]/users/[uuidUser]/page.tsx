@@ -16,7 +16,9 @@ import { GetReservaDetail } from "@/core/repository/reservas";
 import { uiActions } from "@/context/slices/uiSlice";
 import DialogReservaDetail from "@/components/reservas/dialog/DialogReservaDetail";
 import { dataActions } from "@/context/slices/dataSlice";
-
+import { ListItemIcon, ListItemText, MenuItem } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Page = ({ params }: { params: { uuidUser: string,uuid:string } }) => {
     const dispatch = useAppDispatch()
@@ -24,6 +26,7 @@ const Page = ({ params }: { params: { uuidUser: string,uuid:string } }) => {
     const name = searchParams.get("name")
     const id = searchParams.get("id")
     const phone = searchParams.get("phone")
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [userEmpresa,setUserEmpresa] = useState<UserEmpresa>({
         id:Number(id),
         name:name || "", 
@@ -95,34 +98,29 @@ const Page = ({ params }: { params: { uuidUser: string,uuid:string } }) => {
                 <div className="flex justify-between">
                 <span className="text-xl">{' '} {userEmpresa.name} ( {userEmpresa.phone_number} )</span>
 
-                <MenuLayout>
+                <MenuLayout
+                 anchorEl={anchorEl}
+                 setAnchorEl={(e)=>setAnchorEl(e)}>
                 <>
-                
-            <Menu.Item>
-                {({ active }) => (
-                    <button
-                    onClick={()=>setOpenUserDialog(true)}
-                    className={`${active ? 'bg-primary text-white' : 'text-gray-900'} 
-                    group whitespace-nowrap flex w-full items-center rounded-md px-2 py-2 text-sm
-                    `}
-                    >
-                    Editar
-                  </button>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                    <button
-                    //   disabled={user.estado == UserEstado.ENABLED}
-                    onClick={()=>{}}
-                    className={`${active ? 'bg-primary text-white' : 'text-gray-900'} 
-                    group whitespace-nowrap flex w-full items-center rounded-md px-2 py-2 text-sm
-                    `}
-                    >
-                    Eliminar usuario
-                  </button>
-                )}
-              </Menu.Item>
+
+                <MenuItem onClick={()=>{
+                    setOpenUserDialog(true)
+                    }} >                  
+                    <ListItemIcon>
+                    <EditIcon/>
+                </ListItemIcon>
+                <ListItemText>Editar</ListItemText>
+                    </MenuItem>
+
+                {/* <MenuItem onClick={()=>{
+                setOpenUserDialog(true)
+                }} >                  
+                <ListItemIcon>
+                <DeleteIcon/>
+                </ListItemIcon>
+                <ListItemText>Eliminar usuario</ListItemText>
+                </MenuItem>     */}
+
                 </>
             </MenuLayout>
 
@@ -158,6 +156,7 @@ const Page = ({ params }: { params: { uuidUser: string,uuid:string } }) => {
             setReservas(n)
         }}
         uuid={params.uuid}
+        getReservas={()=>{getUserReservas() }}
         />
         }
         </>

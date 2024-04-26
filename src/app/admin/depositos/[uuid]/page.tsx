@@ -272,6 +272,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         data={reservaDetail}
         update={()=>{}}
         uuid={params.uuid}
+        getReservas={()=>{}}
         />
         }
         </>

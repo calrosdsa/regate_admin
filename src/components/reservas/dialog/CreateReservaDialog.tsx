@@ -28,6 +28,7 @@ import { fetchInstalaciones } from "@/context/actions/data-actions";
 import { LoadingButton } from "@mui/lab";
 import InstalacionesDialog from "@/components/establecimiento/instalacion/dialog/InstalacionesDialog";
 import CloseIcon from '@mui/icons-material/Close';
+import ListInstalaciones from "@/components/establecimiento/instalacion/ListInstalaciones";
 
 type CreateReservaRequest = {
     intervals:CupoInterval[]
@@ -48,27 +49,26 @@ type ReservaInterval = {
 }
 
 
-enum Tabs {
-    Instalaciones,
-    ReservaForm
-}
+// enum Tabs {
+//     Instalaciones,
+//     ReservaForm
+// }
 
-const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOptions,isEvento = false,eventoId,startTime}:{
+const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvanceOptions,eventoId,startTime}:{
     open:boolean
     close:()=>void
     uuid:string
-    cancha?:Instalacion
+    cancha:Instalacion | null
     cupos:CupoReserva[]
-    refresh:()=>void
+    onComplete:()=>void
     useAdvanceOptions:boolean
-    isEvento?:boolean
     eventoId:number | null
     startTime?:moment.Moment
 }) => {
     const dispatch = useAppDispatch()
     const instalaciones = useAppSelector(state=>state.data.instalaciones)
     const fetchLoading = useAppSelector(state=>state.ui.fetchLoading)
-    const [tab,setTab] = useState(isEvento ? Tabs.Instalaciones : Tabs.ReservaForm)
+    // const [tab,setTab] = useState(isEvento ? Tabs.Instalaciones : Tabs.ReservaForm)
     const establecimientosUser = useAppSelector(state=>state.account.establecimientos)
     // const instalaciones = useAppSelector(state=>state.data.instalaciones)
     const [loading,setLoading] = useState(false)
@@ -82,7 +82,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
     const [reservaIntervals,setReservaIntervals] = useState<ReservaInterval[]>([])
     const [openAdvanceOptions,setOpenAdvanceOptions] = useState(useAdvanceOptions)
     const [reservaCupos,setReservaCupos] = useState<CupoReserva[]>(cupos)
-    const [instalacion,setInstalacion] = useState<Instalacion | undefined>(cancha)
+    const [instalacion,setInstalacion] = useState<Instalacion | null>(cancha)
     const [openInstalacionesDialog,setOpenInstalacionesDialog] = useState(false)
     const [selectReservaInterval,setSelectecReservaInterval] = useState<ReservaInterval | null>(null)
     // const [currentInterval,setCurrentInterval] = useState<CupoReserva[]>([])
@@ -195,7 +195,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
             switch(res.status){
                 case Http.StatusOk:
                     toast.success("Se ha creado exitosamente la reserva")
-                    refresh()
+                    onComplete()
                     close()
                     setLoading(false)
                 break;    
@@ -386,8 +386,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
     },[reservaCupos])
 
     useEffect(()=>{
-        dispatch(fetchInstalaciones(uuid))
-        
+        dispatch(fetchInstalaciones(uuid))    
     },[])
     return(
         <>
@@ -421,7 +420,6 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
         }
     }}
       startTime={startTime || moment()}
-      startDate={moment().format("yyyy-MM-DD")}
       uuid={uuid}
       instalacionId={instalacion?.id || 0}
       generateCupos={(e)=>{
@@ -435,64 +433,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
      className="max-w-xl"
       open={open} close={close} title="Crear reserva">
         <div className='rounded-lg bg-white overflow-auto max-w-xl'>
-            <>
-            {tab == Tabs.Instalaciones &&
-                        <div className="h-96">
-                        {fetchLoading && 
-                        <Loading
-                        className="flex w-full justify-center h-full"
-                        loading={fetchLoading}
-                        />
-                        }
-                        {instalaciones.map((item,index)=>{
-                            return(
-                                <div key={index}>
-                                        <div 
-                                        onClick={()=>{
-                                            setInstalacion(item)
-                                            setOpenAdvanceOptions(true)
-                                            setTab(Tabs.ReservaForm)
-                                        }}
-                                        className="flex space-x-3 p-2 items-center cursor-pointer border-b relative
-                                        hover:bg-gray-100 justify-between">
-                                            <div className="flex items-center w-full">
-
-                                            <div className="w-12">
-                                                {/* <CommonImage
-                                                src={item.instalacion.portada}
-                                                h={100} w={120} className={"h-20 w-36 object-cover rounded-lg"}/> */}
-                                            {(item.portada == null || item.portada == "") ?
-                                            <Image
-                                            src="/images/img-default.png"
-                                            height={100}
-                                            width={150}
-                                            alt={item.name} 
-                                            className=" rounded-full h-12 w-12   object-contain bg-gray-200 p-2"
-                                            />
-                                            :
-                                            <Image
-                                            src={item.portada as string}
-                                            height={100}
-                                            width={150}
-                                            alt={item.name} 
-                                            className=" rounded-full h-12 w-12  object-cover"
-                                            />
-                                        }
-                                        </div>
-                                    <span className="font-medium text-sm  line-clamp-2 w-1/2
-                                    p-1 z-10 rounded-br-lg">{item.name}</span>
-                                    </div>
-                                    
-                                </div>
-
-                                </div>
-                            )
-                        })}
-                        </div>
-            }
-          
-            {tab == Tabs.ReservaForm &&
-            <>
+           
             <div className="py-2">
                     {/* <div className="flex space-x-3 items-center">
                     <CommonImage
@@ -557,7 +498,6 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
                                     <div className="flex space-x-2 items-center">
                                         <Button size="small" onClick={()=>selectInstalacionFromDialog(item)}>
                                             <Typography variant="caption">
-
                                         Seleccionar otra cancha
                                             </Typography>
                                         </Button>
@@ -713,9 +653,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,refresh,uuid,useAdvanceOpt
             sx={{width:"100%"}}
             loading={loading}>Crear Reserva</LoadingButton>
         </form>
-        </>
-            }
-            </>
+        
          </div>   
      </DialogLayout>
       }

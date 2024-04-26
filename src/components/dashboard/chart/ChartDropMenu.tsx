@@ -5,6 +5,8 @@ import ChartDialog from "./ChartDialog";
 import { TypeOfChart } from "@/core/type/enums";
 import { ChartTypeData, FilterChartData } from "@/core/type/chart";
 import ButtonIcon from "@/components/util/button/ButtonIcon";
+import { Button, ListItemIcon, ListItemText, MenuItem } from "@mui/material";
+import AssessmentIcon from '@mui/icons-material/Assessment';
 
 const ChartDropMenu = ({
     children,title,subtitle,setTypeOfChart,setData,className = "",CustomToolTip,getNewData,
@@ -25,6 +27,7 @@ const ChartDropMenu = ({
     chartTypeData:ChartTypeData
     closeDialog:boolean
 }) => {
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [openChartDialog,setOpenChartDialog] = useState(false)
     function classNames(...classes:any) {
         return classes.filter(Boolean).join(' ')
@@ -69,27 +72,21 @@ const ChartDropMenu = ({
                 )
              }}
              />    */}
-            <MenuLayout>
-            <Menu.Item>
-              {({ active }) => (
-                  <button
-                onClick={()=>{
+            <MenuLayout 
+            anchorEl={anchorEl}
+            setAnchorEl={(e)=>setAnchorEl(e)}
+            >
+            <MenuItem onClick={()=>{
+                    setAnchorEl(null)
                     setOpenChartDialog(true)
                     setTypeOfChart()
                     setData()
-                }}
-                className={classNames(
-                    active ? 'bg-gray-200 text-gray-900' : 'text-gray-700',
-                    'flex justify-between space-x-2 px-4 py-2 text-sm  text-left',
-                    )}
-                    >
-                <span className=" whitespace-nowrap">Ver reporte</span>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605" />
-            </svg>
-                </button>
-              )}
-            </Menu.Item>
+            }} >                  
+             <ListItemIcon>
+            <AssessmentIcon/>
+          </ListItemIcon>
+          <ListItemText>Ver reporte</ListItemText>
+            </MenuItem>
             
             </MenuLayout>
             </div>

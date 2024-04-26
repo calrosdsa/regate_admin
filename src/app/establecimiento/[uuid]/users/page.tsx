@@ -167,6 +167,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                     <Pagination
                     currentPage={paginationProps.currentPage}
                     setPage={(page)=>{
+                        
                         // console.log(Math.ceil(paginationProps.count/paginationProps.pageSize))
                         appendSerachParams("page",page.toString())
                         getUsersEmpresa(filterData,page)

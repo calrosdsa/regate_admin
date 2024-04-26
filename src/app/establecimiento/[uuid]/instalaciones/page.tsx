@@ -441,6 +441,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         data={reservaDetail}
         update={()=>getCuposReservaInstalacion(reservaDetail.instalacion.id)}
         uuid={params.uuid}
+        getReservas={()=>{}}
         />
         }
 
@@ -452,7 +453,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
             return {...item,instalacion_id:instalacion.id}
         })}
         cancha={instalacion}
-        refresh={()=>getCuposReservaInstalacion(instalacion.id)}
+        onComplete={()=>getCuposReservaInstalacion(instalacion.id)}
         uuid={params.uuid}
         useAdvanceOptions={selectedCupos.length == 0}
         eventoId={null}

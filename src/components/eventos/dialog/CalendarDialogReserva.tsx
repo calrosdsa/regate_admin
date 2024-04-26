@@ -1,6 +1,5 @@
 import InstalacionCard from "@/components/establecimiento/instalacion/InstalacionCard"
 import DialogLayout from "@/components/util/dialog/DialogLayout"
-import InputDateTime from "@/components/util/input/InputDateTime"
 import SelectTime from "@/components/util/select/SelectTime"
 import { days } from "@/context/actions/chart-actions"
 import { GetInstalaciones } from "@/core/repository/instalacion"
@@ -17,6 +16,7 @@ import { successfulMessage, unexpectedError } from "@/context/config"
 import ButtonWithLoader from "@/components/util/button/ButtonWithLoader"
 import Loading from "@/components/util/loaders/Loading"
 import TimeSelect from "@/components/util/input/TimeSelect"
+import InputDate from "@/components/util/input/InputDate"
 
 
 const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type,uuidEvent,
@@ -75,12 +75,6 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
             [e.target.name]:e.target.value
         })
     }
-    // const onChangeSelect = (e:ChangeEvent<HTMLSelectElement>)=>{
-    //     setFilterData({
-    //         ...filterData,
-    //         [e.target.name]:e.target.value
-    //     })
-    // }
 
     const getInstalaciones = async () =>{
         try{
@@ -302,6 +296,8 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
         >
             {tab == 0 &&
         <div className="grid sm:grid-cols-2 gap-x-4 gap-y-4">
+
+
             <TimeSelect
             time={start}
             setTime={(e)=>{setStart(e)}}
@@ -312,31 +308,8 @@ const CalendarDialogReserva = ({close,open,startDate,startTime,uuid,reserva_type
             setTime={(e)=>{setEnd(e)}}
             label="Fin"
             />
-            {/* <InputDateTime
-            label="Inicio"
-            datetime={start}
-            setTime={(e)=>{
-                setStart({...start,time:e})
-            }}
-            setDate={(e)=>{
-                setStart({...start,date:e})
-            }}
-            /> */}
-            {/* <InputDateTime
-            label="Fin"
-            datetime={end}
-            setTime={(e)=>{
-                setEnd({...end,time:e})
-            }}
-            setDate={(e)=>{
-                setEnd({...end,date:e})
-            }}
-            /> */}
 
-            {/* <div className="flex space-x-2 items-center col-span-full">
-                <input id="all-day" type="checkbox" />
-                <label htmlFor="all-day" className="text-sm">Todo el dia</label>
-            </div> */}
+           
 
             <div className=" grid">
                 <span className="label">Repetir</span>

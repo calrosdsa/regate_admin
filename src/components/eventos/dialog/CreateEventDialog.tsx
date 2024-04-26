@@ -12,11 +12,12 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 
-const CreateEventDialog = ({open,close,establecimientoId,addEvento}:{
+const CreateEventDialog = ({open,close,establecimientoId,addEvento,onCreateEvento}:{
     open:boolean,
     close:()=>void
     addEvento:(e:Evento)=>void
     establecimientoId?:number 
+    onCreateEvento:(e:Evento)=>void
 }) =>{
     const [loading,setLoading] = useState(false)
     const [formData,setFormData] = useState({
@@ -79,6 +80,7 @@ const CreateEventDialog = ({open,close,establecimientoId,addEvento}:{
             toast.success(successfulMessage)
             // onUpdate(formData.name,formData.phone_numberx)
             close()
+            onCreateEvento(res)
         }catch(err){
             toast.error(unexpectedError)
             setLoading(false)
@@ -114,7 +116,7 @@ const CreateEventDialog = ({open,close,establecimientoId,addEvento}:{
             max={255}
             /> 
 
-        <div className="pt-3">
+        {/* <div className="pt-3">
         <span className="title text-[17px]">Usuario para quien se realizará la reserva</span>
         <div className="pt-1 w-full relative">
         <span className="label">Nombre</span>
@@ -176,7 +178,7 @@ const CreateEventDialog = ({open,close,establecimientoId,addEvento}:{
         // error={error}
         onChange={onChange}
         />    
-        </div>    
+        </div>     */}
 
             <ButtonSubmit
             title="Submit"

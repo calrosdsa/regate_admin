@@ -2,14 +2,15 @@ import { useRef, useState } from "react";
 import useEffectOnce from "@/core/util/hooks/useEffectOnce";
 import moment from "moment";
 import { hoursTime } from "@/context/actions/chart-actions";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
 
 
 const TimeSelect = ({
-    label,className,time,setTime,disabledHours
+    label,className,time,setTime,disabledHours,size="small"
 }:{
     className?:string
     label:string
+    size?:'small' | 'medium'
     time: string | undefined
     setTime:(e:string)=>void
     disabledHours?:string[]
@@ -21,23 +22,20 @@ const TimeSelect = ({
 
 
     return(
-        <>
+        <div>
          {/* <div className={`relative  grid  ${className}`}>
               {label != undefined &&
          <span className="label">{label}</span>
        } */}
-      <FormControl sx={{width:104}}>
-        <InputLabel id={label}>{label}</InputLabel>
+            <Typography variant="body2">{label}</Typography>
             <Select
             name=""
             id=""
-            labelId={label}
-            label={label}
-            size="small"
+            size={size}
             required 
+            sx={{mt:1,width:"100%"}}
             value={time} 
              onChange={(e,v)=>{
-                console.log(e.target.value)
                 setTime(e.target.value)}}>
                 <MenuItem value=""></MenuItem>
                 {hoursTime.map((item,index)=>{
@@ -50,7 +48,6 @@ const TimeSelect = ({
                     24:00
                 </option> */}
             </Select>
-        </FormControl>
             
             {/* <TimeSelect
             setTime={(e)=>{
@@ -69,7 +66,7 @@ const TimeSelect = ({
         className=" outline-none px-2 w-full"/> */}
 
          {/* </div> */}
-        </>
+        </div>
     )
 }
 

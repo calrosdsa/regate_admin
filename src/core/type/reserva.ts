@@ -90,7 +90,6 @@ type ReservaCancelRequest = {
     establecimiento_uuid:string
     profile_id?:number
     user_id?:number
-    evento_id:number | null
     admin_id?:string 
     reserva_type:number
     reasignar_reserva_request:ReasignarReservaRequest | null
@@ -98,7 +97,7 @@ type ReservaCancelRequest = {
 type ReasignarReservaRequest = {
     evento_id?:number
     evento_uuid?:string
-    intervals:CupoInterval
+    cupo_interval:CupoInterval
 }
 
 type ConfirmReservaRequest = {

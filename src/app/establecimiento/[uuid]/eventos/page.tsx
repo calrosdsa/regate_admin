@@ -18,19 +18,35 @@ import { useState } from "react"
 import { toast } from "react-toastify"
 import RefreshIcon from '@mui/icons-material/Refresh';
 import AddIcon from '@mui/icons-material/Add';
+import InstalacionesDialog from "@/components/establecimiento/instalacion/dialog/InstalacionesDialog"
+import { fetchInstalaciones } from "@/context/actions/data-actions"
+import CreateReservaDialog from "@/components/reservas/dialog/CreateReservaDialog"
 const Page = ({ params }: { params: { uuid: string } }) =>{
     const dispatch = useAppDispatch()
     const searchParams = useSearchParams();
     const current = new URLSearchParams(Array.from(searchParams.entries()))
+    const instalaciones = useAppSelector(state=>state.data.instalaciones)
     const [loading,setLoading] = useState(false)
     const [query,setQuery] = useState("")
     const [paginationProps,setPaginationProps] = useState<PaginationProps | undefined>(undefined)
     const [eventos,setEventos] = useState<Evento[]>([])
     const [createEventoDialog,setCreateEventoDialog] = useState(false)
     const establecimientos = useAppSelector(state=>state.account.establecimientos)
-
     const [selectedId,setSelectedId] = useState<number | undefined>(undefined)
     const [deleteEventoConfirmationDialog,setDeleteConfirmationDialog] = useState(false)
+    const [instalacion,setInstacion] = useState<Instalacion | null>(null)
+    const [eventoCreated,setEventoCreated] = useState<Evento | null>(null)
+    const [openInstalacionesDialog,setOpenInstalacionesDialog] = useState(false)
+    const [openReservaDialog,setOpenReservaDialog] = useState(false)
+
+    const getInstalaciones = () =>{
+        dispatch(fetchInstalaciones(params.uuid,()=>{
+            dispatch(uiActions.setLoaderDialog(true))
+        },()=>{
+            dispatch(uiActions.setLoaderDialog(false))
+            setOpenInstalacionesDialog(true)
+        }))
+    }
 
     const deleteEvento = async() =>{
         try{
@@ -79,12 +95,22 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
     })
     return(
         <>
+        {openInstalacionesDialog &&
+        <InstalacionesDialog
+        instalaciones={instalaciones}
+        openModal={openInstalacionesDialog}
+        closeModal={()=>setOpenInstalacionesDialog(false)}
+        onAccept={(e)=>{
+            setInstacion(e)
+            setOpenReservaDialog(true)
+        }}
+        />
+        }
         {deleteEventoConfirmationDialog&&
         <ConfirmationDialog
         open={deleteEventoConfirmationDialog}
         close={()=>setDeleteConfirmationDialog(false)}
         performAction={()=>deleteEvento()}
-        
         />
         }
         {createEventoDialog &&
@@ -93,8 +119,29 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         open={createEventoDialog}
         close={()=>setCreateEventoDialog(false)}
         establecimientoId={establecimientos.find(item=>item.uuid == params.uuid)?.id}
+        onCreateEvento={(e)=>{
+            setEventoCreated(e)
+            getInstalaciones()
+        }}
         />
         }
+
+        {(openReservaDialog && eventoCreated != null && instalacion != null) &&
+        <CreateReservaDialog
+        uuid={params.uuid}
+        open={openReservaDialog}
+        close={()=>setOpenReservaDialog(false)}
+        cupos={[]}
+        onComplete={()=>{
+            setOpenInstalacionesDialog(false)
+        }}
+        cancha={instalacion}
+        useAdvanceOptions={true}
+        eventoId={eventoCreated.id}
+        // startTime={moment()}
+        />
+        }
+
         <div className="p-2 overflow-auto h-screen">
 
             <div>

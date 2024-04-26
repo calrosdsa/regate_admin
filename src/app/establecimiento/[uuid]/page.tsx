@@ -215,7 +215,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
       }}
         singleColor={true}
         keyValue2='value2'
-        legendLabels={["Local","App"]}
+        legendLabels={["Local","Eventos"]}
         showLegend={true}
         closeDialog={chartState.closeDialog}
         chartTypeData={ChartTypeData.INGRESOS_RESERVAS}
@@ -226,7 +226,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
           barSize={40}
           keyValue2='value2'
           singleColor={true}
-          legendLabels={["Local","App"]}
+          legendLabels={["Local","Eventos"]}
           showLegend={true}
           CustomToolTip={CustomTooltipAvergeHoursStacked}
           //  angle={310}
@@ -262,7 +262,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
       }}
         singleColor={true}
         keyValue2='value2'
-        legendLabels={["Local","App"]}
+        legendLabels={["Local","Eventos"]}
         showLegend={true}
       closeDialog={chartState.closeDialog}
       chartTypeData={ChartTypeData.HORAS_RESERVAS}
@@ -271,7 +271,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
     data={chartState.response?.reserva_count_hours || []}
     loading={chartState.loading}
     fontSize={12}
-    legendLabels={["Local","App"]}
+    legendLabels={["Local","Eventos"]}
     keyValue2='value2'
     // CustomToolTip={CustomTooltip}
     CustomToolTip={CustomTooltipCountHoursStacked}
@@ -402,7 +402,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
       }}
         keyValue2='value2'
         singleColor={true}
-        legendLabels={["Local","App"]}
+        legendLabels={["Local","Eventos"]}
         showLegend={true}
         closeDialog={chartState.closeDialog}
         chartTypeData={ChartTypeData.INGRESOS_RESERVAS}
@@ -413,7 +413,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
           barSize={40}
           keyValue2='value2'
           singleColor={true}
-          legendLabels={["Local","App"]}
+          legendLabels={["Local","Eventos"]}
           showLegend={true}
           CustomToolTip={CustomTooltipAvergeHoursStacked}
           //  angle={310}

@@ -181,6 +181,7 @@ export const getReservaAverageAmountBase  = (data:FilterChartData) :ThunkAction<
         try{
             dispatch(chartActions.setChartLoading(true))
             const res:NameValueData[] = await GetReservaAverageAmountBase(data)
+            console.log("PIE CHART DATA",res)
             dispatch(chartActions.setData(res))
             dispatch(chartActions.setChartLoading(false))
         }catch(err){

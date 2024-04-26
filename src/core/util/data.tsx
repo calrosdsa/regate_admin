@@ -50,10 +50,10 @@ export const reservaEstados:SelectItem[] = [
         name:"Pendiente",
         value:ReservaEstado.Pendiente.toString()
     },
-    {
-        name:"Cancelado",
-        value:ReservaEstado.Cancel.toString()
-    },
+    // {
+    //     name:"Cancelado",
+    //     value:ReservaEstado.Cancel.toString()
+    // },
 ]
 
 export  const repeatOptions = [

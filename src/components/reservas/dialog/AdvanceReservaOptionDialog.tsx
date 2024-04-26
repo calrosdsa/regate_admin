@@ -1,6 +1,7 @@
 import ButtonSubmit from "@/components/util/button/ButtonSubmit";
 import ButtonWithLoader from "@/components/util/button/ButtonWithLoader";
 import DialogLayout from "@/components/util/dialog/DialogLayout";
+import InputDate from "@/components/util/input/InputDate";
 import TimeSelect from "@/components/util/input/TimeSelect";
 import Loading from "@/components/util/loaders/Loading";
 import Spinner from "@/components/util/loaders/Spinner";
@@ -10,6 +11,7 @@ import { GetInstalaciones } from "@/core/repository/instalacion";
 import { CheckRervasCuposAvailables, CreateReservaCupos, DeleteReservaCupos, GenerateReservaCupos } from "@/core/repository/reservas";
 import { EndOptions, Http, MonthDaySelectOption, Repeat, ReservaType } from "@/core/type/enums";
 import { repeatOptions } from "@/core/util/data";
+import { MenuItem, Select, TextField, Typography } from "@mui/material";
 import moment from "moment";
 import Image from "next/image";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
@@ -17,18 +19,18 @@ import { toast } from "react-toastify";
 
 
 const AdvanceReservaOptionDialog = ({
-    close,open,startDate,startTime,uuid,instalacionId,generateCupos
+    close,open,startTime,uuid,instalacionId,generateCupos
 }:{
         close:(closeParentDialog:boolean)=>void
         open:boolean
         uuid:string
-        startDate?:string
-        startTime?:moment.Moment
+        startTime:moment.Moment
         instalacionId:number
         generateCupos:(e:CupoReserva[])=>void
 }) => {
-
+    const startDate = startTime.format("YYYY-MM-DD")
     const [repeatOption,setRepeatOption] = useState(Repeat.NEVER)
+    const [date,setDate] = useState<moment.Moment>(startTime || moment())
     const [untilOption,setUntilOption] = useState(EndOptions.DATE)
     const [selectedDaysWeeks,setSelectedDaysWeeks] = useState<number[]>([])
     const [instalaciones,setInstalaciones] = useState<InstalacionWithReservaCupos[]>([])
@@ -40,7 +42,7 @@ const AdvanceReservaOptionDialog = ({
     const [end,setEnd] = useState(startTime?.add(30,"minutes").format("HH:mm"))
     const [filterData,setFilterData] = useState({
         repeat_every:"1",
-        until_date:startDate,
+        until_date:startTime,
         until_count:"1",
         day_month:"1",
         day_month_position:"",
@@ -62,7 +64,7 @@ const AdvanceReservaOptionDialog = ({
         }
     }
 
-    const onChange = (e:ChangeEvent<HTMLInputElement>)=>{
+    const onChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>{
         setFilterData({
             ...filterData,
             [e.target.name]:e.target.value
@@ -75,7 +77,7 @@ const AdvanceReservaOptionDialog = ({
         const startM = moment(startDate + " " + start)
         const endM = moment(startDate + " " + end)
         const minutesDifference = ((endM.hour()*60) + endM.minute()) - ((startM.hour()*60) + startM.minute()) 
-        const dayDiff = moment(until_date + " " + start).diff(startM,"days") +1
+        const dayDiff = moment(until_date.format("YYYY-MM-DD") + " " + start).diff(startM,"days") +1
         let count:number;
                 if(untilOption == EndOptions.DATE){
                     count = dayDiff
@@ -220,10 +222,10 @@ const AdvanceReservaOptionDialog = ({
         open={open}
         allowFullScreen={true}
         close={()=>close(true)}
-        title={moment(startTime).format("LL")}
+        title={"Reserva Customizada"}
         className="max-w-lg"
         >
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} className="mt-4">
             <div className="grid sm:grid-cols-2 gap-x-4 gap-y-4 ">
             <TimeSelect
             time={start}
@@ -235,17 +237,44 @@ const AdvanceReservaOptionDialog = ({
                 }
             }}
             label="Inicio"
+            size="medium"
             />
              <TimeSelect
             time={end}
             setTime={(e)=>{setEnd(e)}}
             label="Fin"
+            size="medium"
             />
-       
+
+            <div>
+            <Typography variant="body2">Fecha</Typography>
+            <InputDate
+            value={date}
+            onChange={(e)=>setDate(e)}
+            minDate={moment()}
+            />
+            </div>
+
 
             <div className=" grid">
-                <span className="label">Repetir</span>
-                <select name="repeat" id="repeat" className=" select h-8 text-sm mt-2"
+                <Typography variant="body2">Repetir</Typography>
+                <TextField
+                name="repeat"
+                id="repeat" 
+                size="medium"
+                sx={{mt:1}}
+                variant="outlined"
+                select
+                onChange={(e)=>setRepeatOption(Number(e.target.value))}
+                >
+                {repeatOptions.map((item,idx)=>{
+                        return(
+                            <MenuItem 
+                             key={idx} value={item.repeat}>{item.label}</MenuItem>
+                        )
+                    })}
+                </TextField>
+                {/* <select name="repeat" id="repeat" className=" select h-8 text-sm mt-2"
                 onChange={(e)=>setRepeatOption(Number(e.target.value))}>
                     {repeatOptions.map((item,idx)=>{
                         return(
@@ -253,15 +282,20 @@ const AdvanceReservaOptionDialog = ({
                              key={idx} value={item.repeat}>{item.label}</option>
                         )
                     })}
-                </select> 
+                </select>  */}
             </div>
 
             {repeatOption != Repeat.NEVER &&
             <div className=" grid">
-                <span className="label">Repetir cada</span>
+                <Typography variant="body2">Repetir Cada</Typography>
+
                 <div className="flex space-x-2 items-center">
-                <input type="number" name="repeat_every" className="input h-8 w-20" min={1} 
-                value={repeat_every} onChange={onChange} />
+                <TextField type="number" name="repeat_every" 
+                sx={{maxWidth:100,mt:1}} 
+                InputProps={{ inputProps: { min: 0 } }}
+                value={repeat_every} onChange={(e)=>{                    
+                            onChange(e)
+                    }} />
                 <span className="text-sm">
                     {getCurrentRepatName()}(s)
                     </span>
@@ -273,7 +307,8 @@ const AdvanceReservaOptionDialog = ({
            {(repeatOption != Repeat.NEVER && repeatOption != Repeat.DAYLY) &&
             
                <div className="grid">
-                <span className="label">Repetir en</span>
+                <Typography variant="body2">Repetir en</Typography>
+
                 {repeatOption == Repeat.WEEKLY && 
                 <div className="flex flex-wrap gap-2 p-2" >
                 {days.map((item,index) =>{
@@ -300,9 +335,11 @@ const AdvanceReservaOptionDialog = ({
                 {repeatOption == Repeat.MOTHTLY && 
                 <>
                 <div className="flex items-center space-x-3 p-2">
-                    <span className="text-sm">Día</span>
-                    <input onChange={onChange} value={day_month}
-                    name="day_month" type="number" className="input h-8 w-20" min={1} 
+                <Typography variant="body2">Día</Typography>
+                    <TextField onChange={onChange} value={day_month}
+                     sx={{maxWidth:100,mt:1}} 
+                     InputProps={{ inputProps: { min: 0 } }}
+                    name="day_month" type="number" 
                     /> 
                 </div>
 
@@ -315,47 +352,35 @@ const AdvanceReservaOptionDialog = ({
 
 
             {repeatOption != Repeat.NEVER &&
-            <div className="grid">
-                <span className="label">Termina</span>
+            <div className="grid col-span-2">
+                <Typography variant="body2">Termina</Typography>
 
-                <div className="flex space-x-2 r mt-2">
-                <select name="repeat" id="repeat" className=" select h-8 text-sm"
+                <div className="flex space-x-2">
+                <TextField name="repeat" id="repeat" size="medium"  defaultValue={EndOptions.DATE}
+                select sx={{mt:1}}
                 onChange={(e)=>setUntilOption(Number(e.target.value))}
                 >
-                            <option className="text-sm"
-                             value={EndOptions.DATE}>Hasta</option>
-                             <option className="text-sm"
-                             value={EndOptions.COUNT}>Por conteo</option>
-                </select> 
+                            <MenuItem
+                             value={EndOptions.DATE}>Hasta</MenuItem>
+                             <MenuItem
+                             value={EndOptions.COUNT}>Por conteo</MenuItem>
+                </TextField> 
                 {untilOption == EndOptions.COUNT &&
-                <input type="number" className="input h-8 w-full" min={1} 
+                <TextField type="number" 
+                sx={{maxWidth:100,mt:1}} 
+                InputProps={{ inputProps: { min: 0 } }}
                 name="until_count" value={until_count} onChange={onChange}/>
                 }
                  {untilOption == EndOptions.DATE &&
                  <>
-        <label className="relative flex items-center input h-8 p-0 w-full ">
-            <input
-            type="text"
-            value={moment(until_date).format("DD/MM/YY")}
-            onChange={()=>{}}
-            className=" outline-none px-2 w-full text-xs"/>
-            <label htmlFor={"until-date"} className="h-8 border-l  border-gray-400 px-1
-             grid place-content-center hover:bg-gray-200 w-10 ">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                <path fillRule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.75 2.75 0 0118 6.75v8.5A2.75 2.75 0 0115.25 18H4.75A2.75 2.75 0 012 15.25v-8.5A2.75 2.75 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75z" clipRule="evenodd" />
-            </svg>
-            </label>
-            <input
-            type="date"
-            className="w-0 "
-            name="until_date"
-            value={until_date}
-            onChange={onChange}
-            min={new Date().toISOString().split('T')[0]}
-            id={"until-date"}
-            />
-           
-                </label>
+                 <InputDate
+                 value={until_date}
+                 onChange={(e)=>{setFilterData({
+                    ...filterData,
+                    until_date:e
+                 })}}
+                 minDate={date}
+                 />
                  </>
                 }
                 </div>
