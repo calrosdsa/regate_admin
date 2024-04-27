@@ -33,7 +33,7 @@ const TimeSelect = ({
             id=""
             size={size}
             required 
-            sx={{mt:1,width:"100%"}}
+            sx={{mt:1,width:"100%",minWidth:70}}
             value={time} 
              onChange={(e,v)=>{
                 setTime(e.target.value)}}>

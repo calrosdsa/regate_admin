@@ -85,6 +85,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
     const [instalacion,setInstalacion] = useState<Instalacion | null>(cancha)
     const [openInstalacionesDialog,setOpenInstalacionesDialog] = useState(false)
     const [selectReservaInterval,setSelectecReservaInterval] = useState<ReservaInterval | null>(null)
+    const [totalAmount,setTotalAmount] = useState(0)
     // const [currentInterval,setCurrentInterval] = useState<CupoReserva[]>([])
 
 
@@ -569,6 +570,36 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
             </div>
              
         <form onSubmit={onSubmit} className="mt-2">
+         {reservaIntervals.length > 0 &&
+         <>
+             <span className="title text-[17px]">Informacion de las reservas</span>
+        <div className="pt-2 w-full relative">
+          <Typography fontWeight={500}>Precio total</Typography>
+          <Typography>{reservaIntervals.map((item)=>{
+              const totalPrice = item.interval.map(t=>t.precio).reduce((prev,curr)=>prev + curr)
+              return totalPrice
+            }).reduce((prev,curr)=>prev + curr)}</Typography>
+
+          <Typography variant="body2">Monto total</Typography>
+          <TextField
+          size="small"
+          sx={{mt:1,width:"100%"}}
+          type="number"
+          onChange={(e)=>{
+            const amountV = Number(e.target.value)
+            if(amountV >0) {
+                const n = reservaIntervals.map(item=>{
+                    item.paid = (amountV / reservaIntervals.length).toString()
+                    return item
+                })
+                setReservaIntervals(n)
+            } 
+          }}
+          />
+
+        </div>
+            </>
+        }   
 
             <span className="title text-[17px]">Usuario para quien se realizará la reserva</span>
         <div className="pt-2 w-full relative">

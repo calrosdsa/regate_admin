@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import { ChangeEvent, useState } from "react";
 
 interface Props{
@@ -19,7 +20,7 @@ required= true,onBlur=()=>{}}:Props) =>{
   return(
     <div className={`relative mt-3 ${className}`}>
           {label != undefined &&
-        <label className="label">{label}</label>
+          <Typography variant="body2">{label}</Typography>
       }
       {icon != undefined &&
         icon()
@@ -33,7 +34,7 @@ required= true,onBlur=()=>{}}:Props) =>{
         value={value}
         onBlur={onBlur}
         // minLength={8}
-        className={`input
+        className={`input mt-1
         ${icon != undefined && "pl-7"}`}
         placeholder={placeholder} 
         />

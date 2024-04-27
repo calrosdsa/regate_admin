@@ -4,7 +4,7 @@ import DialogLayout from "@/components/util/dialog/DialogLayout"
 import MultiSelectComponent from "@/components/util/input/MultiSelectComponent"
 import { days } from "@/context/actions/chart-actions"
 import moment from "moment"
-import { Button, Checkbox, DialogActions, FormControlLabel, IconButton, MenuItem, TextField, Tooltip } from "@mui/material"
+import { Button, Checkbox, DialogActions, FormControlLabel, IconButton, MenuItem, TextField, Tooltip, Typography } from "@mui/material"
 import TimeSelect from "@/components/util/input/TimeSelect"
 import CloseIcon from '@mui/icons-material/Close';
 import { LoadingButton } from "@mui/lab"
@@ -162,12 +162,15 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
                           disabledHours={disabledHours}
                           />
                           {(!useDefinedPrice && actionType != ActionType.DELETED) &&
+                          <div>
+                            <Typography variant="body2">Monto</Typography>
                             <TextField
                             required type="number" className="w-20" value={item.precio} name="precio"
-                            label="Monto" size="small"
+                            size="small" sx={{mt:1}}
                             InputLabelProps={{ shrink: true }}
                             onChange={(e)=>onChangeCustomPrecio(e.target.name,e.target.value,index)}
                             />
+                            </div>
                           }
                             <IconButton onClick={()=>{
                               const newItems = customPrecioInstalacion.filter((t,i)=>i != index)

@@ -11,7 +11,7 @@ import moment from "moment"
 import Image from "next/image"
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { toast } from "react-toastify"
-import { Button, IconButton, TextField } from "@mui/material"
+import { Button, IconButton, TextField, Typography } from "@mui/material"
 import CloseIcon from '@mui/icons-material/Close';
 
 const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
@@ -255,12 +255,15 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
                           }}
                           disabledHours={disabledHours}
                           />
+                          <div>
+                          <Typography variant="body2">Monto</Typography>
                             <TextField
                             required type="number" className="w-20" value={item.precio} name="precio"
-                            label="Monto" size="small"
+                            sx={{mt:1}} size="small"
                             InputLabelProps={{ shrink: true }}
                             onChange={(e)=>onChangeCustomPrecio(e.target.name,e.target.value,index)}
                             />
+                          </div>
                             <IconButton onClick={()=>{
                               const newItems = customPrecioInstalacion.filter((t,i)=>i != index)
                               setCustomPrecuoInstalacion(newItems)
