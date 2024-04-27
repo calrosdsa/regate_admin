@@ -580,7 +580,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
               return totalPrice
             }).reduce((prev,curr)=>prev + curr)}</Typography>
 
-          <Typography variant="body2">Monto total</Typography>
+          <Typography variant="body2">Monto pagado</Typography>
           <TextField
           size="small"
           sx={{mt:1,width:"100%"}}

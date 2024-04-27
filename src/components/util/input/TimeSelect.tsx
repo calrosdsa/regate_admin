@@ -11,8 +11,8 @@ const TimeSelect = ({
     className?:string
     label:string
     size?:'small' | 'medium'
-    time: string | undefined
-    setTime:(e:string)=>void
+    time: moment.Moment | undefined
+    setTime:(e:moment.Moment)=>void
     disabledHours?:string[]
     
 })=>{
@@ -28,20 +28,23 @@ const TimeSelect = ({
          <span className="label">{label}</span>
        } */}
             <Typography variant="body2">{label}</Typography>
+            {/* <span>{time?.format()}</span> */}
             <Select
             name=""
             id=""
             size={size}
             required 
             sx={{mt:1,width:"100%",minWidth:70}}
-            value={time} 
-             onChange={(e,v)=>{
-                setTime(e.target.value)}}>
+            value={time?.format("YYYY-MM-DD HH:mm")} 
+            onChange={(e,v)=>{
+                setTime(moment(e.target.value))}}>
                 <MenuItem value=""></MenuItem>
                 {hoursTime.map((item,index)=>{
-                    const t =moment(item.hour).utc().format("HH:mm")
-                    return (
-                        <MenuItem key={index}  value={t} disabled={disabledHours?.includes(t)}>{t}</MenuItem>
+                    // const t = item.hour.utc().format("HH:mm")
+                    return (    
+                        <MenuItem key={index}  value={item.hour.format("YYYY-MM-DD HH:mm")}
+                        //  disabled={disabledHours?.includes(t)}
+                         >{item.hour.format("HH:mm")}</MenuItem>
                     )
                 })}
                 {/* <option value="24:00">

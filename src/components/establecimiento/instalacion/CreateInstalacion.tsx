@@ -239,19 +239,19 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
                         <div key={index} className="flex space-x-2 items-center py-2 min-w-[380px]">
                           <TimeSelect
                           label="Inicio"
-                          time={moment(item.start_time).format("HH:mm")}
+                          time={moment(item.start_time)}
                           setTime={(e)=>{
                             const today = moment().format("yyyy-MM-DD")
-                            onChangeCustomPrecio("start_time",moment(today +" "+e).format("yyyy-MM-DD HH:mm"),index)
+                            onChangeCustomPrecio("start_time",e.format("yyyy-MM-DD HH:mm"),index)
                           }}
                           disabledHours={disabledHours}
                           />
                            <TimeSelect
                           label="Fin"
-                          time={moment(item.end_time).format("HH:mm")}
+                          time={moment(item.end_time)}
                           setTime={(e)=>{
                             const today = moment().format("yyyy-MM-DD")
-                            onChangeCustomPrecio("end_time",moment(today +" "+e).format("yyyy-MM-DD HH:mm"),index)
+                            onChangeCustomPrecio("end_time",e.format("yyyy-MM-DD HH:mm"),index)
                           }}
                           disabledHours={disabledHours}
                           />
