@@ -1,41 +1,53 @@
-import { Box, Card, CardActionArea, Container, Typography } from "@mui/material";
+import { Box, Button, Card, CardActionArea, Container, IconButton, ListItemText, Typography } from "@mui/material";
 import EditComponent from "../util/input/EditComponent";
 import { formatDateTime } from "@/core/util";
 import { useState } from "react";
 import { EditEvento } from "@/core/repository/evento";
 import { toast } from "react-toastify";
 import { successfulMessage, unexpectedError } from "@/context/config";
-
-
+import EditComponentSelect from "../util/input/EditComponentSelect";
+import { eventoEstados } from "@/core/util/data";
+import { getEstadoEvento } from "./EventoListTable";
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import EditIcon from '@mui/icons-material/Edit';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import EditUserEmpresaDialog from "../user/dialog/EditUserEmpresaDialog";
+import { getRouteEstablecimiento } from "@/core/util/routes";
 const EventoDetail = ({
-    evento,uuid,updateEvento
+    eventoDetail,uuid,updateEventoDetail
 }:{
-    evento:Evento
+    eventoDetail:EventoDetail
     uuid:string
-    updateEvento:(e:Evento)=>void
+    updateEventoDetail:(e:EventoDetail)=>void
 }) =>{
+    const {evento,users} = eventoDetail
     const [eventoData,setEventoData] = useState(evento)
+    const [openEditUserDialog,setOpenEditUserDialog] = useState(false)
+    const [userEmpresa,setUserEmpresa] = useState<UserEmpresa | undefined>(undefined)
 
     const editEvento = async(addLoader:()=>void,removeLoader:()=>void,name:string,value:string) =>{
         try{
             addLoader()
             const d  = {
                 ...eventoData,
-                [name]:value
+                [name]:name == "estado" ? Number(value) : value
             }
             const body:EditEventoRequest = {
                 uuid:d.uuid,
                 id:d.id,
                 name:d.name,
+                estado:Number(d.estado),
                 description:d.description,
-                paid:Number(d.paid),
-                should_update_amount:name == "paid",
                 establecimiento_uuid:uuid
             }
-            console.log(body)
+            console.log(d)
             await EditEvento(body)
             setEventoData(d)
-            updateEvento(d)
+            updateEventoDetail({
+                ...eventoDetail,
+                evento:d
+            })
             toast.success(successfulMessage)
             removeLoader()
         }catch(err){
@@ -46,8 +58,26 @@ const EventoDetail = ({
     }
 
     return (
-        <div>
-
+        <>
+            {(openEditUserDialog && userEmpresa != undefined) && 
+                <EditUserEmpresaDialog
+                open={openEditUserDialog}
+                close={()=>setOpenEditUserDialog(false)}
+                userEmpresa={userEmpresa}
+                onUpdate={(name,phone)=>{
+                    const updateUser = {...userEmpresa,name:name,phone_number:phone}
+                    const updateUserList= users.map(item=> {
+                        if(item.id == updateUser.id){
+                            item = updateUser
+                        }
+                        return item
+                    })
+                    updateEventoDetail({
+                        ...eventoDetail,
+                        users:updateUserList
+                    })
+                }}/>
+            }
             <Container maxWidth="md" sx={{mt:3}}>
             <Card sx={{p:{xs:1,sm:2}}}>
                 <Box sx={{width:"100%",}} >
@@ -69,6 +99,13 @@ const EventoDetail = ({
             edit={(addLoader,removeLoader,e)=>{
                 editEvento(addLoader,removeLoader,"description",e)
             }}
+            />
+            <EditComponentSelect
+             label='Estado del Evento'
+             items={eventoEstados}
+             getItems={()=>{}}
+             updateSelect={(value,addLoader,removeLoader)=>editEvento(addLoader,removeLoader,"estado",value)}
+             currentSelected={{value:eventoData.estado.toString(),name:getEstadoEvento(eventoData.estado)}}
             />
             <div className="grid md:grid-cols-2 gap-x-4">
              <EditComponent
@@ -101,9 +138,41 @@ const EventoDetail = ({
             />
             </div>
 
+            <Box sx={{width:"100%",}} >
+                    <Typography variant="h6">
+                    Organizador(es)
+                    </Typography>
+                </Box>
+
+                <List>
+                    {users.map((item,idx)=>{
+                        return(
+                            <ListItem key={idx}
+                            secondaryAction={
+                                <Box sx={{display:"flex"}}  >
+                                <IconButton edge="end" size="small"
+                                onClick={()=>{
+                                    setUserEmpresa(item)
+                                    setOpenEditUserDialog(true)
+                                }}
+                                aria-label="edit" sx={{mr:1}}>
+                                  <EditIcon />
+                                </IconButton>
+                                <IconButton edge="end" aria-label="see" size="small"
+                                 href={getRouteEstablecimiento(uuid,`users/${item.uuid}?id=${item.id}&name=${item.name}&phone=${item.phone_number}`)}>
+                                  <RemoveRedEyeIcon />
+                                </IconButton>
+                                </Box>
+                              }>
+                                <ListItemText primary={item.name} secondary={item.phone_number}/>
+                            </ListItem>
+                    )
+                })}
+                </List>
+
             </Card>
             </Container>
-        </div>
+        </>
     )
 }
 

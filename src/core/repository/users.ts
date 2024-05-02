@@ -1,5 +1,15 @@
 import { LOCAL_URL } from "@/context/config"
 
+export async function GetUserEmpresaDetail(id:number,uuid:string) {
+  const res = await fetch(`${LOCAL_URL}/api/users/empresa/detail?id=${id}&uuid=${uuid}`)
+  if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error('Failed to fetch data')
+    }
+  return res.json()
+}
+
+
 export async function SearchUsersEmpresa(query:string) {
     const res = await fetch(`${LOCAL_URL}/api/users/empresa/search?query=${query}`)
     if (!res.ok) {

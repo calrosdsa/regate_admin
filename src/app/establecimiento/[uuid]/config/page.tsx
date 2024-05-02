@@ -37,6 +37,8 @@ import { days } from '@/context/actions/chart-actions';
 import AttentionScheduleComponent from '@/components/establecimiento/setting/AttentionScheduleComponent';
 import TitleWithInfo from '@/components/util/info-bar/SubtitleWithInfo';
 import Loading from '@/components/util/loaders/Loading';
+import { Button, Typography } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 const Page = ({ params }: { params: { uuid: string } }) =>{
     const establecimientoEstados = [{value:"true",name:"Visible"}
@@ -341,7 +343,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             label='Visibilidad'
             items={establecimientoEstados}
             getItems={()=>{}}
-            updateSelect={(value,addLoader,removeLoader,currentName)=>updateEstablecimiento("visibility",value,addLoader,removeLoader)}
+            updateSelect={(value,addLoader,removeLoader)=>updateEstablecimiento("visibility",value,addLoader,removeLoader)}
             currentSelected={establecimientoEstados.find(item=>item.value == data.establecimiento.visibility.toString())}
             />
             }
@@ -369,13 +371,13 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
 
             <div className=" flex justify-between items-center space-x-5">
                 <div className="grid">
-                    <span className="label">Ubicación</span>
-                    <span className="text-sm">{data?.establecimiento.address}</span>
+                <Typography fontWeight={500} fontSize={16.5}>Ubicación</Typography>
+                    <Typography variant="subtitle1" >{data?.establecimiento.address}</Typography>
                 </div>
-                <span onClick={()=>{
+                <Button color="inherit" onClick={()=>{
                     setOpenMap(true)
                     appendSerachParams("map","1",router,current,pathname)
-                }} className=" underline font-medium cursor-pointer">Edit</span>
+                }}>Editar</Button>
             </div>
                 {(data?.establecimiento.address_photo != undefined && data?.establecimiento.address_photo != "")&&
             <div className=" mt-2 mb-2">
@@ -392,7 +394,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             </div>
 
             <div>
-            <span className="label pb-1">Imagen de portada</span>
+            <Typography fontWeight={500} fontSize={16.5}>Imagen de portada</Typography>
             <UploadImage
             setFile={(e)=>setEstablecimientoPhoto(e)}
             src={data?.establecimiento.photo}
@@ -457,9 +459,9 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             <span className="text-xl py-2 font-medium">Establecimiento Ajustes</span>
 
         {data?.setting_establecimiento != undefined ?
-            <div>
+            <div className='grid gap-y-3'>
 
-            <span className='label'>Horario de atención</span>
+            {/* <span className='label'>Horario de atención</span>
             <AttentionScheduleComponent
             attention_schedue_week={data.attention_schedule_week}
             updateList={(e)=>{
@@ -468,22 +470,20 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                     attention_schedule_week:e
                 })
             }}
-            />
-
-            <span className='label'>Metodo de pago</span>
-            <div className='flex flex-wrap gap-3'>   
+            /> */}
+                <Typography fontWeight={500} fontSize={16.5}>Metodo de pago</Typography>
+            {/* <span className='label'>Metodo de pago</span> */}
+            <div className='flex flex-wrap gap-3 '>   
             {data?.setting_establecimiento.paid_type != null &&
             data?.setting_establecimiento.paid_type.map((item)=>{
                 return(
                     <span key={item} className='card w-min whitespace-nowrap'>{getPaymentMethod(item)}</span>
                 )
             })}
-             <div  onClick={()=> setOpenUpdateMethodDialog(true)} className='card flex space-x-1 items-center bg-primary text-white'>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-  <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-            </svg>
-            <span className='label'>Añadir</span>
-            </div>
+             <Button onClick={()=> setOpenUpdateMethodDialog(true)} 
+             startIcon={<AddIcon/>} size='small'>
+            Añadir
+            </Button>
             </div>
 
             {data?.setting_establecimiento.paid_type != null &&
@@ -521,7 +521,8 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
 
             <div className='grid gap-y-3'>
             <span className="text-xl py-2 font-medium">Comodidades y Reglas del Establecimiento</span>
-            <span className='label'>Comodidades</span>
+            <Typography fontWeight={500} fontSize={16.5}>Comodidades</Typography>
+
            <div className='flex flex-wrap gap-3'>
             {amenitiesEstablecimiento.map((item)=>{ return <Amenity key={item.id} item={item}/>})}
             <AddAndDeleteButtons
@@ -529,7 +530,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             onDeleteButtonClick={()=>setOpenDeleteAmenityDialog(true)}
             />
             </div>
-            <span className='label'>Reglas</span>
+            <Typography fontWeight={500} fontSize={16.5}>Reglas</Typography>
             <div>
             {rulesEstablecimiento.map((item)=>{
                 return(

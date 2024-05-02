@@ -6,7 +6,7 @@ import moment from "moment";
 import {useEffect, useRef, useState} from "react"
 import CancelReservaDialog from "./CancelReservaDialog";
 import { getEstadoReserva } from "../ReservaList";
-import { ReservaEstado } from "@/core/type/enums";
+import { ReservaEstado, ReservaType } from "@/core/type/enums";
 import ConfirmReservaDialog from "./ConfirmReservaDialog";
 import EditReservaDialog from "./EditDialogReserva";
 import { useAppDispatch } from "@/context/reduxHooks";
@@ -14,7 +14,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import { dataActions } from "@/context/slices/dataSlice";
 import Link from "next/link";
 import { getRouteEstablecimiento } from "@/core/util/routes";
-import { IconButton } from "@mui/material";
+import { Button, DialogActions, IconButton, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 const DialogReservaDetail = ({open,close,data,update,uuid,getReservas}:{
     open:boolean
     close:()=>void
@@ -34,6 +35,7 @@ const DialogReservaDetail = ({open,close,data,update,uuid,getReservas}:{
     useEffect(()=>{
         setShowReservaDetail(true)
         setDetail(data)
+        console.log(data)
     },[data])
     return(
         <>
@@ -138,8 +140,32 @@ const DialogReservaDetail = ({open,close,data,update,uuid,getReservas}:{
             </div>
             
         {detail.reserva.nombre != undefined &&
-                <div className=" flex justify-between items-center">
-                        <div className="flex space-x-2 items-center pt-2">
+                <div className="">
+                    <List>
+                    <ListItem 
+                    secondaryAction={
+                        detail.reserva.reserva_type != ReservaType.App &&
+                        <IconButton edge="end" aria-label="see" size="small"
+                                 href={getRouteEstablecimiento(uuid,`users/${detail.reserva.user_uuid}?id=${detail.reserva.user_id}&name=${detail.reserva.nombre}`)}
+                                 target="_blank">
+                            <OpenInNewIcon fontSize="small"/>
+                        </IconButton>
+                    }
+                    >
+                        <ListItemIcon>
+                        <CommonImage
+                            src={detail.reserva.profile_photo || "/images/profile.png"}
+                            h={30}
+                            w={30}
+                            className="rounded-full"
+                            />
+                        </ListItemIcon>
+                        <ListItemText
+                            primary={getFullName(detail.reserva.nombre,detail.reserva.apellido)}
+                            />
+                    </ListItem>
+                    </List>
+                        {/* <div className="flex space-x-2 items-center pt-2">
                             <CommonImage
                             src={detail.reserva.profile_photo || "/images/profile.png"}
                             h={30}
@@ -152,82 +178,88 @@ const DialogReservaDetail = ({open,close,data,update,uuid,getReservas}:{
                         <IconButton onClick={()=>setEditReservaDialog(true)}>
                         <EditIcon/>
                         </IconButton>
-                         }
+                         } */}
 
-                        {/* {detail.reserva.estado != ReservaEstado.Cancel &&
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" 
-                        className="w-7 h-7 noSelect icon-button" onClick={()=>{
-                            setEditReservaDialog(true)
-                            // setShowReservaDetail(false)
-                        }}>
-                            <path d="M13.488 2.513a1.75 1.75 0 0 0-2.475 0L6.75 6.774a2.75 2.75 0 0 0-.596.892l-.848 2.047a.75.75 0 0 0 .98.98l2.047-.848a2.75 2.75 0 0 0 .892-.596l4.261-4.262a1.75 1.75 0 0 0 0-2.474Z" />
-                            <path d="M4.75 3.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h6.5c.69 0 1.25-.56 1.25-1.25V9A.75.75 0 0 1 14 9v2.25A2.75 2.75 0 0 1 11.25 14h-6.5A2.75 2.75 0 0 1 2 11.25v-6.5A2.75 2.75 0 0 1 4.75 2H7a.75.75 0 0 1 0 1.5H4.75Z" />
-                            </svg>
-                        }  */}
+                      
 
                 </div>
                     }
                     
 
-                         <div className=" my-4 ">
-                                <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
-                                        <span className="label">Fecha y hora de la reserva</span>
+                         <div className=" mb-4 ">
+                                <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
+                                        <Typography variant="subtitle2"  className="label">Fecha y hora de la reserva</Typography>
                                         <span className="text-xs  sm:whitespace-nowrap">{moment.utc(detail.reserva.start_date).format("ll")} de {' '}
                                 {moment.utc(detail.reserva.start_date).format("LT")} a {' '}
                                 {moment.utc(detail.reserva.end_date).format("LT")} </span>
                                     </div>
 
-                                    <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
-                                        <span className="label">Estado de la reserva</span>
+                                    <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
+                                        <Typography variant="subtitle2"  className="label">Estado de la reserva</Typography>
                                         <span className="text-xs ">{getEstadoReserva(detail.reserva.estado)}</span>
                                     </div>
 
-                                    <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
-                                        <span className="label">Precio de la reserva</span>
+                                    <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
+                                        <Typography variant="subtitle2"  className="label">Precio de la reserva</Typography>
                                         <span className="text-xs ">{detail.reserva.total_price}</span>
                                     </div>
 
-                                    <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
-                                        <span className="label">Cantidad pagada</span>
+                                    <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
+                                        <Typography variant="subtitle2"  className="label">Cantidad pagada</Typography>
                                         <span className="text-xs ">{detail.reserva.paid}</span>
                                     </div>
 
 
-                                    <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
-                                        <span className="label">Hora en la que se hizo la reserva</span>
+                                    <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
+                                        <Typography variant="subtitle2"  className="label">Hora en la que se hizo la reserva</Typography>
                                         <span className="text-xs ">
                                             {moment.utc(detail.reserva.created_at).format("lll")}
                                         </span>
                                     </div>
 
-                                    {detail.reserva.evento.uuid != "" &&
-                                    <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
-                                        <span className="label">Evento</span>
+                                    {detail.reserva.evento.id != 0 &&
+                                    <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
+                                        <Typography variant="subtitle2"  className="label">Evento</Typography>
                                         <Link  href={getRouteEstablecimiento(uuid,`eventos/${detail.reserva.evento.uuid}?name=${detail.reserva.evento.name}&id=${detail.reserva.evento.id}`)} 
                                         className="text-xs link">
                                             {detail.reserva.evento.name}
                                         </Link>
                                     </div>
                                     }
+                                    {detail.reserva.cancellation_reason != null && 
+                                    <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
+                                        <Typography variant="subtitle2"  className="label">Motivo de cancelación</Typography>
+                                        <span className="text-xs ">{detail.reserva.cancellation_reason}</span>
+                                    </div>
+                                    }
                                     
                                 </div>
 
                                 <>
-                                <div className="flex space-x-2">
+                                    <DialogActions>
+                                        <div className="flex flex-wrap gap-2">
                                     {detail.reserva.estado == ReservaEstado.Pendiente &&
-                                    <div className={`button flex justify-center text-sm `}
+                                    <Button variant="contained"
                                     onClick={()=>setConfirmReservaDialog(true)} >
                                         Completar monto de la reserva
-                                    </div>
+                                    </Button>
                                     }
 
                                     {(detail.reserva.estado == ReservaEstado.Valid || detail.reserva.estado == ReservaEstado.Pendiente) &&
-                                    <div className={`button flex justify-center h-10 `}
+                                    <Button variant="contained"
                                     onClick={()=>setCancelReservaDialog(true)} >
                                     Cancelar reserva
-                                    </div>
+                                    </Button>
                                     }
-                                </div>
+
+                                    {detail.reserva.estado != ReservaEstado.Cancel &&
+                                    <Button variant="contained"
+                                     onClick={()=>setEditReservaDialog(true)}>
+                                    <EditIcon/>
+                                    </Button>
+                                    }
+                                    </div>
+                                    </DialogActions>
       </>
                                 {/* <button onClick={()=>setCancelReservaDialog(true)}
                                 className="button">Cancelar reserva</button> */}

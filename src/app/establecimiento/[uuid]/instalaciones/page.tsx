@@ -54,7 +54,6 @@ const Page = ({ params }: { params: { uuid: string } })=>{
     const [reservaDetail,setReservaDetail] = useState<ReservaDetail | null>(null)
     const [cupos,setCupos] = useState<Cupo[]>([])
     const [cuposReservas,setCuposReservas] = useState<CupoReserva[]>([])
-    const [selectedDay,setSelectedDay] = useState<number | null>(null)
     const [openCreateInstalacion,setOpenCreateInstalacion] = useState(false)
     const [openReservaDetailDialog,setOpenReservaDetailDialog] = useState(false)
     const [selectedCupos,setSelectedCupos] = useState<CupoReserva[]>([])
@@ -120,7 +119,6 @@ const Page = ({ params }: { params: { uuid: string } })=>{
             appendSerachParams("tabIndex","1")
             const res:Cupo[] =  await getInstalacionDayHorario(id,day)
             setCupos(res)
-            setSelectedDay(day)
             setLoadingHorarios(false)
         }catch(err){
             setLoadingHorarios(false)
@@ -195,9 +193,11 @@ const Page = ({ params }: { params: { uuid: string } })=>{
 
     useEffect(()=>{
         if(instalacion != null){
-            if(tabIndex == "2"){
+           switch(currentTab){
+            case TabInstalacion.RESERVAS:
                 getCuposReservaInstalacion(instalacion.id)
-            }
+                break;
+           }
         }
     },[instalacion])
 
@@ -357,7 +357,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                         <div className="px-2">
                             <HorarioWeek
                             instalacionId={instalacion.id}
-                            selectedDay={selectedDay}
+                            currentDay={currentDay}
                             cupos={cupos}
                             getHorarioDay={(day:number)=>getHorariosDay(day,instalacion.id)}
                             loading={loadingHorarios}

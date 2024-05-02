@@ -43,7 +43,7 @@ const SideBarEstablecimiento = () =>{
    useEffect(()=>{
       getCoutConversationMessage()
       if(establecimientos.length == 0){
-         dispatch(getEstablecimientosUser(params.uuid as string))
+         dispatch(getEstablecimientosUser())
       } 
    },[])
 

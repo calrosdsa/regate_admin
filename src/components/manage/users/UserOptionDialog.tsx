@@ -2,17 +2,50 @@ import ConfirmationDialog from "@/components/util/dialog/ConfirmationDialog"
 import DialogLayout from "@/components/util/dialog/DialogLayout"
 import { UserEstado } from "@/core/type/enums"
 import { Menu } from "@headlessui/react"
+import { ListItemText, MenuItem } from "@mui/material"
 import { useState } from 'react'
 
 
-const UserOptionDialog = ({selectUserEstado,user}:{
+const UserOptionDialog = ({selectUserEstado,user,anchorEl,setAnchorEl}:{
     user:User
     selectUserEstado:(estado:UserEstado)=>void
+    anchorEl:null | HTMLElement
+    setAnchorEl:(e:null | HTMLElement)=>void
 }) =>{
    
     return(
         <>
-            <Menu.Item>
+              <MenuItem 
+              disabled={user.estado == UserEstado.ENABLED}
+              onClick={()=>{
+                  setAnchorEl(null)
+                  selectUserEstado(UserEstado.ENABLED)
+                  }} >                  
+              {/* <ListItemIcon>
+              <EditIcon/>
+          </ListItemIcon> */}
+                <ListItemText> Habilitar usuario</ListItemText>
+              </MenuItem>
+
+              <MenuItem 
+              disabled={user.estado == UserEstado.DISABLED}
+              onClick={()=>{
+                  setAnchorEl(null)
+                  selectUserEstado(UserEstado.DISABLED)
+                  }} >                  
+                <ListItemText>Deshabilitar usuario</ListItemText>
+              </MenuItem>
+
+              <MenuItem 
+              disabled={user.estado == UserEstado.DELETED}
+              onClick={()=>{
+                  setAnchorEl(null)
+                  selectUserEstado(UserEstado.DELETED)
+                  }} >                  
+                <ListItemText>Eliminar usuario</ListItemText>
+              </MenuItem>
+
+            {/* <Menu.Item>
                 {({ active }) => (
                   <button
                   disabled={user.estado == UserEstado.ENABLED}
@@ -24,8 +57,8 @@ const UserOptionDialog = ({selectUserEstado,user}:{
                     Habilitar usuario
                   </button>
                 )}
-              </Menu.Item>
-              <Menu.Item>
+              </Menu.Item> */}
+              {/* <Menu.Item>
                 {({ active }) => (
                   <button disabled={user.estado == UserEstado.DISABLED}
                   onClick={()=>selectUserEstado(UserEstado.DISABLED)}
@@ -50,7 +83,7 @@ const UserOptionDialog = ({selectUserEstado,user}:{
                      Eliminar usuario
                   </button>
                 )}
-              </Menu.Item>
+              </Menu.Item> */}
         </>
     )
 }

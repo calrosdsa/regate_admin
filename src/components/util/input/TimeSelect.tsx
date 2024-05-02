@@ -1,25 +1,37 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useEffectOnce from "@/core/util/hooks/useEffectOnce";
 import moment from "moment";
-import { hoursTime } from "@/context/actions/chart-actions";
-import { FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import { MenuItem, TextField, Typography } from "@mui/material";
 
 
 const TimeSelect = ({
-    label,className,time,setTime,disabledHours,size="small"
+    label,className,time,setTime,disabledHours,size="small",isError,date
 }:{
     className?:string
     label:string
     size?:'small' | 'medium'
     time: moment.Moment | undefined
+    date: string
     setTime:(e:moment.Moment)=>void
     disabledHours?:string[]
-    
+    isError:boolean
+
 })=>{
     // const [date,setDate] = useState(datetime.date)
     // const [time,setTime] = useState(startTime)
 
-
+    const generateHours = ():moment.Moment[] =>{
+        let hours: moment.Moment[] = []
+        const t = moment(date + "T00:00:00Z")
+        for(let i = 0;i<48;i++){
+            hours.push(t.clone().add(30*i,"minutes"))
+        }
+        return hours
+    }
+  
+    useEffect(()=>{
+        generateHours()
+    },[])
 
     return(
         <div>
@@ -29,46 +41,30 @@ const TimeSelect = ({
        } */}
             <Typography variant="body2">{label}</Typography>
             {/* <span>{time?.format()}</span> */}
-            <Select
+            <TextField
             name=""
             id=""
+            select
+            error={isError}
             size={size}
             required 
             sx={{mt:1,width:"100%",minWidth:70}}
             value={time?.format("YYYY-MM-DD HH:mm")} 
-            onChange={(e,v)=>{
+            onChange={(e)=>{
                 setTime(moment(e.target.value))}}>
                 <MenuItem value=""></MenuItem>
-                {hoursTime.map((item,index)=>{
-                    // const t = item.hour.utc().format("HH:mm")
+                {generateHours().map((item,index)=>{
+                    const t = item.utc().format("HH:mm")
                     return (    
-                        <MenuItem key={index}  value={item.hour.format("YYYY-MM-DD HH:mm")}
-                        //  disabled={disabledHours?.includes(t)}
-                         >{item.hour.format("HH:mm")}</MenuItem>
+                        <MenuItem key={index}  value={item.utc().format("YYYY-MM-DD HH:mm")}
+                         disabled={disabledHours?.includes(t)}
+                         >{t}</MenuItem>
                     )
                 })}
-                {/* <option value="24:00">
-                    24:00
-                </option> */}
-            </Select>
+                
+            </TextField>
             
-            {/* <TimeSelect
-            setTime={(e)=>{
-                const t = e.utc().format("HH:mm")
-                setTime(t)
-            }}
-            currentTime={time}
-        /> */}
-
-        
-        {/*             
-        <input
-            type="text"
-            value={time}
-            onChange={(e)=>{}}
-        className=" outline-none px-2 w-full"/> */}
-
-         {/* </div> */}
+         
         </div>
     )
 }

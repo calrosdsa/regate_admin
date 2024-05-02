@@ -3,6 +3,7 @@ type CreateEventoRequest = {
     name:string
     description:string
     establecimiento_id:number
+    user_empresa:UserEmpresa
 }
 
 type Evento = {
@@ -15,6 +16,14 @@ type Evento = {
     end_date:string | null
     paid:number | null
     total_price:number | null
+    estado:number
+    total_hours:number | null
+    organizador:string | null
+}
+
+type EventoDetail = {
+    evento:Evento
+    users:UserEmpresa[]
 }
 
 type EditEventoRequest = {
@@ -22,8 +31,7 @@ type EditEventoRequest = {
 	id:number
 	name:string
 	description:string
-	paid:number
-	should_update_amount:boolean
+    estado:number
 	establecimiento_uuid:string
 }
 

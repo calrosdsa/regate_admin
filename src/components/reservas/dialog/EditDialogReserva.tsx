@@ -37,12 +37,12 @@ const EditReservaDialog = ({open,close,reserva,update}:{
                 start_date:reserva.start_date,
                 end_date:reserva.end_date
             }
-            // console.log("DATA",r)
+            console.log("DATA",r)
             await EditReserva(r)
             setLoading(false)
             toast.success(successfulMessage)
             update( Number(paid), Number(estado), 
-            moment(reserva.end_date).add(Number(extra_time),"minutes").utc().format())
+            moment(reserva.end_date).clone().add(Number(extra_time),"minutes").utc().format())
             close()
         }catch(err){
             setLoading(false)
@@ -57,6 +57,7 @@ const EditReservaDialog = ({open,close,reserva,update}:{
         title="Editar reserva"
         >
             <form onSubmit={onSubmit}>
+                
                 <InputWithIcon
                 value={paid}
                 onChange={(e)=>setFormData({

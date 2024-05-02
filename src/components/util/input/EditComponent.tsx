@@ -26,7 +26,7 @@ const EditComponent =  ({label,content,edit,type="text",multiline=false,enableEd
                 </div>
                 {enableEdit &&
                     <Button disabled={disabled} onClick={()=>setShow(!show)} color="inherit">
-                        <span className=" underline font-medium">Editar</span>
+                        Editar
                     </Button>
                 }
             </div>

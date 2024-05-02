@@ -1,4 +1,4 @@
-import { DayMonthPosition, EstadoVisibility, Repeat, ReservaEstado } from "../type/enums";
+import { DayMonthPosition, EstadoVisibility, EventoEstado, Repeat, ReservaEstado } from "../type/enums";
 
 
 export const estadoVisibility:SelectItem[] = [
@@ -54,6 +54,25 @@ export const reservaEstados:SelectItem[] = [
     //     name:"Cancelado",
     //     value:ReservaEstado.Cancel.toString()
     // },
+]
+
+export const eventoEstados:SelectItem[] = [
+    // {
+    //     name:"Todo",
+    //     value:"0"
+    // },
+    {
+        name:"Pagado",
+        value:EventoEstado.Valid.toString()
+    },
+    {
+        name:"Pendiente",
+        value:EventoEstado.Pendiente.toString()
+    },
+    {
+        name:"Cancelado",
+        value:EventoEstado.Cancel.toString()
+    },
 ]
 
 export  const repeatOptions = [

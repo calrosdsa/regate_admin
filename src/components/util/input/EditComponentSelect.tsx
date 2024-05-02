@@ -2,6 +2,7 @@ import { Transition } from "@headlessui/react"
 import ButtonWithLoader from "../button/ButtonWithLoader"
 import { useState } from "react"
 import { Tooltip } from "react-tooltip"
+import { Button, MenuItem, TextField, Typography } from "@mui/material"
 
 
 const EditComponentSelect = ({items,currentSelected,getItems,updateSelect,tooltipId,contentToolTip,
@@ -20,10 +21,10 @@ const EditComponentSelect = ({items,currentSelected,getItems,updateSelect,toolti
     const [value,setValue] = useState(currentSelected?.value || "")
     return(
         <div>
-             <div className=" flex justify-between items-center space-x-5 py-3 divider">
+             <div className=" flex justify-between items-center space-x-5 py-3">
                 <div className="grid">
                     <div className="flex space-x-2 items-center">
-                    <span className="label">{label}</span>
+                    <Typography fontWeight={500} fontSize={16.5}>{label}</Typography>
                         {(contentToolTip != undefined && tooltipId != undefined) &&
                         <>
                     <Tooltip anchorSelect={`#${tooltipId}`} place="top">
@@ -39,14 +40,15 @@ const EditComponentSelect = ({items,currentSelected,getItems,updateSelect,toolti
                     }
                     </div>
                     {currentSelected != undefined &&
-                    <span className="text-sm">{currentSelected.name}</span>
+                    <Typography variant="subtitle1" >{currentSelected.name}</Typography>
+                    // <span className="text-sm">{currentSelected.name}</span>
                 }
                 </div>
                 {enableEdit &&
-                    <span onClick={()=>{
+                    <Button color="inherit" onClick={()=>{
                         getItems()
                         setShow(!show)
-                    }} className=" underline font-medium cursor-pointer">Edit</span>
+                    }} className=" underline font-medium cursor-pointer">Editar</Button>
                 }
             </div>
 
@@ -59,17 +61,19 @@ const EditComponentSelect = ({items,currentSelected,getItems,updateSelect,toolti
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
             >
-          <select disabled={!enableEdit}
+          <TextField disabled={!enableEdit}
+          select
+          size="small"
           name="" id="" className="input"  value={value} onChange={(e)=>{
             setValue(e.target.value)
             }}>
             {items.map((item)=>{
                 return(
-                    <option 
-                    key={item.value} value={item.value}>{item.name}</option>
+                    <MenuItem 
+                    key={item.value} value={item.value}>{item.name}</MenuItem>
                     )
                 })}
-          </select>
+          </TextField>
 
                 {enableEdit &&
             <ButtonWithLoader

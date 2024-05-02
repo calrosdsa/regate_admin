@@ -43,7 +43,7 @@
     @apply border-b-primary text-primary
   }
   .card {
-    @apply p-2 border-[1px] shadow-md rounded-md cursor-pointer hover:opacity-70
+    @apply px-2 py-[6px] border-[1px] shadow-md rounded-md cursor-pointer hover:opacity-70
   }
   .label {
     @apply  text-sm 

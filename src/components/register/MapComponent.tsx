@@ -7,7 +7,7 @@ import { getPlaces } from '@/core/repository/establecimiento';
 import Input from 'postcss/lib/input';
 import InputWithIcon from '../util/input/InputWithIcon';
 import ButtonWithLoader from '../util/button/ButtonWithLoader';
-
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,address,setAddress,update}:{
     open:boolean
@@ -25,7 +25,7 @@ export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,address,setAdd
     const [longitud,setLongitud] = useState(lng.toString())
     const [latitud,setLatitud] = useState(lat.toString())
     const [loading,setLoading] = useState(false)
-    const onChange = (e:ChangeEvent<HTMLInputElement>)=>{
+    const onChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>{
         setAdress(e.target.value)
     }
     const setData = async(lng:any,lat:any)=>{
@@ -134,13 +134,7 @@ export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,address,setAdd
               onChange={onChange}
               name='address'
               label='Adress'
-              icon={()=>{
-                return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                className="w-5 h-5 absolute bottom-[10px] left-[5px] text-gray-400">
-                <path fillRule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
-              </svg>
-                )
-            }}
+              Icon={LocationOnIcon}
             />
             <ButtonWithLoader
               title='Guardar Ubicación'

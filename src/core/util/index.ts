@@ -14,7 +14,7 @@ export function classNames(...classes:any) {
   }
   export const formatDateTime = (date:string | null | undefined):string=>{
     if(date == null || date == undefined) return "-"
-    return  moment(date).format('lll');  
+    return  moment(date).utc().format('lll');  
   }
 
   export const  getRandomInt = () => {
@@ -40,7 +40,7 @@ export function classNames(...classes:any) {
     link.click()
   }
 
-  export const formatBlankorNull = (v:number | string | null | undefined) :string=>{
+  export const formatBlankorNull = (v:number | string | null | undefined,ext:string="") :string=>{
     if(v == "" || v == null || v == undefined) return "-"
-    return v.toString()
+    return v + ext
   }

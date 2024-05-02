@@ -6,6 +6,7 @@ import { login } from "@/context/actions/account-actions";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import Image from "next/image";
 import { ChangeEvent, FormEvent, useState } from "react";
+import MailIcon from '@mui/icons-material/Mail';
 import Link from "next/link";
 const Login = () =>{
     const dispatch = useAppDispatch()
@@ -16,7 +17,7 @@ const Login = () =>{
       password:""
     })
     const {email,password} = formData
-    const onChange = (e:ChangeEvent<HTMLInputElement>)=>{
+    const onChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>{
     //   dispatch(authActions.setErrrorLogin(undefined))
       setFormData({ ...formData, [e.target.name]: e.target.value });
     }
@@ -47,21 +48,17 @@ const Login = () =>{
    label='Email'
    value={email}
    name='email'
+   size="small"
 //    error={authtate.errorLogin?.email}
    onChange={onChange}
-   icon={()=>{
-    return(
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
-      className="w-5 h-5 absolute bottom-[10px] left-[5px] text-gray-400">
-   <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
- </svg>
-  )}}
+   Icon={MailIcon}
   />
   
    <InputPassword
    label='Contraseña'
    password={password}
    name='password'
+   size="small"
    onChange={onChange}
 //    error={authtate.errorLogin?.password}
    className=''

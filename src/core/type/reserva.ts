@@ -12,11 +12,13 @@ interface Reserva  {
     end_date:string
     created_at:string
     user_id:number
+    user_uuid:string | null
     evento:Evento
     reserva_type:number
     nombre?:string,
     apellido?:string
     profile_photo?:string
+    cancellation_reason:string | null
 }
 
 type ReservaReporteRequest = {

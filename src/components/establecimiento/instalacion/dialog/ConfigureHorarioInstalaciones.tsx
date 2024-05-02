@@ -37,6 +37,8 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
       precio:"",
       start_time:"",
       end_time:"",
+      isError:false,
+      times:[]
     } 
     setCustomPrecuoInstalacion(e=>[...e,n])
     checkIsHoursIsDisabled()
@@ -46,33 +48,59 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
   const onChangeCustomPrecio = (name:string,value:string,index:number)=>{
     const updateList = customPrecioInstalacion.map((item,idx)=>{
         if(index == idx){
-            item[name as keyof CustomPrecioInstalacion] = value
+          switch(name){
+            case "precio":
+              item["precio"] = value
+              break;
+            case "start_time":
+              item["start_time"] = value
+              break;
+            case "end_time":
+              item["end_time"] = value
+              break;
+          }
         }
         return item
     })
     setCustomPrecuoInstalacion(updateList)
   }
-  const getTimeRangeFromCustomPrecioInstalacion = ():string[] => {
-    let timeRange:string[] = []
-    customPrecioInstalacion.map((item)=>{
+  const getTimeRangeFromCustomPrecioInstalacion = ():CustomPrecioInstalacion[] => {
+    return customPrecioInstalacion.map((item)=>{
+      let timeRange:string[] = []
       const startM = moment(item.start_time)
-      const endM = moment(item.end_time)
-      const minutesDifference = ((endM.hour()*60) + moment(endM).minute()) - ((startM.hour()*60) + moment(startM).minute()) 
+      const endM = moment(item.end_time).subtract(30,"minutes")
+      let endHours =0
+      if(startM.date() != endM.date()){
+        endHours = 24 * 60
+      }else{
+        endHours = endM.hour() * 60
+      }
+      const minutesDifference = ((endHours) + endM.minute()) - ((startM.hour()*60) + startM.minute()) 
       for(let t =0;t < (minutesDifference/30)+1;t++){
         timeRange.push(moment(startM).add(30*t,"minutes").format("HH:mm:ss"))
     }
+      item.times = timeRange
+      return item
   })
-  return timeRange
   }
 
   const checkIsHoursIsDisabled = () =>{
     try{
     let timeRange:string[] = []
-    console.log(customPrecioInstalacion)
       customPrecioInstalacion.map((item)=>{
         const startM = moment(item.start_time)
-      const endM = moment(item.end_time)
-      const minutesDifference = ((endM.hour()*60) + moment(endM).minute()) - ((startM.hour()*60) + moment(startM).minute()) 
+      const endM = moment(item.end_time).subtract(30,"minutes")
+      if(endM.isBefore(startM)){
+        item.isError = true 
+      }
+      let endHours =0
+      if(startM.date() != endM.date()){
+        endHours = 24 * 60
+      }else{
+          endHours = endM.hour() * 60
+      }
+
+      const minutesDifference = ((endHours) + moment(endM).minute()) - ((startM.hour()*60) + moment(startM).minute()) 
       console.log("MINUTES DIFFERENCE",minutesDifference)
       for(let t =0;t < ((minutesDifference)/30)+1;t++){
         const r = moment(startM).add(30*t,"minutes").format("HH:mm")
@@ -91,8 +119,11 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
       try{
           e.preventDefault()
           setLoading(true)
-          let times = getTimeRangeFromCustomPrecioInstalacion()
-
+          let customPrecionInstalacionWithTimeRange = getTimeRangeFromCustomPrecioInstalacion()
+          let times:string[] = []
+          customPrecionInstalacionWithTimeRange.map(item=>
+            times = times.concat(item.times)
+          )
           if(daysWeek.length == 0) return
           let daysWeekDefault:number[] = []
           if(daysWeek[0] == -1){
@@ -106,13 +137,12 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
             times:times,
             available:available,
             action_type:actionType,
-            custom_precio_instalacion:customPrecioInstalacion,
+            custom_precio_instalacion:customPrecionInstalacionWithTimeRange,
             establecimiento_uuid:uuid,
             use_defined_price:useDefinedPrice,
           }
           await EditInstalacionesHorario(d)
           toast.success(successfulMessage)
-          console.log(d)
           setLoading(false)
       }catch(err){
         toast.error(unexpectedError)
@@ -120,11 +150,6 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
         console.log(e)
       }
     }
-
-    // useEffect(()=>{
-    //   console.log("customprecio instalacion")
-    //   checkIsHoursIsDisabled()
-    // },[customPrecioInstalacion])
 
 
     return(
@@ -146,6 +171,7 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
                           <TimeSelect
                           label="Inicio"
                           time={moment(item.start_time)}
+                          isError={item.isError}
                           setTime={(e)=>{
                             console.log("Fin",e.format())
                             onChangeCustomPrecio("start_time",e.format("yyyy-MM-DD HH:mm"),index)
@@ -155,6 +181,7 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
                            <TimeSelect
                           label="Fin"
                           time={moment(item.end_time)}
+                          isError={item.isError}
                           setTime={(e)=>{
                             console.log("Fin",e.format())
                             onChangeCustomPrecio("end_time",e.format("yyyy-MM-DD HH:mm"),index)

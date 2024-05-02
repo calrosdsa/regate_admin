@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getRouteEstablecimiento } from "@/core/util/routes";
-import { GetUserLocalReservas } from "@/core/repository/users";
+import { GetUserEmpresaDetail, GetUserLocalReservas } from "@/core/repository/users";
 import useEffectOnce from "@/core/util/hooks/useEffectOnce";
 import UserReservaTable from "@/components/user/UserReservaTable";
 import { useAppDispatch } from "@/context/reduxHooks";
@@ -30,15 +30,23 @@ const Page = ({ params }: { params: { uuidUser: string,uuid:string } }) => {
     const [userEmpresa,setUserEmpresa] = useState<UserEmpresa>({
         id:Number(id),
         name:name || "", 
-        phone_number:phone || ""
+        phone_number:phone || "",
+        uuid:params.uuidUser,
     })
     const [openEditUserDialog,setOpenUserDialog] = useState(false)
     const [loading,setLoading] = useState(false)
     const [reservas,setReservas] = useState<Reserva[]>([])
     const [reservaDetail,setReservaDetail] = useState<ReservaDetail | null>(null)
     const [openReservaDetailDialog,setOpenReservaDetailDialog] = useState(false)
+   
 
-
+    const getUserEmpresaDetail = async() => {
+        try{
+            const res:UserEmpresa = await GetUserEmpresaDetail(Number(id),params.uuidUser )
+            setUserEmpresa(res)
+        }catch(err){
+        }
+    }
 
     const getReservaDetail = async(id:number) => {
         try{
@@ -74,6 +82,7 @@ const Page = ({ params }: { params: { uuidUser: string,uuid:string } }) => {
     },[reservaDetail])
 
     useEffectOnce(()=>{
+        getUserEmpresaDetail()
         getUserReservas()
     })
 
@@ -101,9 +110,9 @@ const Page = ({ params }: { params: { uuidUser: string,uuid:string } }) => {
                 <MenuLayout
                  anchorEl={anchorEl}
                  setAnchorEl={(e)=>setAnchorEl(e)}>
-                <>
 
                 <MenuItem onClick={()=>{
+                    setAnchorEl(null)
                     setOpenUserDialog(true)
                     }} >                  
                     <ListItemIcon>
@@ -121,7 +130,6 @@ const Page = ({ params }: { params: { uuidUser: string,uuid:string } }) => {
                 <ListItemText>Eliminar usuario</ListItemText>
                 </MenuItem>     */}
 
-                </>
             </MenuLayout>
 
                 </div>

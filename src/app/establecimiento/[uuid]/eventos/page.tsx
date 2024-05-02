@@ -118,7 +118,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         addEvento={(e)=>setEventos([e,...eventos])}
         open={createEventoDialog}
         close={()=>setCreateEventoDialog(false)}
-        establecimientoId={establecimientos.find(item=>item.uuid == params.uuid)?.id}
+        establecimientoId={establecimientos.find(item=>item.uuid == params.uuid)?.id || 0}
         onCreateEvento={(e)=>{
             setEventoCreated(e)
             getInstalaciones()

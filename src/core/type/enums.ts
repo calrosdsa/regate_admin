@@ -48,11 +48,17 @@ export const enum ReservaEstado {
     Cancel
 }
 
+export const enum EventoEstado {
+    Pendiente =1,
+    Valid = 2,
+    Cancel =3
+}
+
 export const enum ReservaType {
-    App,
-    Local,
-    Sala,
-    Evento,
+    App = 1,
+    Local =2,
+    Evento =3,
+    Sala =4,
 }
 
 export enum TypeOfChart {

@@ -23,12 +23,13 @@ import SeeMore from "@/components/util/button/SeeMore";
 import { Http, HttpStatusCode } from "@/core/type/enums";
 import { Tab } from "@headlessui/react";
 import { GetInstalaciones } from "@/core/repository/instalacion";
-import { Autocomplete, Button, IconButton, TextField, Typography } from "@mui/material";
+import { Button, IconButton, TextField, Typography } from "@mui/material";
 import { fetchInstalaciones } from "@/context/actions/data-actions";
 import { LoadingButton } from "@mui/lab";
 import InstalacionesDialog from "@/components/establecimiento/instalacion/dialog/InstalacionesDialog";
 import CloseIcon from '@mui/icons-material/Close';
 import ListInstalaciones from "@/components/establecimiento/instalacion/ListInstalaciones";
+import AutocompleteMui from "@/components/util/input/AutocompleteMui";
 
 type CreateReservaRequest = {
     intervals:CupoInterval[]
@@ -54,7 +55,8 @@ type ReservaInterval = {
 //     ReservaForm
 // }
 
-const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvanceOptions,eventoId,startTime}:{
+const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvanceOptions,
+    eventoId,startTime,usersEvento}:{
     open:boolean
     close:()=>void
     uuid:string
@@ -64,6 +66,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
     useAdvanceOptions:boolean
     eventoId:number | null
     startTime?:moment.Moment
+    usersEvento?:UserEmpresa[]
 }) => {
     const dispatch = useAppDispatch()
     const instalaciones = useAppSelector(state=>state.data.instalaciones)
@@ -135,7 +138,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
       }, [debouncedValue])
   
       
-    const onChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const onChange = (e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({...formData,
             [e.target.name]:e.target.value
         })
@@ -435,18 +438,8 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
       open={open} close={close} title="Crear reserva">
         <div className='rounded-lg bg-white overflow-auto max-w-xl'>
            
-            <div className="py-2">
-                    {/* <div className="flex space-x-3 items-center">
-                    <CommonImage
-                        src={instalacion?.portada}
-                        h={140}
-                        w={140}
-                        className="rounded-full h-12 w-12 object-cover"
-                        />
-                        <span className="font-semibold">{instalacion?.name}</span>
-                    </div> */}
-                    <div className="h-2"/>
-
+            <div className="">
+                    
                     <Button size="small"
                     color="inherit" variant="outlined" onClick={()=>setOpenAdvanceOptions(!openAdvanceOptions)}>
                     Seleccionar hora
@@ -570,7 +563,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
             </div>
              
         <form onSubmit={onSubmit} className="mt-2">
-         {reservaIntervals.length > 0 &&
+         {reservaIntervals.length > 1 &&
          <>
              <span className="title text-[17px]">Informacion de las reservas</span>
         <div className="pt-2 w-full relative">
@@ -580,7 +573,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
               return totalPrice
             }).reduce((prev,curr)=>prev + curr)}</Typography>
 
-          <Typography variant="body2">Monto pagado</Typography>
+          <Typography variant="body2">Total pagado</Typography>
           <TextField
           size="small"
           sx={{mt:1,width:"100%"}}
@@ -589,7 +582,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
             const amountV = Number(e.target.value)
             if(amountV >0) {
                 const n = reservaIntervals.map(item=>{
-                    item.paid = (amountV / reservaIntervals.length).toString()
+                    item.paid = Math.round(amountV / reservaIntervals.length).toString()
                     return item
                 })
                 setReservaIntervals(n)
@@ -604,68 +597,30 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
             <span className="title text-[17px]">Usuario para quien se realizará la reserva</span>
         <div className="pt-2 w-full relative">
 
-        {/* <Autocomplete
-        disablePortal
-        id="combo-box-demo"
-        options={top100Films}
-        onChange={(e)=>console.log(e.target)}
-        // getOptionLabel={(option) => console.log(option)}
-        // sx={{ width: 300 }}
-        renderInput={(params) => 
-        <TextField
-        onChange={(e)=>console.log(e.target.value)}
-         {...params} label="Nombre" />
-    }
-        /> */}
+        <AutocompleteMui
+        label="Nombre"
+        options={usersEvento != undefined ? [...usersEvento,...users] : users} 
+        loading={loadingUsers}
+        setQuery={(e)=>{
+            setSearchQuery(e)
+            setUserEmpresa(null)
+        }}
+        query={searchQuery}
+        onSelect={(e)=>{
+            console.log(e)
+            if(e == null) return
+            setFormData({
+                ...formData,
+                name:e.name,
+                phone_number:e.phone_number  
+            })
+            setSearchQuery(e.name)
+            setUserEmpresa(e)
+            setUsers([])
+        }}
+        value={userEmpresa}
+        />
 
-    <span className="label">Nombre</span>
-            <SearchInput
-            value={searchQuery}
-            onChange={(e)=>{
-                setSearchQuery(e.target.value)
-                setUserEmpresa(null)
-            }}
-            clear={()=>{
-                // setSearchQuery("")
-                setUsers([])
-            }}
-            className="h-10 rounded-lg items-center"
-            onEnter={()=>onSearch()}
-            placeholder=""
-            required={true}
-            />
-            {(loadingUsers || users.length > 0) &&
-                <div className="pt-2 overflow-auto absolute bg-white z-10 w-full  shadow-lg">
-                <div className="flex justify-end px-3">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
-                className="w-7 h-7 icon-button noSelect p-1" onClick={()=>setUsers([])}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
-                </svg>
-                </div>
-                <Loading
-                loading={loadingUsers}
-                className="flex justify-center mt-2"
-                />
-
-                {users.map((item,idx)=>{
-                    return(
-                        <div key={idx} className="record"
-                        onClick={()=>{
-                            setFormData({
-                                ...formData,
-                                name:item.name,
-                                phone_number:item.phone_number  
-                            })
-                            setSearchQuery(item.name)
-                            setUserEmpresa(item)
-                            setUsers([])
-                        }}>
-                            <span className="text-xs">{item.name}</span>
-                        </div>
-                    )
-                })}
-                </div>
-            }
 
             </div>
            <InputWithIcon

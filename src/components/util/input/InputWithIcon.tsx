@@ -1,45 +1,60 @@
-import { Typography } from "@mui/material";
+import { InputAdornment, SvgIconTypeMap, TextField, Typography } from "@mui/material";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { ChangeEvent, useState } from "react";
 
 interface Props{
-    onChange:(e:ChangeEvent<HTMLInputElement>)=>void
+    onChange:(e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>void
     value:string
     label?:string
     name:string
     required?:boolean
     type?:string
     error?:string 
+    size?:'small' | 'medium'
+    multiline?:boolean
     placeholder?:string
     onBlur?:()=>void
-    icon?:()=>JSX.Element
+    Icon?: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string;}
+    maxLenght?:number
     className?:string,
 }
-const InputWithIcon = ({onChange,value,label,name,type="text",error,icon,className,placeholder="",
-required= true,onBlur=()=>{}}:Props) =>{
+const InputWithIcon = ({onChange,value,label,name,type="text",error,Icon,className,placeholder="",
+required= true,onBlur=()=>{},size = "small",multiline=false,maxLenght= 255}:Props) =>{
 
   return(
-    <div className={`relative mt-3 ${className}`}>
+    <div className={`mt-1 ${className}`}>
           {label != undefined &&
-          <Typography variant="body2">{label}</Typography>
+          <Typography variant="body2" sx={{mb:1}}>{label}</Typography>
       }
-      {icon != undefined &&
-        icon()
-        }
-    <input 
+      
+    <TextField 
         name={name}  
         type={type}
+        size={size}
         required={required}
-        onChange={onChange} 
-        autoFocus
+        onChange={(e)=>{
+          onChange(e)
+        }} 
+        fullWidth
         value={value}
         onBlur={onBlur}
+        multiline={multiline}
+        inputProps={{ maxLength: maxLenght }}
+        sx={{backgroundColor:"white"}}
+        InputProps={{
+          startAdornment: (
+              Icon != undefined &&
+            <InputAdornment position="start">
+              <Icon/>
+              </InputAdornment>
+            
+          ),
+        }}
         // minLength={8}
-        className={`input mt-1
-        ${icon != undefined && "pl-7"}`}
+        
         placeholder={placeholder} 
+        helperText={error}
         />
-          <span className="text-red-500 pl-2 absolute left-0 -bottom-4 font-medium text-xs truncate"
-         >{error}</span>
       </div>  
     )
 }

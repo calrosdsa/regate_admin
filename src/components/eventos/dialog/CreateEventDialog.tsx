@@ -1,5 +1,6 @@
 import ButtonSubmit from "@/components/util/button/ButtonSubmit";
 import DialogLayout from "@/components/util/dialog/DialogLayout";
+import AutocompleteMui from "@/components/util/input/AutocompleteMui";
 import InputWithIcon from "@/components/util/input/InputWithIcon";
 import SearchInput from "@/components/util/input/SearchInput";
 import TextAreaWithMaxLength from "@/components/util/input/TextAreaWithMaxLength";
@@ -8,6 +9,7 @@ import { successfulMessage, unexpectedError } from "@/context/config";
 import { CreateEvento } from "@/core/repository/evento";
 import { SearchUsersEmpresa } from "@/core/repository/users";
 import useDebounce from "@/core/util/hooks/useDebounce";
+import { Typography } from "@mui/material";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -16,21 +18,25 @@ const CreateEventDialog = ({open,close,establecimientoId,addEvento,onCreateEvent
     open:boolean,
     close:()=>void
     addEvento:(e:Evento)=>void
-    establecimientoId?:number 
+    establecimientoId:number 
     onCreateEvento:(e:Evento)=>void
 }) =>{
     const [loading,setLoading] = useState(false)
-    const [formData,setFormData] = useState({
-        name_evento:"",
+    const [formData,setFormData] = useState<CreateEventoRequest>({
+        name:"",
         description:"",
-        phone_number:"",
-        name:""
+        establecimiento_id:establecimientoId,
+        user_empresa:{
+            id:0,
+            name:"",
+            phone_number:""
+        }
     })
     const [searchQuery,setSearchQuery] = useState("")
     const debouncedValue = useDebounce(searchQuery,500)
     const [confirmUserRepeat,setConfirmUserRepeat] = useState(false)
     const [loadingUsers,setLoadingUsers] = useState(false)
-    const [userEmpresa,setUserEmpresa] = useState<null | UserEmpresa>(null)
+   
     const [users,setUsers] = useState<UserEmpresa[]>([])
     const { name } = formData
 
@@ -45,7 +51,13 @@ const CreateEventDialog = ({open,close,establecimientoId,addEvento,onCreateEvent
             setLoadingUsers(true)
             const q = searchQuery.trim().replaceAll(/\s+/g,":* & ") + ":*"
             const res = await SearchUsersEmpresa(q)
-            setFormData({...formData,name:searchQuery})
+            setFormData({
+                ...formData,
+                user_empresa:{
+                    ...formData.user_empresa,
+                    name:searchQuery
+                }
+            })
             setUsers(res)
             setLoadingUsers(false)
         }catch(err){
@@ -57,24 +69,22 @@ const CreateEventDialog = ({open,close,establecimientoId,addEvento,onCreateEvent
     
     
     
-    const onChange = (e:ChangeEvent<HTMLInputElement>) => {
+    const onChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({...formData,[e.target.name]:e.target.value})
     }
-    const onChangeTextArea = (e:ChangeEvent<HTMLTextAreaElement>) => {
-        setFormData({...formData,[e.target.name]:e.target.value})
-    }
-
+  
     const onSumbit = async(e:FormEvent<HTMLFormElement>) => {
         try{
             e.preventDefault()
             if(establecimientoId == undefined) return 
             setLoading(true)
-            const request:CreateEventoRequest = {
-                name:formData.name_evento,
-                description:formData.description,
-                establecimiento_id:establecimientoId
-            } 
-            const res:Evento = await CreateEvento(request)
+            // const request:CreateEventoRequest = {
+            //     name:formData.name,
+            //     description:formData.description,
+            //     establecimiento_id:establecimientoId,
+            //     user_empresa:userEmpresa
+            // } 
+            const res:Evento = await CreateEvento(formData)
             addEvento(res)
             setLoading(false)
             toast.success(successfulMessage)
@@ -101,84 +111,63 @@ const CreateEventDialog = ({open,close,establecimientoId,addEvento,onCreateEvent
             >
               <form onSubmit={onSumbit} className="">
                 <InputWithIcon
-            type="text"
-            label="Nombre"
-            value={formData.name_evento}
-            name="name_evento"
-            // error={error}
-            onChange={onChange}
-            /> 
-             <TextAreaWithMaxLength
-            label="Descripción"
-            value={formData.description}
-            name="description"
-            onChangeValue={onChangeTextArea}
-            max={255}
-            /> 
+                type="text"
+                label="Nombre"
+                value={formData.name}
+                name="name"
+                // error={error}
+                onChange={onChange}
+                /> 
+                <InputWithIcon
+                label="Descripción"
+                value={formData.description}
+                name="description"
+                onChange={onChange}
+                multiline={true}
+                /> 
 
-        {/* <div className="pt-3">
+        <div className="pt-3">
         <span className="title text-[17px]">Usuario para quien se realizará la reserva</span>
         <div className="pt-1 w-full relative">
-        <span className="label">Nombre</span>
-        <SearchInput
-        value={searchQuery}
-        onChange={(e)=>{
-            setSearchQuery(e.target.value)
-            setUserEmpresa(null)
+        <AutocompleteMui
+        label="Nombre"
+        options={users}
+        loading={loadingUsers}
+        setQuery={(e)=>{
+            setSearchQuery(e)
+            
         }}
-        clear={()=>{
-            setSearchQuery("")
+        query={searchQuery}
+        onSelect={(e)=>{
+            console.log(e)
+            if(e == null) return
+            setFormData({
+                ...formData,
+                user_empresa:e
+            })
+            setSearchQuery(e.name)
             setUsers([])
         }}
-        className="h-10 rounded-lg items-center"
-        onEnter={()=>onSearch()}
-        placeholder=""
-        required={true}
+        value={formData.user_empresa}
         />
-        {(loadingUsers || users.length > 0) &&
-            <div className="pt-2 overflow-auto absolute bg-white z-10 w-full h-36 shadow-lg">
-            <div className="flex justify-end px-3">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
-            className="w-7 h-7 icon-button noSelect p-1" onClick={()=>setUsers([])}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
-            </svg>
-            </div>
-            <Loading
-            loading={loadingUsers}
-            className="flex justify-center mt-2"
-            />
-
-            {users.map((item,idx)=>{
-                return(
-                    <div key={idx} className="record"
-                    onClick={()=>{
-                        setFormData({
-                            ...formData,
-                            name:item.name,
-                            phone_number:item.phone_number  
-                        })
-                        setSearchQuery(item.name)
-                        setUserEmpresa(item)
-                        setUsers([])
-                    }}>
-                        <span className="text-xs">{item.name}</span>
-                    </div>
-                )
-            })}
-            </div>
-        }
+        
 
         </div>
         <InputWithIcon
         type="tel"
         label="Número de teléfono."
-        value={formData.phone_number}
+        value={formData.user_empresa.phone_number}
         name="phone_number"
-        className="mb-5"
         // error={error}
-        onChange={onChange}
+        onChange={(e)=>setFormData({
+            ...formData,
+            user_empresa:{
+                ...formData.user_empresa,
+                phone_number:e.target.value
+            }
+        })}
         />    
-        </div>     */}
+        </div>    
 
             <ButtonSubmit
             title="Submit"

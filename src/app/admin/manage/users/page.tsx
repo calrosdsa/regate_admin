@@ -14,11 +14,13 @@ import { GetEstablecimientosUserByUuid } from "@/core/repository/account"
 import { DeleteEstablecimientoUser, GetUsersEmpresa, UpdateUserEstado } from "@/core/repository/manage"
 import { UserEstado, UserRol } from "@/core/type/enums"
 import { appendSerachParams } from "@/core/util/routes"
+import { Button } from "@mui/material"
 import moment from "moment"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
-
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import RefreshIcon from '@mui/icons-material/Refresh';
 export default function Page(){
     const dispatch = useAppDispatch()
     const searchParams = useSearchParams();
@@ -37,6 +39,7 @@ export default function Page(){
     const [currentUserEstado,setCurrentUserEstado] = useState<UserEstado | null>(null)
     const [userEstablecimiento,setUserEstablecimiento] = useState<EstablecimientoUser | null>(null)
     const [openAddEstablecimientoDialog,setOpenAddEstablecimientoDialog] = useState(false)
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const selectUserEstado = (estado:UserEstado) => {
         setCurrentUserEstado(estado)
@@ -211,21 +214,15 @@ export default function Page(){
                 <span className="headline">Usuarios</span>
 
                 <div className="flex items-center space-x-2">
-                <button className="button w-min " disabled={loadingUsers} onClick={()=>getUsersEmpresa()}>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                <path fillRule="evenodd" d="M4.755 10.059a7.5 7.5 0 0112.548-3.364l1.903 1.903h-3.183a.75.75 0 100 1.5h4.992a.75.75 0 00.75-.75V4.356a.75.75 0 00-1.5 0v3.18l-1.9-1.9A9 9 0 003.306 9.67a.75.75 0 101.45.388zm15.408 3.352a.75.75 0 00-.919.53 7.5 7.5 0 01-12.548 3.364l-1.902-1.903h3.183a.75.75 0 000-1.5H2.984a.75.75 0 00-.75.75v4.992a.75.75 0 001.5 0v-3.18l1.9 1.9a9 9 0 0015.059-4.035.75.75 0 00-.53-.918z" clipRule="evenodd" />
-                                </svg>
-                </button>
+                <Button  disabled={loadingUsers} onClick={()=>getUsersEmpresa()} variant="contained">
+                     <RefreshIcon/>  
+                </Button>
 
               
-                <button onClick={()=>setOpenDialogCreateUser(true)}
-                className="button flex space-x-2">
-                    <span>Agregar usuario</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} 
-                    stroke="currentColor" className="w-5 h-5">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
-            </svg>
-                    </button>
+                <Button onClick={()=>setOpenDialogCreateUser(true)}
+                endIcon={<PersonAddIcon/>} variant="contained">
+                    Agregar usuario               
+                    </Button>
             
                 </div>
                 </div>
@@ -287,13 +284,17 @@ export default function Page(){
                         </div>
 
 
-                    <MenuLayout>
+                    <MenuLayout 
+                    anchorEl={anchorEl}
+                    setAnchorEl={(e)=>setAnchorEl(e)}>
                     {/* {(openUserOptionDialog && currentUser != null) && */}
                     <UserOptionDialog
                     // open={openUserOptionDialog}
                     // close={()=>setOpenUserOptionDialog(false)}
                     selectUserEstado={(e)=>selectUserEstado(e)}
                     user={currentUser}
+                    anchorEl={anchorEl}
+                    setAnchorEl={(e)=>setAnchorEl(e)}
                     />
                     {/* } */}
                     </MenuLayout>

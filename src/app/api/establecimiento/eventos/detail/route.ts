@@ -8,6 +8,7 @@ import { cookies } from 'next/headers'; // Import cookies
 export async function GET(request:Request) {
   const { searchParams } = new URL(request.url)
   const eventoUuid = searchParams.get('uuid')
+  const eventoId = searchParams.get('id')
   const nextCookies = cookies(); // Get cookies object
   const token = nextCookies.get('access_token')?.value
   if(token == undefined){
@@ -15,7 +16,7 @@ export async function GET(request:Request) {
  }
  try{
      // const body = await request.json()
-     const res = await fetch(`${API_URL}/evento/detail/${eventoUuid}/`,{
+     const res = await fetch(`${API_URL}/evento/detail/${eventoUuid}/${eventoId}/`,{
         headers:{
             'Authorization':`Bearer ${token}`
         }

@@ -1,16 +1,15 @@
-import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material"
+import { FormControl, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material"
 import { ReactNode } from "react"
 
 
-const SelectComponent = ({items,value,onChange,required=true,name,label,containerClassName="mt-3",
-defaultItem}:{
+const SelectComponent = ({items,value,onChange,required=true,name,label,containerClassName="mt-3",size="small"}:{
     items:SelectItem[]
     value:string
     onChange:(e:SelectChangeEvent<string>, child: ReactNode)=>void
     required?:boolean
     name:string
-    defaultItem?:SelectItem
     label?:string
+    size?:'small' | 'medium'
     containerClassName?:string
 }) =>{
     
@@ -18,23 +17,20 @@ defaultItem}:{
         
         <div className={`${containerClassName}`}>
             {label != undefined &&
-        <label className="label">{label}</label>
+        <Typography variant="body2" sx={{mb:1}}>{label}</Typography>
             }
         <FormControl sx={{minWidth:"100%"}}>
         <Select
-            size="small"
+            size={size}
             onChange={onChange}
             value={value}
-            sx={{height:35}}
+            sx={size == "small" ? {height: 35}:{}}
             name={name}
             required={required}
-            // displayEmpty
-            defaultValue={defaultItem?.value}
             >
-                <MenuItem value={defaultItem?.value}>{defaultItem?.name}</MenuItem>
                   {items.map((item,idx)=>{
                 return(
-                    <MenuItem  key={idx} value={item.value}>{item.name}</MenuItem>
+                    <MenuItem  key={idx} value={item.value}>{item.name.slice(0,50)}</MenuItem>
                     // <option key={item.dayWeek} value={item.dayWeek}>{item.dayName}</option>
                     // <div key={item.dayWeek} onClick={()=>getHorarioDay(item.dayWeek)}
                     // className={`${selectedDay == item.dayWeek ? 'button':'button-inv'}`}>

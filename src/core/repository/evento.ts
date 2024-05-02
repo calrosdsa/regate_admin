@@ -29,8 +29,8 @@ export async function CreateEvento(data:CreateEventoRequest) {
 
 
   
-  export async function GetEventoDetail(eventoUuid:string) {
-    const res = await fetch(`${LOCAL_URL}/api/establecimiento/eventos/detail?uuid=${eventoUuid}`)
+  export async function GetEventoDetail(eventoUuid:string,eventoId:number) {
+    const res = await fetch(`${LOCAL_URL}/api/establecimiento/eventos/detail?uuid=${eventoUuid}&id=${eventoId}`)
     if (!res.ok) {
       // This will activate the closest `error.js` Error Boundary
       throw new Error('Failed to fetch data')

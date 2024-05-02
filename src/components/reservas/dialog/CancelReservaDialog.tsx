@@ -34,7 +34,7 @@ const CancelReservaDialog = ({open,close,update,reserva,uuid,instalacion,getRese
     const [selectedInstalacion,setSelectedInstalacion] = useState(instalacion)
     const [openInstalacionesDialog,setOpenInstalacionesDialog] = useState(false)
 
-    const onChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const onChange = (e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setValue(e.target.value)
     }
 
@@ -138,7 +138,8 @@ const CancelReservaDialog = ({open,close,update,reserva,uuid,instalacion,getRese
         <ConfirmationDialog
         open={openConfirmationDialog}
         close={()=>setOpenConfirmationDialog(false)}
-        description={ reserva.reserva_type == ReservaType.App?`Al cancelar la reserva, se notificará al usuario que su reserva ha sido cancelada y se le reembolsará el monto gastado.`:""}
+        description={ reserva.reserva_type == ReservaType.App?`Al cancelar la reserva, se notificará al usuario que su reserva ha sido cancelada y se le reembolsará el monto gastado.`
+        :"Al continuar con la acción requerida, se cancelará la reserva."}
         performAction={()=>{
             setOpenConfirmationDialog(false)
             cancelarReserva()
@@ -156,10 +157,12 @@ const CancelReservaDialog = ({open,close,update,reserva,uuid,instalacion,getRese
                 onChange={(e)=>onChange(e)}
                 value={value}
                 name="content"
+                multiline={true}
+                maxLenght={255}
                 label="Motivo de cancelación de la reserva."
                 />
 
-                {reserva.evento.id!= 0 &&
+               
                 <>
                 {date != null &&
                     <div className="mt-3">
@@ -194,7 +197,7 @@ const CancelReservaDialog = ({open,close,update,reserva,uuid,instalacion,getRese
                     }
 
                 </>
-                }
+                
 
                 <div className=" flex justify-end">
                 <ButtonWithLoader

@@ -13,6 +13,7 @@ import { EndOptions, Http, MonthDaySelectOption, Repeat, ReservaType } from "@/c
 import { repeatOptions } from "@/core/util/data";
 import { MenuItem, Select, TextField, Typography } from "@mui/material";
 import moment from "moment";
+import { Truculenta } from "next/font/google";
 import Image from "next/image";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -37,9 +38,11 @@ const AdvanceReservaOptionDialog = ({
     const [loadingInstalaciones,setLoadingInstalaciones] = useState<number[]>([])
     const [selectedInstalaciones,setSelectedInstalaciones] = useState<number[]>([])
     const [loadingSaveButton,setLoadingSaveButton] = useState(false)
-    const [start,setStart] = useState(startTime?.format("HH:mm"))
+    // const [start,setStart] = useState(startTime?.format("HH:mm"))
+    const [start,setStart] = useState(startTime)
+    const [timeSelectError,setTimeSelectError] = useState(false)
     const [times,setTimes] = useState<string[]>([])
-    const [end,setEnd] = useState(startTime?.add(30,"minutes").format("HH:mm"))
+    const [end,setEnd] = useState(startTime.clone().add(30,"minutes"))
     const [filterData,setFilterData] = useState({
         repeat_every:"1",
         until_date:startTime,
@@ -74,10 +77,21 @@ const AdvanceReservaOptionDialog = ({
   
 
     const validateToContinue = async() =>{
-        const startM = moment(startDate + " " + start)
-        const endM = moment(startDate + " " + end)
-        const minutesDifference = ((endM.hour()*60) + endM.minute()) - ((startM.hour()*60) + startM.minute()) 
-        const dayDiff = moment(until_date.format("YYYY-MM-DD") + " " + start).diff(startM,"days") +1
+        // const startM = moment(startDate + " " + start.format("HH:mm"))
+        const startM = start
+        const endM = end
+        let endHours =0
+        if(endM.isBefore(startM)){
+            setTimeSelectError(true)
+            console.log("display error")
+        }
+        if(startM.date() != endM.date()){
+            endHours = 24 * 60
+        }else{
+            endHours = endM.hour() * 60
+        }
+        const minutesDifference = (endHours + endM.minute()) - ((startM.hour()*60) + startM.minute()) 
+        const dayDiff = moment(until_date.format("YYYY-MM-DD") + " " + start.format("HH:mm")).diff(startM,"days") +1
         let count:number;
                 if(untilOption == EndOptions.DATE){
                     count = dayDiff
@@ -212,6 +226,7 @@ const AdvanceReservaOptionDialog = ({
         }
     }
     useEffect(()=>{
+        console.log(times)
         generateReservaCupos()
     },[times])
 
@@ -229,19 +244,26 @@ const AdvanceReservaOptionDialog = ({
             <div className="grid sm:grid-cols-2 gap-x-4 gap-y-4 ">
             <TimeSelect
             time={start}
+            isError={timeSelectError}
             setTime={(e)=>{
                 setStart(e)
-                console.log(end)
+                console.log(e.format())
                 if(end == undefined){
                     // setEnd(e)
                 }
             }}
+            date={startTime.format("YYYY-MM-DD")}
             label="Inicio"
             size="medium"
             />
              <TimeSelect
             time={end}
-            setTime={(e)=>{setEnd(e)}}
+            isError={timeSelectError}
+            setTime={(e)=>{
+                console.log(e.format())
+                setEnd(e)
+            }}
+            date={startTime.format("YYYY-MM-DD")}
             label="Fin"
             size="medium"
             />
@@ -274,15 +296,7 @@ const AdvanceReservaOptionDialog = ({
                         )
                     })}
                 </TextField>
-                {/* <select name="repeat" id="repeat" className=" select h-8 text-sm mt-2"
-                onChange={(e)=>setRepeatOption(Number(e.target.value))}>
-                    {repeatOptions.map((item,idx)=>{
-                        return(
-                            <option className="text-sm"
-                             key={idx} value={item.repeat}>{item.label}</option>
-                        )
-                    })}
-                </select>  */}
+              
             </div>
 
             {repeatOption != Repeat.NEVER &&

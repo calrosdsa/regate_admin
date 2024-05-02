@@ -8,11 +8,12 @@ import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 
 
 const InputDate = ({
-    value,onChange,minDate
+    value,onChange,minDate,maxDate
 }:{
     onChange:(e:moment.Moment)=>void
     value:moment.Moment
     minDate?:moment.Moment
+    maxDate?:moment.Moment
 })=>{
     
     return(
@@ -26,6 +27,7 @@ const InputDate = ({
         <DemoItem>
           <DatePicker 
           minDate={minDate}
+          maxDate={maxDate}
            value={value} onChange={(e)=>{
             if(e == null) return
             onChange(e)

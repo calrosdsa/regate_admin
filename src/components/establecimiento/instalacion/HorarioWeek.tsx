@@ -16,9 +16,10 @@ import ConfirmationDialog from "@/components/util/dialog/ConfirmationDialog";
 import { TooltipContainer } from "@/components/util/tooltips/Tooltip";
 import { time } from "console";
 import EditIcon from '@mui/icons-material/Edit';
-import { Button, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Button, ListItemText, MenuItem, Select, TextField, Typography } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 const dayWeek:Horario[] = [
     {dayName:"Domingo",dayWeek:DayWeek.Domingo},
@@ -29,25 +30,22 @@ const dayWeek:Horario[] = [
     {dayName:"Viernes",dayWeek:DayWeek.Viernes},
     {dayName:"Sabado",dayWeek:DayWeek.Sabado}
 ]
-const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,instalaciones,updateHorarios}:{
+const HorarioWeek = ({instalacionId,cupos,currentDay,getHorarioDay,loading,instalaciones,updateHorarios}:{
     instalacionId:number
-    selectedDay:number | null
+    currentDay:number
     cupos:Cupo[]
     loading:boolean
     instalaciones:Instalacion[]
     getHorarioDay:(day:number)=>void
     updateHorarios:(res:Cupo[]) =>void
 }) =>{
-    // const [cupos,setCupos] = useState<Cupo[]>([])
-    // const [selectedDay,setSelectedDay] = useState<number | null>(null)
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const dispatch = useAppDispatch()
     const [editHorarioDialog,setEditHorarioDialog] = useState(false)
     const [openCopyInstalacion,setOpenCopyInstalacion] = useState(false)
-    // const [cupo,setCupo] = useState<Cupo | undefined>(undefined)
     const [resetDayConfirmationDialog,setResetDayConfirmationDialog] = useState(false)
     const [selectedCupos,setSelectedCupos] = useState<Cupo[]>([])
     const [confirmDeleteDialog,setConfirmDeleteDialog] = useState(false)
-
     const appendCupo = (cupo:Cupo) =>{
         if(selectedCupos.map(item=>item.time).includes(cupo.time)){
             const updateList = selectedCupos.filter(item=>item.time != cupo.time)
@@ -63,11 +61,6 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
             dispatch(uiActions.setLoaderDialog(true))
             const ids = selectedCupos.filter(item=>item.id != undefined).map(item=>item.id)
             await DeleteCupos(ids)
-            // const updatedSelectedCupos = selectedCupos.map(item=>{
-            //     item.id = undefined
-            //     item.price = undefined
-            //     return item
-            // })
             const updateCurrentCupos = cupos.map(item=>{
                 if(ids.includes(item.id)){
                     const current = selectedCupos.find(t => t.id == item.id)
@@ -96,7 +89,7 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
         dispatch(uiActions.setLoaderDialog(true))
         const request = {
             id:instalacionId,
-            day_week:selectedDay
+            day_week:currentDay
         }
         const res = await ResetInstalacionHorarioDay(JSON.stringify(request))
         const updateCupos = cupos.map(item=>{
@@ -114,24 +107,11 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
     }
    }
 
-//    const mergeC = () =>{
-//     cupos.map((item,idx)=>{
-//         if(idx % 2 == 0){
-//         }
-//         return
-//     })
-//    }
-
     useEffect(()=>{
-        if(selectedDay != undefined){
-            getHorarioDay(selectedDay)
+        if(currentDay != undefined){
+            getHorarioDay(currentDay)
         }
     },[instalacionId])
-
-    // useEffect(()=>{
-    //     mergeC()
-    // },[cupos])
-
 
     return(
         <>
@@ -179,7 +159,7 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
         open={openCopyInstalacion}
         close={()=>setOpenCopyInstalacion(false)}
         instalacionId={instalacionId}
-        dayWeek={selectedDay}
+        dayWeek={currentDay}
         updateHorarios={(e)=>{
             const idsCupos = e.map(item=>item.time.slice(11,19))
             const updateCupos = cupos.map(item=>{
@@ -200,19 +180,28 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
 
         <div className=" w-full z-10 sticky top-14 bg-white flex  space-x-3   justify-between items-center ">
             <div className="flex space-x-2  items-center overflow-x-auto  pb-2 ">    
+            <Button 
+                variant="contained"      
+                sx={{height:35}}
+                disabled={loading}
+                onClick={()=>{
+                 getHorarioDay(currentDay)
+                }}
+                >
+                <RefreshIcon/>
+                </Button>
             <Select
             size="small"
             sx={{height:35}}
-            value={selectedDay?.toString()} 
+            value={currentDay} 
             onChange={(e)=>{
                 getHorarioDay(Number(e.target.value))
                 setSelectedCupos([])
                 }}
-            defaultValue={selectedDay?.toString()}
             >
                  {dayWeek.map((item)=>{
                 return(
-                    <MenuItem  key={item.dayWeek} value={item.dayWeek.toString()}>{item.dayName}</MenuItem>
+                    <MenuItem  key={item.dayWeek} value={item.dayWeek}>{item.dayName}</MenuItem>
                     // <option key={item.dayWeek} value={item.dayWeek}>{item.dayName}</option>
                     // <div key={item.dayWeek} onClick={()=>getHorarioDay(item.dayWeek)}
                     // className={`${selectedDay == item.dayWeek ? 'button':'button-inv'}`}>
@@ -269,43 +258,26 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
 
             <div className="flex space-x-2 items-center pb-5">
 
-             {/* <div className="rounded-full noSelect hover:bg-gray-200 cursor-pointer flex justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-8 h-8 p-[6px]">
-            <path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z" />
-            <path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z" />
-            </svg>
-             </div> */}
-
-            <MenuLayout>
+            <MenuLayout
+             anchorEl={anchorEl}
+             setAnchorEl={(e)=>setAnchorEl(e)}>
                 <>
-                
-            <Menu.Item>
-                {({ active }) => (
-                    <button
-                      disabled={instalaciones.length < 1}
-                    onClick={()=>setOpenCopyInstalacion(true)}
-                    className={`${active ? 'bg-primary text-white' : 'text-gray-900'} 
-                    group whitespace-nowrap flex w-full items-center rounded-md px-2 py-2 text-sm
-                    ${instalaciones.length < 1 && "disabled"}
-                    `}
-                    >
-                    Copiar horario
-                  </button>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                    <button
-                    //   disabled={user.estado == UserEstado.ENABLED}
-                    onClick={()=>setResetDayConfirmationDialog(true)}
-                    className={`${active ? 'bg-primary text-white' : 'text-gray-900'} 
-                    group whitespace-nowrap flex w-full items-center rounded-md px-2 py-2 text-sm
-                    `}
-                    >
-                    Restablecer horario del día.
-                  </button>
-                )}
-              </Menu.Item>
+                <MenuItem onClick={()=>{
+                    setAnchorEl(null)
+                  setOpenCopyInstalacion(true)
+                    }} >                  
+                    {/* <ListItemIcon>
+                    <EditIcon/>
+                </ListItemIcon> */}
+                <ListItemText>Copiar horario</ListItemText>
+                    </MenuItem>
+                    <MenuItem  onClick={()=>{
+                    setAnchorEl(null)
+                 setResetDayConfirmationDialog(true)
+                    }} >                  
+                <ListItemText>Restablecer horario del día</ListItemText>
+                    </MenuItem>
+            
                 </>
             </MenuLayout>
 
@@ -358,34 +330,6 @@ const HorarioWeek = ({instalacionId,cupos,selectedDay,getHorarioDay,loading,inst
                 )
             })}
         </div>
-
-
-        {/* <div className="grid grid-cols-2 xl:grid-cols-4 gap-2">
-            {cupos.map((item,index)=>{
-                return(
-                    <div key={index} onClick={()=>openEditDialog(item)}
-                    className={`card grid grid-cols-2 ${item.available || ' opacity-50'} relative`}>
-                        {item.available &&
-                        <span className="absolute top-0 right-1 text-green-500 font-medium text-xs">Habilitado</span>
-                    }
-                    {item.available == false && item.price != undefined &&
-                        <span className="absolute top-0 right-1 text-red-500 font-medium text-xs">Deshabilitado</span>
-                    }
-                        <div className="grid">
-                        <span className="label">Hora</span>
-                        <span className="text-sm">{item.time.slice(0,5)}</span>
-                        </div>
-
-                        <div className="grid">
-                        <span className="label">Precio</span>
-                        <span className="text-sm">{item.price == undefined ? "Sin definir" : item.price}</span>
-                        </div>
-                    </div>
-                )
-            })}
-        </div> */}
-
-
         </div>
         </>
     )

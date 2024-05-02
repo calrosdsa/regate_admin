@@ -2,6 +2,9 @@ import Image from "next/image";
 import { ChangeEvent, useEffect, useState } from "react";
 import CommonImage from "../image/CommonImage";
 import ButtonWithLoader from "../button/ButtonWithLoader";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Button } from "@mui/material";
+import { styled } from '@mui/material/styles';
 
 const UploadImage = ({setFile,src,save,id="file",width="w-44",height="h-44",clearAfterUpload=false}:{
     setFile:(e:File)=>void
@@ -14,6 +17,17 @@ const UploadImage = ({setFile,src,save,id="file",width="w-44",height="h-44",clea
 }) => {
     const [loading,setLoading] = useState(false)
     const [source,setSource] = useState("/images/img-default.png")
+    const VisuallyHiddenInput = styled('input')({
+        clip: 'rect(0 0 0 0)',
+        clipPath: 'inset(50%)',
+        height: 1,
+        overflow: 'hidden',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        whiteSpace: 'nowrap',
+        width: 1,
+      });
     const uploadImage = (e:ChangeEvent<HTMLInputElement>)=>{     
         if(e.target.files != null){
             console.log(e.target.files)
@@ -45,12 +59,23 @@ const UploadImage = ({setFile,src,save,id="file",width="w-44",height="h-44",clea
             />
             </div>
             <div className="flex justify-between w-full mt-2 sm:w-max sm:grid sm:gap-y-2">
-            <label htmlFor={id} className="button h-10">
-                Upload Image
+            <Button
+            component="label"
+            role={undefined}
+            variant="contained"
+            tabIndex={-1}
+            startIcon={<CloudUploadIcon />}
+            >
+            Subir imagen
+            <VisuallyHiddenInput type="file"  id={id} onChange={uploadImage}
+            accept="image/*"/>
+            </Button>
+            {/* <label htmlFor={id} className="button h-10">
+            Subir imagen
             <input id={id} className="hidden" type="file" onChange={uploadImage}
             accept="image/*"
             />
-            </label>
+            </label> */}
             {save != undefined &&
             <ButtonWithLoader
             onClick={async()=>{

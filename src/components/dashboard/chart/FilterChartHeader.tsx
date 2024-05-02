@@ -3,9 +3,12 @@ import { ChartTypeData, FilterChartData } from "@/core/type/chart";
 import { TypeOfChart, TypeOfDate } from "@/core/type/enums";
 import { groupByToMap } from "@/core/util";
 import { Disclosure, Menu, Popover, Transition } from "@headlessui/react";
+import { Button, IconButton, List, ListItem, ListItemButton, ListItemText, Typography } from "@mui/material";
 import moment from "moment";
 import { Fragment, useEffect, useState } from "react";
 import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
+import CloseIcon from '@mui/icons-material/Close';
+import ExpandMore from "@/components/util/button/ExpandMore";
 
 
 type InstalacionGroup = {
@@ -93,7 +96,7 @@ chartTypeData}:{
             <div className='flex w-full justify-between items-center  p-2 space-x-6 pb-3'>
               {/* {JSON.stringify(filterData)} */}
                   <div className='flex space-x-4'>
-                      <span className='title whitespace-nowrap border-gray-400 pr-2'>{label}</span>
+                      <Typography variant="h6">{label}</Typography>
                       {/* <span className=' whitespace-nowrap'>Casos Count</span> */}
                   </div>
 
@@ -111,16 +114,19 @@ chartTypeData}:{
                   <path fillRule="evenodd" d="M15.312 11.424a5.5 5.5 0 01-9.201 2.466l-.312-.311h2.433a.75.75 0 000-1.5H3.989a.75.75 0 00-.75.75v4.242a.75.75 0 001.5 0v-2.43l.31.31a7 7 0 0011.712-3.138.75.75 0 00-1.449-.39zm1.23-3.723a.75.75 0 00.219-.53V2.929a.75.75 0 00-1.5 0V5.36l-.31-.31A7 7 0 003.239 8.188a.75.75 0 101.448.389A5.5 5.5 0 0113.89 6.11l.311.31h-2.432a.75.75 0 000 1.5h4.243a.75.75 0 00.53-.219z" clipRule="evenodd" />
                   </svg>
                 </div>   
-                    <button onClick={()=>{reset()}}  className='smallButton h-8 grid place-content-center '>
+                    <button onClick={()=>{reset()}}  className='smallButton h-9 grid place-content-center '>
                         <span>Reset</span>
                     </button>
-                  <button onClick={()=>{
+                    <IconButton size="small" onClick={close}>
+                      <CloseIcon/>
+                    </IconButton>
+                  {/* <button onClick={()=>{
                     close()
                     //   closeModal()
                     //   router.replace( {}, undefined, {})
                       }} className='smallButton h-8 grid place-content-center'>
-                      <span>Back to dashboard</span>
-                  </button>
+                      <span>Volver</span>
+                  </button> */}
                   </div>
               </div>
                 
@@ -239,7 +245,7 @@ chartTypeData}:{
         {({close})=>(
           <>
           <div className=" border-b-[1px] border-gray-400">
-          <span className="text-sm font-semibold px-2 pt-2">Chart Type</span>
+          <Typography variant="subtitle1" fontWeight={500} sx={{p:1}}>Chart Type</Typography>
         <div onClick={()=>setTypeChart(TypeOfChart.line)} className="flex space-x-2 w-24 items-center p-2 cursor-default hover:bg-gray-200">
           <input onChange={(e)=>setTypeChart(Number(e.target.value))} type="radio" name="chart" value={TypeOfChart.line}
             checked={typeChart == TypeOfChart.line}/>
@@ -271,12 +277,10 @@ chartTypeData}:{
 
         </div>
         <div className="px-2 py-1">
-        <button onClick={()=>{
+        <Button onClick={()=>{
             applyTypeChart(typeChart)
           close()
-        }}
-         className="smallButton w-min bg-blue-500  hover:bg-blue-600 p-1 px-2
-         text-white">Apply</button>     
+        }} variant="contained" size="small">Guardar</Button>     
                     </div>
          </>
              )}
@@ -300,42 +304,38 @@ chartTypeData}:{
 
               
 
-              <Popover.Panel className="absolute z-20 bg-white shadow-md w-48 p-2 ">
+              <Popover.Panel className="absolute z-20 bg-white shadow-md w-64 ">
               {({ close }) => (
                 <>
-              <Disclosure defaultOpen  as="div" className="">
-                            <Disclosure.Button className="py-2 w-44">
-                              <div className="flex justify-between w-full items-center ">
-                                <span className=" subtitle text-base">Instalaciones</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" 
-                                className="w-5 h-5">
-                                  <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
-                                </svg>
-                              </div>
-                            </Disclosure.Button>
-                            <Transition
-                              enter="transition duration-100 ease-out"
-                              enterFrom="transform scale-95 opacity-0"
-                              enterTo="transform scale-100 opacity-100"
-                              leave="transition duration-75 ease-out"
-                              leaveFrom="transform scale-100 opacity-100"
-                              leaveTo="transform scale-95 opacity-0"
-                            >
-                            <Disclosure.Panel className="text-gray-500">
+                <ExpandMore title="Instalaciones">            
                               {loadingInstalaciones ?
                               <Loading
                               loading={loadingInstalaciones}
                               className="py-2"
                               />
                              : 
-                             instalacionGroups.map((item,idx)=>{
-                              return(
-                                <div className="pl-2" key={idx}>
-                                  <span className="subtitle">{item.category}</span>
-                                  <div className="grid">
+                             <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+
+                             {instalacionGroups.map((item,idx)=>{
+                               return(
+                                <>
+                                <ListItem
+                                key={idx}
+                                disablePadding
+                              >
+                                  <ListItemText  primary={item.category}
+                                   primaryTypographyProps={{
+                                    fontSize: 15,
+                                    fontWeight: 'medium',
+                                    lineHeight: '20px',
+                                    mb: '2px',
+                                  }} />
+                              </ListItem>
+
+                                 
                                     {item.instalaciones.map((instalacion,idx2)=>{
                                       return(
-                                        <div onClick={()=>{
+                                        <ListItemButton onClick={()=>{
                                           if(selectedIds.includes(instalacion.id)){
                                             const n = selectedIds.filter(t=>t != instalacion.id)
                                             setSelectedIds(n)
@@ -343,18 +343,22 @@ chartTypeData}:{
                                             setSelectedIds(e=>[...e,instalacion.id])
                                           }
                                         }}
-                                        key={idx2} className={`p-1  cursor-pointer hover:bg-gray-200
-                                        ${selectedIds.includes(instalacion.id) ?
-                                        "text-primary "
-                                        :""}`}>
-                                          {instalacion.name}
-                                        </div>
+                                        selected={selectedIds.includes(instalacion.id)}
+                                        key={idx2}>
+                                          <ListItemText  primary={instalacion.name.slice(0,39)}
+                                           primaryTypographyProps={{
+                                            fontSize: 14,
+                                            lineHeight: '15px',
+                                          }}/>
+                                        </ListItemButton>
                                       )
                                     })}
-                                  </div>
-                                </div>
+                                
+                                </>
                               )
-                             })
+                            })
+                          }
+                          </List>
 
                             // groupByToMap<Instalacion,string>(instalaciones,(item)=>item.category_name).map((items,key)=>{
                             //   return(
@@ -363,13 +367,14 @@ chartTypeData}:{
                             //     </div>
                             //   )
                             // })
-
+                            
                              }
-                            </Disclosure.Panel>
-                            </Transition>
-                          </Disclosure>
-                            <div className="flex justify-end w-full border-t border-gray-400 pt-1">
-                            <button 
+                </ExpandMore>
+                           
+                            <div className="flex justify-end w-full border-t border-gray-400 p-2">
+                            <Button 
+                            variant="contained"
+                            size="small"
                             onClick={()=>{
                               const data:FilterChartData = {
                                 ...filterData,
@@ -378,7 +383,7 @@ chartTypeData}:{
                               getNewData(data)
                               close()
                             }}
-                            className="button">Save</button>
+                            >Aplicar filtros</Button>
                             </div>
                             </>
                             )}

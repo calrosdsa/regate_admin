@@ -2,7 +2,7 @@ import { AnyAction, ThunkAction } from "@reduxjs/toolkit"
 import { RootState } from "../store"
 import axios from "axios"
 import { uiActions } from "../slices/uiSlice"
-import { UserEstado, UserRol } from "@/core/type/enums"
+import { HttpStatusCode, UserEstado, UserRol } from "@/core/type/enums"
 import { GetEstablecimientos } from "@/core/repository/establecimiento"
 import { accountActions } from "../slices/accountSlice"
 import { adminRoutes, rootEstablecimiento } from "@/core/util/routes"
@@ -96,25 +96,18 @@ export const getEstablecimientosUser = () :ThunkAction<void,RootState,undefined,
         try{
             dispatch(uiActions.setInnerLoading(true))
             const res = await fetch(`${LOCAL_URL}/api/account/establecimientos`)
-            if (!res.ok) {
-                // This will activate the closest `error.js` Error Boundary
-                throw new Error('Failed to fetch data')
-              }
-            const data:EstablecimientoUser[] = await res.json()
-            console.log(res.status,"STATUS",data)
-            if(res.status == 401){
-                redirectToLogin()
+            switch(res.status){
+                case HttpStatusCode.Unauthorized:
+                    redirectToLogin()
+                    break;
+                    case HttpStatusCode.Ok:
+                        const data:EstablecimientoUser[] = await res.json()
+                        console.log("DATA ESTABLECIOMIENTOS",data)
+                        dispatch(accountActions.setEstablecimientos(data))
+                    break;    
             }
-            dispatch(accountActions.setEstablecimientos(data))
-            // console.log(current)
             dispatch(uiActions.setInnerLoading(false))
-
-            //Check if the user has been assigned to any of the establishments.
-            // const isExist = data.map(item=>item.uuid).includes(uuid)
-            // console.log(isExist)
-            // if(!isExist){
-            //     redirectToLogin()
-            // }
+          
         }catch(e){
             dispatch(uiActions.setInnerLoading(false))
         }
@@ -126,7 +119,7 @@ export const getEstablecimientos = () :ThunkAction<void,RootState,undefined,AnyA
         try{
             dispatch(uiActions.setInnerLoading(true))
             const data:EstablecimientoData[] = await GetEstablecimientos()
-            // dispatch(accountActions.setEstablecimientos(data))
+            
             dispatch(uiActions.setInnerLoading(false))
         }catch(e){
             dispatch(uiActions.setInnerLoading(false))

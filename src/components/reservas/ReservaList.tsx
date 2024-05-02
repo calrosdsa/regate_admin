@@ -145,7 +145,7 @@ const ReservaList = ({reservas,loading,order,changeOrder,getReservaDetail}:{
                         <td className="rowTable">{getEstadoReserva(item.estado)}</td>
                         <td className="rowTable">{moment(item.start_date).utc().format('ll')} de
                          {moment(item.start_date).utc().format('LT')} a {moment(item.end_date).utc().format('LT')}</td>
-                         <td className="rowTable">{moment(item.created_at).format("lll")}</td>
+                         <td className="rowTable">{moment(item.created_at).utc().format("lll")}</td>
                         <td 
                         className="rowTable noSelect">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" 

@@ -1,5 +1,6 @@
 import ButtonSubmit from "@/components/util/button/ButtonSubmit";
 import DialogLayout from "@/components/util/dialog/DialogLayout";
+import InputDate from "@/components/util/input/InputDate";
 import InputWithIcon from "@/components/util/input/InputWithIcon";
 import MultiSelectComponent from "@/components/util/input/MultiSelectComponent";
 import SelectComponent from "@/components/util/input/SelectCompenent";
@@ -7,6 +8,7 @@ import { downloadReporteReservasExcel } from "@/context/actions/download-actions
 import { useAppDispatch } from "@/context/reduxHooks";
 import { ReservaEstado } from "@/core/type/enums";
 import { reservaEstados } from "@/core/util/data";
+import moment from "moment";
 import { ChangeEvent, FormEvent, useState } from "react";
 
 
@@ -28,7 +30,7 @@ const RequestReporteReservaDialog = ({uuid,open,close,instalacionOptions}:{
     })
     const {end_date,start_date,instalaciones} = filterDataReporte
 
-    const onChange = (e:ChangeEvent<HTMLInputElement>) => {
+    const onChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFilterDataReporte({
             ...filterDataReporte,
             [e.target.name]:e.target.value
@@ -60,8 +62,27 @@ const RequestReporteReservaDialog = ({uuid,open,close,instalacionOptions}:{
       >
         <form onSubmit={onSubmit} className="w-full">
             <div className="grid grid-cols-1  sm:grid-cols-2 gap-x-2 w-full">
-
-            <InputWithIcon
+                <InputDate
+                value={moment(start_date)}  
+                maxDate={moment(end_date)} 
+                onChange={(e)=>{
+                    setFilterDataReporte({
+                        ...filterDataReporte,
+                        start_date:e.format("YYYY-MM-DD")
+                    })
+                }}
+                />
+                 <InputDate
+                value={moment(end_date)} 
+                minDate={moment(start_date)} 
+                onChange={(e)=>{
+                    setFilterDataReporte({
+                        ...filterDataReporte,
+                        end_date:e.format("YYYY-MM-DD")
+                    })
+                }}
+                />
+            {/* <InputWithIcon
             type="date"
             label="Inicio"
             value={start_date}
@@ -74,7 +95,7 @@ const RequestReporteReservaDialog = ({uuid,open,close,instalacionOptions}:{
             value={end_date}
             onChange={onChange}
             name="end_date"
-            />
+            /> */}
             </div>
 
             <MultiSelectComponent
@@ -90,6 +111,7 @@ const RequestReporteReservaDialog = ({uuid,open,close,instalacionOptions}:{
 
             <SelectComponent
             label="Estado"
+            size="medium"
             items={reservaEstados}
             onChange={(e)=>{
                 const v = e.target.value

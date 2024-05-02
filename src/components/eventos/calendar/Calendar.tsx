@@ -24,12 +24,13 @@ type DateWeekWithCupos = {
     cupose_reserva:ReservaCupo[]
     index:number
 }
-const Calendar = ({uuid,uuidEvent,reserva_type,eventoId,eventoName}:{
+const Calendar = ({uuid,uuidEvent,reserva_type,eventoId,eventoName,usersEvento}:{
     eventoId:number
     eventoName:string
     uuid:string
     uuidEvent:string
     reserva_type:ReservaType
+    usersEvento:UserEmpresa[]
 }) =>{
     const dispatch = useAppDispatch()
     const instalaciones = useAppSelector(state=>state.data.instalaciones)
@@ -174,11 +175,15 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId,eventoName}:{
         open={openReservaDialog}
         close={()=>setOpenReservaDialog(false)}
         cupos={[]}
-        onComplete={()=>{}}
+        onComplete={()=>{
+            setCountDays(7)
+            generateDaysWeek(dateFilter,7)
+        }}
         cancha={instalacion}
         useAdvanceOptions={true}
         eventoId={eventoId}
         startTime={startTime}
+        usersEvento={usersEvento}
         />
         }
         <div className="grid gap-y-2">

@@ -201,7 +201,7 @@ export default function Page({params}:{params:{uuid:string}}){
                         value:t.id.toString(),
                         name:t.name
                     } 
-                })}
+                }).concat({name:"Todas las canchas",value:"0"})}
                 onChange={(e)=>{
                     const filterD:ReservaDataFilter = {
                         ...filterData,
@@ -212,7 +212,6 @@ export default function Page({params}:{params:{uuid:string}}){
                 }}
                 name={"Instalaciones"}
                 containerClassName="h-9"
-                defaultItem={{name:"Todas las canchas",value:"0"}}
                 />
                 
                 {/* <button className="button-inv flex space-x-1" disabled={loading}  onClick={()=>setCreateReservaDialog(true)}>

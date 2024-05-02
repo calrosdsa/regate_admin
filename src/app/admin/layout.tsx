@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from '@/context/reduxHooks'
 import { uiActions } from '@/context/slices/uiSlice'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import { getUser } from '@/context/actions/account-actions'
+import { getEstablecimientosUser, getUser } from '@/context/actions/account-actions'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import LoaderDialog from '@/components/util/loaders/LoaderDialog'
@@ -41,6 +41,7 @@ export default function RootLayout({
     validateUser()
     dispatch(uiActions.openSidebar(false))
     dispatch(getUser())
+    dispatch(getEstablecimientosUser())
   },[pathName])
   return (
     // <html lang="en">

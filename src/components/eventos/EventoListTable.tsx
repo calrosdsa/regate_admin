@@ -2,10 +2,22 @@ import moment from "moment";
 import CommonImage from "../util/image/CommonImage";
 import { formatBlankorNull, formatDateTime, getFullName } from "@/core/util";
 import Loading from "../util/loaders/Loading";
-import { Order, OrderQueue, ReservaEstado } from "@/core/type/enums";
+import { EventoEstado, Order, OrderQueue, ReservaEstado } from "@/core/type/enums";
 import Link from "next/link";
 import { getRouteEstablecimiento } from "@/core/util/routes";
 
+export const getEstadoEvento = (estado:EventoEstado)=>{
+    switch(estado){
+        case EventoEstado.Valid:
+            return "Pagado"
+            case EventoEstado.Pendiente:
+                return "Pendiente"
+        case EventoEstado.Cancel:
+            return "Cancelado"
+        default:
+            return "-"    
+    }
+}
 
 
 const EventoListTable = ({eventos,loading,uuid,deleteEvento}:{
@@ -46,6 +58,12 @@ const EventoListTable = ({eventos,loading,uuid,deleteEvento}:{
                 <th className="headerTable">
                     Fecha de finalización
                 </th>
+                <th className="headerTable">
+                    Horas totales
+                </th>
+                <th className="headerTable">
+                    Organizador
+                </th>
                 {/* <th className="headerTable">
                     Precio pagado
                 </th> */}
@@ -71,31 +89,14 @@ const EventoListTable = ({eventos,loading,uuid,deleteEvento}:{
                         </td>
                         <td className="rowTable ">{formatBlankorNull(item.total_price)}</td>
                         <td className="rowTable ">{formatBlankorNull(item.paid)}</td>
+                        <td className="rowTable">{getEstadoEvento(item.estado)}</td>
                         <td className="rowTable ">{formatDateTime(item.start_date)}</td>
                         <td className="rowTable ">{formatDateTime(item.end_date)}</td>
+                        <td className="rowTable ">{formatBlankorNull(item.total_hours," hrs")}</td>
+                        <td className="rowTable ">{formatBlankorNull(item.organizador)}</td>
+
 
                         {/* <td className="rowTable">{item.name}</td> */}
-                        <td className="rowTable">
-                            <div className="flex space-x-2 items-center">
-                                <Link href={getRouteEstablecimiento(uuid,`eventos/${item.uuid}?name=${item.name}&id=${item.id}`)}
-                                className="font-medium underline noSelect">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" 
-                                    className="w-[26px] h-[26px] noSelect icon-button text-primary">
-                                    <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
-                                    <path fillRule="evenodd" d="M1.38 8.28a.87.87 0 0 1 0-.566 7.003 7.003 0 0 1 13.238.006.87.87 0 0 1 0 .566A7.003 7.003 0 0 1 1.379 8.28ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" clipRule="evenodd" />
-                                    </svg>
-
-                                </Link>
-
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
-                                 className="w-[26px] h-[26px] noSelect icon-button text-primary"
-                                 onClick={()=>deleteEvento(item.id)}>
-                                <path fillRule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clipRule="evenodd" />
-                                </svg>
-
-                            </div>
-
-                        </td>
                     </tr>
                 )
             })}

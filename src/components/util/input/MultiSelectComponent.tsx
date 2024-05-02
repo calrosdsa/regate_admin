@@ -14,11 +14,12 @@ const MenuProps = {
 };
 
 
-const MultiSelectComponent = ({options,label,allName,allValue,setInstalaciones}:{
+const MultiSelectComponent = ({options,label,allName,allValue,setInstalaciones,size="small"}:{
     options:SelectItem[]
     label?:string
     allValue:string
     allName:string
+    size?:'small' | 'medium'
     setInstalaciones:(e:number[])=>void
 }) =>{
     const theme = useTheme();
@@ -67,16 +68,16 @@ const MultiSelectComponent = ({options,label,allName,allValue,setInstalaciones}:
 
     return(
         <div className="mt-3 w-full">
-        <FormControl sx={{ minWidth:"100%" }}>
-          <InputLabel size="small" id={label}>{label}</InputLabel>
+         {label != undefined &&
+        <Typography variant="body2" sx={{mb:1}}>{label}</Typography>
+            }
           <Select
-            labelId={label}
             id="multiple-chip"
-            size="small"
+            size={size}
             multiple
             value={values}
             onChange={handleChange}
-            input={<OutlinedInput id="select-multiple-chip" label={label} />}
+            input={<OutlinedInput id="select-multiple-chip"  />}
             renderValue={(selected) => (
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                 {selected.map((value) => (
@@ -96,7 +97,6 @@ const MultiSelectComponent = ({options,label,allName,allValue,setInstalaciones}:
               </MenuItem>
             ))}
           </Select>
-        </FormControl>
       </div>
     )
 }
