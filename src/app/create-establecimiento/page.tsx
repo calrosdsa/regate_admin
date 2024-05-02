@@ -13,6 +13,8 @@ import { ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 import { Router } from "next/router";
 import { useRouter } from "next/navigation";
+import { InputAdornment, TextField, Typography } from "@mui/material";
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 const Login = () =>{
     const router = useRouter()
@@ -84,16 +86,14 @@ const Login = () =>{
           src=""
           />
 
-          <div className="h-10"/>
+          <div className="h-2"/>
 
           <InputWithMaxLength
           value={name}
           required={true}
           name="name"
           onChangeValue={(e)=>{
-            if(e.target.value.length <= 50){ 
               onChange(e)
-            }
           }}
           max={50}
           label="Nombre del Establecimiento*"
@@ -103,9 +103,7 @@ const Login = () =>{
           value={email}
           name="email"
           onChangeValue={(e)=>{
-            if(e.target.value.length <= 50){ 
               onChange(e)
-            }
           }}
           max={50}
           label="Email"
@@ -116,9 +114,7 @@ const Login = () =>{
           value={phone_number}
           name="phone_number"
           onChangeValue={(e)=>{
-            if(e.target.value.length <= 20){ 
               onChange(e)
-            }
           }}
           max={20}
           type="tel"
@@ -129,31 +125,35 @@ const Login = () =>{
 
           <div className="relative">
            <div>
-            <span className="help-text">Ubicación*</span>
-            <div className="flex input justify-between cursor-pointer" 
-            onClick={()=>setOpenMap(true)}>
-              <input type="text" required={true}  className=" outline-none w-full cursor-pointer"
-               value={address} onChange={(e)=>{}}
-              />
-              {/* <span className=" truncate "></span> */}
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-            </svg>
-            </div>
+            <Typography variant="body2" sx={{mb:1,mt:1}}>Ubicación*</Typography>
+            <TextField
+            size={"small"}
+            required
+            sx={{width:"100%"}}
+            multiline
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LocationOnIcon/>
+                  </InputAdornment>  
+              ),
+            }}
+            value={address} onChange={(e)=>{}}
+            onClick={()=>setOpenMap(true)}
+            />
+         
           </div>
         {/* <span className="help-text absolute right-1">{`${address.length}/50`}</span> */}
         </div>
 
         
-          <TextAreaWithMaxLength
+          <InputWithMaxLength
           value={description}
           name="description"
           onChangeValue={(e)=>{
-            if(e.target.value.length <= 250){ 
               setFormData({...formData,description:e.target.value})
-            }
           }}
+          multiline={true}
           max={250}
           label="Descripción"
           />
