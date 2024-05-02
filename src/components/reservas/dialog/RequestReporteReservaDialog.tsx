@@ -112,7 +112,7 @@ const RequestReporteReservaDialog = ({uuid,open,close,instalacionOptions}:{
             <SelectComponent
             label="Estado"
             size="medium"
-            items={reservaEstados}
+            items={reservaEstados.concat({name:"Cancelado",value:ReservaEstado.Cancel.toString()})}
             onChange={(e)=>{
                 const v = e.target.value
                 console.log(v,Number(v))

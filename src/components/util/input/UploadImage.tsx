@@ -6,7 +6,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Button } from "@mui/material";
 import { styled } from '@mui/material/styles';
 
-const UploadImage = ({setFile,src,save,id="file",width="w-44",height="h-44",clearAfterUpload=false}:{
+const UploadImage = ({setFile,src,save,id="file",width="w-36",height="h-36",clearAfterUpload=false}:{
     setFile:(e:File)=>void
     src?:string
     width?:string
@@ -52,9 +52,9 @@ const UploadImage = ({setFile,src,save,id="file",width="w-44",height="h-44",clea
             <div className="w-full">
             <CommonImage
             src={source.includes("https") ? `${source}?${Date.now()}` : source}
-            w={250}
-            h={200}
-            className={`${width} ${height} rounded object-contain`}
+            w={100}
+            h={100}
+            className={`${width} ${height}  object-contain p-2 bg-gray-200 rounded-lg`}
             // alt={""}
             />
             </div>

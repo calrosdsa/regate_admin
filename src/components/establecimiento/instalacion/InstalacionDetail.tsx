@@ -55,9 +55,9 @@ const InstalacionDetail = ({instalacion,update,uuid,refresh}:{
                 uuid:instalacion.uuid,
                 establecimiento_uuid:uuid
             }
+            setDeleteConfirmationDialog(false)
             await DeleteInstalacion(d)
             refresh()
-            setDeleteConfirmationDialog(false)
             dispatch(uiActions.setLoaderDialog(false))
             toast.success(successfulMessage)
         }catch(err){
@@ -131,7 +131,7 @@ const InstalacionDetail = ({instalacion,update,uuid,refresh}:{
                 }}/>
             <EditComponent
                 label="Descripcion"
-                isTextArea={true}
+                multiline={true}
                 content={instalacion.description}
                 edit={(addLoader,removeLoader,value)=>{
                     updateInstalacion("description",value,addLoader,removeLoader)

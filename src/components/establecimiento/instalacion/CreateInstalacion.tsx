@@ -11,7 +11,7 @@ import moment from "moment"
 import Image from "next/image"
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { toast } from "react-toastify"
-import { Button, IconButton, TextField, Typography } from "@mui/material"
+import { Button, IconButton, MenuItem, TextField, Typography } from "@mui/material"
 import CloseIcon from '@mui/icons-material/Close';
 
 const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
@@ -23,7 +23,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
         name:"",
         description:"",
         cantidad_de_personas:20,
-        category_id: 1,
+        category_id: "",
         precio_hora:""
       })
       const [uploadLoading,setUploadingLoading] = useState(false)
@@ -42,6 +42,8 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
           precio:"",
           start_time:"",
           end_time:"",
+          times:[],
+          isError:false
         } 
         setCustomPrecuoInstalacion(e=>[...e,n])
         checkIsHoursIsDisabled()
@@ -49,25 +51,42 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
 
       const onChangeCustomPrecio = (name:string,value:string,index:number)=>{
         const updateList = customPrecioInstalacion.map((item,idx)=>{
-            if(index == idx){
-                item[name as keyof CustomPrecioInstalacion] = value
+          if(index == idx){
+            switch(name){
+              case "precio":
+                item["precio"] = value
+                break;
+              case "start_time":
+                item["start_time"] = value
+                break;
+              case "end_time":
+                item["end_time"] = value
+                break;
             }
-            return item
-        })
+          }
+          return item
+      })
         setCustomPrecuoInstalacion(updateList)
     }
     
-    const getTimeRangeFromCustomPrecioInstalacion = ():string[] => {
+    const getTimeRangeFromCustomPrecioInstalacion = ():CustomPrecioInstalacion[] => {
+      return customPrecioInstalacion.map((item)=>{
         let timeRange:string[] = []
-        customPrecioInstalacion.map((item)=>{
-          const startM = moment(item.start_time)
-          const endM = moment(item.end_time)
-          const minutesDifference = ((endM.hour()*60) + moment(endM).minute()) - ((startM.hour()*60) + moment(startM).minute()) 
-          for(let t =0;t < (minutesDifference/30)+1;t++){
-            timeRange.push(moment(startM).add(30*t,"minutes").format("HH:mm:ss"))
+        const startM = moment(item.start_time)
+        const endM = moment(item.end_time).subtract(30,"minutes")
+        let endHours =0
+        if(startM.date() != endM.date()){
+          endHours = 24 * 60
+        }else{
+          endHours = endM.hour() * 60
         }
-      })
-      return timeRange
+        const minutesDifference = ((endHours) + endM.minute()) - ((startM.hour()*60) + startM.minute()) 
+        for(let t =0;t < (minutesDifference/30)+1;t++){
+          timeRange.push(moment(startM).add(30*t,"minutes").format("HH:mm:ss"))
+      }
+        item.times = timeRange
+        return item
+    })
     }
 
 
@@ -115,7 +134,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
             // console.log(priceHour)
             uploadData.append("name",name)
             uploadData.append("description",description)
-            uploadData.append("category_id",category_id.toString())
+            uploadData.append("category_id",category_id)
             uploadData.append("cantidad_de_personas",cantidad_de_personas.toString())
             uploadData.append("precio_hora",priceHour)
             // uploadData.append("establecimiento_id",id.toString())
@@ -142,25 +161,35 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
       const checkIsHoursIsDisabled = () =>{
         try{
         let timeRange:string[] = []
-        console.log(customPrecioInstalacion)
           customPrecioInstalacion.map((item)=>{
             const startM = moment(item.start_time)
-          const endM = moment(item.end_time)
-          const minutesDifference = ((endM.hour()*60) + moment(endM).minute()) - ((startM.hour()*60) + moment(startM).minute()) 
+          const endM = moment(item.end_time).subtract(30,"minutes")
+          if(endM.isBefore(startM)){
+            item.isError = true 
+          }else{
+           item.isError = false 
+          }
+          let endHours =0
+          if(startM.date() != endM.date()){
+            endHours = 24 * 60
+          }else{
+              endHours = endM.hour() * 60
+          }
+    
+          const minutesDifference = ((endHours) + moment(endM).minute()) - ((startM.hour()*60) + moment(startM).minute()) 
           console.log("MINUTES DIFFERENCE",minutesDifference)
           for(let t =0;t < ((minutesDifference)/30)+1;t++){
-            const r = moment(startM).add(30*t,"minutes").format("HH:mm")
+            const r = moment(startM).add(30*t,"minutes").format("YYYY-MM-DD HH:mm")
             if(!timeRange.includes(r)){
               timeRange.push(r)
             }
+          }
+            })
+            setDisabledHours(timeRange)
+          }catch(err){
+            console.log(err)
+          }
         }
-          })
-          setDisabledHours(timeRange)
-          console.log("TIME RANGE",timeRange)
-        }catch(err){
-          console.log(err)
-        }
-      }
 
       // useEffect(()=>{
       //   console.log("customprecio instalacion")
@@ -173,10 +202,10 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
 
             <UploadImage
             id="file-instalacion"
-          setFile={setPhoto}
-          src=""
+            setFile={setPhoto}
+            src=""
           />
-
+          <div className="h-2"/>
           <InputWithMaxLength
           value={name}
           required={true}
@@ -190,29 +219,33 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
           label="Nombre *"
           />
 
-        <TextAreaWithMaxLength
+        <InputWithMaxLength
           value={description}
           name="description"
+          multiline
           onChangeValue={(e)=>{
               if(e.target.value.length <= 250){ 
               setFormData({...formData,description:e.target.value})
             }
         }}
-        max={250}
+          max={250}
           label="Descripción"
           />
-          <div className=" mt-4">
-            <span className="help-text">Seleciona una categoria*</span>
-          <select name="" id="" className="input">
+          <div className="">
+            <Typography variant="body2" sx={{mb:1}}>Seleciona una categoria*</Typography>
+          <TextField
+          name="category_id"
+          value={category_id} onChange={onChange}
+          select size="small" sx={{width:"100%"}}>
             {categories.map((item)=>{
                 return(
-                    <option key={item.id} value={item.id}>{item.name}</option>
+                    <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
                     )
                 })}
-          </select>
+          </TextField>
             </div>
 
-          {customPrecioInstalacion.length == 0 &&
+          {/* {customPrecioInstalacion.length == 0 &&
           <InputWithMaxLength
           value={precio_hora.toString()}
           name="precio_hora"
@@ -225,7 +258,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
           required
           type="number"
           />
-        }
+        } */}
 
           <div>
             <span className="help-text">
@@ -236,23 +269,25 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
                 {customPrecioInstalacion.map((item,index)=>{
                     return(
                         <>
-                        <div key={index} className="flex space-x-2 items-center py-2 min-w-[380px]">
+                        <div key={index} className="flex space-x-2 items-end py-2 min-w-[380px]">
                           <TimeSelect
                           label="Inicio"
                           time={moment(item.start_time)}
+                          date={moment().format("YYYY-MM-DD")}
                           setTime={(e)=>{
-                            const today = moment().format("yyyy-MM-DD")
                             onChangeCustomPrecio("start_time",e.format("yyyy-MM-DD HH:mm"),index)
                           }}
+                          isError={item.isError}
                           disabledHours={disabledHours}
                           />
                            <TimeSelect
                           label="Fin"
+                          date={moment().format("YYYY-MM-DD")}
                           time={moment(item.end_time)}
                           setTime={(e)=>{
-                            const today = moment().format("yyyy-MM-DD")
                             onChangeCustomPrecio("end_time",e.format("yyyy-MM-DD HH:mm"),index)
                           }}
+                          isError={item.isError}
                           disabledHours={disabledHours}
                           />
                           <div>

@@ -12,6 +12,7 @@ const CreateInstalacionDialog = ({open,close,uuid,addInstalacion}:{
         <DialogLayout
         className="max-w-lg "
         allowFullScreen={true}
+        title="Crear nueva cancha"
          open={open} close={close}>
             <CreateInstalacionComponent
             uuid={uuid}

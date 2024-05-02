@@ -92,6 +92,8 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
       const endM = moment(item.end_time).subtract(30,"minutes")
       if(endM.isBefore(startM)){
         item.isError = true 
+      }else{
+        item.isError = false 
       }
       let endHours =0
       if(startM.date() != endM.date()){
@@ -103,7 +105,7 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
       const minutesDifference = ((endHours) + moment(endM).minute()) - ((startM.hour()*60) + moment(startM).minute()) 
       console.log("MINUTES DIFFERENCE",minutesDifference)
       for(let t =0;t < ((minutesDifference)/30)+1;t++){
-        const r = moment(startM).add(30*t,"minutes").format("HH:mm")
+        const r = moment(startM).add(30*t,"minutes").format("YYYY-MM-DD HH:mm")
         if(!timeRange.includes(r)){
           timeRange.push(r)
         }
@@ -173,9 +175,9 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
                           time={moment(item.start_time)}
                           isError={item.isError}
                           setTime={(e)=>{
-                            console.log("Fin",e.format())
                             onChangeCustomPrecio("start_time",e.format("yyyy-MM-DD HH:mm"),index)
                           }}
+                          date={moment().format("YYYY-MM-DD")}
                           disabledHours={disabledHours}
                           />
                            <TimeSelect
@@ -183,9 +185,9 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
                           time={moment(item.end_time)}
                           isError={item.isError}
                           setTime={(e)=>{
-                            console.log("Fin",e.format())
                             onChangeCustomPrecio("end_time",e.format("yyyy-MM-DD HH:mm"),index)
                           }}
+                          date={moment().format("YYYY-MM-DD")}
                           disabledHours={disabledHours}
                           />
                           {(!useDefinedPrice && actionType != ActionType.DELETED) &&

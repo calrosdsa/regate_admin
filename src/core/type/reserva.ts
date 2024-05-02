@@ -26,6 +26,7 @@ type ReservaReporteRequest = {
     start_date:string
     end_date:string
     estado?:number
+    // evento_id:number
     instalaciones:number[]
 }
 

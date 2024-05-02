@@ -77,7 +77,7 @@ export const downloadReporteReservasExcel = (
                         const url = window.URL.createObjectURL(new Blob([response.data]));
                         const link = document.createElement('a');
                         link.href = url;
-                        link.setAttribute('download', `${date} - Deposito.xlsx`); //or any other extension
+                        link.setAttribute('download', `${date} - Reservas.xlsx`); //or any other extension
                         document.body.appendChild(link);
                         toast.update(id, {render: "Se ha completado la descarga", type: "success", isLoading: false,autoClose:5000});
                         link.click();

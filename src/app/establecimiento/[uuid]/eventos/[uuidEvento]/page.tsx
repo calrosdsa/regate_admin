@@ -222,11 +222,11 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
                     <RefreshIcon/>
                     </Button>
     
-                    <Button variant="outlined" disabled={loading}  onClick={()=>{
+                    {/* <Button variant="outlined" disabled={loading}  onClick={()=>{
                       openExportReservasDialog()
                         }}>
                             <DownloadIcon/>
-                    </Button>
+                    </Button> */}
     
                     <SelectComponent
                     value={selectedInstalacion}
