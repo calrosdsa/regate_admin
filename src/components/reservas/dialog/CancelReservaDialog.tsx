@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "@/context/reduxHooks"
 import { CancelReserva } from "@/core/repository/reservas"
 import { ReservaType } from "@/core/type/enums"
 import { Button, Typography } from "@mui/material"
+import { HttpStatusCode } from "axios"
 import moment from "moment"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
@@ -49,7 +50,7 @@ const CancelReservaDialog = ({open,close,update,reserva,uuid,instalacion,getRese
                 const minutes = duration.asMinutes();
                 const selectedDate = date.format("YYYY-MM-DD")
                 console.log(selectedDate)
-                const time = start.utc().format("hh:mm")
+                const time = start.utc().format("HH:mm")
                 console.log(time)
                 const newDatetime = selectedDate + " " + time
                 console.log(newDatetime)
@@ -80,7 +81,7 @@ const CancelReservaDialog = ({open,close,update,reserva,uuid,instalacion,getRese
                     evento_uuid:reserva.evento.uuid
                 }   
                 }   
-                console.log("Cupos",reasignarReservaRequest)
+                // console.log("Cupos",reasignarReservaRequest)
             }   
             const request:ReservaCancelRequest = {
                 content:value,
@@ -92,15 +93,26 @@ const CancelReservaDialog = ({open,close,update,reserva,uuid,instalacion,getRese
                 user_id:reserva.user_id,
                 reasignar_reserva_request:reasignarReservaRequest,
             }
-            console.log(request)
-             await CancelReserva(request)
-             if(reasignarReservaRequest != null ){
-                getReservas()
+            // console.log(request)
+             const res = await CancelReserva(request)
+             const data:ResponseMessage = await res.json()
+             switch(res.status){
+                case HttpStatusCode.Ok:
+                    if(reasignarReservaRequest != null ){
+                       getReservas()
+                    }
+                    update()
+                    toast.success("Reserva Cancelada")
+                    close()
+                    break;
+                case HttpStatusCode.NotAcceptable:
+                    toast.error(data.message)
+                    break;
+                default:
+                    toast.error(unexpectedError)
+                    break;    
              }
              setLoading(false)
-             update()
-             close()
-            toast.success("Reserva Cancelada")
         }catch(err){
             setLoading(false)
             toast.error(unexpectedError)

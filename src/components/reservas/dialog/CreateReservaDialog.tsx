@@ -196,6 +196,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
             }
             console.log("CREATE RESERVA BODY",requestData)
             const res = await CreateReserva(JSON.stringify(requestData))
+            const data:ResponseMessage = await res.json()
             switch(res.status){
                 case Http.StatusOk:
                     toast.success("Se ha creado exitosamente la reserva")
@@ -206,6 +207,9 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
                 case Http.StatusConflict:
                     toast.error("No es posible registrar usuarios con nombres duplicados. Intenta cambiar el nombre de usuario.")    
                     // setConfirmUserRepeat(false)
+                    break;
+                case HttpStatusCode.NotAcceptable:
+                    toast.error(data.message);
                     break;
                 default:
                     toast.error(unexpectedError)               
@@ -485,9 +489,9 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
                             const totalPrice = item.interval.map(t=>t.precio).reduce((prev,curr)=>prev + curr)
                                 return (
                                     <Tab.Panel key={idx} className={""}>
-                                <div className="grid ">
+                                <div className="grid gap-y-1 mt-2 ">
                                 {item.interval.length > 0 &&
-                                <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
+                                <div className="grid sm:grid-cols-2 sm:items-center sm:space-x-10 border-b-[1px] pb-1">
                                     <span className="label">Cancha</span>
                                     <div className="flex space-x-2 items-center">
                                         <Button size="small" onClick={()=>selectInstalacionFromDialog(item)}>
@@ -501,11 +505,11 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
                                     </div>
                                 </div>
                                 }
-                                <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
+                                <div className="grid sm:grid-cols-2 sm:items-center sm:space-x-10 border-b-[1px] pb-1">
                                     <span className="label">Precio de la reserva</span>
                                     <span className="text-xs ">{totalPrice}</span>
                                 </div>
-                                <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
+                                <div className="grid sm:grid-cols-2 sm:items-center sm:space-x-10 border-b-[1px] pb-1">
                                     <span className="label">Disponibilidad</span>
                                     {/* <div className="text-xs ">
                                         <span className="">{getMessageAvailable(item.interval)}
@@ -519,7 +523,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
                                     />
                                 </div>
                                 {item.interval.length > 0 &&
-                                <div className="grid sm:flex sm:justify-between sm:items-center sm:space-x-10 border-b-[1px] py-2">
+                                <div className="grid sm:grid-cols-2 sm:items-center sm:space-x-10 border-b-[1px] pb-1">
                                     <span className="label">Fecha y hora de la reserva</span>
                                     <div className="grid ">
                                         <span className="text-xs">

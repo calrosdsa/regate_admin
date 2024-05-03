@@ -447,6 +447,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
 
         {(createReservaDialog && instalacion != null) &&
         <CreateReservaDialog
+        startTime={startDate || moment()}
         open={createReservaDialog}
         close={()=>setCreateReservaDialog(false)}
         cupos={selectedCupos.map(item=>{

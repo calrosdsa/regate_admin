@@ -77,9 +77,10 @@ const AdvanceReservaOptionDialog = ({
   
 
     const validateToContinue = async() =>{
-        // const startM = moment(startDate + " " + start.format("HH:mm"))
-        const startM = start
-        const endM = end
+        const startM = moment(date.format("YYYY-MM-DD") + " " + start.format("HH:mm"))
+        // const startM = start
+        const endM = moment(date.format("YYYY-MM-DD") + " " + end.format("HH:mm"))
+        // const endM = end
         let endHours =0
         if(endM.isBefore(startM)){
             setTimeSelectError(true)
@@ -261,6 +262,7 @@ const AdvanceReservaOptionDialog = ({
             isError={timeSelectError}
             setTime={(e)=>{
                 console.log(e.format())
+                // const t = moment(date.format("YYYY-MM-DD" + " " + e.format("HH:mm")))
                 setEnd(e)
             }}
             date={startTime.format("YYYY-MM-DD")}

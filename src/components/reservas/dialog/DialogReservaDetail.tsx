@@ -213,7 +213,7 @@ const DialogReservaDetail = ({open,close,data,update,uuid,getReservas}:{
                                     <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
                                         <Typography variant="subtitle2"  className="label">Hora en la que se hizo la reserva</Typography>
                                         <span className="text-xs ">
-                                            {moment.utc(detail.reserva.created_at).format("lll")}
+                                            {moment(detail.reserva.created_at).format("lll")}
                                         </span>
                                     </div>
 
