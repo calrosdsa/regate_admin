@@ -9,7 +9,6 @@ import { useAppDispatch, useAppSelector } from '@/context/reduxHooks'
 import { uiActions } from '@/context/slices/uiSlice'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import { getEstablecimientosUser, getUser } from '@/context/actions/account-actions'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import LoaderDialog from '@/components/util/loaders/LoaderDialog'
@@ -19,6 +18,7 @@ import { rootEstablecimiento } from '@/core/util/routes'
 import { Http } from '@/core/type/enums'
 import { IconButton } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
+import { getUser } from '@/context/actions/account-actions'
 // const inter = Inter({ subsets: ['latin'] })
 
 
@@ -35,14 +35,13 @@ export default function RootLayout({
   const validateUser = async() =>{
       const res = await ValidateUser()
       if(res.status == Http.StatusUnauthorized){
-        router.push('../auth/login')  
+        window.location.replace('/auth/login')  
       }
   }
   useEffect(()=>{
     validateUser()
     dispatch(uiActions.openSidebar(false))
     dispatch(getUser())
-    dispatch(getEstablecimientosUser())
   },[pathName])
   return (
     // <html lang="en">

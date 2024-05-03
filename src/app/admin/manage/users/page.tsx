@@ -14,13 +14,17 @@ import { GetEstablecimientosUserByUuid } from "@/core/repository/account"
 import { DeleteEstablecimientoUser, GetUsersEmpresa, UpdateUserEstado } from "@/core/repository/manage"
 import { UserEstado, UserRol } from "@/core/type/enums"
 import { appendSerachParams } from "@/core/util/routes"
-import { Button } from "@mui/material"
+import { Button, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material"
 import moment from "moment"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import AddIcon from '@mui/icons-material/Add';
+import PersonIcon from '@mui/icons-material/Person';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 export default function Page(){
     const dispatch = useAppDispatch()
     const searchParams = useSearchParams();
@@ -127,8 +131,8 @@ export default function Page(){
             if(userEstablecimiento == null) return
             if(userEstablecimiento.admin_id == undefined) return
             dispatch(uiActions.setLoaderDialog(true))
-            await DeleteEstablecimientoUser(userEstablecimiento.uuid,userEstablecimiento.admin_id)
             setUserEstablecimiento(null)
+            await DeleteEstablecimientoUser(userEstablecimiento.uuid,userEstablecimiento.admin_id)
             dispatch(uiActions.setLoaderDialog(false))
             toast.success(successfulMessage)
             const f = currentUserEstablecimientos.filter(item=>item.uuid != userEstablecimiento.uuid)
@@ -206,7 +210,7 @@ export default function Page(){
         }
         <div className="">
 
-        <div className="px-2 h-screen xl:pt-0">
+        <div className=" h-screen xl:pt-0">
 
         <div className="grid xl:grid-cols-8 h-full gap-2">
             <div className=" col-span-3 bg-white  rounded-lg shadow-lg p-2 overflow-auto relative">
@@ -231,25 +235,35 @@ export default function Page(){
               loading={loadingUsers}
               className='pt-2 flex w-full justify-center'
               />
+              <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                
                 {users.map((item,idx)=>{
                     return(
-                        <div onClick={()=>selectUser(item)} className={`hover:bg-gray-200 p-2 flex justify-between cursor-pointer items-center
-                        ${item.user_id == currentUser?.user_id && "bg-gray-200"}`} key={idx}>
-                            <div className="grid">
-                            <span className="subtitle">{item.username}</span>
-                            <span className="text-xs">{item.email}</span>
-                            </div>
-                            {item.rol == UserRol.ADMIN_USER_ROL ?
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
-                            className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>
-                            :
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                            </svg>
-                        }
-                        </div>
+                        <ListItem key={idx} disablePadding>
+                        <ListItemButton 
+                        divider={true}
+                        selected={item.user_id == currentUser?.user_id}
+                        onClick={()=>selectUser(item)} 
+                        >
+                        <ListItemText
+                            primary={item.username}
+                            secondary={item.email}
+                            />
+                            <ListItemIcon>
+                            {
+                               item.rol == UserRol.ADMIN_USER_ROL ?
+                                <VerifiedUserIcon/>
+                                :
+                                <PersonIcon/>
+                               
+                           }
+                           </ListItemIcon>
+                        </ListItemButton>
+                            </ListItem>
+                       
                     )
                 })}
+                </List>
             
             
             </div>
@@ -309,13 +323,12 @@ export default function Page(){
                     
 
                 <div className="title p-2 mt-4 flex justify-between">
-                    <span className="subtitle text-base">Complejos asignados</span>
+                    <Typography variant="h6">Complejos asignados</Typography>
 
                     {(currentUser != undefined && currentUser.rol == UserRol.CLIENT_USER_ROL)&&
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" 
-                    className="w-7 h-7 icon-button noSelect" onClick={()=>getAllEstablecientos()}>
-                    <path fillRule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm.75-10.25v2.5h2.5a.75.75 0 0 1 0 1.5h-2.5v2.5a.75.75 0 0 1-1.5 0v-2.5h-2.5a.75.75 0 0 1 0-1.5h2.5v-2.5a.75.75 0 0 1 1.5 0Z" clipRule="evenodd" />
-                    </svg>
+                    <IconButton onClick={()=>getAllEstablecientos()}>
+                        <AddIcon/>
+                    </IconButton>
                     }
 
                 </div>
@@ -324,22 +337,27 @@ export default function Page(){
               loading={loadingEstablecimientos}
               className='pt-2 flex w-full justify-center'
               />
+              <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+
                 {currentUserEstablecimientos.map((item)=>{
                     return(
-                        <div className="flex items-center p-2 text-gray-600 justify-between cursor-default 
-                         border-b" key={item.id}>
-                            <span className=" subtitle">{item.name}</span>
-
-                    {(currentUser != undefined && currentUser.rol == UserRol.CLIENT_USER_ROL)&&
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" 
-                            className="w-7 h-7 icon-button noSelect" onClick={()=>setUserEstablecimiento(item)}>
-                            <path fillRule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clipRule="evenodd" />
-                            </svg>
-                    }
-
-                        </div>
+                         <ListItem key={item.id}
+                         divider
+                         secondaryAction={
+                            (currentUser != undefined && currentUser.rol == UserRol.CLIENT_USER_ROL)&&
+                            <IconButton onClick={()=>setUserEstablecimiento(item)}>
+                                <DeleteIcon/>
+                            </IconButton>
+                         }>
+                            <ListItemText
+                             primary={item.name}
+                             />
+                             
+                         </ListItem>
+                       
                     )
                 })}
+                    </List>
                     </div>
                 </div>
                 }

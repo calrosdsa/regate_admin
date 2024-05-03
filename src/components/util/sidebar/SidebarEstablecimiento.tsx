@@ -1,5 +1,4 @@
 "use client"
-import { getEstablecimientos, getEstablecimientosUser } from "@/context/actions/account-actions";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { Disclosure } from "@headlessui/react";
 import Link from "next/link";
@@ -35,16 +34,7 @@ const SideBarEstablecimiento = () =>{
    }
 
    useEffect(()=>{
-      if(establecimientos.length > 0 ){
-
-      }
-   },[establecimientos])
-
-   useEffect(()=>{
-      getCoutConversationMessage()
-      if(establecimientos.length == 0){
-         dispatch(getEstablecimientosUser())
-      } 
+      // getCoutConversationMessage() 
    },[])
 
     return(

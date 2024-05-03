@@ -16,6 +16,7 @@ import { unexpectedError } from '@/context/config'
 import DialogLayout from '@/components/util/dialog/DialogLayout'
 import { GetEstablecimientos } from '@/core/repository/establecimiento'
 import { CreateUser } from '@/core/repository/manage'
+import { Button, DialogActions, Typography } from '@mui/material'
 
  interface Props{
    openModal:boolean
@@ -63,7 +64,7 @@ const CreateUserNegocioDialog:React.FC<Props>=({
         }
             // setReservas(data)
     }
-  const onChange = (e:React.ChangeEvent<HTMLInputElement>) =>{
+  const onChange = (e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
@@ -164,15 +165,7 @@ const CreateUserNegocioDialog:React.FC<Props>=({
                 value={username}
                 onChange={onChange}
                 name='username'
-                label='Nombre'
-                icon={()=>{
-                    return(
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
-                         className="w-5 h-5 absolute bottom-[10px] left-[5px] text-gray-400">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M7.864 4.243A7.5 7.5 0 0119.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 004.5 10.5a7.464 7.464 0 01-1.15 3.993m1.989 3.559A11.209 11.209 0 008.25 10.5a3.75 3.75 0 117.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 01-3.6 9.75m6.633-4.596a18.666 18.666 0 01-2.485 5.33" />
-                </svg>
-                    )
-                }}
+                label='Nombre'      
                 />
                 <InputWithIcon
                 value={email}
@@ -180,17 +173,9 @@ const CreateUserNegocioDialog:React.FC<Props>=({
                 name='email'
                 label='Email'
                 type='email'
-                icon={()=>{
-                    return(
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
-                        className="w-5 h-5 absolute bottom-[10px] left-[5px] text-gray-400">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                      </svg>                      
-                    )
-                }}
                 />
 
-              <div className='py-2'>Asignar rol</div> 
+              <Typography variant="body2" sx={{my:1}}>Asignar rol</Typography> 
 
               <div className='border-[1px] py-2 space-y-4'>
                 <div className='grid grid-cols-6 place-items-center'>
@@ -307,19 +292,17 @@ const CreateUserNegocioDialog:React.FC<Props>=({
 
               </div>
             
-              <div className=' w-full  rounded-lg border-t-[1px] z-10 bg-white'>
-
-              <div className='flex justify-between w-full p-1'>
-                <button className='button' onClick={()=>setCurrentTab(Tab.MAIN)}>Volver</button>
+                <DialogActions >
+                  <div className=' space-x-2'>
+                <Button variant="contained" onClick={()=>setCurrentTab(Tab.MAIN)}>Volver</Button>
                 <ButtonWithLoader
                 loading={loading}
                 title='Crear usuario'
                 onClick={()=>createUser()}
-                className='w-32 button '
                 />
+                  </div>
+                </DialogActions>
                 {/* <button className='button' onClick={()=>createUser()}>Crear usuario</button> */}
-              </div>
-              </div>
 
             </div>
             }

@@ -12,6 +12,7 @@ const ListInstalaciones =  ({instalaciones,selected,onClick}:{
         <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
             {instalaciones.map((item,idx) => (
                 <ListItem
+                divider={true}
                 key={idx}
                 disablePadding
                 secondaryAction={

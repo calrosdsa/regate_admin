@@ -10,7 +10,7 @@ import MobileSidebar from '@/components/util/sidebar/MobileSidebar';
 import uiSlice, { uiActions } from '@/context/slices/uiSlice';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { getUser } from '@/context/actions/account-actions';
+import { getEstablecimientosUser, getUser } from '@/context/actions/account-actions';
 import { Dialog, Transition } from '@headlessui/react';
 import InfoBar from '@/components/util/info-bar/InfoBar';
 import { systemActions } from '@/context/slices/systemSlice';
@@ -21,9 +21,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 
 export default function RootLayout({
-  children,
+  children,params
 }: {
   children: React.ReactNode
+  params:{uuid:string}
 }) {
   const loaderDialog = useAppSelector(state=>state.ui.loaderDialog)
   const pathName = usePathname()
@@ -33,6 +34,9 @@ export default function RootLayout({
   const clearState = () =>{
     dispatch(chatActions.setChat(undefined))
  }
+    useEffect(()=>{
+        dispatch(getEstablecimientosUser(params.uuid))
+    },[])
   useEffect(()=>{
     dispatch(uiActions.openSidebar(false))
     dispatch(getUser())

@@ -68,7 +68,8 @@ export const login = (email:string,password:string) :ThunkAction<void,RootState,
                        case UserRol.CLIENT_USER_ROL:
                            const res = await fetch(`/api/account/establecimientos`)
                            const data:EstablecimientoUser[] = await res.json()
-                           if(data.length == 0){
+                           console.log("ESTABLECIMEINTOS",data)
+                           if(data.length == 1){
                                window.location.assign(`${rootEstablecimiento}/${data[0].uuid}`)
                            }
                            if(data.length > 1) {
@@ -91,11 +92,12 @@ export const login = (email:string,password:string) :ThunkAction<void,RootState,
         }
     }
 }
-export const getEstablecimientosUser = () :ThunkAction<void,RootState,undefined,AnyAction> =>{
+export const getEstablecimientosUser = (uuid:string="") :ThunkAction<void,RootState,undefined,AnyAction> =>{
     return async(dispatch)=>{
         try{
             dispatch(uiActions.setInnerLoading(true))
-            const res = await fetch(`${LOCAL_URL}/api/account/establecimientos`)
+            console.log("CURRENT_UUID",uuid)
+            const res = await fetch(`${LOCAL_URL}/api/account/establecimientos?uuid=${uuid}`)
             switch(res.status){
                 case HttpStatusCode.Unauthorized:
                     redirectToLogin()

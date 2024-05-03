@@ -41,7 +41,6 @@ const InstalacionDetail = ({instalacion,update,uuid,refresh}:{
         try{
             const res:Label[] = await GetCategories()
             setCategories(res)
-            console.log(res)
             setShow(!show)
         }catch(err){
             console.log(err)
@@ -69,14 +68,11 @@ const InstalacionDetail = ({instalacion,update,uuid,refresh}:{
             try{
                 addLoader()
                 const req = JSON.stringify({[name]:value})
-                console.log(JSON.stringify(req))
                 const res = await UpdateInstalacion(req,instalacion.id,uuid,instalacion.uuid)
-                console.log(res)
                 update(name,value)
                 removeLoader()
                 toast.success(successfulMessage)
             }catch(err){
-                console.log(err)
                 removeLoader()
                 toast.error(unexpectedError)
             }
@@ -97,7 +93,6 @@ const InstalacionDetail = ({instalacion,update,uuid,refresh}:{
                 toast.success(successfulMessage)
             }catch(err){
                 setLoading(false)
-                console.log(err)
                 toast.error(unexpectedError)
             }
         }
@@ -115,7 +110,7 @@ const InstalacionDetail = ({instalacion,update,uuid,refresh}:{
         description={`Se eliminar la cancha (${instalacion.name})`}
         />
         }
-        <div className="grid gap-y-3 w-full">
+        <div className="grid gap-y-3 w-full px-3">
             {/* <button className="button w-min rounded-lg">Editar</button> */}
             <div className="flex justify-between space-x-3">
             <span className="text-xl py-2 font-medium">Instalacion Info</span>

@@ -101,7 +101,6 @@ const Page = () =>{
                     type='email'
                     enableEdit={false}
                     content={account.last_login != null ? moment(account.last_login).utc().format('LLLL'):""}
-                    edit={(addLoader,removeLoader,e)=>updateAccount("email",e,addLoader,removeLoader)}
                     />
 
                     </>     

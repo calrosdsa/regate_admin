@@ -58,6 +58,7 @@ const UploadImage = ({setFile,src,save,id="file",width="w-36",height="h-36",clea
             // alt={""}
             />
             </div>
+            
             <div className="flex justify-between w-full mt-2 sm:w-max sm:grid sm:gap-y-2">
             <Button
             component="label"

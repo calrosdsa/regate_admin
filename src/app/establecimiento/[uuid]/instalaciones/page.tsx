@@ -255,9 +255,9 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         />
         }
         <div className="px-1 h-full  w-full">
-            <div className="md:grid md:grid-cols-8 gap-x-3 xl:pt-0">
+            <div className="md:grid md:grid-cols-9 gap-x-3 xl:pt-0">
                 
-            <div className="flex flex-col w-full col-span-2 p-2 border-[1px] shadow-lg md:h-screen overflow-auto ">
+            <div className="flex flex-col w-full col-span-3 p-2 border-[1px] shadow-lg md:h-screen overflow-auto ">
                 <div className="flex justify-between flex-wrap gap-2">
                 <Button 
                 variant="outlined"
@@ -298,7 +298,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                         </div>
                     </div>
 
-            <div className="flex relative flex-col col-start-3 col-span-full  md:border-[1px] md:shadow-lg h-screen md:overflow-auto">
+            <div className="flex relative flex-col col-start-4 col-span-full  md:border-[1px] md:shadow-lg h-screen md:overflow-auto">
                 <div>
                 <Tabs
                 className="sticky top-0 bg-white z-10 w-full pb-2"

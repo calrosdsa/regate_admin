@@ -4,12 +4,14 @@ import { API_URL } from "@/context/config";
 export async function GET(request:Request) {
    const nextCookies = cookies(); // Get cookies object
    const token = nextCookies.get('access_token')?.value
+   const { searchParams } = new URL(request.url)
+   const uuid = searchParams.get('uuid') || ""
    if(token == undefined){
     return NextResponse.json("Usuario no authorizado",{status:401})
   }
   try{
     //   const body:Cupo = await request.json()
-      const res = await fetch(`${API_URL}/account/admin/establecimientos-user/`,
+      const res = await fetch(`${API_URL}/account/admin/establecimientos-user/?uuid=${uuid}`,
       {
          headers:{
          'Authorization':`Bearer ${token}`

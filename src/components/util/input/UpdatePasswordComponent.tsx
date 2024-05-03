@@ -7,6 +7,7 @@ import moment from "moment"
 import { UpdatePassword } from "@/core/repository/account"
 import { toast } from "react-toastify"
 import { successfulMessage, unexpectedError } from "@/context/config"
+import { Button, TextField, Typography } from "@mui/material"
 
 const UpdatePasswordComponent = ({
     last_updated_password
@@ -59,10 +60,11 @@ const UpdatePasswordComponent = ({
         <div>
         <div className=" flex justify-between items-center space-x-5 py-3 divider">
            <div className="grid">
-               <span className="label">Contraseña</span>
-               <span className="text-sm">{last_updated_password != undefined ? moment(last_updated_password).utc().format('LLLL'):""}</span>
+           <Typography fontWeight={500} fontSize={16.5}>Contraseña</Typography>
+           <Typography variant="subtitle1" >{last_updated_password != undefined ? moment(last_updated_password).utc().format('LLLL'):""}</Typography>
+               {/* <span className="text-sm">{last_updated_password != undefined ? moment(last_updated_password).utc().format('LLLL'):""}</span> */}
            </div>
-            <span onClick={()=>setShow(!show)} className=" underline font-medium cursor-pointer">Actualizar</span>
+           <Button onClick={()=>setShow(!show)} color="inherit">Actualizar</Button>
        </div>
        <Transition
        show={show}
@@ -74,60 +76,51 @@ const UpdatePasswordComponent = ({
        leaveTo="transform opacity-0 scale-95"
        >
 
-        <form onSubmit={onSubmit} className="grid gap-y-3">
-            <div >
-            <label className="label"
-            htmlFor="currentPassword">Contraseña actual</label>
-           <input 
-            id="currentPassword"
-            type='password' name="currentPassword"
-            className="input"
-            value={currentPassword} 
-            onChange={onChange}
-            />
-            </div>
+        <form onSubmit={onSubmit} className="grid gap-y-3 mt-3">
+                <TextField
+                size="small"
+                label="Contraseña actual"
+                id="currentPassword"
+                required
+                sx={{width:"100%"}}
+                type='password' 
+                name="currentPassword"
+                value={currentPassword} 
+                onChange={onChange}
+                />
+               
+                <TextField
+                size="small"
+                label="Nueva contraseña"
+                id="newPassword"
+                type='password' 
+                name="newPassword"
+                value={newPassword} 
+                onChange={onChange}
+                required
+                sx={{width:"100%"}}
+                />
 
-            <div >
-            <label className="label"
-            htmlFor="newPassword">Nueva contraseña</label>
-           <input 
-            id="newPassword"
-            type='password' name="newPassword"
-            className="input"
-            value={newPassword} 
-            onChange={onChange}
-            />
-            </div>
+                <TextField
+                size="small"
+                label="Repetir nueva contraseña"
+                id="newPasswordConfirm"
+                type='password' 
+                name="newPasswordConfirm"
+                className="input"
+                value={newPasswordConfirm} 
+                onChange={onChange}
+                required
+                sx={{width:"100%"}}
+                />
 
-            <div >
-            <label className="label"
-            htmlFor="newPasswordConfirm">Repetir nueva contraseña</label>
-           <input 
-            id="newPasswordConfirm"
-            type='password' name="newPasswordConfirm"
-            className="input"
-            value={newPasswordConfirm} 
-            onChange={onChange}
-            />
-            </div>
-
-           <ButtonSubmit
-           loading={loading}
-           title="Actualizar contraseña"
-           />
+                <ButtonSubmit
+                loading={loading}
+                title="Actualizar contraseña"
+                />
 
            </form>
-         {/* <ButtonWithLoader
-         onClick={()=>edit(()=>setLoading(true),()=>{
-           setLoading(false)
-           setShow(false)
-       },value)}
-         title="Guardar"
-         loading={loading}
-         className="mt-2 w-28"
-         /> */}
-         {/* <button onClick={()=>edit(()=>setLoading(true),()=>setLoading(false),value)} */}
-          {/* className=" button">Guardar Cambios</button> */}
+         
        </Transition>
    </div>
     )

@@ -14,7 +14,6 @@ const ButtonWithLoader = ({loading,title,className="",onClick,disabled=false}:Pr
       <LoadingButton
       onClick={onClick}
       variant="contained"
-      sx={{mt:2}}
       loading={loading} className={className}
       disabled={disabled}>
         {title}

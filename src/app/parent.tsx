@@ -17,6 +17,8 @@ export function Parent({ children }:any) {
   const current = new URLSearchParams(Array.from(searchParams.entries()))
   const dispatch = useAppDispatch()
 
+  
+
   useEffect(()=>{
     const userLocal = localStorage.getItem("user") 
     const user:User | null = userLocal != null ? JSON.parse(userLocal) : null
