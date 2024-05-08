@@ -16,7 +16,7 @@ import { GetReservaDetail } from "@/core/repository/reservas";
 import { uiActions } from "@/context/slices/uiSlice";
 import DialogReservaDetail from "@/components/reservas/dialog/DialogReservaDetail";
 import { dataActions } from "@/context/slices/dataSlice";
-import { ListItemIcon, ListItemText, MenuItem } from "@mui/material";
+import { ListItemIcon, ListItemText, MenuItem, Typography } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -97,15 +97,19 @@ const Page = ({ params }: { params: { uuidUser: string,uuid:string } }) => {
         />
         }
         <div className="p-2 overflow-auto h-screen">
-            <div className="flex subtitle space-x-1">
-                <Link href={getRouteEstablecimiento(params.uuid,"users")}  className="cursor-pointer underline">Usuarios </Link>
+            <div className="flex space-x-1 items-center">
+                <Link href={getRouteEstablecimiento(params.uuid,"users")}  className="cursor-pointer underline">
+                    <Typography variant="body2">
+                    Usuarios
+                    </Typography>
+                     </Link>
                 <span> {' > '} </span>
-                <span className="text-primary cursor-pointer"> {userEmpresa.name}</span>
+                <Typography variant="body2" className="text-primary cursor-pointer"> {userEmpresa.name}</Typography>
             </div>
             <div className="pt-10 xl:pt-2">
 
                 <div className="flex justify-between">
-                <span className="text-xl">{' '} {userEmpresa.name} ( {userEmpresa.phone_number} )</span>
+                <Typography variant="h6" className="text-xl">{' '} {userEmpresa.name} ( {userEmpresa.phone_number} )</Typography>
 
                 <MenuLayout
                  anchorEl={anchorEl}
@@ -134,7 +138,7 @@ const Page = ({ params }: { params: { uuidUser: string,uuid:string } }) => {
 
                 </div>
                 <div className="mt-2">
-                <span className="sutitle text-lg">Reservas</span>
+                <Typography>Reservas</Typography>
                 <div className="mt-4">
                    <UserReservaTable
                    loading={loading}

@@ -13,12 +13,14 @@ import { useAppDispatch } from '@/context/reduxHooks'
 import { uiActions } from '@/context/slices/uiSlice'
 import { toast } from 'react-toastify'
 import { successfulMessage, unexpectedError } from '@/context/config'
+import { Chip, MenuItem, TextField, Typography } from '@mui/material'
 
-export const EditHorarioPrecio = ({open,close,cupos,updateCupos}:{
+export const EditHorarioPrecio = ({open,close,cupos,updateCupos,setCupos}:{
     open:boolean
     close:()=>void
     cupos:Cupo[]
     updateCupos:(c:Cupo[])=>void
+    setCupos:(c:Cupo)=>void
 }) => {
     // const dispatch = useAppDispatch()
     const [loading,setLoading] = useState(false)
@@ -78,14 +80,18 @@ export const EditHorarioPrecio = ({open,close,cupos,updateCupos}:{
     className=' max-w-lg'
      open={open} close={close}>
       <div className="grid">
-        <span className='label'>Horas a editar</span>
+      <Typography sx={{mb:1}} variant="body2">Precio por hora</Typography>
+        
 
-        <div className='flex overflow-auto space-x-2 py-2'>
+        <div className='flex overflow-auto space-x-2 pb-3 pt-1'>
         {cupos.map((item,idx)=>{
           return(
-            <div key={idx} className='w-min rounded-full bg-primary text-white px-2 py-1'>
-              <span>{item.time}</span>
-            </div>
+            <Chip key={idx} label={item.time} onDelete={()=>{
+              setCupos(item)
+            }} />
+            // <div key={idx} className='w-min rounded-full bg-primary text-white px-2 py-1'>
+            //   <span>{item.time}</span>
+            // </div>
           )
         })}
         </div>
@@ -93,34 +99,39 @@ export const EditHorarioPrecio = ({open,close,cupos,updateCupos}:{
         <form onSubmit={onSubmit}>
             <div className='grid grid-cols-2 gap-3'>
             <div>
-           <span className='label'>Precio por hora</span>
+           <Typography sx={{mb:1}} variant="body2">Precio por hora</Typography>
              <div className={`relative`}>
-        <input id="password" type='telnet'
-        required
+        <TextField
+            id="password" type='telnet'
+            size='small'
+            required
             onChange={onChange} 
             value={price}
-            // minLength={8}
-            pattern='^[0-9]*$'
-            className="input z-0 "
+            className="z-0 "
              />
         </div>  
 
             </div>
 
             <div>
-            <TooltipIcon
+            {/* <TooltipIcon
             title='Habilitar'
             helpText='Decide si quieres que se hagan reservas en esta hora'
             tooltipId='tooltip2'
-            />
+            /> */}
+           <Typography sx={{mb:1}} variant="body2">Habilitar</Typography>
+            
 
-            <select className='input' value={available.toString()} onChange={(e)=>{
+            <TextField size='small' value={available.toString()}
+            select
+            sx={{width:"100%"}}
+             onChange={(e)=>{
               const bool = e.target.value == "true"
               setAvailable(bool) 
             }}>
-                <option value="true" >Habilitar</option>
-                <option value="false">Deshabilitar</option>
-            </select>
+                <MenuItem value="true" >Habilitar</MenuItem>
+                <MenuItem value="false">Deshabilitar</MenuItem>
+            </TextField>
             </div>
             </div>
 

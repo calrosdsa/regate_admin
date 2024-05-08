@@ -14,8 +14,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import { dataActions } from "@/context/slices/dataSlice";
 import Link from "next/link";
 import { getRouteEstablecimiento } from "@/core/util/routes";
-import { Button, DialogActions, IconButton, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import { Button, Chip, DialogActions, IconButton, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import LabelIcon from '@mui/icons-material/Label';
+
 const DialogReservaDetail = ({open,close,data,update,uuid,getReservas}:{
     open:boolean
     close:()=>void
@@ -98,12 +100,11 @@ const DialogReservaDetail = ({open,close,data,update,uuid,getReservas}:{
      />
      }
      <DialogLayout
-     className=" max-w-md sm:max-w-lg md:max-w-xl"
      title="Detalles de la Reserva"
      allowFullScreen={true}
      open={showReservaDetail} close={()=>setShowReservaDetail(false)}>
 
-        <div className='rounded-lg bg-white overflow-auto pt-2'>
+        <div className=' overflow-auto'>
 
             {/* <div className="pb-2 flex justify-between items-center">
                 <span className="title text-lg">Detalles de la Reserva</span>
@@ -119,17 +120,22 @@ const DialogReservaDetail = ({open,close,data,update,uuid,getReservas}:{
                         src={detail.instalacion.portada}
                         h={100}
                         w={100}
-                        className="rounded-full h-14 w-14 object-cover"
+                        className="rounded-full h-14 w-14 object-cover bg-gray-200 "
                         />
                         <div className="flex flex-col gap-y-2">
-                        <span className="text-sm font-semibold">{detail.instalacion.name}</span>
-                        <div className="flex w-40 space-x-2 items-center border-[1px] p-1 rounded-lg cursor-default">
+                        <Typography >{detail.instalacion.name}</Typography>
+                        <Chip
+                        size="small"
+                        label={detail.instalacion.category_name}
+                        icon={<LabelIcon/>}
+                        />
+                        {/* <div className="flex px-2 space-x-2 items-center border-[1px] p-1 rounded-lg cursor-default">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
                                     className="w-3 h-3">
                                     <path fillRule="evenodd" d="M5.25 2.25a3 3 0 00-3 3v4.318a3 3 0 00.879 2.121l9.58 9.581c.92.92 2.39 1.186 3.548.428a18.849 18.849 0 005.441-5.44c.758-1.16.492-2.629-.428-3.548l-9.58-9.581a3 3 0 00-2.122-.879H5.25zM6.375 7.5a1.125 1.125 0 100-2.25 1.125 1.125 0 000 2.25z" clipRule="evenodd" />
                                 </svg>
-                                <span className="text-xs font-medium">{detail.instalacion.category_name}</span>
-                        </div>
+                                <Typography variant="caption">{detail.instalacion.category_name}</Typography>
+                        </div> */}
                         </div>
                     </div>
 
@@ -189,47 +195,49 @@ const DialogReservaDetail = ({open,close,data,update,uuid,getReservas}:{
                          <div className=" mb-4 ">
                                 <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
                                         <Typography variant="subtitle2"  className="label">Fecha y hora de la reserva</Typography>
-                                        <span className="text-xs  sm:whitespace-nowrap">{moment.utc(detail.reserva.start_date).format("ll")} de {' '}
+                                        <Typography variant="body2" className="sm:whitespace-nowrap">{moment.utc(detail.reserva.start_date).format("ll")} de {' '}
                                 {moment.utc(detail.reserva.start_date).format("LT")} a {' '}
-                                {moment.utc(detail.reserva.end_date).format("LT")} </span>
+                                {moment.utc(detail.reserva.end_date).format("LT")} </Typography>
                                     </div>
 
                                     <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
                                         <Typography variant="subtitle2"  className="label">Estado de la reserva</Typography>
-                                        <span className="text-xs ">{getEstadoReserva(detail.reserva.estado)}</span>
+                                        <Typography variant="body2">{getEstadoReserva(detail.reserva.estado)}</Typography>
                                     </div>
 
                                     <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
                                         <Typography variant="subtitle2"  className="label">Precio de la reserva</Typography>
-                                        <span className="text-xs ">{detail.reserva.total_price}</span>
+                                        <Typography variant="body2">{detail.reserva.total_price}</Typography>
                                     </div>
 
                                     <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
                                         <Typography variant="subtitle2"  className="label">Cantidad pagada</Typography>
-                                        <span className="text-xs ">{detail.reserva.paid}</span>
+                                        <Typography variant="body2">{detail.reserva.paid}</Typography>
                                     </div>
 
 
                                     <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
                                         <Typography variant="subtitle2"  className="label">Hora en la que se hizo la reserva</Typography>
-                                        <span className="text-xs ">
+                                        <Typography variant="body2">
                                             {moment(detail.reserva.created_at).format("lll")}
-                                        </span>
+                                        </Typography>
                                     </div>
 
                                     {detail.reserva.evento.id != 0 &&
                                     <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
                                         <Typography variant="subtitle2"  className="label">Evento</Typography>
                                         <Link  href={getRouteEstablecimiento(uuid,`eventos/${detail.reserva.evento.uuid}?name=${detail.reserva.evento.name}&id=${detail.reserva.evento.id}`)} 
-                                        className="text-xs link">
+                                        className="text-xs underline">
+                                            <Typography color="primary" variant="body2">
                                             {detail.reserva.evento.name}
+                                            </Typography>
                                         </Link>
                                     </div>
                                     }
                                     {detail.reserva.cancellation_reason != null && 
                                     <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
                                         <Typography variant="subtitle2"  className="label">Motivo de cancelación</Typography>
-                                        <span className="text-xs ">{detail.reserva.cancellation_reason}</span>
+                                        <Typography variant="body2">{detail.reserva.cancellation_reason}</Typography>
                                     </div>
                                     }
                                     

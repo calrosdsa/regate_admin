@@ -1,4 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react"
+import { CircularProgress } from "@mui/material"
 import { Fragment } from "react"
 
 
@@ -8,7 +9,7 @@ const LoaderDialog = ({open}:{
 
     return(
         <Transition appear show={open} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={()=>{}}>
+        <Dialog as="div" className="relative z-50" onClose={()=>{}}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -34,13 +35,7 @@ const LoaderDialog = ({open}:{
               >
                 <Dialog.Panel className="transform overflow-hidden h-10 w-10
                  text-left align-middle  transition-all">
-                    <div
-                    className="inline-block text-primary h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                    role="status">
-                    <span
-                        className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
-                        >Loading...</span>
-                    </div>
+                   <CircularProgress color="inherit"/>
             </Dialog.Panel>
           </Transition.Child>
         </div>

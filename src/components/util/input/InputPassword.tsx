@@ -34,7 +34,6 @@ const InputPassword = ({onChange,password,label,name,error,className,size="small
       onChange={onChange} 
       value={password}
       fullWidth
-      sx={{backgroundColor:"white"}}
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">

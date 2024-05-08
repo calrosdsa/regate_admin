@@ -15,10 +15,10 @@ module.exports = {
       },
       colors:{
         'facebook': '#039be5',
-        'primary':'#0406ee',
+        'primary':'rgba(92,217,255,0.79)',
         'hoverPrimary':'#1b03c3',
         'teclu2':'#e50108',
-        'secondary':'F2BE22',
+        'secondary':'#f50057',
         'error':'#ED4337'
       }
     },

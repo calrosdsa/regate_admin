@@ -5,6 +5,7 @@ import { useAppDispatch } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
 import { AddAmenities, AddRules } from "@/core/repository/labels";
 import { toast } from "react-toastify";
+import { Button, Checkbox, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 
 
 const AddRuleDialog = ({rules,close,open,establecimientoId,setNewRulesEstablecimiento}:{
@@ -61,26 +62,38 @@ const AddRuleDialog = ({rules,close,open,establecimientoId,setNewRulesEstablecim
         className="max-w-lg"
          open={open} close={close} title="Agregar reglas">
             <div className="py-2 max-w-xl">
-                <div className="gap-2 flex overflow-auto max-w-xl flex-wrap " >
-                    {rules.map((item)=>{
+            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                    {rules.map((item,idx)=>{
+                        const labelId = `checkbox-list-label-${idx}`;
                         return(
-                            <div key={item.id} onClick={()=>selectItem(item.id)}
-                            className="flex cursor-pointer space-x-4 divider p-1 w-full">
-                                <input type="checkbox" checked={ids.includes(item.id)} onChange={(e)=>{}}/>
-                                <span>{item.name}</span>
-                            </div>
-                            // <Amenity key={item.id} onClick={()=>selectItem(item.id)}
-                        //    item={item} className={`noselect ${ids.includes(item.id) ? "border-2 border-primary":"border-2"}`}/>
-                        )
-                    })}
+                            <ListItemButton key={idx} role={undefined} onClick={()=>selectItem(item.id)} dense>
+                            <ListItemIcon>
+                              <Checkbox
+                                edge="start"
+                                checked={ids.includes(item.id)}
+                                tabIndex={-1}
+                                disableRipple
+                                inputProps={{ 'aria-labelledby': labelId }}
+                              />
+                            </ListItemIcon>
+                            <ListItemText id={labelId} primary={item.name} />
+                          </ListItemButton>
+                            // <div key={item.id} onClick={()=>selectItem(item.id)}
+                            // className="flex cursor-pointer space-x-4 divider p-1 w-full">
+                            //     <input type="checkbox" checked={ids.includes(item.id)} onChange={(e)=>{}}/>
+                            //     <span>{item.name}</span>
+                            // </div>
+                           
+                    )
+                })}
+            </List>                
                     
-                </div>
 
                 <div className="w-full justify-end pt-2">
-                <button onClick={()=>setShowDialogConfirmation(true)}
-                className="button" disabled={ids.length == 0}>
+                <Button onClick={()=>setShowDialogConfirmation(true)}
+                 disabled={ids.length == 0} variant="contained">
                     Añadir
-                </button>
+                </Button>
                 </div>
                 {/* {JSON.stringify(rules)} */}
             </div>

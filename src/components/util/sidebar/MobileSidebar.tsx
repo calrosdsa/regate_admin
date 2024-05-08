@@ -52,14 +52,12 @@ const MobileSidebar:React.FC<Props> = ({open,setOpen,children}) =>{
                 >
                   
                 </Transition.Child>
-                <div className='relative flex  flex-col w-full  bg-white shadow-xl overflow-auto z-30'>
-                <div className='flex space-x-4 items-center px-4 sm:px-6'>
+                <div className=' z-30'>
                   {/* <Dialog.Title className='text-2xl font-bold text-indigo-500'>
                     <h1>Portal Cautivo</h1>
                   </Dialog.Title> */}
                 
-                </div>
-                {children}
+                  {children}
               </div>
               </div>
           </Transition.Child>

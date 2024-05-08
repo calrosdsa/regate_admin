@@ -17,7 +17,7 @@ import { GetInstalaciones } from "@/core/repository/instalacion";
 import { GetReservaDetail, getEstablecimientoReservas } from "@/core/repository/reservas";
 import { Order, OrderQueue, ReservaType } from "@/core/type/enums";
 import { getRouteEstablecimiento } from "@/core/util/routes";
-import { Button, Tab, Tabs } from "@mui/material";
+import { Button, Tab, Tabs, Typography } from "@mui/material";
 import moment from "moment";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -157,17 +157,20 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
     return(
         <>
         <div className="p-2 overflow-auto h-screen">
-            <div className="flex subtitle space-x-1">
-                <Link href={getRouteEstablecimiento(params.uuid,"eventos")}  className="cursor-pointer underline">Eventos </Link>
+            <div className="flex space-x-1">
+                <Link href={getRouteEstablecimiento(params.uuid,"eventos")}  className="cursor-pointer underline">
+                    <Typography variant="body2">
+                        Eventos
+                    </Typography>
+                     </Link>
                 <span> {' > '} </span>
-                <span className="text-primary cursor-pointer"> {name}</span>
+                <Typography variant="body2" className="text-primary cursor-pointer"> {name}</Typography>
             </div>
             <div className="pt-10 xl:pt-2">
 
-                <div className="grid">
-                <span className="text-xl">{name} 
-                <span className="text-sm subtitle"> #{params.uuidEvento.slice(0,7)}</span>
-                </span>
+                <div className="flex  space-x-1 items-center">
+                <Typography variant="h6">{name}</Typography>
+                <Typography className="text-sm"> #{params.uuidEvento.slice(0,7)}</Typography>
                 </div>
 
 
@@ -212,7 +215,7 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
             }
             <div className="p-2 overflow-auto h-screen">
                 <div className="pt-10 xl:pt-2">
-                    <span className="text-xl">Reservas({paginationProps?.count})</span>
+                    <Typography className="text-xl">Reservas({paginationProps?.count})</Typography>
     
                 <div className="flex space-x-3 py-2">
               

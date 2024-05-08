@@ -4,11 +4,10 @@ import EditComponent from "@/components/util/input/EditComponent";
 import UpdatePasswordComponent from "@/components/util/input/UpdatePasswordComponent";
 import Loader from "@/components/util/loaders/Loader";
 import { GetAccount } from "@/core/repository/account";
+import { Divider, IconButton, Typography } from "@mui/material";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 const Page = () =>{
     const [account,setAccount] = useState<User | undefined>(undefined)
     const [loadingAccount,setLoadingAccount] = useState(false)
@@ -36,24 +35,22 @@ const Page = () =>{
 
     return(
         <>
-         <ToastContainer
-            position='bottom-center'
-        />
-        <div className="grid sm:grid-cols-2 p-3 max-w-6xl mx-auto gap-x-10">
-
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
-        className="w-10 h-10 icon-button noSelect" onClick={()=>{
+        <div className="max-w-6xl mx-auto p-3">
+            <IconButton sx={{mb:1}} onClick={()=>{
             if(window != undefined){
                 window.history.back()
             }
         }}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-        </svg>
+                <ArrowBackIcon/>
+            </IconButton>
+            <Divider/>
+            <Typography variant="h5" className="py-3">Cuenta</Typography>
 
-            <span className="title text-2xl col-span-full pb-5 pt-3">Cuenta</span>
+        <div className="grid sm:grid-cols-2 gap-x-10">
+
 
                 <div className="flex flex-col gap-y-2">
-                    <span className="title text-xl">Información personal</span>
+                    <Typography variant="h6">Información personal</Typography>
                     {loadingAccount &&
                     <Loader className=" flex justify-center w-full pt-10"/>
                     }
@@ -73,23 +70,23 @@ const Page = () =>{
                     edit={(addLoader,removeLoader,e)=>updateAccount("email",e,addLoader,removeLoader)}
                     />
 
-                    <EditComponent
+                    {/* <EditComponent
                     label='Número de Telefono'
                     content={account.phone || ""}
                     type='tel'
                     enableEdit={false}
                     edit={(addLoader,removeLoader,e)=>updateAccount("phone_number",e,addLoader,removeLoader)}
-                    />
+                    /> */}
                     </>     
                    }
                 </div>
 
                 <div className="flex flex-col gap-y-2">
-                    <span className="title text-xl">Inicio de sesión y seguridad</span>
+                    <Typography variant="h6">Inicio de sesión y seguridad</Typography>
 
                     {loadingAccount &&
                     <Loader className=" flex justify-center w-full pt-10"/>
-                    }
+                }
 
                     {account != undefined &&
                    <>
@@ -107,6 +104,7 @@ const Page = () =>{
                    }
                 </div>
 
+            </div>
             </div>
         </>
     )

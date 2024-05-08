@@ -1,22 +1,56 @@
 'use client';
 
+import LoaderDialog from "@/components/util/loaders/LoaderDialog";
 import { handleIncomeMessages } from "@/context/actions/chat-actions";
 import { WS_URL } from "@/context/config";
 import { getMessagesChat, insertMessage } from "@/context/db";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { chatActions } from "@/context/slices/chatSlice";
+import { uiActions } from "@/context/slices/uiSlice";
 import store from "@/context/store";
 import { PayloadType, WsAccountPayload } from "@/core/type/notification";
+import { ThemeProvider } from "@emotion/react";
+import { CssBaseline, Paper, createTheme } from "@mui/material";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef } from "react";
-import { toast } from "react-toastify";
+import { useEffect, useMemo, useRef } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export function Parent({ children }:any) {
   const connection = useRef<WebSocket>();
   const searchParams = useSearchParams();
   const current = new URLSearchParams(Array.from(searchParams.entries()))
   const dispatch = useAppDispatch()
+  const {mode,loaderDialog} = useAppSelector(state=>state.ui)
 
+  const theme = useMemo(
+    () =>
+      createTheme({
+        // typography: {
+        //   fontFamily: roboto.style.fontFamily,
+        // },
+        palette:{
+          mode,
+          primary: {
+            main: 'rgba(79,168,220,0.79)',
+          },
+          secondary: {
+            main: '#f50057',
+          },
+        }
+      }),
+    [mode],
+  );
+
+
+  useEffect(()=>{
+    if(typeof window != "undefined"){
+      const m = localStorage.getItem("mode") as 'light' | 'dark' || "light"
+      dispatch(uiActions.setMode(m))
+    }
+  },[])
   
 
   useEffect(()=>{
@@ -52,7 +86,20 @@ export function Parent({ children }:any) {
   },[])
   return (
     <>
-      {children}
+     <AppRouterCacheProvider>
+        <ThemeProvider theme={theme}>
+        <CssBaseline />
+          <Paper elevation={0}>
+            <>
+            <ToastContainer
+              position='bottom-center'
+              />
+                <LoaderDialog open={loaderDialog}/>
+              {children}
+            </>
+          </Paper>
+        </ThemeProvider>
+     </AppRouterCacheProvider>
     </>
   );
 }

@@ -7,20 +7,22 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { StaticDatePicker } from "@mui/x-date-pickers";
 import moment from "moment";
 import DialogLayout from "./DialogLayout";
+import { Paper } from "@mui/material";
 
-const DialogCalendar = ({openModal,closeModal,onAccept,value}:{
+const DialogCalendar = ({openModal,closeModal,onAccept,value,label}:{
     openModal:boolean
     value:moment.Moment | null
     closeModal:()=>void
     onAccept:(e: moment.Moment | null) =>void
+    label?:string
 }) =>{
 
     return(
         <DialogLayout
         close={closeModal}
+        title={label}
         allowFullScreen={false}
         open={openModal}>
-
                     <LocalizationProvider dateAdapter={AdapterMoment}>
                                 <DemoContainer components={['DatePicker']}>
                                     <StaticDatePicker value={value} onAccept={(e)=>{

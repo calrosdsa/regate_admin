@@ -8,6 +8,7 @@ import Image from "next/image";
 import { ChangeEvent, FormEvent, useState } from "react";
 import MailIcon from '@mui/icons-material/Mail';
 import Link from "next/link";
+import { Paper, Typography } from "@mui/material";
 const Login = () =>{
     const dispatch = useAppDispatch()
     const uiState = useAppSelector(state=>state.ui)
@@ -33,7 +34,9 @@ const Login = () =>{
   
 
     return(
-        <div className='sm:w-[400px] bg-gray-100 shadow-md p-2 py-10 rounded-lg'>
+          <Paper elevation={2}>
+        <div className='sm:w-[400px] shadow-md p-2 py-10 rounded-lg'>
+
       <div className=' grid place-content-center mb-10'>
       <Image
             src="/images/logo.png"
@@ -49,10 +52,10 @@ const Login = () =>{
    value={email}
    name='email'
    size="small"
-//    error={authtate.errorLogin?.email}
+   //    error={authtate.errorLogin?.email}
    onChange={onChange}
    Icon={MailIcon}
-  />
+   />
   
    <InputPassword
    label='Contraseña'
@@ -64,7 +67,11 @@ const Login = () =>{
    className=''
    />
   </div>
-  <Link href={`/auth/forgot-password`} className="labelText flex justify-end text-gray-600 cursor-pointer">¿Olvidaste tu contraseña?</Link>
+  <Link href={`/auth/forgot-password`} className="labelText flex justify-end cursor-pointer">
+    <Typography>
+    ¿Olvidaste tu contraseña?
+    </Typography>
+    </Link>
 
   <ButtonSubmit
   title='Submit'
@@ -74,6 +81,7 @@ const Login = () =>{
    
 </form>
     </div>
+   </Paper>
     )
 }
 export default Login;

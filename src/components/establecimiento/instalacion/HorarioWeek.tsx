@@ -16,7 +16,7 @@ import ConfirmationDialog from "@/components/util/dialog/ConfirmationDialog";
 import { TooltipContainer } from "@/components/util/tooltips/Tooltip";
 import { time } from "console";
 import EditIcon from '@mui/icons-material/Edit';
-import { Button, ListItemText, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Box, Button, ListItemText, MenuItem, Paper, Select, TextField, Typography, useTheme } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -41,6 +41,7 @@ const HorarioWeek = ({instalacionId,cupos,currentDay,getHorarioDay,loading,insta
 }) =>{
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const dispatch = useAppDispatch()
+    const theme = useTheme()
     const [editHorarioDialog,setEditHorarioDialog] = useState(false)
     const [openCopyInstalacion,setOpenCopyInstalacion] = useState(false)
     const [resetDayConfirmationDialog,setResetDayConfirmationDialog] = useState(false)
@@ -134,6 +135,10 @@ const HorarioWeek = ({instalacionId,cupos,currentDay,getHorarioDay,loading,insta
             setSelectedCupos([])
             setEditHorarioDialog(false)
         }}
+        setCupos={(e)=>{
+            const n = selectedCupos.filter(t=>t.time != e.time)
+              setSelectedCupos(n)
+        }}
         />
         }
 
@@ -178,7 +183,9 @@ const HorarioWeek = ({instalacionId,cupos,currentDay,getHorarioDay,loading,insta
         }
         <div className="relative">
 
-        <div className=" w-full z-10 sticky top-14 bg-white flex  space-x-3   justify-between items-center ">
+        <Paper 
+        elevation={2}
+        className=" w-full z-10 sticky top-14  flex  space-x-3   justify-between items-center ">
             <div className="flex space-x-2  items-center overflow-x-auto  pb-2 ">    
             <Button 
                 variant="contained"      
@@ -282,14 +289,13 @@ const HorarioWeek = ({instalacionId,cupos,currentDay,getHorarioDay,loading,insta
             </MenuLayout>
 
             </div>
+        </Paper>
 
-
-        </div>
         <Loading
         loading={loading}
         className="flex justify-center w-full"
         />
-        <div className="pt-6">
+        <div className="pt-6 px-2">
 
         {cupos.slice(0,48).map((item,index)=>{
                 return(
@@ -305,25 +311,38 @@ const HorarioWeek = ({instalacionId,cupos,currentDay,getHorarioDay,loading,insta
                             <span className=" w-full h-[0.5px]  bg-gray-400"></span>
                         }
 
-                        <div className={`w-full h-10  flex items-center p-1 cursor-pointer
-                        ${item.available && "bg-gray-200"} 
-                        ${selectedCupos.map(item=>item.time).includes(item.time) ? "bg-primary text-white":"hover:bg-gray-200"}`}>
+                        <Box 
+                        sx={{
+                            backgroundColor:
+                                selectedCupos.map(item=>item.time).includes(item.time)  ?
+                                (
+                                theme.palette.mode == "dark"?
+                                theme.palette.primary.dark  
+                                :
+                                theme.palette.primary.light
+                                )
+                            : theme.palette.background.paper
+                        }}
+                        className={`w-full h-10  flex items-center p-1 cursor-pointer`}>
+
                             <div className="flex items-center space-x-3">
                                 {item.price != undefined ?
-                                <span className="text-sm font-medium">{item.price} BOB</span>
+                                <Typography variant="caption" className="text-sm font-medium">{item.price} BOB</Typography>
                                 :
-                                <span className="text-sm italic">Sin definir</span>
+                                <Typography variant="caption" className="text-sm italic">Sin definir</Typography>
                                 }
-                                {/* <span className="text-sm font-medium">{item.price == undefined ? "Sin definir" : `${item.price} BOB`}</span> */}
+                                {/* <Typography variant="caption" className="text-sm font-medium">{item.price == undefined ? "Sin definir" : `${item.price} BOB`}</Typography> */}
                                 {item.available &&
-                                    <span className="text-green-500 font-medium text-xs">Habilitado</span>
+                                    <Typography variant="caption" className="text-green-500 font-medium text-xs">Habilitado</Typography>
                                 }
                                 {item.available == false && item.price != undefined &&
-                                    <span className="text-red-500 font-medium text-xs">Deshabilitado</span>
+                                    <Typography variant="caption" className="text-red-500 font-medium text-xs">Deshabilitado</Typography>
                                 }
-                                <span>{item.available}</span>
+                                <Typography>{item.available}</Typography>
                             </div>
-                        </div>
+
+                        </Box>
+
                     </div>
                     </div>
 

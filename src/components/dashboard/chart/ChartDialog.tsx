@@ -16,6 +16,8 @@ import Loader from "@/components/util/loaders/Loader";
 import { exportDashboardDataExcel } from "@/context/actions/download-actions";
 import { useParams } from "next/navigation";
 import { fetchInstalaciones } from "@/context/actions/data-actions";
+import { Paper, Table, TableContainer, TableHead, TableRow } from "@mui/material";
+import { StyledTableCell, StyledTableRow } from "@/components/util/table/StyleTableCell";
 
 
 const ChartDialog = ({open,close,CustomToolTip,getNewData,showLegend,legendLabels,singleColor,
@@ -140,7 +142,7 @@ keyValue2,label,chartTypeData}:{
     return(
         <>
         <Transition appear show={open} as={Fragment}>
-    <Dialog as='div' className='relative z-10' open={open} onClose={close}>
+    <Dialog as='div' className='relative z-50' open={open} onClose={close}>
         <div className='fixed top-0  w-screen h-screen'>
       <Transition.Child
                 as={Fragment}
@@ -151,9 +153,9 @@ keyValue2,label,chartTypeData}:{
                 leaveFrom="opacity-0 scale-95"
                 leaveTo="opacity-0 scale-0"
               >
-      <Dialog.Panel>
-                                   <div className='bg-gray-100 h-screen overflow-auto relative'>
-            <div className={`border-[1px] bg-white md:m-3   border-gray-400  
+      <Paper>
+            <div className=' h-screen overflow-auto relative'>
+            <div className={`border-[1px] md:m-3   border-gray-400  
              ${hideHeader ? "mt-2" : "mt-16 md:mt-16" }`}>
                             <FilterChartHeader
                             hideHeader={hideHeader}
@@ -241,45 +243,50 @@ keyValue2,label,chartTypeData}:{
                 }
              </div>
 
-             <div className={`border-t-[1px] border-gray-400 sm:p-3 relative `}>
+             <div className={`border-t-[1px] border-gray-400 sm:p-3 relative overflow-auto w-full `}>
                 {/* {chartState.loading ?
           <Loader className=' absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 '/>
                 : */}
-             <table className="w-full shadow-xl">
+                <Paper elevation={2}>
+                <TableContainer>
+                    <Table>
+             {/* <table className="w-full shadow-xl"> */}
 
-             <thead className=" bg-gray-200 text-left noselect">
-            <tr>
-                <th className="headerTable w-10">
-                </th>
-                <th className="headerTable">
+             <TableHead >
+            <TableRow>
+                <StyledTableCell>
+                </StyledTableCell>
+                <StyledTableCell>
                    {labelName}
-                </th>
-                <th className="headerTable">
+                </StyledTableCell>
+                <StyledTableCell>
                     {valueName}
-                </th>        
+                </StyledTableCell>        
                 {shouldShowSecondLabel &&
-                <th className="headerTable">
+                <StyledTableCell>
                     App
-                </th>
+                </StyledTableCell>
                 }
-            </tr>
-        </thead>
+            </TableRow>
+        </TableHead>
         <tbody>
             {chartState.data.map((item,index)=>{
                 return(
-                    <tr key={index} 
-                    className={`${index % 2 && "bg-gray-100"}`}>
-                        <td className="rowTable font-medium">{index + 1}.-</td>
-                        <td className="rowTable truncate ">{item.name}</td>
-                        <td className="rowTable truncate ">{item.value} {getTypeValue()}</td>
+                    <StyledTableRow key={index}>
+                        <StyledTableCell>{index + 1}.-</StyledTableCell>
+                        <StyledTableCell>{item.name}</StyledTableCell>
+                        <StyledTableCell>{item.value} {getTypeValue()}</StyledTableCell>
                         {shouldShowSecondLabel &&
-                            <td className="rowTable truncate ">{item.value2} {getTypeValue()}</td>
+                            <StyledTableCell>{item.value2} {getTypeValue()}</StyledTableCell>
                         }
-                    </tr>
+                    </StyledTableRow>
                 )
             })}
         </tbody>
-                </table>
+                </Table>
+                </TableContainer>
+                </Paper>
+
         {/* } */}
              </div>
 
@@ -287,7 +294,7 @@ keyValue2,label,chartTypeData}:{
 
                             </div>
                         </div>
-                        </Dialog.Panel>
+                        </Paper>
             </Transition.Child>
             </div>
             </Dialog>

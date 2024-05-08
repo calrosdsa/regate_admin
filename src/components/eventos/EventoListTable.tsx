@@ -5,6 +5,9 @@ import Loading from "../util/loaders/Loading";
 import { EventoEstado, Order, OrderQueue, ReservaEstado } from "@/core/type/enums";
 import Link from "next/link";
 import { getRouteEstablecimiento } from "@/core/util/routes";
+import { Paper, Table, TableBody, TableContainer, TableHead, TableRow } from "@mui/material";
+import { StyledTableCell, StyledTableRow } from "../util/table/StyleTableCell";
+import LinearProgressMui from "../util/loaders/LinnearProgressMui";
 
 export const getEstadoEvento = (estado:EventoEstado)=>{
     switch(estado){
@@ -30,12 +33,73 @@ const EventoListTable = ({eventos,loading,uuid,deleteEvento}:{
     
 
     return(
-        <div className={`relative ${loading && "h-20"}`}>
-            <Loading
+        <div className={`relative`}>
+            <LinearProgressMui
             loading={loading}
-            className="absolute top-12 left-1/2 -translate-x-1/2"
             />
-             <table className="w-full shadow-xl">
+            <Paper sx={{ width: '100%'}} elevation={2}>
+            <TableContainer>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <StyledTableCell></StyledTableCell>
+                            <StyledTableCell>
+                                Evento
+                            </StyledTableCell>
+                            <StyledTableCell>
+                                Precio Total
+                            </StyledTableCell>
+                            <StyledTableCell>
+                                Monto Pagado
+                            </StyledTableCell>
+                            <StyledTableCell>
+                                Estado
+                            </StyledTableCell>
+                            <StyledTableCell>
+                                Fecha de Inicio
+                            </StyledTableCell>
+                            <StyledTableCell>
+                                Fecha de Finalización
+                            </StyledTableCell>
+                            <StyledTableCell>
+                            Horas totales
+                            </StyledTableCell>
+                            <StyledTableCell>
+                            Organizador
+                            </StyledTableCell>
+                        </TableRow>
+                    
+                    </TableHead>
+                    <TableBody>
+                    {eventos.map((item,index)=>{
+                        return(
+                            <StyledTableRow key={index}>
+                                <StyledTableCell>{index + 1}.-</StyledTableCell>
+                                <StyledTableCell>
+                                    <div className="flex items-center space-x-1 ">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                                        <path fillRule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.75 2.75 0 0118 6.75v8.5A2.75 2.75 0 0115.25 18H4.75A2.75 2.75 0 012 15.25v-8.5A2.75 2.75 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75z" clipRule="evenodd" />
+                                        </svg>
+                                        <Link href={getRouteEstablecimiento(uuid,`eventos/${item.uuid}?name=${item.name}&id=${item.id}`)} 
+                                        className="rowTable truncate underline font-medium ">{item.name}</Link>
+                                    </div>
+                                </StyledTableCell>
+                                <StyledTableCell>{formatBlankorNull(item.total_price)}</StyledTableCell>
+                                <StyledTableCell>{formatBlankorNull(item.paid)}</StyledTableCell>
+                                <StyledTableCell>{getEstadoEvento(item.estado)}</StyledTableCell>
+                                <StyledTableCell>{formatDateTime(item.start_date)}</StyledTableCell>
+                                <StyledTableCell>{formatDateTime(item.end_date)}</StyledTableCell>
+                                <StyledTableCell>{formatBlankorNull(item.total_hours," hrs")}</StyledTableCell>
+                                <StyledTableCell>{formatBlankorNull(item.organizador)}</StyledTableCell>
+
+
+                                {/* <td className="rowTable">{item.name}</td> */}
+                            </StyledTableRow>
+                        )
+                    })}
+                    </TableBody>
+
+             {/* <table className="w-full shadow-xl">
         <thead className=" bg-gray-200 text-left noselect">
             <tr>
                 <th className="headerTable w-10">
@@ -64,11 +128,6 @@ const EventoListTable = ({eventos,loading,uuid,deleteEvento}:{
                 <th className="headerTable">
                     Organizador
                 </th>
-                {/* <th className="headerTable">
-                    Precio pagado
-                </th> */}
-                
-            
                 <th className="headerTable">
                 </th>
             </tr>
@@ -94,32 +153,17 @@ const EventoListTable = ({eventos,loading,uuid,deleteEvento}:{
                         <td className="rowTable ">{formatDateTime(item.end_date)}</td>
                         <td className="rowTable ">{formatBlankorNull(item.total_hours," hrs")}</td>
                         <td className="rowTable ">{formatBlankorNull(item.organizador)}</td>
-
-
-                        {/* <td className="rowTable">{item.name}</td> */}
                     </tr>
                 )
             })}
 
-            
-           
-          
-            {/* {data.map((item)=>{
-                return(
-            <tr className="bg-white border-b">
-                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                    <Link href={`./establecimiento/${item.uuid}`}>
-                    {item.name}
-                    </Link>
-                </th>
-                <td className="px-6 py-4">
-                    Silver
-                </td>
-            </tr>
-       )})} */}
-
         </tbody>
-    </table>
+    </table> */}
+
+    
+    </Table>
+            </TableContainer>
+            </Paper>
            
            
         </div>

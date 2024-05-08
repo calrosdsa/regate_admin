@@ -5,7 +5,7 @@ import ChartDialog from "./ChartDialog";
 import { TypeOfChart } from "@/core/type/enums";
 import { ChartTypeData, FilterChartData } from "@/core/type/chart";
 import ButtonIcon from "@/components/util/button/ButtonIcon";
-import { Button, ListItemIcon, ListItemText, MenuItem } from "@mui/material";
+import { Button, ListItemIcon, ListItemText, MenuItem, Paper, Typography } from "@mui/material";
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
 const ChartDropMenu = ({
@@ -53,11 +53,11 @@ const ChartDropMenu = ({
         chartTypeData={chartTypeData}
         />
         }
-        <div className={`${className} border-[1px] border-gray-500 rounded-lg p-2`}>
+        <Paper elevation={4} className={`${className}  rounded-lg p-2`}>
              <div className='flex justify-between items-start'>
             <div className='grid pb-4'>
-                <span className='title'>{title}</span>
-                <span className=" text-xs">{subtitle}</span>
+                <Typography variant="subtitle2">{title}</Typography>
+                <Typography variant="caption">{subtitle}</Typography>
             </div>
 
             <div className="flex">
@@ -93,7 +93,7 @@ const ChartDropMenu = ({
 
               </div>
             {children}
-        </div>
+        </Paper>
     </>
     )
 }

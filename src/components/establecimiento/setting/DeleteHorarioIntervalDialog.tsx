@@ -1,9 +1,11 @@
 import ConfirmationDialog from "@/components/util/dialog/ConfirmationDialog";
 import DialogLayout from "@/components/util/dialog/DialogLayout";
+import Item from "@/components/util/item/Item";
 import { useAppDispatch } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
 import { addIntervalsHorario, deleteIntervalsHorario } from "@/core/repository/setting";
 import { getIntervaloString } from "@/core/util/converter";
+import { Button } from "@mui/material";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -58,14 +60,21 @@ const DeleteHorarioIntervalDialog = ({open,close,intervalHorario,appendIntervals
             <div className="grid gap-3 grid-cols-2 py-5">
             {intervalHorario.map((item)=>{
                 return(
-                    <span key={item.minutes} onClick={()=>selectInterval(item)}
-                     className={`card ${intervals.includes(item) && 'bg-primary text-white'} `}>
-                        {getIntervaloString(item.minutes)}</span>
+                    <Item
+                    onClick={()=>selectInterval(item)}
+                    key={item.minutes}
+                    disabled={false}
+                    text={getIntervaloString(item.minutes)}
+                    selected={intervals.includes(item)}
+                    />
+                    // <span key={item.minutes} onClick={()=>selectInterval(item)}
+                    //  className={`card ${intervals.includes(item) && 'bg-primary text-white'} `}>
+                    //     {getIntervaloString(item.minutes)}</span>
                     )
                 })}
 
                 </div>
-                <button className="button" onClick={()=>setShowDialogConfirmation(true)}>Guardar Cambios</button>
+                <Button  onClick={()=>setShowDialogConfirmation(true)}>Guardar Cambios</Button>
             </div>
         </DialogLayout>
         </>

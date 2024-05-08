@@ -14,7 +14,7 @@ import { GetEstablecimientosUserByUuid } from "@/core/repository/account"
 import { DeleteEstablecimientoUser, GetUsersEmpresa, UpdateUserEstado } from "@/core/repository/manage"
 import { UserEstado, UserRol } from "@/core/type/enums"
 import { appendSerachParams } from "@/core/util/routes"
-import { Button, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material"
+import { Button, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Typography } from "@mui/material"
 import moment from "moment"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -22,8 +22,8 @@ import { toast } from "react-toastify"
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import AddIcon from '@mui/icons-material/Add';
-import PersonIcon from '@mui/icons-material/Person';
 import DeleteIcon from '@mui/icons-material/Delete';
+import PersonIcon from '@mui/icons-material/Person';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 export default function Page(){
     const dispatch = useAppDispatch()
@@ -212,9 +212,10 @@ export default function Page(){
 
         <div className=" h-screen xl:pt-0">
 
-        <div className="grid xl:grid-cols-8 h-full gap-2">
-            <div className=" col-span-3 bg-white  rounded-lg shadow-lg p-2 overflow-auto relative">
-                <div className="flex justify-between items-center border-b-2 pb-2">
+        <div className="grid xl:grid-cols-8 h-full w-full">
+
+            <Paper elevation={2} className=" col-span-3 rounded-xl my-2  ml-2 p-2  overflow-auto relative  w-full">
+                <div className="flex justify-between items-center  pb-2">
                 <span className="headline">Usuarios</span>
 
                 <div className="flex items-center space-x-2">
@@ -230,13 +231,13 @@ export default function Page(){
             
                 </div>
                 </div>
+                <Divider/>
             
                 <Loading
               loading={loadingUsers}
-              className='pt-2 flex w-full justify-center'
+              className='pt-2'
               />
-              <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                
+              <List sx={{ width: '100%'}}>
                 {users.map((item,idx)=>{
                     return(
                         <ListItem key={idx} disablePadding>
@@ -263,19 +264,19 @@ export default function Page(){
                        
                     )
                 })}
+                
                 </List>
+            </Paper>
             
-            
-            </div>
-            <div className="col-start-4 col-span-full bg-white  rounded-lg shadow-lg p-2 relative">
+            <Paper elevation={2} className="col-start-4 col-span-full shadow-md  rounded-lg m-2  p-2 relative">
                 {/* {loading && <Loader className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"/> } */}
 
                     {currentUser != null &&
-                    <div>
+                    <div className="">
 
                     <div className="grid w-full">
 
-                <div className="flex justify-between items-center px-2 border-b-[1px] pb-2 w-full">
+                <div className="flex justify-between items-center px-2 pb-2 w-full">
                     <div className="grid">
                         <span className="font-medium text-lg w-10/12 truncate">{currentUser.username}</span>
                         <span className="text-xs">{currentUser.email}</span>
@@ -318,7 +319,10 @@ export default function Page(){
                     /> */}
 
 
-                </div>                    
+                </div> 
+
+                <Divider/>
+
                     </div>
                     
 
@@ -337,7 +341,7 @@ export default function Page(){
               loading={loadingEstablecimientos}
               className='pt-2 flex w-full justify-center'
               />
-              <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+              <List sx={{ width: '100%' }}>
 
                 {currentUserEstablecimientos.map((item)=>{
                     return(
@@ -362,7 +366,8 @@ export default function Page(){
                 </div>
                 }
 
-            </div>
+            </Paper>
+
         </div>
 
         </div>

@@ -16,6 +16,7 @@ export const getUser  = () :ThunkAction<void,RootState,undefined,AnyAction> =>{
     return async(dispatch)=>{
         try{
             const userLocal = localStorage.getItem("user")
+            console.log("USER",userLocal)
             if(userLocal!= null){
                 const user:User = JSON.parse(userLocal)
                 dispatch(accountActions.setUser(user))
@@ -72,9 +73,7 @@ export const login = (email:string,password:string) :ThunkAction<void,RootState,
                            if(data.length == 1){
                                window.location.assign(`${rootEstablecimiento}/${data[0].uuid}`)
                            }
-                           if(data.length > 1) {
-                                window.location.replace(`/auth/establecimientos`)
-                           }
+                            window.location.replace(`/auth/establecimientos`)
                            break;
                     }
                    dispatch(uiActions.setInnerLoading(false))

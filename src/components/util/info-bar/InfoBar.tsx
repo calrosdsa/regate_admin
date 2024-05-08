@@ -1,7 +1,8 @@
 import { Dialog, Transition } from "@headlessui/react";
 import Loader from "../loaders/Loader";
 import { useEffect, useState } from "react";
-
+import { Divider, IconButton, Paper, Typography } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 const InfoBar = ({open,close,infoText,loading}:{
     close:()=>void
     open:boolean
@@ -63,19 +64,19 @@ const InfoBar = ({open,close,infoText,loading}:{
                     >
                     
                     </Transition.Child>
-                    <div className='h-screen bg-white w-80 p-2 shadow-lg'> 
-                    <div className=' flex justify-between items-center border-b-[1px] pb-2'>
+                    <Paper elevation={2} className='h-screen w-80 p-2 shadow-lg'> 
+                    <div className=' flex justify-between items-center pb-2'>
                         <div>
                             {infoText != undefined &&
-                            <span className="title text-lg">{infoText.title}</span>
+                            <Typography className="title text-lg">{infoText.title}</Typography>
                             }    
                         </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                    className="w-9 h-9 p-1 rounded-full noSelect hover:bg-gray-200 cursor-pointer"
-                    onClick={()=>close()}>
-                        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-                    </svg>
+                        <IconButton  onClick={()=>close()}>
+                            <CloseIcon/>
+                        </IconButton>
+                
                     </div>
+                    <Divider/>
 
                     {loading ?
                     <Loader
@@ -90,8 +91,8 @@ const InfoBar = ({open,close,infoText,loading}:{
                             {data.map((item,index)=>{
                                 return(
                                     <div key={index} className="grid pt-2">
-                                        <span className="title">{item.subtitle}</span>
-                                        <span className=" text-sm pt-1">{item.content}</span>
+                                        <Typography variant="subtitle2">{item.subtitle}</Typography>
+                                        <Typography variant="body1" fontSize={13} className=" text-sm pt-1">{item.content}</Typography>
                                     </div>
                                 )
                             })}
@@ -99,7 +100,8 @@ const InfoBar = ({open,close,infoText,loading}:{
                         }
                         </>
                     }
-                        </div>
+                        </Paper>
+
                     </div>
 
                 </Transition.Child>

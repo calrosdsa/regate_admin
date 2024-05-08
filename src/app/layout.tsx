@@ -15,15 +15,9 @@ import { firebaseConfig } from '@/core/util/firebase'
 import { getUser } from '@/context/actions/account-actions'
 import moment from 'moment'
 import 'moment/locale/es'
-import { WS_URL } from '@/context/config'
-import { PayloadType, WsAccountPayload } from '@/core/type/notification'
-import { toast } from 'react-toastify'
-import { initDb, insertMessage } from '@/context/db'
-import { chatActions } from '@/context/slices/chatSlice'
+
 import { Parent } from './parent'
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from '../theme';
+
 // import { messaging } from '@/core/util/firebase'
 
 // export const metadata = {
@@ -121,11 +115,7 @@ export default function RootLayout({
           GET TOKEN
         </button> */}
         <Parent>
-        <AppRouterCacheProvider>
-        <ThemeProvider theme={theme}>
         {children}
-        </ThemeProvider>
-        </AppRouterCacheProvider>
         </Parent>
         </>
         </body>

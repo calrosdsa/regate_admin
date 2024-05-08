@@ -1,5 +1,6 @@
 import ButtonIcon from "@/components/util/button/ButtonIcon";
 import { getFullName, groupByToMap } from "@/core/util";
+import { Typography } from "@mui/material";
 import { time } from "console";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -165,7 +166,7 @@ const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCup
 
 
                         <div className="flex space-x-4 h-10 items-center">
-                            <span className=" -translate-y-5 w-9 text-sm">{moment(item.hour).utc().format("LT")}</span>
+                            <Typography variant="body2" className=" -translate-y-5 w-9">{moment(item.hour).utc().format("LT")}</Typography>
                             <div className="grid w-10/12">
                         <span className=" w-full h-[0.5px] bg-gray-400"></span>
                         <div 
@@ -182,17 +183,17 @@ const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCup
                                             }
                                         }}
                             className={`w-full h-10 flex items-center p-1 cursor-pointer
-                            ${item.reserva != undefined && `${item.reserva.color} text-white ` }
+                            ${item.reserva != undefined && `${item.reserva.color}  ` }
                             ${isSelected && "bg-gray-400 bg-opacity-50"}
                             ${isAfter && "disabled"}
                             ${item.reserva?.evento_id != undefined && "disabled"}
                             `}>
                                 <>
                                 {item.reserva?.reserva_id != null ?
-                                <div className="flex w-full space-x-2 items-center justify-between">
-                                <span className="text-sm">{getFullName(item.reserva?.nombre,item.reserva?.apellido)}</span>
+                                <div className="flex w-full space-x-2 items-center justify-between text-white">
+                                <Typography variant="body2">{getFullName(item.reserva?.nombre,item.reserva?.apellido)}</Typography>
                                 {(item.reserva.reserva_count > 1) &&
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 text-white">
                                     <path fillRule="evenodd" d="M8 1.75a.75.75 0 0 1 .692.462l1.41 3.393 3.664.293a.75.75 0 0 1 .428 1.317l-2.791 2.39.853 3.575a.75.75 0 0 1-1.12.814L7.998 12.08l-3.135 1.915a.75.75 0 0 1-1.12-.814l.852-3.574-2.79-2.39a.75.75 0 0 1 .427-1.318l3.663-.293 1.41-3.393A.75.75 0 0 1 8 1.75Z" clipRule="evenodd" />
                                     </svg>
                                 }
@@ -206,16 +207,16 @@ const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCup
                                    <div className="flex w-full justify-between">
                                    {/* <span className="text-green-700 text-xs">Hora disponible </span> */}
                                    {item.reserva.available ?
-                                       <span className="subtitle">{item.reserva.precio} BOB</span>
+                                       <Typography variant="body2" className="">{item.reserva.precio} BOB</Typography>
                                        :
-                                       <span className="subtitle text-red-500">Hora no configurada</span>
+                                       <Typography variant="body2" className=" text-red-500">Hora no configurada</Typography>
                                     }
 
                                     {item.reserva?.evento_id != undefined?
-                                    <span className="subtitle text-primary">Reservada para evento</span>
+                                    <Typography variant="body2" className=" text-primary">Reservada para evento</Typography>
                                     :
                                     isAfter &&
-                                    <span className="subtitle">No puedes reservar en esta hora</span>
+                                    <Typography variant="body2" className="">No puedes reservar en esta hora</Typography>
                                     }
                                     
                                    </div>
@@ -249,15 +250,15 @@ const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCup
                                             }
                                         }}
                             className={`w-10/12 h-10 flex items-center p-1 cursor-pointer
-                            ${item.reserva != undefined && `${item.reserva.color} text-white ` }
+                            ${item.reserva != undefined && `${item.reserva.color}  ` }
                             ${isSelected && "bg-gray-400 bg-opacity-50"}
                             ${isAfter && "disabled"}
                             ${item.reserva?.evento_id != undefined && "disabled"}
                             `}>
                                 <>
                                 {item.reserva?.reserva_id != null ?
-                               <div className="flex w-full space-x-2 items-center justify-between">
-                               <span className="text-sm">{getFullName(item.reserva?.nombre,item.reserva?.apellido)}</span>
+                               <div className="flex w-full space-x-2 items-center justify-between text-white">
+                               <Typography variant="body2" >{getFullName(item.reserva?.nombre,item.reserva?.apellido)}</Typography>
                                {(item.reserva.reserva_count > 1) &&
                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4">
                                    <path fillRule="evenodd" d="M8 1.75a.75.75 0 0 1 .692.462l1.41 3.393 3.664.293a.75.75 0 0 1 .428 1.317l-2.791 2.39.853 3.575a.75.75 0 0 1-1.12.814L7.998 12.08l-3.135 1.915a.75.75 0 0 1-1.12-.814l.852-3.574-2.79-2.39a.75.75 0 0 1 .427-1.318l3.663-.293 1.41-3.393A.75.75 0 0 1 8 1.75Z" clipRule="evenodd" />
@@ -271,18 +272,18 @@ const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCup
                                     <>
                                     {/* {item.reserva.available? */}
                                    <div className="flex w-full justify-between">
-                                   {/* <span className="text-green-700 text-xs">Hora disponible </span> */}
+                                   {/* <Typography className="text-green-700 text-xs">Hora disponible </Typography> */}
                                    {item.reserva.available ?
-                                       <span className="subtitle">{item.reserva.precio} BOB</span>
+                                       <Typography variant="body2">{item.reserva.precio} BOB</Typography>
                                        :
-                                       <span className="subtitle text-red-500">Hora no configurada</span>
+                                       <Typography variant="body2" className="text-red-500">Hora no configurada</Typography>
                                     }
 
                                     {item.reserva?.evento_id != undefined?
-                                    <span className="subtitle text-primary">Reservada para evento</span>
+                                    <Typography variant="body2" className="text-primary">Reservada para evento</Typography>
                                     :
                                     isAfter &&
-                                    <span className="subtitle">No puedes reservar en esta hora</span>
+                                    <Typography variant="body2">No puedes reservar en esta hora</Typography>
                                     }
                                     
                                    </div>

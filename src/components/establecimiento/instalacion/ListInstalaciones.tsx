@@ -9,7 +9,7 @@ const ListInstalaciones =  ({instalaciones,selected,onClick}:{
 }) =>{
 
     return(
-        <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+        <List sx={{ width: '100%' }}>
             {instalaciones.map((item,idx) => (
                 <ListItem
                 divider={true}
@@ -21,7 +21,7 @@ const ListInstalaciones =  ({instalaciones,selected,onClick}:{
                     src={item.portada}
                     h={70}
                     w={70}
-                    className="h-10 w-10 object-cover rounded-full"
+                    className="h-10 w-10 object-cover rounded-full bg-gray-200 "
                     />
                 }
                 >

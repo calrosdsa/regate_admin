@@ -11,6 +11,7 @@ export async function POST(request:Request) {
   }
   try{
       const body = await request.json()
+      // console.log("BODY",body)
       const res = await fetch(`${API_URL}/account/admin/establecimientos-user-by-uuid/`,
       {
          method:'post',
@@ -20,6 +21,7 @@ export async function POST(request:Request) {
          "Content-Type":"application/json"
       }})
       const data =await res.json()
+      // console.log("USER ESTABLECIMIENTOS",data)
       return NextResponse.json(data,{status:res.status})
    }catch(err){
       // console.log(err)

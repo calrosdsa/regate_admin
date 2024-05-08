@@ -8,6 +8,8 @@ import Input from 'postcss/lib/input';
 import InputWithIcon from '../util/input/InputWithIcon';
 import ButtonWithLoader from '../util/button/ButtonWithLoader';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import DialogLayout from '../util/dialog/DialogLayout';
+import { Box, Paper, TextField } from '@mui/material';
 
 export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,address,setAddress,update}:{
     open:boolean
@@ -44,6 +46,7 @@ export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,address,setAdd
       // if(mapboxgl != undefined) return
       // let mapboxgl:any = undefined
         if(loaded){
+          console.log("LOADING MAP...")
             mapboxgl.accessToken = MB_API_KEY;
             const map = new mapboxgl.Map({  
             container: 'map', // container ID
@@ -87,12 +90,12 @@ export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,address,setAdd
         onError={()=>{
             console.log("error")
         }}
-        onLoad={()=>{
+        onLoad={()=>{   
+          console.log("loading map api...")
           setLoaded(true)
         }}/>
         <Script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js" />
-
-<Transition appear show={open} as={Fragment}>
+        <Transition appear show={open} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={close}>
           <Transition.Child
             as={Fragment}
@@ -117,45 +120,41 @@ export const MapComponent = ({open,close,loaded,setLoaded,lng,lat,address,setAdd
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white h-screen
-                 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
+               
+                  <Paper elevation={3}
+                  className="w-full max-w-2xl transform overflow-hidden rounded-2xl h-screen text-left"
                   >
-                    
-                     </Dialog.Title>
-              <div id="map"></div>   
-              {/* {JSON.stringify(place?.query)} */}
-              {/* {place != null && */}
-              <div className='px-2 xl:px-20 grid gap-y-4'>
-              <InputWithIcon
-              value={adress}
-              onChange={onChange}
-              name='address'
-              label='Adress'
-              Icon={LocationOnIcon}
-            />
-            <ButtonWithLoader
-              title='Guardar Ubicación'
-              loading={loading}
-              onClick={()=>{
-                if(adress != ""){
-                  update(longitud,latitud,adress,(bool:boolean)=>setLoading(bool))
-                }
-              }}
-            />
-            </div>
-        {/* } */}
+
+                    <div id="map"></div>   
+                    {/* {JSON.stringify(place?.query)} */}
+                    {/* {place != null && */}
+                    <div className='px-2 xl:px-20 grid gap-y-4'>
                      
-            </Dialog.Panel>
-          </Transition.Child>
-        </div>
-      </div>
-    </Dialog>
-  </Transition>
-        {/* <DialogLayout open={open} close={close}>
-        </DialogLayout> */}
+                    <InputWithIcon
+                    value={adress}
+                    onChange={onChange}
+                    name='address'
+                    label='Adress'
+                    Icon={LocationOnIcon}
+                  />
+                  <ButtonWithLoader
+                    title='Guardar Ubicación'
+                    loading={loading}
+                    onClick={()=>{
+                      if(adress != ""){
+                        update(longitud,latitud,adress,(bool:boolean)=>setLoading(bool))
+                      }
+                    }}
+                  />
+                  </div>
+              {/* } */}
+                          
+                        </Paper>
+                </Transition.Child>
+              </div>
+            </div>
+          </Dialog>
+        </Transition>
         </>
     )
 }

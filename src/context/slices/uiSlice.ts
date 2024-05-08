@@ -10,7 +10,8 @@ const uiState:UiState=  {
     loaded:false,
     loaderDialog:false,
     openSidebar:false,
-    ongoingDownloadProcess:[]
+    ongoingDownloadProcess:[],
+    mode:"light"
 }
 
 
@@ -18,6 +19,10 @@ const uiSlice = createSlice({
     name:"ui",
     initialState:uiState,
     reducers:{
+        setMode(state,action:PayloadAction<'light' | 'dark'>){
+            localStorage.setItem("mode",action.payload)
+            state.mode = action.payload
+        },
         setInnerLoading(state,action:PayloadAction<boolean>){
             state.innerLoading = action.payload
         },

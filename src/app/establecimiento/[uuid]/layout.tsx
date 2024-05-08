@@ -2,8 +2,6 @@
 
 import { Inter } from 'next/font/google'
 import SideBarEstablecimiento from '@/components/util/sidebar/SidebarEstablecimiento'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useAppDispatch, useAppSelector } from '@/context/reduxHooks';
 import LoaderDialog from '@/components/util/loaders/LoaderDialog';
 import MobileSidebar from '@/components/util/sidebar/MobileSidebar';
@@ -44,11 +42,6 @@ export default function RootLayout({
   },[pathName])
   return (
     <>
-      <ToastContainer 
-    position='bottom-center'
-    />
-        {/* <SideBar/> */}
-      <LoaderDialog open={loaderDialog}/>
     <div className='flex max-w-[1750px] mx-auto'>
 
     <div className=' hidden xl:block'>

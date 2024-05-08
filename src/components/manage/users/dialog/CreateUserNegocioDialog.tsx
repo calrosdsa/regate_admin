@@ -1,5 +1,4 @@
 import React,{FormEvent, Fragment, useState} from 'react'
-import { Dialog,Switch,Transition } from '@headlessui/react'
 import InputPassword from '@/components/util/input/InputPassword'
 import ButtonSubmit from '@/components/util/button/ButtonSubmit'
 import { useAppDispatch, useAppSelector } from '@/context/reduxHooks'
@@ -16,8 +15,9 @@ import { unexpectedError } from '@/context/config'
 import DialogLayout from '@/components/util/dialog/DialogLayout'
 import { GetEstablecimientos } from '@/core/repository/establecimiento'
 import { CreateUser } from '@/core/repository/manage'
-import { Button, DialogActions, Typography } from '@mui/material'
-
+import { Button, Checkbox, DialogActions, List, ListItemButton, ListItemIcon, ListItemText, Paper, Switch, Typography } from '@mui/material'
+import PersonIcon from '@mui/icons-material/Person';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
  interface Props{
    openModal:boolean
    closeModal:()=>void
@@ -158,7 +158,7 @@ const CreateUserNegocioDialog:React.FC<Props>=({
    open={openModal}
    close={closeModal}
     >
-        <div className='rounded-lg bg-white overflow-auto'>
+        <div className='rounded-lg overflow-auto'>
             {Tab.MAIN == currentTab &&
             <form className='p-2' onSubmit={onSubmit}>
                 <InputWithIcon
@@ -177,24 +177,22 @@ const CreateUserNegocioDialog:React.FC<Props>=({
 
               <Typography variant="body2" sx={{my:1}}>Asignar rol</Typography> 
 
-              <div className='border-[1px] py-2 space-y-4'>
+              <Paper elevation={2} className='py-2 space-y-4'>
+
+
                 <div className='grid grid-cols-6 place-items-center'>
                   <div className='col-span-5 grid grid-cols-8'>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
-                className="w-6 h-6 col-span-1 place-self-center">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-              </svg>
+                <PersonIcon className='col-span-1 place-self-center'/>
               <div className=' col-span-7'>
-              <span className='font-semibold'>Acceso de usuario</span>
-              <p className='text-[13px] leading-3'>Un usuario con el rol de usuario tendrá acceso restringido y solo podrá gestionar los establecimientos designados por un administrador.</p>
+              <Typography  className='font-semibold'>Acceso de usuario</Typography>
+              <Typography variant="body2" fontSize={13} className='text-[13px] leading-3'>Un usuario con el rol de usuario tendrá acceso restringido y solo podrá gestionar los establecimientos designados por un administrador.</Typography>
               </div>
                   </div>
 
-                  <div className="">
               <Switch
               checked={rol == UserRol.CLIENT_USER_ROL}
               onChange={(e)=>{
-                if(e){
+                if(e.target.checked){
                   setFormData({
                     ...formData,
                     rol:UserRol.CLIENT_USER_ROL
@@ -202,42 +200,31 @@ const CreateUserNegocioDialog:React.FC<Props>=({
                 }else{
                   setFormData({
                     ...formData,
-                    rol:undefined
+                    rol:UserRol.ADMIN_USER_ROL
                   })
                 }
-              }}
-              className={`${rol == UserRol.CLIENT_USER_ROL ? 'bg-primary' : 'bg-gray-400'}
-              relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
-              >
-              <span className="sr-only">Use setting</span>
-              <span
-                aria-hidden="true"
-                className={`${rol == UserRol.CLIENT_USER_ROL ? 'translate-x-6' : 'translate-x-0'}
-                pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
-                />
-              </Switch>
-              </div>
+              }}/>
 
                 </div>
 
                 <div className='grid grid-cols-6 place-items-center'>
                   <div className='col-span-5 grid grid-cols-8'>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
-                        className="w-6 h-6 col-span-1 place-self-center">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                    </svg>
-              <div className=' col-span-7'>
-              <span className='font-semibold'>Acceso de administrador</span>
-              <p className='text-[13px] leading-3'>Los usuarios con rol de administrador tendrán el control total.
-                Pueden modificar la configuración, los usuarios y datos de la organización.</p>
+
+                  <VerifiedUserIcon className='col-span-1 place-self-center'/>
+
+                    <div className=' col-span-7'>
+              <Typography  className='font-semibold'>Acceso de administrador</Typography>
+              <Typography variant="body2" fontSize={13} className='text-[13px] leading-3'>
+              Los usuarios con rol de administrador tendrán el control total.
+              Pueden modificar la configuración, los usuarios y datos de la organización.</Typography>
               </div>
+              
                   </div>
 
-                  <div className="">
               <Switch
               checked={rol == UserRol.ADMIN_USER_ROL}
               onChange={(e)=>{
-                if(e){
+                if(e.target.checked){
                   setFormData({
                     ...formData,
                     rol:UserRol.ADMIN_USER_ROL
@@ -245,23 +232,13 @@ const CreateUserNegocioDialog:React.FC<Props>=({
                 }else{
                   setFormData({
                     ...formData,
-                    rol:undefined
+                    rol:UserRol.CLIENT_USER_ROL
                   })
                 }
-              }}
-              className={`${rol == UserRol.ADMIN_USER_ROL ? 'bg-primary' : 'bg-gray-400'}
-              relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
-              >
-              <span className="sr-only">Use setting</span>
-              <span
-                aria-hidden="true"
-                className={`${rol == UserRol.ADMIN_USER_ROL ? 'translate-x-6' : 'translate-x-0'}
-                  pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
-              />
-              </Switch>
-              </div>
+              }}/>
                 </div>
-              </div>
+
+              </Paper>
                  
                 <ButtonSubmit
                 loading={loading}
@@ -276,21 +253,35 @@ const CreateUserNegocioDialog:React.FC<Props>=({
               loading={uiState.innerLoading}
               className='pt-2 flex w-full justify-center'
               />
-              <div className=' overflow-auto'>
+              <List sx={{ width: '100%'}}>
               {establecimientos.map((item,idx)=>{
+                const labelId = `checkbox-list-label-${idx}`;
                 return(
-                  <div key={idx} onClick={()=>selectEstablecimientos(item.id)}
-                  className='flex justify-between items-center px-2 py-3 border-b-[1px] cursor-pointer 
-                  hover:bg-gray-200'>
-                    <span className='title'>{item.name}</span>
+                    <ListItemButton key={idx} role={undefined} onClick={()=>selectEstablecimientos(item.id)} dense>
+                    <ListItemIcon>
+                      <Checkbox
+                        edge="start"
+                        checked={establecimientosIds.map(item=>item.uuid).includes(item.uuid)}
+                        tabIndex={-1}
+                        disableRipple
+                        inputProps={{ 'aria-labelledby': labelId }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText id={labelId} primary={item.name} />
+                  </ListItemButton>
+                // return(
+                //   <div key={idx} onClick={()=>selectEstablecimientos(item.id)}
+                //   className='flex justify-between items-center px-2 py-3 border-b-[1px] cursor-pointer 
+                //   hover:bg-gray-200'>
+                //     <span className='title'>{item.name}</span>
 
-                    <input type="checkbox" checked={establecimientosIds.map(item=>item.uuid).includes(item.uuid)} 
-                    onChange={()=>selectEstablecimientos(item.id)}/>
-                  </div>
+                //     <input type="checkbox" checked={establecimientosIds.map(item=>item.uuid).includes(item.uuid)} 
+                //     onChange={()=>selectEstablecimientos(item.id)}/>
+                //   </div>
                 )
               })}
+              </List>
 
-              </div>
             
                 <DialogActions >
                   <div className=' space-x-2'>

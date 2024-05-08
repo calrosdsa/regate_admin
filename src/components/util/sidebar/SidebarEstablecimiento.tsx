@@ -9,8 +9,17 @@ import { useRouter } from "next/navigation";
 import { UserRol } from "@/core/type/enums";
 import { GetMessagesCount } from "@/core/repository/chat";
 import { chatActions } from "@/context/slices/chatSlice";
-
-
+import { Box, IconButton, List, ListItemButton, ListItemIcon, ListItemText, MenuItem, Paper, Select, useTheme } from "@mui/material";
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import RoomPreferencesIcon from '@mui/icons-material/RoomPreferences';
+import StoreIcon from '@mui/icons-material/Store';
+import StyleIcon from '@mui/icons-material/Style';
+import EventIcon from '@mui/icons-material/Event';
+import PeopleIcon from '@mui/icons-material/People';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import { uiActions } from "@/context/slices/uiSlice";
 const SideBarEstablecimiento = () =>{
    const dispatch = useAppDispatch()
    const establecimientos = useAppSelector(state=>state.account.establecimientos)
@@ -20,8 +29,7 @@ const SideBarEstablecimiento = () =>{
    const params = useParams()
    const router = useRouter()
    const root = `/establecimiento/${params.uuid}`
-
-   
+   const theme = useTheme();
    // const searchParams = useSearchParams()
    // const current = new URLSearchParams(Array.from(searchParams.entries()))
 
@@ -38,14 +46,32 @@ const SideBarEstablecimiento = () =>{
    },[])
 
     return(
-        <div className="shadow-xl">
+      <Paper  
+      elevation={2}
+      sx={{
+         width: '100%',
+         p: 1,
+         height:"100vh",
+         minWidth:250,
+         position:"relative",
+         zIndex:30,
+         overflow:"auto"
+       }}
+      >
+         <div className="absolute bottom-3 right-3">
+            
+         <IconButton onClick={()=>{
+            if(theme.palette.mode === 'dark'){
+               dispatch(uiActions.setMode("light"))
+            }else{
+               dispatch(uiActions.setMode("dark"))
+            }
+         }}>
+         {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+         </IconButton>
+         </div>
 
-<aside className="z-40 w-64 h-screen">
 
-   <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 relative">
-   
-
-      <ul className="space-y-2 font-medium">
       {user != null &&
       <UserSideBar
       user={user}
@@ -53,22 +79,96 @@ const SideBarEstablecimiento = () =>{
       }
          
       <div className="text-gray-900  dark:text-white border-b-[1px] py-2">
-         <select name="" id="" className="w-full bg-gray-50 dark:bg-gray-800 outline-none" 
+         <Select size="small" name="" id="" 
+         sx={{width:"100%"}}
          value={params.uuid}
          onChange={(e)=>{
             router.push(`/establecimiento/${e.target.value}`)
             }}>
             {establecimientos.map((item,idx)=>{
                return(
-                  <option  key={idx} value={item.uuid} >
+                  <MenuItem  key={idx} value={item.uuid} >
                      {item.name}
-                  </option>
+                  </MenuItem>
                )
             })}
-         </select>
+         </Select>
       </div>
 
-         <li>
+      <List>
+      <ListItemButton LinkComponent={Link}
+      href={root}
+       selected={pathname == root}>
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Dashboard" />
+      </ListItemButton>
+
+      <ListItemButton LinkComponent={Link}
+      href={`${root}/config`}
+       selected={pathname == `${root}/config`}>
+        <ListItemIcon>
+          <RoomPreferencesIcon />
+        </ListItemIcon>
+        <ListItemText primary="Establecimiento" />
+      </ListItemButton>
+
+      <ListItemButton LinkComponent={Link}
+      href={`${root}/instalaciones`}
+       selected={pathname == `${root}/instalaciones`}>
+        <ListItemIcon>
+          <StoreIcon />
+        </ListItemIcon>
+        <ListItemText primary="Canchas" />
+      </ListItemButton>
+
+      <ListItemButton LinkComponent={Link}
+      href={`${root}/reservas`}
+       selected={pathname == `${root}/reservas`}>
+        <ListItemIcon>
+          <StyleIcon />
+        </ListItemIcon>
+        <ListItemText primary="Reservas Info" />
+      </ListItemButton>
+
+      <ListItemButton LinkComponent={Link}
+      href={`${root}/eventos`}
+       selected={pathname == `${root}/eventos`}>
+        <ListItemIcon>
+          <EventIcon />
+        </ListItemIcon>
+        <ListItemText primary="Eventos" />
+      </ListItemButton>
+
+      <ListItemButton LinkComponent={Link}
+      href={`${root}/users`}
+       selected={pathname == `${root}/users`}>
+        <ListItemIcon>
+          <PeopleIcon />
+        </ListItemIcon>
+        <ListItemText primary="Usuarios" />
+      </ListItemButton>
+
+      {user?.rol == UserRol.ADMIN_USER_ROL &&
+      <ListItemButton LinkComponent={Link}
+      href={"/admin/manage/establecimientos"}
+       selected={pathname == "/admin/manage/establecimientos"}>
+        <ListItemIcon>
+          <ExitToAppIcon />
+        </ListItemIcon>
+        <ListItemText primary="Volver al panel admin" />
+      </ListItemButton>
+      }
+
+      </List>
+
+    
+
+      
+      
+
+         {/* <li>
             <Link href={`${root}`} className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700
             ${pathname == `${root}` && "bg-gray-200 dark:bg-gray-700"}`}>
                <svg aria-hidden="true" className="w-6 h-6 text-gray-500  dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg>
@@ -85,8 +185,8 @@ const SideBarEstablecimiento = () =>{
                </svg>
                <span className="flex-1 ml-3 whitespace-nowrap">Establecimiento</span>
             </Link>
-         </li>
-         <li>
+         </li> */}
+         {/* <li>
             <Link href={`${root}/instalaciones`} className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700
             ${pathname == `${root}/instalaciones` && "bg-gray-200 dark:bg-gray-700"}`}>
                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
@@ -96,7 +196,7 @@ const SideBarEstablecimiento = () =>{
                </svg>
                <span className="flex-1 ml-3 whitespace-nowrap">Canchas</span>
             </Link>
-         </li>
+         </li> */}
          {/* <li>
             <Link href={`${root}/conversations`} className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700
             ${pathname == `${root}/conversations` && "bg-gray-200 dark:bg-gray-700"}`}>
@@ -121,7 +221,7 @@ const SideBarEstablecimiento = () =>{
                   <span className="flex-1 ml-3 whitespace-nowrap">Users</span>
                </Link>
             </li> */}
-
+{/* 
          <li>
             <Link href={`${root}/reservas`} className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700
             ${pathname == `${root}/reservas` && "bg-gray-200 dark:bg-gray-700"}`}>
@@ -129,10 +229,10 @@ const SideBarEstablecimiento = () =>{
                 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clipRule="evenodd"></path></svg>
                <span className="flex-1 ml-3 whitespace-nowrap">Info Reservas</span>
             </Link>
-         </li>
+         </li> */}
 
          
-         <li>
+         {/* <li>
             <Link href={`${root}/eventos`} className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700
             ${pathname == `${root}/eventos` && "bg-gray-200 dark:bg-gray-700"}`}>
                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="flex-shrink-0 w-6 h-6 text-gray-500 
@@ -141,9 +241,9 @@ const SideBarEstablecimiento = () =>{
                </svg>
                <span className="flex-1 ml-3 whitespace-nowrap">Eventos</span>
             </Link>
-         </li>
+         </li> */}
 
-         <li>
+         {/* <li>
             <Link href={`${root}/users`} className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700
             ${pathname == `${root}/users` && "bg-gray-200 dark:bg-gray-700"}`}>
                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="flex-shrink-0 w-6 h-6 text-gray-500  dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
@@ -151,7 +251,7 @@ const SideBarEstablecimiento = () =>{
                </svg>
                <span className="flex-1 ml-3 whitespace-nowrap">Users</span>
             </Link>
-         </li>
+         </li> */}
 
           {/* <li>
             <Link href={`${root}/depositos`} className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700
@@ -183,7 +283,7 @@ const SideBarEstablecimiento = () =>{
          </li> */}
 
             
-      {user?.rol == UserRol.ADMIN_USER_ROL &&
+      {/* {user?.rol == UserRol.ADMIN_USER_ROL &&
       <li>
 
       <Link href={"/admin/manage/establecimientos"} className="flex items-center p-2 text-gray-900 rounded-lg cursor-pointer space-x-3
@@ -196,26 +296,21 @@ const SideBarEstablecimiento = () =>{
    <span className="flex-1 ml-3 whitespace-nowrap font-medium">Volver al panel admin</span>
       </Link>
          </li>
-   }
+   } */}
 
          {/* <li>
-            <a href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+            <a href="#" className="flex items-center p-4 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                <svg aria-hidden="true" className="flex-shrink-0 w-6 h-6 text-gray-500  dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd"></path></svg>
                <span className="flex-1 ml-3 whitespace-nowrap">Sign In</span>
             </a>
          </li>
          <li>
-            <a href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-               <svg aria-hidden="true" className="flex-shrink-0 w-6 h-6 text-gray-500  dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M5 4a3 3 0 00-3 3v6a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H5zm-1 9v-1h5v2H5a1 1 0 01-1-1zm7 1h4a1 1 0 001-1v-1h-5v2zm0-4h5V8h-5v2zM9 8H4v2h5V8z" clipRule="evenodd"></path></svg>
+	    <a href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                <span className="flex-1 ml-3 whitespace-nowrap">Sign Up</span>
             </a>
          </li> */}
 
-      </ul>
-   </div>
-</aside>
-
-        </div>
+   </Paper>
     )
 }
 

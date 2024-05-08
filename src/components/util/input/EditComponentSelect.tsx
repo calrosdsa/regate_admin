@@ -64,6 +64,7 @@ const EditComponentSelect = ({items,currentSelected,getItems,updateSelect,toolti
           <TextField disabled={!enableEdit}
           select
           size="small"
+          sx={{mb:1}}
           name="" id="" className="input"  value={value} onChange={(e)=>{
             setValue(e.target.value)
             }}>
@@ -87,7 +88,6 @@ const EditComponentSelect = ({items,currentSelected,getItems,updateSelect,toolti
                     }
               }}
               title="Guardar"
-              className="mt-2 w-28"
               loading={loading}
               />
             }

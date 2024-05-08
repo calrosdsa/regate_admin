@@ -21,7 +21,6 @@ const InstalacionesDialog = ({openModal,closeModal,instalaciones,onAccept}:{
 
     return(
        <DialogLayout title="Configurar horas disponible"
-       className="max-w-lg"
        open={openModal} close={closeModal}>
         <div>
         <ListInstalaciones
@@ -48,3 +47,5 @@ const InstalacionesDialog = ({openModal,closeModal,instalaciones,onAccept}:{
 }
 
 export default InstalacionesDialog;
+
+

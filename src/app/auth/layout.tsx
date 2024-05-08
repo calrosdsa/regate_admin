@@ -1,7 +1,4 @@
 "use client"
-import Image from "next/image"
-import { ToastContainer } from "react-toastify"
-import 'react-toastify/dist/ReactToastify.css';
 
 export default function AuthLayout({
     children, // will be a page or nested layout
@@ -10,9 +7,7 @@ export default function AuthLayout({
   }) {
     return (
       <>
-      <ToastContainer
-      autoClose={8000}
-      />
+      
       <div className="grid xl:grid xl:grid-cols-2 max-w-[1700px]  mx-auto">
         {/* Include shared UI here e.g. a header or sidebar */}
         <div className="hidden xl:block">

@@ -1,10 +1,12 @@
 import ConfirmationDialog from "@/components/util/dialog/ConfirmationDialog";
 import DialogLayout from "@/components/util/dialog/DialogLayout";
+import Item from "@/components/util/item/Item";
 import { useAppDispatch } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
 import { UpdatePayMethod, addIntervalsHorario } from "@/core/repository/setting";
 import { PaidType } from "@/core/type/enums";
 import { getIntervaloString, getPaymentMethod } from "@/core/util/converter";
+import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -79,14 +81,21 @@ const UpdatePayMethodDialog = ({open,close,establecimiento_id,update,currentMeth
             <div className="grid gap-3 grid-cols-2 py-5">
             {payMethods.map((item)=>{
                 return(
-                    <span key={item.method} onClick={()=>selectInterval(item.method)}
-                     className={`card ${methods.includes(item.method) && 'bg-primary text-white'} `}>
-                        {getPaymentMethod(item.method)}</span>
+                    <Item
+                    onClick={()=>selectInterval(item.method)}
+                    key={item.method}
+                    text={getPaymentMethod(item.method)}
+                    disabled={false}
+                    selected={methods.includes(item.method)}
+                    />
+                    // <span key={item.method} onClick={()=>selectInterval(item.method)}
+                    //  className={`card ${methods.includes(item.method) && 'bg-primary text-white'} `}>
+                    //     {getPaymentMethod(item.method)}</span>
                     )
                 })}
 
                 </div>
-                <button className="button" onClick={()=>setShowDialogConfirmation(true)}>Guardar Cambios</button>
+                <Button variant="contained" onClick={()=>setShowDialogConfirmation(true)}>Guardar Cambios</Button>
             </div>
         </DialogLayout>
         </>

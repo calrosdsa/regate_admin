@@ -9,9 +9,6 @@ import { useAppDispatch, useAppSelector } from '@/context/reduxHooks'
 import { uiActions } from '@/context/slices/uiSlice'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
-import LoaderDialog from '@/components/util/loaders/LoaderDialog'
 import ButtonIcon from '@/components/util/button/ButtonIcon'
 import { ValidateUser } from '@/core/repository/account'
 import { rootEstablecimiento } from '@/core/util/routes'
@@ -39,10 +36,13 @@ export default function RootLayout({
       }
   }
   useEffect(()=>{
-    validateUser()
     dispatch(uiActions.openSidebar(false))
-    dispatch(getUser())
   },[pathName])
+  
+  useEffect(()=>{
+    validateUser()
+    dispatch(getUser())
+  },[])
   return (
     // <html lang="en">
     //   <body className="flex">
@@ -54,10 +54,7 @@ export default function RootLayout({
     // </html>
     <>
     {}
-     <ToastContainer
-    position='bottom-center'
-    />
-      <LoaderDialog open={uiState.loaderDialog}/>
+    
     <div className='flex max-w-[1750px] mx-auto'>
 
       <div className=' hidden xl:block'>

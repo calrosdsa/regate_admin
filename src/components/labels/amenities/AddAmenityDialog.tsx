@@ -64,7 +64,9 @@ const AddAmenityDialog = ({amenities,close,open,establecimientoId,setNewAmenitie
                 <div className="gap-2 flex overflow-auto max-w-xl flex-wrap " >
                     {amenities.map((item)=>{
                         return <Amenity key={item.id} onClick={()=>selectItem(item.id)}
-                        item={item} className={`noselect ${ids.includes(item.id) ? "border-2 border-primary":"border-2"}`}/>
+                        item={item} selected={ids.includes(item.id)} 
+                        disabled={false}
+                        />
                     })}
                     
                 </div>

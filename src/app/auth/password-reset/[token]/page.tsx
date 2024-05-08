@@ -4,6 +4,7 @@ import InputPassword from "@/components/util/input/InputPassword"
 import InputWithIcon from "@/components/util/input/InputWithIcon"
 import { API_URL } from "@/context/config"
 import { ResetPassword, VerifyToken } from "@/core/repository/account"
+import { Paper } from "@mui/material"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -54,7 +55,8 @@ export default function Page({params} : { params:{token:string}}){
   
 
     return(
-        <div className='sm:w-[400px] bg-gray-50 p-2 py-10 rounded-lg'>
+      <Paper elevation={2}>
+        <div className='sm:w-[400px] p-2 py-10 rounded-lg'>
         <div className=' grid place-content-center mb-10'>
         <Image
               src="/images/logo.png"
@@ -92,5 +94,6 @@ export default function Page({params} : { params:{token:string}}){
      
   </form>
       </div>
+      </Paper>
     )
 }

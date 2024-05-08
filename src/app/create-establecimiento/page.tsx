@@ -13,7 +13,7 @@ import { ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 import { Router } from "next/router";
 import { useRouter } from "next/navigation";
-import { InputAdornment, TextField, Typography } from "@mui/material";
+import { InputAdornment, Paper, TextField, Typography } from "@mui/material";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 const Login = () =>{
@@ -76,9 +76,11 @@ const Login = () =>{
         <ToastContainer
     position='bottom-center'
     />
-        <div className=' absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full px-2 sm:w-2/3 lg:w-1/2
-        xl:w-2/3 overflow-auto h-[100vh] max-w-sm'>
-          <form onSubmit={onSubmit}>
+        <div className='flex flex-col justify-center w-full px-2  overflow-auto h-[100vh] items-center'>
+          <Paper elevation={2} className="p-2 sm:w-2/3 lg:w-1/2
+        xl:w-2/3">
+
+          <form onSubmit={onSubmit} >
 
           <UploadImage
           setFile={setPhoto}
@@ -193,6 +195,8 @@ const Login = () =>{
             />
 
       </form>
+      </Paper>
+
           {/* <div>
             <span className="help-text">Descripción</span>
             <textarea  className="textarea" rows={5} />

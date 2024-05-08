@@ -18,6 +18,7 @@ import { PieChart } from 'recharts';
 import { appendSerachParams } from '@/core/util/routes';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
+import { Paper, Typography } from '@mui/material';
 
 const Page= ({params}:{params:{uuid:string}})=>{
   const searchParams = useSearchParams();
@@ -37,13 +38,13 @@ const Page= ({params}:{params:{uuid:string}})=>{
       return (
         <>
             {(payload != null && payload.length > 0) &&
-        <div className="p-2 border-2 rounded-lg bg-white  border-gray-600">
-            <span className='font-medium'>{payload[0].payload.name}
+        <Paper className="p-2 border-2 rounded-lg  border-gray-600">
+            <Typography className='font-medium'>{payload[0].payload.name}
             {" "}
             {payload[0].payload.value} 
             {/* {payload[0].payload.value == 1 ? " usuario":" usuarios"} */}
-            </span>
-            </div>
+            </Typography>
+            </Paper>
           }
           </>
       );
@@ -76,14 +77,14 @@ const Page= ({params}:{params:{uuid:string}})=>{
       return (
         <>
             {(payload != null && payload.length > 0) &&
-        <div className="p-2 border-2 rounded-lg bg-white  border-gray-600 max-w-[150px]">
+        <Paper className="p-2 border-2 rounded-lg bg-white  border-gray-600 max-w-[150px]">
             <span className='text-primary font-medium'>{payload[0].payload.value} 
             {payload[0].payload.value == 1 ? " hora":" horas"}</span>
             {payload[0].payload.date &&
             <span>{payload[0].payload.value == 1 ? " reservada ":" reservadas "} de {payload[0].payload.name} 
             {' a'} {moment(payload[0].payload.date).add(1,'hours').utc().format('LT')}</span>
             }
-            </div>
+            </Paper>
           }
           </>
       );
@@ -97,7 +98,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
       return (
         <>
             {(payload != null && payload.length > 0) &&
-        <div className="p-2 border-2 rounded-lg bg-white  border-gray-600 ">
+        <Paper className="p-2 border-2 rounded-lg bg-white  border-gray-600 ">
           <span className=' whitespace-nowrap'>{payload[0].payload.name}</span>
           {payload.map((item:any,idx:number)=>{
             return(
@@ -110,7 +111,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
           )
           })}
           <span>Total:{payload.map((item:any)=>item.value).reduce((partial:number,a:number)=>partial+a,0)}Bs</span>
-            </div>
+            </Paper>
           }
           </>
       );
@@ -125,7 +126,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
       return (
         <>
             {(payload != null && payload.length > 0) &&
-        <div className="p-2 border-2 rounded-lg bg-white  border-gray-600 ">
+        <Paper className="p-2 border-2 rounded-lg bg-white  border-gray-600 ">
           <span className=' whitespace-nowrap'>{payload[0].payload.name}</span>
           {payload.map((item:any,idx:number)=>{
             return(
@@ -138,7 +139,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
           )
           })}
           <span>Total:{payload.map((item:any)=>item.value).reduce((partial:number,a:number)=>partial+a,0)} Hrs</span>
-            </div>
+            </Paper>
           }
           </>
       );

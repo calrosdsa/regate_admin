@@ -8,6 +8,7 @@ import { toast } from "react-toastify"
 import { successfulMessage, unexpectedError } from "@/context/config"
 import { useAppDispatch } from "@/context/reduxHooks"
 import { uiActions } from "@/context/slices/uiSlice"
+import { Button, Checkbox, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
 
 
 const CopyInstalacionHorarioDialog = ({open,close,instalaciones,instalacionId,dayWeek,updateHorarios}:{
@@ -58,22 +59,40 @@ const CopyInstalacionHorarioDialog = ({open,close,instalaciones,instalacionId,da
         title="Elige que horario de las siguientes canchas deseas copiar"
         allowFullScreen={true}
          open={open} close={close}>
+            
           <div className="mt-2">
-            {instalaciones.filter(item=> item.id != instalacionId).map((item)=>{
+          <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+
+            {instalaciones.filter(item=> item.id != instalacionId).map((item,idx)=>{
+                const labelId = `checkbox-list-label-${item.id}`;
                 return(
-                    <div key={item.id} className="fles space-x-2 items-center p-2 whitespace-nowrap
-                    active:hover:bg-gray-200 sm:hover:bg-gray-200 cursor-pointer"
-                    onClick={()=>setSelecetedInstalacion(item.id)}>
-                            <input type="checkbox" checked={selectedInstacion == item.id} onChange={(e)=>{}}/>
-                            <span className="">{item.name}</span>
-                    </div>
+                    <ListItemButton key={idx}
+                    divider role={undefined} onClick={()=>setSelecetedInstalacion(item.id)} dense>
+                    <ListItemIcon>
+                      <Checkbox
+                        edge="start"
+                        checked={selectedInstacion == item.id}
+                        tabIndex={-1}
+                        disableRipple
+                        inputProps={{ 'aria-labelledby': labelId }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText id={labelId} primary={item.name} />
+                  </ListItemButton>
+                    // <div key={item.id} className="fles space-x-2 items-center p-2 
+                    // active:hover:bg-gray-200 sm:hover:bg-gray-200 cursor-pointer"
+                    // onClick={()=>setSelecetedInstalacion(item.id)}>
+                    //         <input type="checkbox" checked={selectedInstacion == item.id} onChange={(e)=>{}}/>
+                    //         <span className="">{item.name}</span>
+                    // </div>
                 )
             })}
+            </List>
 
-            <div className="flex w-full justify-end">
-                <button className="button" onClick={()=>setOpenConfirmationDialog(true)}>
+            <div className="flex w-full justify-end mt-3">
+                <Button variant="contained" onClick={()=>setOpenConfirmationDialog(true)}>
                     Copiar horario
-                </button>
+                </Button>
             </div>
           </div>
         </DialogLayout>

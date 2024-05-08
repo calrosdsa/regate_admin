@@ -37,8 +37,9 @@ import { days } from '@/context/actions/chart-actions';
 import AttentionScheduleComponent from '@/components/establecimiento/setting/AttentionScheduleComponent';
 import TitleWithInfo from '@/components/util/info-bar/SubtitleWithInfo';
 import Loading from '@/components/util/loaders/Loading';
-import { Button, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import Item from '@/components/util/item/Item';
 
 const Page = ({ params }: { params: { uuid: string } }) =>{
     const establecimientoEstados = [{value:"true",name:"Visible"}
@@ -294,11 +295,11 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
     };
     },[])
     return(
-       <>
+       <Box>
        <div className='grid xl:grid-cols-2 gap-2 h-screen w-full'>
         {/* <button onClick={()=>setOpenMap(true)}>Open Map</button> */}
         <div className='p-4 flex flex-col space-y-6 xl:overflow-auto'>
-            <span className="text-xl py-2 font-medium">Sucursal Info</span>
+            <Typography variant="h6">Sucursal Info</Typography>
             {data != null ?
             <div>
             <TitleWithInfo
@@ -314,7 +315,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="text-lg">Verificado</span>
+            <Typography className="text-lg">Verificado</Typography>
             </div>
             }
             {data.establecimiento.estado == EstablecimientoEstado.ESTABLECIMIENTO_PENDIENTE&&
@@ -456,7 +457,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         
 
             <div className='p-4 flex flex-col gap-y-4 xl:overflow-auto'>
-            <span className="text-xl py-2 font-medium">Establecimiento Ajustes</span>
+            <Typography variant={"h6"}>Establecimiento Ajustes</Typography>
 
         {data?.setting_establecimiento != undefined ?
             <div className='grid gap-y-3'>
@@ -477,7 +478,11 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             {data?.setting_establecimiento.paid_type != null &&
             data?.setting_establecimiento.paid_type.map((item)=>{
                 return(
-                    <span key={item} className='card w-min whitespace-nowrap'>{getPaymentMethod(item)}</span>
+                    <Item
+                    key={item}
+                    text={getPaymentMethod(item)}
+                    />
+                    // <span key={item} className='card w-min whitespace-nowrap'>{getPaymentMethod(item)}</span>
                 )
             })}
              <Button onClick={()=> setOpenUpdateMethodDialog(true)} 
@@ -507,9 +512,13 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             {(data?.setting_establecimiento.horario_interval != undefined &&  data.setting_establecimiento.horario_interval.length > 0)&& 
             data.setting_establecimiento.horario_interval.sort((a,b)=>a.minutes-b.minutes).map((item)=>{
                 return(
-                    <div key={item.minutes} className='card'>
-                        <span className='label'>{getIntervaloString(item.minutes)}</span>
-                    </div>
+                    <Item
+                    key={item.minutes}
+                    text={getIntervaloString(item.minutes)}
+                    />
+                    // <div key={item.minutes} className='card'>
+                    //     <span className='label'>{getIntervaloString(item.minutes)}</span>
+                    // </div>
                 )
             })}
             <AddAndDeleteButtons
@@ -642,7 +651,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         }})}
         />
     }
-       </>
+       </Box>
     )
 }
 

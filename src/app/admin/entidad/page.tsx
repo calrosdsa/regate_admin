@@ -6,6 +6,7 @@ import { unexpectedError } from "@/context/config";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
 import { GetEmpresaDetail, UpdateEmpresaAddress, UpdateEmpresaDetail } from "@/core/repository/empresa";
+import { Button, Typography } from "@mui/material";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -124,13 +125,17 @@ const Entidad = () =>{
 
         <div className=" flex justify-between items-center space-x-5">
             <div className="grid">
-                <span className="label">Ubicación</span>
-                <span className="text-sm">{empresaDetail.empresa.address}</span>
+            <Typography fontWeight={500} fontSize={16.5}>Ubicación</Typography>
+            <Typography variant="subtitle1" >{empresaDetail.empresa.address}</Typography>
+              
             </div>
-            <span onClick={()=>{
-                setOpenMap(true)
-                appendSerachParams("map","1")
-            }} className=" underline font-medium cursor-pointer">Edit</span>
+            <Button onClick={()=>{
+                 setOpenMap(true)
+                 appendSerachParams("map","1")
+            }} color="inherit">
+                        Editar
+                    </Button>
+           
         </div>
       
 

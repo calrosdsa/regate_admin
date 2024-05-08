@@ -6,6 +6,7 @@ import { LOCAL_URL } from "@/context/config";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import useEffectOnce from "@/core/util/hooks/useEffectOnce";
 import { rootEstablecimiento } from "@/core/util/routes";
+import { Button, Paper, Typography } from "@mui/material";
 import Link from "next/link";
 
 const Page = ({params}:{
@@ -20,36 +21,40 @@ const Page = ({params}:{
         }
     })
     return (
-        <div className='sm:w-[400px] bg-gray-50 p-2 py-10 rounded-lg'>
-            <span className="text-lg subtitle">Establecimientos</span>
+        <Paper elevation={2} className='sm:w-[400px]  p-2 py-5 rounded-lg'>
+            <Typography variant="h6">Establecimientos</Typography>
 
             <Loading
             loading={uiState.innerLoading}
             className="py-5"
             />
-            <div className="grid gap-y-2 mt-2">
+            <div className="grid gap-y-2 mt-4">
             {(establecimientos.length == 0 && !uiState.innerLoading) ?
-                <div className="flex flex-col justify-center mt-10">
-                <span className="title">No tienes establecimientos para administrar</span>
+                <div className="flex flex-col justify-center mt-4 w-full text-center">
+                <Typography variant="subtitle2">No tienes establecimientos para administrar</Typography>
 
-                <div className="w-full flex justify-center mt-2">
-               
-                    <Link className="text-button w-min whitespace-nowrap noSelect"
-                     href={`${LOCAL_URL}/auth/login`}>Volver al inicio de sesión</Link>
+                <div className="w-full flex justify-center mt-5">
+                    <Button LinkComponent={Link} href={`${LOCAL_URL}/auth/login`}>
+                    Volver al inicio de sesión
+                    </Button>
                 </div>
 
                 </div>
                 :
                 establecimientos.map((item,idx)=>{
                     return(
-                            <Link href={`${rootEstablecimiento}/${item.uuid}`} className="card"
-                            key={idx}>
-                            {item.name}
-                            </Link>
+                        <Button key={idx} color="inherit" variant="outlined"
+                        LinkComponent={Link} href={`${rootEstablecimiento}/${item.uuid}`}>
+                        {item.name}
+                        </Button>
+                            // <Link href={`${rootEstablecimiento}/${item.uuid}`} className="card"
+                            // key={idx}>
+                            // {item.name}
+                            // </Link>
                     )
                 })}
             </div>
-        </div>
+        </Paper>
     )
 }
 

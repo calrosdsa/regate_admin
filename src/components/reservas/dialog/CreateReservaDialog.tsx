@@ -440,7 +440,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
      allowFullScreen={true}
      className="max-w-xl"
       open={open} close={close} title="Crear reserva">
-        <div className='rounded-lg bg-white overflow-auto max-w-xl'>
+        <div className='overflow-auto max-w-xl'>
            
             <div className="">
                     
@@ -489,9 +489,9 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
                             const totalPrice = item.interval.map(t=>t.precio).reduce((prev,curr)=>prev + curr)
                                 return (
                                     <Tab.Panel key={idx} className={""}>
-                                <div className="grid gap-y-1 mt-2 ">
+                                <div className="grid gap-y-2 mt-2 ">
                                 {item.interval.length > 0 &&
-                                <div className="grid sm:grid-cols-2 sm:items-center sm:space-x-10 border-b-[1px] pb-1">
+                                <div className="grid sm:grid-cols-2 sm:items-center sm:space-x-10 border-b-[1px] pb-2">
                                     <span className="label">Cancha</span>
                                     <div className="flex space-x-2 items-center">
                                         <Button size="small" onClick={()=>selectInstalacionFromDialog(item)}>
@@ -505,11 +505,11 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
                                     </div>
                                 </div>
                                 }
-                                <div className="grid sm:grid-cols-2 sm:items-center sm:space-x-10 border-b-[1px] pb-1">
+                                <div className="grid sm:grid-cols-2 sm:items-center sm:space-x-10 border-b-[1px] pb-2">
                                     <span className="label">Precio de la reserva</span>
                                     <span className="text-xs ">{totalPrice}</span>
                                 </div>
-                                <div className="grid sm:grid-cols-2 sm:items-center sm:space-x-10 border-b-[1px] pb-1">
+                                <div className="grid sm:grid-cols-2 sm:items-center sm:space-x-10 border-b-[1px] pb-2">
                                     <span className="label">Disponibilidad</span>
                                     {/* <div className="text-xs ">
                                         <span className="">{getMessageAvailable(item.interval)}
@@ -523,7 +523,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
                                     />
                                 </div>
                                 {item.interval.length > 0 &&
-                                <div className="grid sm:grid-cols-2 sm:items-center sm:space-x-10 border-b-[1px] pb-1">
+                                <div className="grid sm:grid-cols-2 sm:items-center sm:space-x-10 border-b-[1px] pb-2">
                                     <span className="label">Fecha y hora de la reserva</span>
                                     <div className="grid ">
                                         <span className="text-xs">

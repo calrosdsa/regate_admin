@@ -5,6 +5,7 @@ type UiState = {
     loaderDialog:boolean
     openSidebar:boolean
     ongoingDownloadProcess:number[]
+    mode:'light' | 'dark'
 }
 
 

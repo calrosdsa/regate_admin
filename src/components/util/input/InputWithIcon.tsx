@@ -40,7 +40,6 @@ required= true,onBlur=()=>{},size = "small",multiline=false,maxLenght= 255}:Prop
         onBlur={onBlur}
         multiline={multiline}
         inputProps={{ maxLength: maxLenght }}
-        sx={{backgroundColor:"white"}}
         InputProps={{
           startAdornment: (
               Icon != undefined &&

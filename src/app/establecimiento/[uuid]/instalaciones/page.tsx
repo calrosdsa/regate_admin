@@ -14,7 +14,7 @@ import { uiActions } from "@/context/slices/uiSlice";
 import { GetCupoReservaInstalciones, GetInstalacion, GetInstalaciones, getInstalacionDayHorario } from "@/core/repository/instalacion";
 import { GetReservaDetail, getInstalacionReservas } from "@/core/repository/reservas";
 // import { Tab } from "@headlessui/react";
-import { Box, Button, List, ListItem, ListItemButton, ListItemText, Tab, Tabs } from "@mui/material";
+import { Box, Button, List, ListItem, ListItemButton, ListItemText, Paper, Tab, Tabs, useTheme } from "@mui/material";
 import moment from "moment";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -40,6 +40,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
     const searchParams = useSearchParams();
     const instalacionId = searchParams.get("id")
     const tabIndex = searchParams.get("tabIndex")
+    const theme = useTheme()
     const current = new URLSearchParams(Array.from(searchParams.entries()))
     const dispatch = useAppDispatch()
     const pathname = usePathname();
@@ -254,10 +255,10 @@ const Page = ({ params }: { params: { uuid: string } })=>{
         addInstalacion={(e:Instalacion)=>setInstalaciones([...instalaciones,e])}
         />
         }
-        <div className="px-1 h-full  w-full">
-            <div className="md:grid md:grid-cols-9 gap-x-3 xl:pt-0">
-                
-            <div className="flex flex-col w-full col-span-3 p-2 border-[1px] shadow-lg md:h-screen overflow-auto ">
+        <div className="h-screen xl:pt-0">
+            <div className="md:grid md:grid-cols-9  xl:pt-0 h-full gap-x-2 px-2">  
+
+            <Paper elevation={2} className="flex flex-col w-full col-span-3 my-2 p-2 shadow-lg overflow-auto ">
                 <div className="flex justify-between flex-wrap gap-2">
                 <Button 
                 variant="outlined"
@@ -296,18 +297,21 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                     }}
                     />
                         </div>
-                    </div>
 
-            <div className="flex relative flex-col col-start-4 col-span-full  md:border-[1px] md:shadow-lg h-screen md:overflow-auto">
+                    </Paper>
+
+
+
+            <Paper elevation={2} className="flex my-2  relative flex-col col-start-4 col-span-full  md:overflow-auto">
                 <div>
+                    <Paper elevation={2} className="sticky top-0 z-10 w-full pb-2">
                 <Tabs
-                className="sticky top-0 bg-white z-10 w-full pb-2"
                 value={currentTab}
                 onChange={(e,v)=>setCurrentTab(v)}
                 variant="scrollable"
                 scrollButtons="auto"
                 aria-label="scrollable auto tabs example"
-            >
+                >
               <Tab label="Info" onClick={()=>{
                             if(instalacion == null) return
                             setInstalacion(null)
@@ -332,6 +336,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                             getCuposReservaInstalacion(instalacion.id)
                             }}/>   
             </Tabs>
+            </Paper>
 
             {currentTab == TabInstalacion.INFO &&
                             <div className={"mx-auto flex justify-center w-full sm:w-3/4"}>
@@ -354,7 +359,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
 
             {currentTab == TabInstalacion.HORARIO &&
                         instalacion != null && 
-                        <div className="px-2">
+                        
                             <HorarioWeek
                             instalacionId={instalacion.id}
                             currentDay={currentDay}
@@ -364,13 +369,13 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                             instalaciones={instalaciones}
                             updateHorarios={(e)=>setCupos(e)}
                             />
-                            </div>
                     }
             {currentTab == TabInstalacion.RESERVAS && 
                     instalacion != null && 
-                           <div className="px-2">
+                           <>
 
-                            <Box  className="bg-white w-full z-10 sticky top-14 ">
+                            <Paper elevation={2} 
+                            className=" w-full z-10 sticky top-14 px-2">
 
                            <div className="flex gap-2  pb-2 flex-wrap items-end ">
                                 <Button variant="contained" className="w-min" disabled={loadingReservas} onClick={()=>{
@@ -412,10 +417,8 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                                 }
                             </div> */}
 
-                            </Box>
-
-
-
+                            </Paper>
+                            <div className="px-2">
                             <Loading
                             loading={loadingReservas}
                             className="flex justify-center mb-2"
@@ -429,9 +432,13 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                             date={startDate || moment()}
                             />
                             </div>
+                            </>
                         }
                 </div>
-            </div>
+
+            </Paper>
+
+
             </div>
         </div>
         {(openReservaDetailDialog && reservaDetail != null) &&
