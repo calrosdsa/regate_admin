@@ -172,8 +172,8 @@ export default function Page({params}:{params:{uuid:string}}){
         instalacionOptions={instalaciones}
         />
         }
-        <div className="p-2 overflow-auto h-screen">
-            <div className="pt-10 xl:pt-2">
+        <div className="p-2 overflow-auto">
+            <div className="">
                 <span className="text-xl">Reservas({paginationProps?.count})</span>
 
             <div className="flex space-x-3 py-2">

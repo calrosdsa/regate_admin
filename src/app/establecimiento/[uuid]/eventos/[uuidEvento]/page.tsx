@@ -156,7 +156,7 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
    
     return(
         <>
-        <div className="p-2 overflow-auto h-screen">
+        <div className="p-2 overflow-auto ">
             <div className="flex space-x-1">
                 <Link href={getRouteEstablecimiento(params.uuid,"eventos")}  className="cursor-pointer underline">
                     <Typography variant="body2">

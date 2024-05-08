@@ -12,7 +12,7 @@ import { uiActions } from "@/context/slices/uiSlice"
 import { DeleteEvento, GetEventos } from "@/core/repository/evento"
 import { GetUsersEmpresaPagination } from "@/core/repository/users"
 import useEffectOnce from "@/core/util/hooks/useEffectOnce"
-import { Button } from "@mui/material"
+import { Button, Typography } from "@mui/material"
 import { useSearchParams } from "next/navigation"
 import { useState } from "react"
 import { toast } from "react-toastify"
@@ -145,7 +145,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         <div className="p-2 overflow-auto h-screen">
 
             <div>
-                <span className="subtitle">Eventos</span>
+                <Typography variant="body2">Eventos</Typography>
             </div>
 
             <div className="pt-10 xl:pt-2">

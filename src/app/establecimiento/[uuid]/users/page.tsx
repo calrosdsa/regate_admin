@@ -103,7 +103,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         userEmpresa={userEmpresa}
         onUpdate={(name,phone)=>{
             const updateUser = {...userEmpresa,name:name,phone_number:phone}
-            const updateUserList= users.map(item=> {
+            const updateUserList: UserEmpresa[] = users.map(item=> {
                 if(item.id == updateUser.id){
                     item = updateUser
                 }
@@ -112,7 +112,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             setUsers(updateUserList)
         }}/>
         }
-        <div className="p-2 overflow-auto h-screen">
+        <div className="p-2 overflow-auto ">
 
             <div>
                 <Typography>Usuarios</Typography>

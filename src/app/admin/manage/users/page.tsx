@@ -212,9 +212,9 @@ export default function Page(){
 
         <div className=" h-screen xl:pt-0">
 
-        <div className="grid xl:grid-cols-8 h-full w-full">
+        <div className="grid xl:grid-cols-8 h-full w-full p-2 gap-x-2 gap-y-2">
 
-            <Paper elevation={2} className=" col-span-3 rounded-xl my-2  ml-2 p-2  overflow-auto relative  w-full">
+            <Paper elevation={2} className=" col-span-3 rounded-xl p-2  overflow-auto relative  w-full">
                 <div className="flex justify-between items-center  pb-2">
                 <span className="headline">Usuarios</span>
 
@@ -225,8 +225,11 @@ export default function Page(){
 
               
                 <Button onClick={()=>setOpenDialogCreateUser(true)}
-                endIcon={<PersonAddIcon/>} variant="contained">
-                    Agregar usuario               
+                variant="contained" >
+                    <Typography variant="button" sx={{
+                        mr:1,display:{xs:"none",sm:"block"},
+                        }}>Agregar Usuario</Typography>
+                    <PersonAddIcon/>
                     </Button>
             
                 </div>
@@ -268,7 +271,7 @@ export default function Page(){
                 </List>
             </Paper>
             
-            <Paper elevation={2} className="col-start-4 col-span-full shadow-md  rounded-lg m-2  p-2 relative">
+            <Paper elevation={2} className="col-start-4 col-span-full shadow-md  rounded-lg  p-2 relative">
                 {/* {loading && <Loader className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"/> } */}
 
                     {currentUser != null &&
