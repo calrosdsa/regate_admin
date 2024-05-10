@@ -113,7 +113,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
             setLoadingUsers(true)
             const q = searchQuery.trim().replaceAll(/\s+/g,":* & ") + ":*"
             const res = await SearchUsersEmpresa(q)
-            setFormData({...formData,name:searchQuery})
+           
             setUsers(res)
             setLoadingUsers(false)
         }catch(err){
@@ -606,6 +606,8 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
         options={usersEvento != undefined ? [...usersEvento,...users] : users} 
         loading={loadingUsers}
         setQuery={(e)=>{
+            console.log("QUERY",e)
+            setFormData({...formData,name:e})
             setSearchQuery(e)
             setUserEmpresa(null)
         }}

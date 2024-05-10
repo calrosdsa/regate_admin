@@ -196,7 +196,7 @@ const CancelReservaDialog = ({open,close,update,reserva,uuid,instalacion,getRese
                     </div>
                     </div>
                 }
-                    <Button sx={{mt:2}}
+                    <Button data-testid="reasignar" sx={{mt:2}}
                     onClick={()=>setOpenCalendar(true)}>
                         Reasignar
                     </Button>
@@ -214,6 +214,7 @@ const CancelReservaDialog = ({open,close,update,reserva,uuid,instalacion,getRese
                 <div className=" flex justify-end">
                 <ButtonWithLoader
                 loading={loading}
+                testId="confirm-cancellation"
                 onClick={()=>setOpenConfirmationDialog(true)}
                 title="Confirmar"
                 className="mt-2 w-28"

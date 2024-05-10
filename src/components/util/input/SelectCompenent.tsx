@@ -2,7 +2,7 @@ import { FormControl, MenuItem, Select, SelectChangeEvent, Typography } from "@m
 import { ReactNode } from "react"
 
 
-const SelectComponent = ({items,value,onChange,required=true,name,label,containerClassName="mt-3",size="small"}:{
+const SelectComponent = ({items,value,onChange,required=true,name,label,containerClassName="mt-3",size="small",testId}:{
     items:SelectItem[]
     value:string
     onChange:(e:SelectChangeEvent<string>, child: ReactNode)=>void
@@ -11,6 +11,7 @@ const SelectComponent = ({items,value,onChange,required=true,name,label,containe
     label?:string
     size?:'small' | 'medium'
     containerClassName?:string
+    testId?:string
 }) =>{
     
     return(
@@ -21,6 +22,7 @@ const SelectComponent = ({items,value,onChange,required=true,name,label,containe
             }
         <FormControl sx={{minWidth:"100%"}}>
         <Select
+            data-testid={testId}
             size={size}
             onChange={onChange}
             value={value}
@@ -30,7 +32,8 @@ const SelectComponent = ({items,value,onChange,required=true,name,label,containe
             >
                   {items.map((item,idx)=>{
                 return(
-                    <MenuItem  key={idx} value={item.value}>{item.name.slice(0,50)}</MenuItem>
+                    <MenuItem data-testid={`${testId}-${idx}`}
+                    key={idx} value={item.value}>{item.name.slice(0,50)}</MenuItem>
                     // <option key={item.dayWeek} value={item.dayWeek}>{item.dayName}</option>
                     // <div key={item.dayWeek} onClick={()=>getHorarioDay(item.dayWeek)}
                     // className={`${selectedDay == item.dayWeek ? 'button':'button-inv'}`}>

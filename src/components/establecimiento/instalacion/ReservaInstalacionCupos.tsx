@@ -169,7 +169,7 @@ const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCup
                             <Typography variant="body2" className=" -translate-y-5 w-9">{moment(item.hour).utc().format("LT")}</Typography>
                             <div className="grid w-10/12">
                         <span className=" w-full h-[0.5px] bg-gray-400"></span>
-                        <div 
+                        <div id={`cupo-reserva-${idx +1}`}
                              onClick={()=>{
                                 if(item.reserva != undefined){
                                     if(!item.reserva.available) return
@@ -236,7 +236,7 @@ const ReservaInstalacionCupos = ({cupos,loading,getReservaDetail,selecReservaCup
                         <div className="flex space-x-4 h-10 items-center">
 
                             <span className=" w-9"></span>
-                            <div 
+                            <div id={`cupo-reserva-${idx +1}`}
                              onClick={()=>{
                                 if(item.reserva != undefined){
                                     if(!item.reserva.available) return

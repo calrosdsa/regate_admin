@@ -6,13 +6,15 @@ interface Props{
     className?:string
     onClick:()=>void
     disabled?:boolean
+    testId?:string
 }
-const ButtonWithLoader = ({loading,title,className="",onClick,disabled=false}:Props) =>{
+const ButtonWithLoader = ({loading,title,className="",onClick,disabled=false,testId}:Props) =>{
 
     return(
       <>
       <LoadingButton
       onClick={onClick}
+      data-testid={testId}
       variant="contained"
       loading={loading} className={className}
       disabled={disabled}>

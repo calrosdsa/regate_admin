@@ -261,6 +261,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
             <Paper elevation={2} className="flex flex-col w-full col-span-3 my-2 p-2 shadow-lg overflow-auto ">
                 <div className="flex justify-between flex-wrap gap-2">
                 <Button 
+                data-testid="crear-cancha"
                 variant="outlined"
                 onClick={()=>{
                     appendSerachParams("dialog","1")
@@ -268,7 +269,9 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                     }} className="w-min h-10 whitespace-nowrap">Crear Cancha</Button>
 
                 <div className="flex space-x-2">
-                    <Button variant="contained" disabled={loadingInstalaciones}             
+                    <Button
+                    data-testid="settings-instalacines"
+                    variant="contained" disabled={loadingInstalaciones}             
                     onClick={()=>setOpenCofigureInstalaciones(true)}
                     >
                         <SettingsIcon/>
@@ -326,7 +329,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                             // }
                             getHorariosDay(currentDay,instalacion.id)
                         }} />
-                <Tab label="Reservas" onClick={()=>{      
+                <Tab id="reservas-tab" label="Reservas" onClick={()=>{      
                             if(instalacion == null) return
                             // if(ReservaInstalacionCupos.length >0 ){
                             // appendSerachParams("tabIndex","2")

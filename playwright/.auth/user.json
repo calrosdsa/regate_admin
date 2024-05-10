@@ -1,0 +1,39 @@
+{
+  "cookies": [
+    {
+      "name": "rol",
+      "value": "0",
+      "domain": "localhost",
+      "path": "/",
+      "expires": 1715459988.841151,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "access_token",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiYWRtaW5faWQiOiJkMmJmNjU3NS1lMzAxLTQ4NjMtOTQ0Ny1lYjdjZDhmNDBkZWMiLCJlbWFpbCI6ImpvcmdlbWlyYW5kYTAxODBAZ21haWwuY29tIiwidXNlcm5hbWUiOiJqb3JnZW1pcmFuZGEiLCJyb2wiOjAsImVtcHJlc2FfaWQiOjEsImV4cCI6MTcxNTczMzU4OH0.-cGZtvnHrJ-4TeX5_Q2pgRLKdZYO4Sm2HNVAg2BwLl4",
+      "domain": "localhost",
+      "path": "/",
+      "expires": 1715459988.841338,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://localhost:3000",
+      "localStorage": [
+        {
+          "name": "mode",
+          "value": "light"
+        },
+        {
+          "name": "user",
+          "value": "{\"id\":1,\"user_id\":\"d2bf6575-e301-4863-9447-eb7cd8f40dec\",\"username\":\"jorgemiranda\",\"rol\":0,\"last_login\":\"2024-05-10T15:39:48.817858Z\",\"created_at\":\"2024-05-03T18:21:19.230684Z\",\"email\":\"jorgemiranda0180@gmail.com\",\"phone\":null,\"estado\":0,\"empresa_id\":1}"
+        }
+      ]
+    }
+  ]
+}

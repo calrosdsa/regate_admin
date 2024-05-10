@@ -100,6 +100,7 @@ const DialogReservaDetail = ({open,close,data,update,uuid,getReservas}:{
      />
      }
      <DialogLayout
+     testId="d-detail-reserva"
      title="Detalles de la Reserva"
      allowFullScreen={true}
      open={showReservaDetail} close={()=>setShowReservaDetail(false)}>
@@ -123,7 +124,7 @@ const DialogReservaDetail = ({open,close,data,update,uuid,getReservas}:{
                         className="rounded-full h-14 w-14 object-cover bg-gray-200 "
                         />
                         <div className="flex flex-col gap-y-2">
-                        <Typography >{detail.instalacion.name}</Typography>
+                        <Typography data-testid="detail-cancha-name">{detail.instalacion.name}</Typography>
                         <Chip
                         size="small"
                         label={detail.instalacion.category_name}
@@ -195,24 +196,24 @@ const DialogReservaDetail = ({open,close,data,update,uuid,getReservas}:{
                          <div className=" mb-4 ">
                                 <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
                                         <Typography variant="subtitle2"  className="label">Fecha y hora de la reserva</Typography>
-                                        <Typography variant="body2" className="sm:whitespace-nowrap">{moment.utc(detail.reserva.start_date).format("ll")} de {' '}
+                                        <Typography data-testid="reserva-fecha" variant="body2" className="sm:whitespace-nowrap">{moment.utc(detail.reserva.start_date).format("ll")} de {' '}
                                 {moment.utc(detail.reserva.start_date).format("LT")} a {' '}
                                 {moment.utc(detail.reserva.end_date).format("LT")} </Typography>
                                     </div>
 
                                     <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
                                         <Typography variant="subtitle2"  className="label">Estado de la reserva</Typography>
-                                        <Typography variant="body2">{getEstadoReserva(detail.reserva.estado)}</Typography>
+                                        <Typography data-testid="reserva-estado" variant="body2">{getEstadoReserva(detail.reserva.estado)}</Typography>
                                     </div>
 
                                     <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
                                         <Typography variant="subtitle2"  className="label">Precio de la reserva</Typography>
-                                        <Typography variant="body2">{detail.reserva.total_price}</Typography>
+                                        <Typography data-testid="reserva-precio" variant="body2">{detail.reserva.total_price}</Typography>
                                     </div>
 
                                     <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
                                         <Typography variant="subtitle2"  className="label">Cantidad pagada</Typography>
-                                        <Typography variant="body2">{detail.reserva.paid}</Typography>
+                                        <Typography data-testid="reserva-monto-pagado" variant="body2">{detail.reserva.paid}</Typography>
                                     </div>
 
 
@@ -254,14 +255,14 @@ const DialogReservaDetail = ({open,close,data,update,uuid,getReservas}:{
                                     }
 
                                     {(detail.reserva.estado == ReservaEstado.Valid || detail.reserva.estado == ReservaEstado.Pendiente) &&
-                                    <Button variant="contained"
+                                    <Button  data-testid="cancelar-reserva" variant="contained"
                                     onClick={()=>setCancelReservaDialog(true)} >
                                     Cancelar reserva
                                     </Button>
                                     }
 
                                     {detail.reserva.estado != ReservaEstado.Cancel &&
-                                    <Button variant="contained"
+                                    <Button data-testid="edit-reserva" variant="contained"
                                      onClick={()=>setEditReservaDialog(true)}>
                                     <EditIcon/>
                                     </Button>

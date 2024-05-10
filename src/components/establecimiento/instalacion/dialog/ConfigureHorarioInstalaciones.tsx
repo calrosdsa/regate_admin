@@ -171,6 +171,7 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
                         <>
                         <div key={index} className="flex space-x-2 items-end py-2 min-w-[380px]">
                           <TimeSelect
+                          testId={`inicio-${index}`}
                           label="Inicio"
                           time={moment(item.start_time)}
                           isError={item.isError}
@@ -182,6 +183,7 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
                           />
                            <TimeSelect
                           label="Fin"
+                          testId={`fin-${index}`}
                           time={moment(item.end_time)}
                           isError={item.isError}
                           setTime={(e)=>{
@@ -194,7 +196,12 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
                           <div>
                             <Typography variant="body2">Monto</Typography>
                             <TextField
-                            required type="number" className="w-20" value={item.precio} name="precio"
+                            required 
+                            id={`amount-${index}`}
+                            data-testid={`amount-${index}`}
+                            type="number" 
+                            className="w-20" 
+                            value={item.precio} name="precio"
                             size="small" sx={{mt:1}}
                             InputLabelProps={{ shrink: true }}
                             onChange={(e)=>onChangeCustomPrecio(e.target.name,e.target.value,index)}
@@ -274,6 +281,7 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
 
         <TextField
         required 
+        data-testid={`type-action`}
         sx={{minWidth:"100%",mt:2}}
         value={actionType.toString()} 
         name="estado"
@@ -288,16 +296,16 @@ const DialogConfigureHorarioInstalaciones = ({openModal,closeModal,instalaciones
           setActionType(Number(v))
         }}
         select>
-         <MenuItem value={ActionType.CREATE}>Crear</MenuItem> 
-         <MenuItem value={ActionType.UPDATED}>Editar</MenuItem> 
-         <MenuItem value={ActionType.DELETED}>Eliminar</MenuItem> 
+         <MenuItem data-testid={`Crear`} value={ActionType.CREATE}>Crear</MenuItem> 
+         <MenuItem  data-testid={`Editar`} value={ActionType.UPDATED}>Editar</MenuItem> 
+         <MenuItem data-testid={`Eliminar`} value={ActionType.DELETED}>Eliminar</MenuItem> 
         </TextField>
         </div>
 
         <DialogActions>
           <LoadingButton
           type="submit"
-          loading={loading} onClick={()=>{}}>Enviar</LoadingButton>
+          loading={loading} onClick={()=>{}}>Guardar Cambios</LoadingButton>
         </DialogActions>
 
             </form>

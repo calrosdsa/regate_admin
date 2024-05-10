@@ -32,7 +32,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
       const {name,description,category_id,cantidad_de_personas,precio_hora} = formData
       const [customPrecioInstalacion,setCustomPrecuoInstalacion] = useState<CustomPrecioInstalacion[]>([])
       const [disabledHours,setDisabledHours] = useState<string[]>([])
-      const onChange = (e:ChangeEvent<HTMLInputElement>)=>{
+      const onChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>{
       //   dispatch(authActions.setErrrorLogin(undefined))
         setFormData({ ...formData, [e.target.name]: e.target.value });
       }
@@ -235,11 +235,13 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
             <Typography variant="body2" sx={{mb:1}}>Seleciona una categoria*</Typography>
           <TextField
           name="category_id"
+          data-testid="select-category"
           value={category_id} onChange={onChange}
           select size="small" sx={{width:"100%"}}>
-            {categories.map((item)=>{
+            {categories.map((item,idx)=>{
                 return(
-                    <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
+                    <MenuItem data-testid={`category-${idx}`}
+                    key={item.id} value={item.id}>{item.name}</MenuItem>
                     )
                 })}
           </TextField>
@@ -272,6 +274,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
                         <div key={index} className="flex space-x-2 items-end py-2 min-w-[380px]">
                           <TimeSelect
                           label="Inicio"
+                          testId={`inicio-${index}`}
                           time={moment(item.start_time)}
                           date={moment().format("YYYY-MM-DD")}
                           setTime={(e)=>{
@@ -282,6 +285,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
                           />
                            <TimeSelect
                           label="Fin"
+                          testId={`fin-${index}`}
                           date={moment().format("YYYY-MM-DD")}
                           time={moment(item.end_time)}
                           setTime={(e)=>{
@@ -293,6 +297,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
                           <div>
                           <Typography variant="body2">Monto</Typography>
                             <TextField
+                            id={`amount-${index}`}
                             required type="number" className="w-20" value={item.precio} name="precio"
                             sx={{mt:1}} size="small"
                             InputLabelProps={{ shrink: true }}

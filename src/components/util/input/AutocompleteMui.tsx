@@ -51,7 +51,7 @@ export default function AutocompleteMui({
               {option.name}
             </Box>
           )}
-        renderInput={(params) => <TextField {...params} />}
+        renderInput={(params) => <TextField  {...params} />}
       />
     </div>
   );

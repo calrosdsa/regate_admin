@@ -24,8 +24,8 @@ const ConfirmationDialog = ({open,close,title="Por favor, confirme si desea cont
           {description}
           </DialogContentText>
         <DialogActions>
-          <Button onClick={descartar}>Descartar</Button>
-          <Button onClick={performAction} autoFocus>
+          <Button data-testid="discard" onClick={descartar}>Descartar</Button>
+          <Button data-testid="accept" onClick={performAction} autoFocus>
           Continuar
           </Button>
         </DialogActions>

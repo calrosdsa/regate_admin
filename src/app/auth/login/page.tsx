@@ -68,7 +68,7 @@ const Login = () =>{
    />
   </div>
   <Link href={`/auth/forgot-password`} className="labelText flex justify-end cursor-pointer">
-    <Typography>
+    <Typography variant="body2">
     ¿Olvidaste tu contraseña?
     </Typography>
     </Link>

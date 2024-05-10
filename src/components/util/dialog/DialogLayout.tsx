@@ -12,10 +12,11 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 
 const DialogLayout = ({open,close,children,title ="",allowClose=false,allowFullScreen=false,
-showHeader=true}:{
+showHeader=true,testId}:{
     open:boolean
     allowClose?:boolean
     close:()=>void
+    testId?:string
     children:ReactNode
     className?:string
     showHeader?:boolean
@@ -45,13 +46,14 @@ showHeader=true}:{
           {title}
             </Typography>
 
-            <IconButton onClick={()=>close()}>
+            <IconButton data-testid={`${testId}-close`} onClick={()=>close()}>
               <CloseIcon/>
             </IconButton>
           </div>
         </DialogTitle>
         }
-        <DialogContent>
+        <DialogContent 
+        >
           {children}
         </DialogContent>
       </Dialog>

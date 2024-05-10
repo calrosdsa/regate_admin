@@ -5,7 +5,7 @@ import { MenuItem, TextField, Typography } from "@mui/material";
 
 
 const TimeSelect = ({
-    label,className,time,setTime,disabledHours,size="small",isError,date
+    label,className,time,setTime,disabledHours,size="small",isError,date,testId
 }:{
     className?:string
     label:string
@@ -15,7 +15,7 @@ const TimeSelect = ({
     setTime:(e:moment.Moment)=>void
     disabledHours?:string[]
     isError?:boolean
-
+    testId?:string
 })=>{
     // const [date,setDate] = useState(datetime.date)
     // const [time,setTime] = useState(startTime)
@@ -46,6 +46,7 @@ const TimeSelect = ({
             name=""
             id=""
             select
+            data-testid={testId}
             error={isError}
             size={size}
             required 
@@ -57,9 +58,10 @@ const TimeSelect = ({
                 {generateHours().map((item,index)=>{
                     const t = item.utc().format("HH:mm")
                     return (    
-                        <MenuItem key={index}  value={item.utc().format("YYYY-MM-DD HH:mm")}
-                         disabled={disabledHours?.includes(item.utc().format("YYYY-MM-DD HH:mm"))}
-                         >{t}</MenuItem>
+                        <MenuItem key={index} data-testid={`time-${index}`}
+                        value={item.utc().format("YYYY-MM-DD HH:mm")}
+                        disabled={disabledHours?.includes(item.utc().format("YYYY-MM-DD HH:mm"))}
+                        >{t}</MenuItem>
                     )
                 })}
                 

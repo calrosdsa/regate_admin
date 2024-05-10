@@ -71,6 +71,7 @@ const EditReservaDialog = ({open,close,reserva,update}:{
 
            <SelectComponent
             label="Estado"
+            testId="s-estado"
             items={reservaEstados.slice(1,reservaEstados.length)}
             onChange={(e)=>{
                setFormData({
@@ -85,6 +86,7 @@ const EditReservaDialog = ({open,close,reserva,update}:{
 
             <SelectComponent
             label="Tiempo extra"
+            testId="s-extra-time"
             required={false}
             items={[
                 {value:"30",name:"30 minutos"},
