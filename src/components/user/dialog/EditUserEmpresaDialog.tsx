@@ -20,7 +20,7 @@ const EditUserEmpresaDialog = ({open,close,userEmpresa,onUpdate}:{
         id:userEmpresa.id
     })
 
-    const onChange = (e:ChangeEvent<HTMLInputElement>) => {
+    const onChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({...formData,[e.target.name]:e.target.value})
     }
 

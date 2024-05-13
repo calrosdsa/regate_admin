@@ -11,7 +11,7 @@ import { GetInstalaciones } from "@/core/repository/instalacion";
 import { CheckRervasCuposAvailables, CreateReservaCupos, DeleteReservaCupos, GenerateReservaCupos } from "@/core/repository/reservas";
 import { EndOptions, Http, MonthDaySelectOption, Repeat, ReservaType } from "@/core/type/enums";
 import { repeatOptions } from "@/core/util/data";
-import { MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Box, MenuItem, Select, TextField, Typography, useTheme } from "@mui/material";
 import moment from "moment";
 import { Truculenta } from "next/font/google";
 import Image from "next/image";
@@ -29,6 +29,7 @@ const AdvanceReservaOptionDialog = ({
         instalacionId:number
         generateCupos:(e:CupoReserva[])=>void
 }) => {
+    const theme = useTheme()
     const startDate = startTime.format("YYYY-MM-DD")
     const [repeatOption,setRepeatOption] = useState(Repeat.NEVER)
     const [date,setDate] = useState<moment.Moment>(startTime || moment())
@@ -245,6 +246,7 @@ const AdvanceReservaOptionDialog = ({
             <div className="grid sm:grid-cols-2 gap-x-4 gap-y-4 ">
             <TimeSelect
             time={start}
+            testId={`inicio-0`}
             isError={timeSelectError}
             setTime={(e)=>{
                 setStart(e)
@@ -259,6 +261,7 @@ const AdvanceReservaOptionDialog = ({
             />
              <TimeSelect
             time={end}
+            testId={`fin-0`}
             isError={timeSelectError}
             setTime={(e)=>{
                 console.log(e.format())
@@ -285,6 +288,7 @@ const AdvanceReservaOptionDialog = ({
                 <TextField
                 name="repeat"
                 id="repeat" 
+                data-testid="repeat"
                 size="medium"
                 sx={{mt:1}}
                 variant="outlined"
@@ -294,6 +298,7 @@ const AdvanceReservaOptionDialog = ({
                 {repeatOptions.map((item,idx)=>{
                         return(
                             <MenuItem 
+                            data-testid={`repeat-option-${idx}`}
                              key={idx} value={item.repeat}>{item.label}</MenuItem>
                         )
                     })}
@@ -328,8 +333,20 @@ const AdvanceReservaOptionDialog = ({
                 {repeatOption == Repeat.WEEKLY && 
                 <div className="flex flex-wrap gap-2 p-2" >
                 {days.map((item,index) =>{
+                    
                     return (
-                        <div key={index} 
+                        <Box
+                        data-testid={`day-${item.value}`}
+                        sx={{
+                            backgroundColor: selectedDaysWeeks.includes(item.value)
+                            ? (
+                                theme.palette.mode == "dark" ?
+                                theme.palette.primary.dark :
+                                theme.palette.primary.light
+                            )
+                            : theme.palette.background.default
+                        }}
+                        key={index} 
                         onClick={()=>{
                             if(selectedDaysWeeks.includes(item.value)){
                                 const news = selectedDaysWeeks.filter(t=>t != item.value)
@@ -338,12 +355,11 @@ const AdvanceReservaOptionDialog = ({
                                 setSelectedDaysWeeks([...selectedDaysWeeks,item.value])
                             }
                         }}
-                        className={`icon-button flex justify-center items-center noSelect
-                        ${selectedDaysWeeks.includes(item.value) ? "text-primary bg-primary bg-opacity-10"
-                        :"border-[1px] border-gray-300"}
+                        className={`rounded-full w-9 h-9 flex justify-center items-center noSelect border
+                       }
                         `}>
                             {item.day.slice(0,1)}
-                        </div>
+                        </Box>
                         )
                     })}
                 </div>
@@ -390,6 +406,7 @@ const AdvanceReservaOptionDialog = ({
                  {untilOption == EndOptions.DATE &&
                  <>
                  <InputDate
+                 testId="until_date"
                  value={until_date}
                  onChange={(e)=>{setFilterData({
                     ...filterData,
@@ -407,6 +424,7 @@ const AdvanceReservaOptionDialog = ({
 
         <div className=" mt-4 flex w-full justify-end space-x-2">
             <ButtonSubmit
+            testId="continuar-reserva-c"
             loading={loadingSaveButton}
             className="w-24"
             // disabled={loadingSaveButton}

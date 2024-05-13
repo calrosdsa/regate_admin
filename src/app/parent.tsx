@@ -33,12 +33,12 @@ export function Parent({ children }:any) {
         // },
         palette:{
           mode,
-          primary: {
-            main: 'rgba(79,168,220,0.79)',
-          },
-          secondary: {
-            main: '#f50057',
-          },
+        //   primary: {
+        //     main: 'rgba(79,168,220,0.79)',
+        //   },
+        //   secondary: {
+        //     main: '#f50057',
+        //   },
         }
       }),
     [mode],

@@ -196,7 +196,8 @@ const DialogReservaDetail = ({open,close,data,update,uuid,getReservas}:{
                          <div className=" mb-4 ">
                                 <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
                                         <Typography variant="subtitle2"  className="label">Fecha y hora de la reserva</Typography>
-                                        <Typography data-testid="reserva-fecha" variant="body2" className="sm:whitespace-nowrap">{moment.utc(detail.reserva.start_date).format("ll")} de {' '}
+                                        <Typography data-testid="reserva-fecha" variant="body2" 
+                                        className="sm:whitespace-nowrap">{moment.utc(detail.reserva.start_date).format("ll")} de {' '}
                                 {moment.utc(detail.reserva.start_date).format("LT")} a {' '}
                                 {moment.utc(detail.reserva.end_date).format("LT")} </Typography>
                                     </div>

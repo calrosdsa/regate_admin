@@ -399,6 +399,7 @@ const Page = ({ params }: { params: { uuid: string } })=>{
                                 disabled={selectedCupos.length != 0}
                                 >
                                     <Button
+                                    data-testid="crear-reserva-custom"
                                     variant="contained"
                                     onClick={()=>{
                                         appendSerachParams("dialog","1")

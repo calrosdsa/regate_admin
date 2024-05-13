@@ -1,4 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
+import moment from 'moment';
+import 'moment/locale/es'
+
 import { AppPageRouteModule } from 'next/dist/server/future/route-modules/app-page/module.compiled';
 
 
@@ -12,6 +15,17 @@ const precioHora = "200"
 test.beforeAll(async ()=>{
   console.log("START WITH TEST")
 })
+
+const now = moment().locale("es")
+
+async function selectCustomHorario(page:Page){
+  await expect(page.getByText("Reserva Customizada")).toBeVisible();
+  await page.getByTestId("inicio-0").click()
+  await page.getByTestId("time-40").click()
+  await page.getByTestId("fin-0").click()
+  await page.getByTestId("time-42").click()
+  await page.getByTestId("repeat").click()
+}
 
 test.describe(() => {
   test.use({ storageState: adminFilePath });
@@ -53,6 +67,56 @@ test.describe(() => {
     await expect(page.getByTestId("reserva-precio").getByText(precioHora)).toBeVisible();  
     await expect(page.getByTestId("reserva-monto-pagado").getByText("100")).toBeVisible();  
     await expect(page.getByTestId("reserva-estado").getByText("Pendiente")).toBeVisible();  
+  })
+  test("CreateReservaWithCustomHorario", async({page})=>{
+    console.log(now.format("ll"),"12301")
+    await page.goto(`/establecimiento/${uuid}/instalaciones`)
+    await expect(page.getByTestId("cancha-0").getByText(instalacionName)).toBeVisible();  
+    await page.getByTestId("cancha-0").click()
+    await page.locator("#reservas-tab").click();
+    await page.getByTestId("crear-reserva-custom").click();
+
+    selectCustomHorario(page)
+    await page.getByTestId("repeat-option-1").click()
+
+    const days = 8
+    const untilDate = now.clone().add(days,"days").format("DD/MM/YYYY")
+    await page.getByTestId("until_date").getByPlaceholder("DD/MM/YYYY").fill(untilDate)
+    await page.getByTestId("continuar-reserva-c").click()
+    
+    //Check
+    for(let i = 0;i < days;i++){
+      const currentD = now.clone().add(i,"days").format("ll")
+      console.log("CURRENT",currentD)
+      await expect(page.getByTestId("reserva-fecha").getByText(currentD)).toBeVisible();
+      await page.getByTestId(`tab-interval-${i+1}`).click();
+    }
+    await page.getByTestId("seleccionar-hora").click()
+
+    selectCustomHorario(page)
+    await page.getByTestId("repeat-option-2").click()
+    await page.getByTestId(`day-${now.day()}`).click()
+    await page.getByTestId("until_date").getByPlaceholder("DD/MM/YYYY").fill(untilDate)
+    await page.getByTestId("continuar-reserva-c").click()
+
+    const iterations = Math.floor(days/7)
+     for(let i = 0;i <= iterations;i++){
+      const currentD = now.clone().add(i*7,"days").format("ll")
+      await expect(page.getByTestId("reserva-fecha").getByText(currentD)).toBeVisible();
+      if(iterations > i){
+        await page.getByTestId(`tab-interval-${i+1}`).click();
+      }
+    }
+    
+
+    
+    
+    // await expect(page.getByTestId("reserva-fecha").getByText(now.format("ll"))).toBeVisible(); 
+    // await page.getByRole("gridcell",{name:""}).click();
+    // await page.getByRole("button",{name:"OK"}).click();
+    // await expect(page.getByTestId("reserva-fecha").getByText("de 20:00 a 21:00")).toBeVisible(); 
+    // await expect(page.getByTestId("reserva-fecha").getByText(now.format("ll"))).toBeVisible(); 
+    
   })
   test("EditReserva", async ({page}) =>{
     await page.goto(`/establecimiento/${uuid}/instalaciones`)

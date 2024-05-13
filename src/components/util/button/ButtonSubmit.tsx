@@ -7,8 +7,9 @@ interface Props{
     title:string
     className?:string
     size?:'small' | 'medium' | 'large'
+    testId?:string
 }
-const ButtonSubmit = ({loading,title,className="",size="medium"}:Props) =>{
+const ButtonSubmit = ({loading,title,className="",size="medium",testId}:Props) =>{
 
     return(
         <div className={`relative ${className} mt-3`}>
@@ -16,6 +17,7 @@ const ButtonSubmit = ({loading,title,className="",size="medium"}:Props) =>{
       variant="contained"
       type="submit" 
       size={size}
+      data-testid={testId}
       loading={loading}
       sx={{ width:"100%"}}>
         {title}

@@ -23,7 +23,7 @@ import SeeMore from "@/components/util/button/SeeMore";
 import { Http, HttpStatusCode } from "@/core/type/enums";
 import { Tab } from "@headlessui/react";
 import { GetInstalaciones } from "@/core/repository/instalacion";
-import { Button, IconButton, TextField, Typography } from "@mui/material";
+import { Button, IconButton, TextField, Typography, useTheme } from "@mui/material";
 import { fetchInstalaciones } from "@/context/actions/data-actions";
 import { LoadingButton } from "@mui/lab";
 import InstalacionesDialog from "@/components/establecimiento/instalacion/dialog/InstalacionesDialog";
@@ -69,6 +69,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
     usersEvento?:UserEmpresa[]
 }) => {
     const dispatch = useAppDispatch()
+    const theme = useTheme()
     const instalaciones = useAppSelector(state=>state.data.instalaciones)
     const fetchLoading = useAppSelector(state=>state.ui.fetchLoading)
     // const [tab,setTab] = useState(isEvento ? Tabs.Instalaciones : Tabs.ReservaForm)
@@ -89,6 +90,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
     const [openInstalacionesDialog,setOpenInstalacionesDialog] = useState(false)
     const [selectReservaInterval,setSelectecReservaInterval] = useState<ReservaInterval | null>(null)
     const [totalAmount,setTotalAmount] = useState(0)
+    const [selectedIndex, setSelectedIndex] = useState(0)
     // const [currentInterval,setCurrentInterval] = useState<CupoReserva[]>([])
 
 
@@ -104,7 +106,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
 
     const onSearch = async() =>{
         try{
-            if(name == searchQuery) return
+            // if(name == searchQuery) return
             if(searchQuery == "") {
                 setUsers([])
                 return
@@ -375,6 +377,10 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
         if(id == undefined) return
         const n = reservaIntervals.filter(item=>item.id!= id)
         setReservaIntervals(n)
+        if(n.length > 0){
+            setSelectedIndex(0)
+        }
+        
     }
 
 
@@ -444,21 +450,29 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
            
             <div className="">
                     
-                    <Button size="small"
+                    <Button size="small" data-testid="seleccionar-hora"
                     color="inherit" variant="outlined" onClick={()=>setOpenAdvanceOptions(!openAdvanceOptions)}>
                     Seleccionar hora
                     </Button>
                     
-                    <Tab.Group>
-                        <Tab.List className={"w-full z-10 flex overflow-auto"}>
+                    <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>
+                        <Tab.List className={"w-full z-10 flex overflow-auto mt-2 space-x-3"}>
                             {reservaIntervals.map((item,idx)=>{
+                                const color = selectedIndex == idx ? theme.palette.primary.main : theme.palette.text.primary
                                 return (
-                                         <Tab key={idx} className={({ selected }) => `tab whitespace-nowrap ${selected && "tab-enabled"}`}
+                                         <Tab key={idx} data-testid={`tab-interval-${idx}`}
+                                          style={{
+                                            color:color,
+                                            borderBottomWidth:2,
+                                            borderColor:selectedIndex == idx ? color : theme.palette.background.default,
+                                            padding:4,
+                                            
+                                          }}
                                         onClick={()=>{
                                             console.log(item.interval)
                                             // setCurrentInterval(item.interval) 
                                         }}>
-                                            <div className="flex space-x-1 items-center">
+                                            <div className="flex space-x-1 items-center justify-center">
                                                 {!checkIsAvailable(item.interval) &&
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" 
                                                 className="w-3 h-3">
@@ -466,15 +480,18 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
                                                 </svg>
                                                 }
                                                 <span>Reserva {idx+1}</span>
-
-                                                <IconButton sx={{height:30}} size="small"
+                                                {reservaIntervals.length > 1 &&
+                                                <IconButton
+                                                color={selectedIndex == idx ? "primary":"default"}
+                                                size="small"
                                                 onClick={(e)=>{
                                                     e.stopPropagation()
                                                     removeReservaInterval(item.id)
                                                 }}
                                                 >
-                                                    <CloseIcon/>
+                                                    <CloseIcon fontSize="inherit"/>
                                                 </IconButton>
+                                                }
 
                                             </div>
                                             </Tab>
@@ -507,10 +524,10 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
                                 }
                                 <div className="grid sm:grid-cols-2 sm:items-center sm:space-x-10 border-b-[1px] pb-2">
                                     <span className="label">Precio de la reserva</span>
-                                    <span className="text-xs ">{totalPrice}</span>
+                                    <Typography variant="body2" className="text-xs ">{totalPrice}</Typography>
                                 </div>
                                 <div className="grid sm:grid-cols-2 sm:items-center sm:space-x-10 border-b-[1px] pb-2">
-                                    <span className="label">Disponibilidad</span>
+                                    <Typography variant="body2" className="label">Disponibilidad</Typography>
                                     {/* <div className="text-xs ">
                                         <span className="">{getMessageAvailable(item.interval)}
                                     <span>Ver mas</span>
@@ -526,11 +543,11 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
                                 <div className="grid sm:grid-cols-2 sm:items-center sm:space-x-10 border-b-[1px] pb-2">
                                     <span className="label">Fecha y hora de la reserva</span>
                                     <div className="grid ">
-                                        <span className="text-xs">
+                                        <Typography variant="body2" className="text-xs" data-testid="reserva-fecha" >
                                         {moment.utc(item.interval[0].time).format("ll")} de {' '}
                                         {moment.utc(item.interval[0].time).format("LT")} a {' '}
                                         {moment.utc(item.interval[item.interval.length -1].time).add(30,'minutes').format("LT")} 
-                                        </span>
+                                        </Typography>
                                     </div>
                                 </div>
                                 }
