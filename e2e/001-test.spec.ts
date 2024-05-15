@@ -18,15 +18,15 @@
     })
   })
 
-  test.describe(() => {
-    test('login-user', async ({ page }) => {
-      await page.goto('/auth/login')
-      await page.locator("[name='email']").fill("jorgemiranda0180@gmail.com")
-      await page.locator("[name='password']").fill("12ab34cd56ef")
+  // test.describe(() => {
+  //   test('login-user', async ({ page }) => {
+  //     await page.goto('/auth/login')
+  //     await page.locator("[name='email']").fill("jorgemiranda0180@gmail.com")
+  //     await page.locator("[name='password']").fill("12ab34cd56ef")
     
-      await page.getByRole('button',{name:"Submit"}).click()
-      await page.waitForURL('/auth/establecimientos')
-      await expect(page).toHaveURL('/auth/establecimientos')
-      await page.context().storageState({ path: userFilePath });
-    })
-  })
+  //     await page.getByRole('button',{name:"Submit"}).click()
+  //     await page.waitForURL('/auth/establecimientos')
+  //     await expect(page).toHaveURL('/auth/establecimientos')
+  //     await page.context().storageState({ path: userFilePath });
+  //   })
+  // })

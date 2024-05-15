@@ -20,7 +20,7 @@ export default function AutocompleteMui({
       <div>{`inputValue: '${inputValue}'`}</div>
       <br /> */}
       {label != undefined && 
-      <Typography sx={{mb:1}} variant="body2">{label}</Typography>
+      <Typography sx={{mb:1}} variant="body2">{label}*</Typography>
       }
       
       {/* <Autocomplete

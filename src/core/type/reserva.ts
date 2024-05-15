@@ -121,6 +121,12 @@ type ReservaEditRequest = {
     end_date:string
 }
 
+type DeleteReservaRequest = {
+    reserva_uuid:string
+    reserva_id:number
+    establecimiento_uuid:string
+}
+
 type CheckInstalacionIsAvailableRequest = {
     instalacion_id:number
     times:string[]

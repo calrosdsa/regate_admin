@@ -30,6 +30,7 @@ import InstalacionesDialog from "@/components/establecimiento/instalacion/dialog
 import CloseIcon from '@mui/icons-material/Close';
 import ListInstalaciones from "@/components/establecimiento/instalacion/ListInstalaciones";
 import AutocompleteMui from "@/components/util/input/AutocompleteMui";
+import { TooltipIcon } from "@/components/util/tooltips/Tooltip";
 
 type CreateReservaRequest = {
     intervals:CupoInterval[]
@@ -400,6 +401,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
     },[reservaCupos])
 
     useEffect(()=>{
+        console.log("Selectedindex",selectedIndex)
         dispatch(fetchInstalaciones(uuid))    
     },[])
     return(
@@ -479,7 +481,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
                                                 <path fillRule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14ZM8 4a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0v-3A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clipRule="evenodd" />
                                                 </svg>
                                                 }
-                                                <span>Reserva {idx+1}</span>
+                                                <span className=" whitespace-nowrap">Reserva {idx+1}</span>
                                                 {reservaIntervals.length > 1 &&
                                                 <IconButton
                                                 color={selectedIndex == idx ? "primary":"default"}
@@ -554,7 +556,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
 
                             <InputWithIcon
                             type="tel"
-                            label="Monto pagado"
+                            label="Anticipo"
                             value={item.paid || ""}
                             name="paid"
                             error={error}
@@ -587,17 +589,23 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
          {reservaIntervals.length > 1 &&
          <>
              <span className="title text-[17px]">Informacion de las reservas</span>
-        <div className="pt-2 w-full relative">
-          <Typography fontWeight={500}>Precio total</Typography>
-          <Typography>{reservaIntervals.map((item)=>{
+        <div className="pt-2 grid gap-y-2 w-full relative">
+            <div>
+
+          <Typography variant="body2" fontWeight={500}>Precio total</Typography>
+          <Typography variant={"body2"}>{reservaIntervals.map((item)=>{
               const totalPrice = item.interval.map(t=>t.precio).reduce((prev,curr)=>prev + curr)
               return totalPrice
             }).reduce((prev,curr)=>prev + curr)}</Typography>
+            </div>
 
-          <Typography variant="body2">Total pagado</Typography>
+            <div>
+          <TooltipIcon  title="El monto total pagado se distribuirá equitativamente entre todas las reservas.">
+          <Typography variant="body2">Total pagado (Opcional)</Typography>
+          </TooltipIcon>
           <TextField
           size="small"
-          sx={{mt:1,width:"100%"}}
+          sx={{width:"100%"}}
           type="number"
           onChange={(e)=>{
             const amountV = Number(e.target.value)
@@ -610,13 +618,15 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
             } 
           }}
           />
+          </div>
 
         </div>
             </>
         }   
 
+        <div className="grid gap-y-2">
             <span className="title text-[17px]">Usuario para quien se realizará la reserva</span>
-        <div className="pt-2 w-full relative">
+        <div className="w-full relative">
 
         <AutocompleteMui
         label="Nombre"
@@ -648,13 +658,14 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
             </div>
            <InputWithIcon
             type="tel"
-            label="Número de teléfono."
+            label="Número de teléfono"
             value={formData.phone_number}
             name="phone_number"
             className="mb-5"
             error={error}
             onChange={onChange}
             />    
+            </div>
              
             <LoadingButton
             type="submit"

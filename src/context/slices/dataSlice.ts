@@ -34,6 +34,10 @@ const dataSlice = createSlice({
                 return item
             })
             state.reservas = n
+        },
+        removeReserva(state,action:PayloadAction<number>){
+            const n = state.reservas.filter(item=>item.id != action.payload)
+            state.reservas = n
         }
 
         // openSidebar(state,action:PayloadAction<boolean>){

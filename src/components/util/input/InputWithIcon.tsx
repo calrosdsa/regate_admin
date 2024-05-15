@@ -22,7 +22,7 @@ const InputWithIcon = ({onChange,value,label,name,type="text",error,Icon,classNa
 required= true,onBlur=()=>{},size = "small",multiline=false,maxLenght= 255}:Props) =>{
 
   return(
-    <div className={`mt-1 ${className}`}>
+    <div className={`${className}`}>
           {label != undefined &&
           <Typography variant="body2" sx={{mb:1}}>{label}</Typography>
       }

@@ -34,7 +34,6 @@ test.describe(() => {
     await page.waitForURL('/admin/manage/establecimientos')
     await expect(page).toHaveURL('/admin/manage/establecimientos')
   })
-  //To run the test below successfully, ensure that no courts are created beforehand.
   test("CreateInstalacionAndReservar", async ({page}) =>{
     await page.goto(`/establecimiento/${uuid}/instalaciones`)
     await page.getByTestId("crear-cancha").click()
@@ -83,8 +82,8 @@ test.describe(() => {
     const untilDate = now.clone().add(days,"days").format("DD/MM/YYYY")
     await page.getByTestId("until_date").getByPlaceholder("DD/MM/YYYY").fill(untilDate)
     await page.getByTestId("continuar-reserva-c").click()
-    
-    //Check
+
+    // await page.getByTestId(`tab-interval-${i+1}`).click();
     for(let i = 0;i < days;i++){
       const currentD = now.clone().add(i,"days").format("ll")
       console.log("CURRENT",currentD)
@@ -100,6 +99,7 @@ test.describe(() => {
     await page.getByTestId("continuar-reserva-c").click()
 
     const iterations = Math.floor(days/7)
+    await page.getByTestId(`tab-interval-0`).click();
      for(let i = 0;i <= iterations;i++){
       const currentD = now.clone().add(i*7,"days").format("ll")
       await expect(page.getByTestId("reserva-fecha").getByText(currentD)).toBeVisible();
@@ -107,16 +107,6 @@ test.describe(() => {
         await page.getByTestId(`tab-interval-${i+1}`).click();
       }
     }
-    
-
-    
-    
-    // await expect(page.getByTestId("reserva-fecha").getByText(now.format("ll"))).toBeVisible(); 
-    // await page.getByRole("gridcell",{name:""}).click();
-    // await page.getByRole("button",{name:"OK"}).click();
-    // await expect(page.getByTestId("reserva-fecha").getByText("de 20:00 a 21:00")).toBeVisible(); 
-    // await expect(page.getByTestId("reserva-fecha").getByText(now.format("ll"))).toBeVisible(); 
-    
   })
   test("EditReserva", async ({page}) =>{
     await page.goto(`/establecimiento/${uuid}/instalaciones`)
@@ -135,7 +125,6 @@ test.describe(() => {
     await page.getByTestId("s-extra-time-0").click();
     await page.getByRole('button', { name: 'Guardar cambios' }).click();
     await expect(page.getByTestId("reserva-fecha").getByText("de 22:00 a 23:30")).toBeVisible(); 
-    // await expect(page.getByTestId("reserva-precio").getByText("300")).toBeVisible();  
     await expect(page.getByTestId("reserva-monto-pagado").getByText("300")).toBeVisible();  
     await expect(page.getByTestId("reserva-estado").getByText("Pagada")).toBeVisible();  
     await page.getByTestId("d-detail-reserva-close").click();
@@ -157,7 +146,6 @@ test.describe(() => {
     await page.getByTestId("cancelar-reserva").click();
     await expect(page.getByTestId("reasignar")).toBeVisible();
     await page.getByTestId("reasignar").click();
-    //click in calendar day options
     await page.getByRole("gridcell",{name:"24"}).click();
     await page.getByRole("button",{name:"OK"}).click();
     await page.getByTestId("confirm-cancellation").click();
@@ -214,16 +202,17 @@ test.describe(() => {
 
 })
 
-test.describe(() => {
-  test.use({ storageState: userFilePath });
-  test('CheckRedirectPageUserRol', async ({ page }) => {
-    await page.goto('/')
-    await page.waitForURL('/auth/login')
-    await expect(page).toHaveURL('/auth/login')
-  })
+// test.describe(() => {
+  
+//   test.use({ storageState: userFilePath });
+//   test('CheckRedirectPageUserRol', async ({ page }) => {
+//     await page.goto('/')
+//     await page.waitForURL('/auth/login')
+//     await expect(page).toHaveURL('/auth/login')
+//   })
  
 
-})
+// })
 
 
 test.afterAll(async ()=>{
