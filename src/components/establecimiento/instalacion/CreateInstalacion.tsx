@@ -13,6 +13,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { Button, IconButton, MenuItem, TextField, Typography } from "@mui/material"
 import CloseIcon from '@mui/icons-material/Close';
+import { TooltipIcon } from "@/components/util/tooltips/Tooltip"
 
 const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
     uuid:string
@@ -198,7 +199,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
    
     return(
         <div className=" max-w-xl ">
-            <form onSubmit={onSubmit} className="relative">
+            <form onSubmit={onSubmit} className="relative grid gap-y-2">
 
             <UploadImage
             id="file-instalacion"
@@ -232,7 +233,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
           label="Descripción"
           />
           <div className="">
-            <Typography variant="body2" sx={{mb:1}}>Seleciona una categoria*</Typography>
+            <Typography variant="body2" sx={{mb:0.5}}>Seleciona una categoria*</Typography>
           <TextField
           name="category_id"
           data-testid="select-category"
@@ -262,12 +263,13 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
           />
         } */}
 
-          <div>
-            <span className="help-text">
-              Configurar precio por rango de hora
-            </span>
-
-          <div className="grid  pt-2 w-full overflow-auto">
+          <div className="mt-1">
+            <TooltipIcon title={`Configura el rango de horas y el precio para las reservas`}>
+            <Typography variant="body2">
+              Configurar precio por rango de hora 
+            </Typography>
+            </TooltipIcon>
+          <div className="grid w-full overflow-auto">
                 {customPrecioInstalacion.map((item,index)=>{
                     return(
                         <>
@@ -317,7 +319,7 @@ const CreateInstalacionComponent = ({uuid,addInstalacion,close}:{
                 })}
             </div>
 
-            <Button onClick={()=>addCustomPrecioInstalcion()}>
+            <Button sx={{mt:1}} onClick={()=>addCustomPrecioInstalcion()}>
             Agregar horas
             </Button>
 

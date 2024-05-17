@@ -164,7 +164,7 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
                     </Typography>
                      </Link>
                 <span> {' > '} </span>
-                <Typography variant="body2" className="text-primary cursor-pointer"> {name}</Typography>
+                <Typography data-testid="evento-name" variant="body2" className="cursor-pointer">{name}</Typography>
             </div>
             <div className="pt-10 xl:pt-2">
 
@@ -183,7 +183,7 @@ const Page = ({ params }: { params: { uuidEvento: string,uuid:string } }) =>{
         aria-label="scrollable auto tabs example"
       >
         <Tab label="Info" onClick={()=>console.log("")}/>
-        <Tab label="Reservas" onClick={()=>console.log("")}/>
+        <Tab label="Reservas" data-testid="reservas-tab" onClick={()=>console.log("")}/>
         <Tab  label="Calendario" />
       </Tabs>
             {currentTab == TabEvento.INFO &&

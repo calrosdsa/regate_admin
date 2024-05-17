@@ -2,7 +2,7 @@
 type CreateEventoRequest = {
     name:string
     description:string
-    establecimiento_id:number
+    establecimiento_uuid:string
     user_empresa:UserEmpresa
 }
 
@@ -19,6 +19,7 @@ type Evento = {
     estado:number
     total_hours:number | null
     organizador:string | null
+    user_evento?:UserEmpresa
 }
 
 type EventoDetail = {

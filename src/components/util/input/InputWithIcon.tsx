@@ -24,7 +24,7 @@ required= true,onBlur=()=>{},size = "small",multiline=false,maxLenght= 255}:Prop
   return(
     <div className={`${className}`}>
           {label != undefined &&
-          <Typography variant="body2" sx={{mb:1}}>{label}</Typography>
+          <Typography variant="body2" sx={{mb:0.5}}>{label}</Typography>
       }
       
     <TextField 

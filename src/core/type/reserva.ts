@@ -51,6 +51,7 @@ type ReservaDataFilter = {
     instalacion_id?:string
     evento_id?:number | null 
     evento_uuid?:string
+    user_id?:number
 }
 
 

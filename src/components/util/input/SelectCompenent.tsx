@@ -18,7 +18,7 @@ const SelectComponent = ({items,value,onChange,required=true,name,label,containe
         
         <div className={`${containerClassName}`}>
             {label != undefined &&
-        <Typography variant="body2" sx={{mb:1}}>{label}</Typography>
+        <Typography variant="body2" sx={{mb:0.5}}>{label}</Typography>
             }
         <FormControl sx={{minWidth:"100%"}}>
         <Select

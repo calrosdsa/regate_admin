@@ -27,7 +27,7 @@ const InstalacionDetail = ({instalacion,update,uuid,refresh}:{
 }) =>{
     const dispatch = useAppDispatch()
     const [show,setShow] = useState(false)
-    const [category,setCategory] = useState<number>(instalacion.category_id)
+    const [category,setCategory] = useState<number>(instalacion.category_id == undefined ? -1 : instalacion.category_id)
     const [photo,setPhoto] = useState<File | undefined>(undefined)
     const [ categories,setCategories ] = useState<Label[]>([])
     const [loadingUpdate,setLoadingUpdate] = useState(false)
@@ -110,7 +110,7 @@ const InstalacionDetail = ({instalacion,update,uuid,refresh}:{
         description={`Se eliminar la cancha (${instalacion.name})`}
         />
         }
-        <div className="grid gap-y-3 w-full px-3">
+        <div className="grid gap-y-3 w-full px-3 pt-3">
             {/* <button className="button w-min rounded-lg">Editar</button> */}
             <div className="flex justify-between space-x-3">
             <span className="text-xl py-2 font-medium">Instalacion Info</span>
@@ -147,7 +147,8 @@ const InstalacionDetail = ({instalacion,update,uuid,refresh}:{
                 return( {name:item.name,value:item.id.toString()} )
             })}
             getItems={getCategories}
-            currentSelected={ {name:instalacion.category_name,value:instalacion.category_id.toString()}}
+            currentSelected={ {name:instalacion.category_name,value:instalacion.category_id != undefined 
+                ? instalacion.category_id.toString() : "-1"}}
             updateSelect={async(value,addLoader,removeLoader,currentName)=>{
                 await updateInstalacion("category_id",value,addLoader,removeLoader)
                 update("category_name",currentName)
@@ -155,7 +156,7 @@ const InstalacionDetail = ({instalacion,update,uuid,refresh}:{
             /> 
 
 
-            <EditComponentSelect
+            {/* <EditComponentSelect
             label="Visibilidad"
             items={estadoVisibility}
             getItems={()=>{}}
@@ -172,7 +173,7 @@ const InstalacionDetail = ({instalacion,update,uuid,refresh}:{
                     </div>
             }
             tooltipId="estado-cancha"
-            />   
+            />    */}
 
             
 

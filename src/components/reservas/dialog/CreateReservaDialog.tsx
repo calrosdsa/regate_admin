@@ -607,6 +607,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
           size="small"
           sx={{width:"100%"}}
           type="number"
+          name="total_pagado"
           onChange={(e)=>{
             const amountV = Number(e.target.value)
             if(amountV >0) {

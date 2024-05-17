@@ -293,7 +293,10 @@ const AdvanceReservaOptionDialog = ({
                 sx={{mt:1}}
                 variant="outlined"
                 select
-                onChange={(e)=>setRepeatOption(Number(e.target.value))}
+                onChange={(e)=>{
+                    setUntilOption(EndOptions.DATE)
+                    setRepeatOption(Number(e.target.value))
+                }}
                 >
                 {repeatOptions.map((item,idx)=>{
                         return(
@@ -312,7 +315,7 @@ const AdvanceReservaOptionDialog = ({
 
                 <div className="flex space-x-2 items-center">
                 <TextField type="number" name="repeat_every" 
-                sx={{maxWidth:100,mt:1}} 
+                sx={{maxWidth:100,mt:0.5}} 
                 InputProps={{ inputProps: { min: 0 } }}
                 value={repeat_every} onChange={(e)=>{                    
                             onChange(e)
@@ -369,7 +372,7 @@ const AdvanceReservaOptionDialog = ({
                 <div className="flex items-center space-x-3 p-2">
                 <Typography variant="body2">Día</Typography>
                     <TextField onChange={onChange} value={day_month}
-                     sx={{maxWidth:100,mt:1}} 
+                     sx={{maxWidth:100,mt:0.5}} 
                      InputProps={{ inputProps: { min: 0 } }}
                     name="day_month" type="number" 
                     /> 
@@ -384,12 +387,12 @@ const AdvanceReservaOptionDialog = ({
 
 
             {repeatOption != Repeat.NEVER &&
-            <div className="grid col-span-2">
+            <div className="grid col-span-2 ">
                 <Typography variant="body2">Termina</Typography>
 
-                <div className="flex space-x-2">
+                <div className="flex space-x-2 items-end">
                 <TextField name="repeat" id="repeat" size="medium"  defaultValue={EndOptions.DATE}
-                select sx={{mt:1}}
+                select sx={{mt:0.5}}
                 onChange={(e)=>setUntilOption(Number(e.target.value))}
                 >
                             <MenuItem
@@ -399,7 +402,7 @@ const AdvanceReservaOptionDialog = ({
                 </TextField> 
                 {untilOption == EndOptions.COUNT &&
                 <TextField type="number" 
-                sx={{maxWidth:100,mt:1}} 
+                sx={{maxWidth:100,mt:0.5}} 
                 InputProps={{ inputProps: { min: 0 } }}
                 name="until_count" value={until_count} onChange={onChange}/>
                 }

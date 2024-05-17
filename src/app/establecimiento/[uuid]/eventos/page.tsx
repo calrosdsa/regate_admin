@@ -118,7 +118,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         addEvento={(e)=>setEventos([e,...eventos])}
         open={createEventoDialog}
         close={()=>setCreateEventoDialog(false)}
-        establecimientoId={establecimientos.find(item=>item.uuid == params.uuid)?.id || 0}
+        establecimientoUuid={params.uuid}
         onCreateEvento={(e)=>{
             setEventoCreated(e)
             getInstalaciones()
@@ -133,8 +133,10 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         close={()=>setOpenReservaDialog(false)}
         cupos={[]}
         onComplete={()=>{
+            getUsersEmpresa(1)
             setOpenInstalacionesDialog(false)
         }}
+        usersEvento={eventoCreated.user_evento != undefined ? [eventoCreated.user_evento]:[]}
         cancha={instalacion}
         useAdvanceOptions={true}
         eventoId={eventoCreated.id}
@@ -160,7 +162,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                     <RefreshIcon/>
                 </Button>
 
-                <Button variant="outlined" onClick={()=>setCreateEventoDialog(true)} 
+                <Button data-testid="crear-evento" variant="outlined" onClick={()=>setCreateEventoDialog(true)} 
                 endIcon={<AddIcon/>}>
                     <span>Crear evento</span>
                 </Button>

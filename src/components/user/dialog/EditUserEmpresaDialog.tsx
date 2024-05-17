@@ -47,7 +47,7 @@ const EditUserEmpresaDialog = ({open,close,userEmpresa,onUpdate}:{
             className="max-w-sm"
             close={close}
             >
-                <form onSubmit={onSumbit} className="">
+                <form onSubmit={onSumbit} className="grid gap-y-3" >
                 <InputWithIcon
             type="text"
             label="Nombre"

@@ -170,7 +170,9 @@ const ReservaList = ({reservas,loading,order,changeOrder,getReservaDetail}:{
                          {moment(item.start_date).utc().format('LT')} a {moment(item.end_date).utc().format('LT')}</StyledTableCell>
                          <StyledTableCell className="rowTable">{moment(item.created_at).format("lll")}</StyledTableCell>
                         <StyledTableCell>
-                            <IconButton size="small" color="primary" onClick={()=>getReservaDetail(item.id)}>
+                            <IconButton 
+                            data-testid={`see-reserva-detail-${index}`}
+                            size="small" color="primary" onClick={()=>getReservaDetail(item.id)}>
                                 <VisibilityIcon fontSize="inherit"/>
                             </IconButton>
                         </StyledTableCell>

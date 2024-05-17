@@ -12,13 +12,8 @@ const adminFilePath = 'playwright/.auth/admin.json';
 const uuid = "5992f417-8e38-41de-b91f-5a7a472dd8d5"
 const instalacionName = "Test Cancha Play"
 const precioHora = "200"
-test.beforeAll(async ()=>{
-  console.log("START WITH TEST")
-})
 
-const now = moment().locale("es")
-
-async function selectCustomHorario(page:Page){
+const selectCustomHorario = async(page:Page)=>{
   await expect(page.getByText("Reserva Customizada")).toBeVisible();
   await page.getByTestId("inicio-0").click()
   await page.getByTestId("time-40").click()
@@ -26,6 +21,13 @@ async function selectCustomHorario(page:Page){
   await page.getByTestId("time-42").click()
   await page.getByTestId("repeat").click()
 }
+
+test.beforeAll(async ()=>{
+  console.log("START WITH TEST")
+})
+
+const now = moment().locale("es")
+
 
 test.describe(() => {
   test.use({ storageState: adminFilePath });
@@ -118,21 +120,21 @@ test.describe(() => {
     await expect(page.getByTestId("reserva-fecha").getByText("de 22:00 a 23:00")).toBeVisible();  
     await page.getByTestId("edit-reserva").click()
     await expect(page.getByText("Editar reserva")).toBeVisible();  
-    await page.locator("[name='paid']").fill("300");
+    await page.locator("[name='paid']").fill("0");
     await page.getByTestId("s-estado").click();
     await page.getByTestId("s-estado-0").click();
     await page.getByTestId("s-extra-time").click();
     await page.getByTestId("s-extra-time-0").click();
     await page.getByRole('button', { name: 'Guardar cambios' }).click();
     await expect(page.getByTestId("reserva-fecha").getByText("de 22:00 a 23:30")).toBeVisible(); 
-    await expect(page.getByTestId("reserva-monto-pagado").getByText("300")).toBeVisible();  
+    await expect(page.getByTestId("reserva-monto-pagado").getByText("0")).toBeVisible();  
     await expect(page.getByTestId("reserva-estado").getByText("Pagada")).toBeVisible();  
     await page.getByTestId("d-detail-reserva-close").click();
     await page.locator("#cupo-reserva-47").click();
     await expect(page.getByTestId("detail-cancha-name").getByText(instalacionName)).toBeVisible();  
     await expect(page.getByTestId("reserva-fecha").getByText("de 22:00 a 23:30")).toBeVisible(); 
     await expect(page.getByTestId("reserva-precio").getByText("300")).toBeVisible();  
-    await expect(page.getByTestId("reserva-monto-pagado").getByText("300")).toBeVisible();  
+    await expect(page.getByTestId("reserva-monto-pagado").getByText("0")).toBeVisible();  
     await expect(page.getByTestId("reserva-estado").getByText("Pagada")).toBeVisible();  
   })
 
@@ -146,7 +148,8 @@ test.describe(() => {
     await page.getByTestId("cancelar-reserva").click();
     await expect(page.getByTestId("reasignar")).toBeVisible();
     await page.getByTestId("reasignar").click();
-    await page.getByRole("gridcell",{name:"24"}).click();
+    await page.getByTitle("Next month").click();
+    await page.getByRole("gridcell",{name:"23"}).first().click();
     await page.getByRole("button",{name:"OK"}).click();
     await page.getByTestId("confirm-cancellation").click();
     await page.getByTestId("accept").click();

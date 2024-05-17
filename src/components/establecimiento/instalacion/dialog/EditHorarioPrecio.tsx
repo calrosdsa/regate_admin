@@ -97,14 +97,15 @@ export const EditHorarioPrecio = ({open,close,cupos,updateCupos,setCupos}:{
         </div>
 
         <form onSubmit={onSubmit}>
-            <div className='grid grid-cols-2 gap-3'>
+            <div className='grid grid-cols-2 gap-3 items-end'>
             <div>
-           <Typography sx={{mb:1}} variant="body2">Precio por hora</Typography>
+           <Typography  variant="body2">Precio por hora</Typography>
              <div className={`relative`}>
         <TextField
             id="password" type='telnet'
             size='small'
             required
+            sx={{mt:0.5}}
             onChange={onChange} 
             value={price}
             className="z-0 "
@@ -119,7 +120,25 @@ export const EditHorarioPrecio = ({open,close,cupos,updateCupos,setCupos}:{
             helpText='Decide si quieres que se hagan reservas en esta hora'
             tooltipId='tooltip2'
             /> */}
-           <Typography sx={{mb:1}} variant="body2">Habilitar</Typography>
+             <TooltipIcon
+              title={
+                <>
+                  <Typography variant="body2" fontSize={13}>
+                    {" "}
+                    <b>Habilitar:</b> Selecciona esta opción para permitir que
+                    se hagan reservas
+                  </Typography>
+                  <Typography variant="body2" fontSize={13}>
+                    <b>Deshabilitar:</b> Selecciona esta opción para impedir que
+                    se hagan reservas
+                  </Typography>
+                </>
+              }
+            >
+              <Typography 
+               variant="body2">Habilitar</Typography>
+            </TooltipIcon>
+           {/* <Typography sx={{mb:1}} variant="body2">Habilitar</Typography> */}
             
 
             <TextField size='small' value={available.toString()}

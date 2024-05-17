@@ -10,15 +10,12 @@ interface Props{
     totalCount:number
 }
 const Pagination = ({currentPage,setPage,totalCount,pageSize}:Props) => {
-   
 
-useEffect(()=>{
-    // console.log(paginationRange)
-},[currentPage])
+
 
     return(
         <>      
-        <PaginationMui count={Math.ceil(totalCount/pageSize)} page={currentPage} onChange={(e,page)=>{
+        <PaginationMui count={Math.ceil(totalCount/pageSize) || 0} page={currentPage} onChange={(e,page)=>{
                     setPage(page)
                 }} color='primary' />
         </>

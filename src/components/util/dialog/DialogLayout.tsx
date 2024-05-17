@@ -36,11 +36,11 @@ showHeader=true,testId}:{
             close()
           }
         }}
-        aria-labelledby="responsive-dialog-title"
-
+        
       >
         {showHeader &&
-        <DialogTitle id="responsive-dialog-title" >
+        <DialogTitle id="responsive-dialog-title"  
+        data-testid="responsive-dialog-title">
           <div className='flex justify-between items-center space-x-8'>
             <Typography variant="h6">
           {title}

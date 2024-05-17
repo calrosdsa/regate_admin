@@ -50,7 +50,7 @@ const TimeSelect = ({
             error={isError}
             size={size}
             required 
-            sx={{mt:1,width:"100%",minWidth:70}}
+            sx={{mt:0.5,width:"100%",minWidth:70}}
             value={time?.format("YYYY-MM-DD HH:mm")} 
             onChange={(e)=>{
                 setTime(moment(e.target.value))}}>

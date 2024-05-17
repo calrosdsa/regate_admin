@@ -69,7 +69,7 @@ const MultiSelectComponent = ({options,label,allName,allValue,setInstalaciones,s
     return(
         <div className="mt-3 w-full">
          {label != undefined &&
-        <Typography variant="body2" sx={{mb:1}}>{label}</Typography>
+        <Typography variant="body2" sx={{mb:0.5}}>{label}</Typography>
             }
           <Select
             id="multiple-chip"

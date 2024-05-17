@@ -34,6 +34,7 @@ const InstalacionesDialog = ({openModal,closeModal,instalaciones,onAccept}:{
                 <LoadingButton
                 loading={loading}
                 disabled={selected == null}
+                data-testId="aceptar"
                 onClick={()=>{
                     if(selected == null) return
                     onAccept(selected,(isLoading:boolean)=>{

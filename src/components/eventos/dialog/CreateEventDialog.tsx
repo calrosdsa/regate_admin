@@ -14,18 +14,18 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 
-const CreateEventDialog = ({open,close,establecimientoId,addEvento,onCreateEvento}:{
+const CreateEventDialog = ({open,close,addEvento,onCreateEvento,establecimientoUuid}:{
     open:boolean,
     close:()=>void
     addEvento:(e:Evento)=>void
-    establecimientoId:number 
     onCreateEvento:(e:Evento)=>void
+    establecimientoUuid:string
 }) =>{
     const [loading,setLoading] = useState(false)
     const [formData,setFormData] = useState<CreateEventoRequest>({
         name:"",
         description:"",
-        establecimiento_id:establecimientoId,
+        establecimiento_uuid:establecimientoUuid,
         user_empresa:{
             id:0,
             name:"",
@@ -76,7 +76,7 @@ const CreateEventDialog = ({open,close,establecimientoId,addEvento,onCreateEvent
     const onSumbit = async(e:FormEvent<HTMLFormElement>) => {
         try{
             e.preventDefault()
-            if(establecimientoId == undefined) return 
+            if(establecimientoUuid == "") return 
             setLoading(true)
             // const request:CreateEventoRequest = {
             //     name:formData.name,
@@ -98,6 +98,7 @@ const CreateEventDialog = ({open,close,establecimientoId,addEvento,onCreateEvent
     }
     useEffect(() => {
         onSearch()
+        // console.log("ESTABLECIMIENTOID",establecimientoId)
         // Do fetch here...
         // Triggers when "debouncedValue" changes
       }, [debouncedValue])
@@ -109,7 +110,7 @@ const CreateEventDialog = ({open,close,establecimientoId,addEvento,onCreateEvent
             className="max-w-sm"
             close={close}
             >
-              <form onSubmit={onSumbit} className="">
+              <form onSubmit={onSumbit} className="grid gap-y-2">
                 <InputWithIcon
                 type="text"
                 label="Nombre"
@@ -125,10 +126,9 @@ const CreateEventDialog = ({open,close,establecimientoId,addEvento,onCreateEvent
                 onChange={onChange}
                 multiline={true}
                 /> 
-
-        <div className="pt-3">
+                <div className="pt-1"/>
         <span className="title text-[17px]">Usuario para quien se realizará la reserva</span>
-        <div className="pt-1 w-full relative">
+        <div className="w-full relative">
         <AutocompleteMui
         label="Nombre"
         options={users}
@@ -167,9 +167,9 @@ const CreateEventDialog = ({open,close,establecimientoId,addEvento,onCreateEvent
             }
         })}
         />    
-        </div>    
 
             <ButtonSubmit
+            testId="sumbit-create-event"
             title="Submit"
             loading={loading}
             />

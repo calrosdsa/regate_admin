@@ -11,7 +11,7 @@ type Instalacion = {
     name:string
     description:string
     establecimiento_id:number
-    category_id:number
+    category_id?:number
     category_name:string
     portada?:string
     max_cupos:number

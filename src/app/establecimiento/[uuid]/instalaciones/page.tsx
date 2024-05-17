@@ -206,6 +206,7 @@ const Page = ({ params }: { params: { uuid: string } }) => {
       setLoadingInstalacion(true);
       setInstalacion(null);
       const res: Instalacion = await GetInstalacion(uuid);
+      console.log("INSTALACION",res)
       setInstalacion(res);
       appendSerachParams("id", res.uuid);
       setLoadingInstalacion(false);
@@ -333,7 +334,7 @@ const Page = ({ params }: { params: { uuid: string } }) => {
               </div>
             </div>
             <h2 className="title py-2">Cancha</h2>
-            <div className="flex md:flex-col w-fulll overflow-auto md:gap-y-2 pb-3 md:pb-0 space-x-2 md:space-x-0  md:h-min">
+            <div className="flex flex-col w-fulll overflow-auto md:gap-y-2 pb-3 md:pb-0 space-x-2 md:space-x-0  md:h-min">
               <Loading
                 loading={loadingInstalaciones}
                 className="flex justify-center mb-2"
@@ -486,7 +487,7 @@ const Page = ({ params }: { params: { uuid: string } }) => {
                   <div className="px-2">
                     <Loading
                       loading={loadingReservas}
-                      className="flex justify-center mb-2"
+                      className="flex justify-center my-2"
                     />
                     <ReservaInstalacionCupos
                       cupos={cuposReservas}

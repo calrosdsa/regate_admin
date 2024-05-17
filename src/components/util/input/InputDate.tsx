@@ -21,7 +21,6 @@ const InputDate = ({
        <>
          <LocalizationProvider dateAdapter={AdapterMoment}>
          <DemoContainer
-        
         components={[
           'DatePicker',
         ]}>

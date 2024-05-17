@@ -27,6 +27,7 @@ const ListInstalaciones =  ({instalaciones,selected,onClick}:{
                 }
                 >
                 <ListItemButton
+                data-testid={`instalacion-option-${idx}`}
                 selected={selected(item)}
                  onClick={()=>onClick(item)}>
                 <ListItemText primary={item.name.slice(0,50)} secondary={item.category_name} />
