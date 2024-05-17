@@ -46,6 +46,9 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  compiler: {
+    removeConsole: false,
+  },
 }
   
 

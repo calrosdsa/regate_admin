@@ -293,7 +293,7 @@ const HorarioWeek = ({instalacionId,cupos,currentDay,getHorarioDay,loading,insta
 
         <Loading
         loading={loading}
-        className="flex justify-center w-full"
+        className="flex justify-center w-full my-2"
         />
         <div className="pt-6 px-2">
 
@@ -338,7 +338,12 @@ const HorarioWeek = ({instalacionId,cupos,currentDay,getHorarioDay,loading,insta
                                 {item.available == false && item.price != undefined &&
                                     <Typography variant="caption" className="text-red-500 font-medium text-xs">Deshabilitado</Typography>
                                 }
-                                <Typography>{item.available}</Typography>
+
+                                <Typography>
+                                    <>
+                                    {item.available}
+                                    </>
+                                    </Typography>
                             </div>
 
                         </Box>

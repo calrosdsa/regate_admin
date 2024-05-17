@@ -11,7 +11,8 @@ const uiState:UiState=  {
     loaderDialog:false,
     openSidebar:false,
     ongoingDownloadProcess:[],
-    mode:"light"
+    mode:"light",
+    showBackButton:true
 }
 
 
@@ -44,6 +45,9 @@ const uiSlice = createSlice({
         removeOngoingProcessFromQueue(state,action:PayloadAction<number>){
             const ongoingDownloads = state.ongoingDownloadProcess.filter(item=>item != action.payload)
             state.ongoingDownloadProcess = ongoingDownloads
+        },
+        setShowBackButton(state,action:PayloadAction<boolean>){
+            state.showBackButton = action.payload
         }
     }
 })

@@ -35,6 +35,7 @@ import {
   Paper,
   Tab,
   Tabs,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import moment from "moment";
@@ -44,7 +45,7 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import SettingsIcon from "@mui/icons-material/Settings";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -98,6 +99,7 @@ const Page = ({ params }: { params: { uuid: string } }) => {
     Number(tabIndex)
   );
   const [openCalendar, setOpenCalendar] = useState(false);
+  const matches = useMediaQuery("(min-width:768px)");
   const [openConfigureInstalacionesHorario, setOpenCofigureInstalaciones] =
     useState(false);
 
@@ -169,13 +171,6 @@ const Page = ({ params }: { params: { uuid: string } }) => {
       setLoadingInstalaciones(true);
       const instalaciones: Instalacion[] = await GetInstalaciones(params.uuid);
       setInstalaciones(instalaciones);
-      if (instalaciones.length > 0) {
-        // if(instalacionId != null){
-        //     getInstalacionData(instalacionId,instalaciones)
-        // }else{
-        getInstalacionData(instalaciones[0].uuid, instalaciones);
-        // }
-      }
       setLoadingInstalaciones(false);
     } catch (err) {
       setLoadingInstalaciones(false);
@@ -206,7 +201,7 @@ const Page = ({ params }: { params: { uuid: string } }) => {
       setLoadingInstalacion(true);
       setInstalacion(null);
       const res: Instalacion = await GetInstalacion(uuid);
-      console.log("INSTALACION",res)
+      console.log("INSTALACION", res);
       setInstalacion(res);
       appendSerachParams("id", res.uuid);
       setLoadingInstalacion(false);
@@ -223,6 +218,14 @@ const Page = ({ params }: { params: { uuid: string } }) => {
       setSelectedCupos((v) => [...v, cupo]);
     }
   };
+
+  useEffect(()=>{
+    if (instalaciones.length > 0) {
+      if (matches) {
+        getInstalacionData(instalaciones[0].uuid, instalaciones);
+      }
+    }
+  },[instalaciones])
 
   useEffect(() => {
     getData();
@@ -256,6 +259,7 @@ const Page = ({ params }: { params: { uuid: string } }) => {
     window.addEventListener("popstate", () => {
       setOpenReservaDetailDialog(false);
       setCreateReservaDialog(false);
+      setInstalacion(null);
       setOpenCreateInstalacion(false);
     });
     return () => {
@@ -294,214 +298,222 @@ const Page = ({ params }: { params: { uuid: string } }) => {
       )}
       <div className="h-screen xl:pt-0">
         <div className="md:grid md:grid-cols-9  xl:pt-0 h-full gap-x-2 px-2">
-          <Paper
-            elevation={2}
-            className="flex flex-col w-full col-span-3 my-2 p-2 shadow-lg overflow-auto "
-          >
-            <div className="flex justify-between flex-wrap gap-2">
-              <Button
-                data-testid="crear-cancha"
-                variant="outlined"
-                onClick={() => {
-                  appendSerachParams("dialog", "1");
-                  setOpenCreateInstalacion(true);
-                }}
-                className="w-min h-10 whitespace-nowrap"
-              >
-                Crear Cancha
-              </Button>
-
-              <div className="flex space-x-2">
+          {((instalacion == null && !matches) || matches) && (
+            <Paper
+              elevation={2}
+              className="flex flex-col w-full col-span-3 my-2 p-2 shadow-lg overflow-auto "
+            >
+              <div className="flex justify-between flex-wrap gap-2">
                 <Button
-                  data-testid="settings-instalacines"
-                  variant="contained"
-                  disabled={loadingInstalaciones}
-                  onClick={() => setOpenCofigureInstalaciones(true)}
-                >
-                  <SettingsIcon />
-                </Button>
-                <Button
-                  variant="contained"
-                  className="w-min h-10"
-                  disabled={loadingInstalaciones}
+                  data-testid="crear-cancha"
+                  variant="outlined"
                   onClick={() => {
-                    setInstalaciones([]);
-                    getData();
+                    appendSerachParams("dialog", "1");
+                    setOpenCreateInstalacion(true);
                   }}
+                  className="w-min h-10 whitespace-nowrap"
                 >
-                  <RefreshIcon />
+                  Crear Cancha
                 </Button>
+
+                <div className="flex space-x-2">
+                  <Button
+                    data-testid="settings-instalacines"
+                    variant="contained"
+                    disabled={loadingInstalaciones}
+                    onClick={() => setOpenCofigureInstalaciones(true)}
+                  >
+                    <SettingsIcon />
+                  </Button>
+                  <Button
+                    variant="contained"
+                    className="w-min h-10"
+                    disabled={loadingInstalaciones}
+                    onClick={() => {
+                      setInstalaciones([]);
+                      getData();
+                    }}
+                  >
+                    <RefreshIcon />
+                  </Button>
+                </div>
               </div>
-            </div>
-            <h2 className="title py-2">Cancha</h2>
-            <div className="flex flex-col w-fulll overflow-auto md:gap-y-2 pb-3 md:pb-0 space-x-2 md:space-x-0  md:h-min">
-              <Loading
-                loading={loadingInstalaciones}
-                className="flex justify-center mb-2"
-              />
-              <ListInstalaciones
-                instalaciones={instalaciones}
-                selected={(e) => e.id == instalacion?.id}
-                onClick={(e) => {
-                  setInstalacion(null);
-                  getInstalacion(e.uuid);
-                }}
-              />
-            </div>
-          </Paper>
+              <h2 className="title py-2">Cancha</h2>
+              <div className="flex flex-col w-fulll overflow-auto md:gap-y-2 pb-3 md:pb-0 space-x-2 md:space-x-0  md:h-min">
+                <Loading
+                  loading={loadingInstalaciones}
+                  className="flex justify-center mb-2"
+                />
+                <ListInstalaciones
+                  instalaciones={instalaciones}
+                  selected={(e) => e.id == instalacion?.id}
+                  // selected={(e) => true}
+                  onClick={(e) => {
+                    setInstalacion(null);
+                    getInstalacion(e.uuid);
+                  }}
+                />
+              </div>
+            </Paper>
+          )}
 
-          <Paper
-            elevation={2}
-            className="flex my-2  relative flex-col col-start-4 col-span-full  md:overflow-auto"
-          >
-            <div>
-              <Paper elevation={2} className="sticky top-0 z-10 w-full pb-2">
-                <Tabs
-                  value={currentTab}
-                  onChange={(e, v) => setCurrentTab(v)}
-                  variant="scrollable"
-                  scrollButtons="auto"
-                  aria-label="scrollable auto tabs example"
-                >
-                  <Tab
-                    label="Info"
-                    onClick={() => {
-                      if (instalacion == null) return;
-                      setInstalacion(null);
-                      appendSerachParams("tabIndex", "0");
-                      getInstalacion(instalacion.uuid);
-                    }}
-                  />
-                  <Tab
-                    label="Horarios"
-                    onClick={() => {
-                      if (instalacion == null) return;
-                      // if(cupos.length>0) {
-                      //     appendSerachParams("tabIndex","1")
-                      //     return
-                      // }
-                      getHorariosDay(currentDay, instalacion.id);
-                    }}
-                  />
-                  <Tab
-                    id="reservas-tab"
-                    label="Reservas"
-                    onClick={() => {
-                      if (instalacion == null) return;
-                      // if(ReservaInstalacionCupos.length >0 ){
-                      // appendSerachParams("tabIndex","2")
-                      //     return
-                      // }
-                      appendSerachParams("tabIndex", "2");
-                      getCuposReservaInstalacion(instalacion.id);
-                    }}
-                  />
-                </Tabs>
-              </Paper>
-
-              {currentTab == TabInstalacion.INFO && (
-                <div className={"mx-auto flex justify-center w-full sm:w-3/4"}>
-                  {/* {JSON.stringify(instalacion)} */}
-                  <Loading
-                    loading={loadingInstalacion}
-                    className="flex justify-center w-full mt-2"
-                  />
-                  {instalacion != null && (
-                    <InstalacionDetail
-                      uuid={params.uuid}
-                      instalacion={instalacion}
-                      refresh={getData}
-                      update={(name, value) => {
-                        setInstalacion({ ...instalacion, [name]: value });
+          {(instalacion != null || matches) && (
+            <Paper
+              elevation={2}
+              className="flex my-2  relative flex-col col-start-4 col-span-full  md:overflow-auto"
+            >
+              <div>
+                <Paper elevation={2} className="sticky top-0 z-10 w-full pb-2">
+                  <Tabs
+                    value={currentTab}
+                    onChange={(e, v) => setCurrentTab(v)}
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    aria-label="scrollable auto tabs example"
+                  >
+                    <Tab
+                      label="Info"
+                      onClick={() => {
+                        // if (instalacion == null) return;
+                        // setInstalacion(null);
+                        appendSerachParams("tabIndex", "0");
+                        if(instalacion == null){
+                          getInstalacion(instalacionId as string);
+                        }
                       }}
                     />
-                  )}
-                </div>
-              )}
+                    <Tab
+                      label="Horarios"
+                      onClick={() => {
+                        if (instalacion == null) return;
 
-              {currentTab == TabInstalacion.HORARIO && instalacion != null && (
-                <HorarioWeek
-                  instalacionId={instalacion.id}
-                  currentDay={currentDay}
-                  cupos={cupos}
-                  getHorarioDay={(day: number) =>
-                    getHorariosDay(day, instalacion.id)
-                  }
-                  loading={loadingHorarios}
-                  instalaciones={instalaciones}
-                  updateHorarios={(e) => setCupos(e)}
-                />
-              )}
-              {currentTab == TabInstalacion.RESERVAS && instalacion != null && (
-                <>
-                  <Paper
-                    elevation={2}
-                    className=" w-full z-10 sticky top-14 px-2"
+                        getHorariosDay(currentDay, instalacion.id);
+                      }}
+                    />
+                    <Tab
+                      id="reservas-tab"
+                      label={`Reservas`}
+                      onClick={() => {
+                        if (instalacion == null) return;
+                        // if(ReservaInstalacionCupos.length >0 ){
+                        // appendSerachParams("tabIndex","2")
+                        //     return
+                        // }
+                        appendSerachParams("tabIndex", "2");
+                        getCuposReservaInstalacion(instalacion.id);
+                      }}
+                    />
+                  </Tabs>
+                </Paper>
+
+                {currentTab == TabInstalacion.INFO && (
+                  <div
+                    className={"mx-auto flex justify-center w-full sm:w-3/4"}
                   >
-                    <div className="flex gap-2  pb-2 flex-wrap items-end ">
-                      <Button
-                        variant="contained"
-                        className="w-min"
-                        disabled={loadingReservas}
-                        onClick={() => {
-                          getCuposReservaInstalacion(instalacion.id);
+                    {/* {JSON.stringify(instalacion)} */}
+                    <Loading
+                      loading={loadingInstalacion}
+                      className="flex justify-center w-full mt-2"
+                    />
+                    {instalacion != null && (
+                      <InstalacionDetail
+                        uuid={params.uuid}
+                        instalacion={instalacion}
+                        refresh={getData}
+                        update={(name, value) => {
+                          setInstalacion({ ...instalacion, [name]: value });
                         }}
-                      >
-                        <RefreshIcon />
-                      </Button>
+                      />
+                    )}
+                  </div>
+                )}
 
-                      <Button
-                        variant="contained"
-                        onClick={() => setOpenCalendar(true)}
-                        endIcon={<CalendarTodayIcon />}
+                {currentTab == TabInstalacion.HORARIO &&
+                  instalacion != null && (
+                    <HorarioWeek
+                      instalacionId={instalacion.id}
+                      currentDay={currentDay}
+                      cupos={cupos}
+                      getHorarioDay={(day: number) =>
+                        getHorariosDay(day, instalacion.id)
+                      }
+                      loading={loadingHorarios}
+                      instalaciones={instalaciones}
+                      updateHorarios={(e) => setCupos(e)}
+                    />
+                  )}
+                {currentTab == TabInstalacion.RESERVAS &&
+                  instalacion != null && (
+                    <>
+                      <Paper
+                        elevation={2}
+                        className=" w-full z-10 sticky top-14 px-2"
                       >
-                        {startDate?.format("DD MMMM")}
-                      </Button>
+                        <div className="flex gap-2  pb-2 flex-wrap items-end ">
+                          <Button
+                            variant="contained"
+                            className="w-min"
+                            disabled={loadingReservas}
+                            onClick={() => {
+                              getCuposReservaInstalacion(instalacion.id);
+                            }}
+                          >
+                            <RefreshIcon />
+                          </Button>
 
-                      <TooltipContainer
-                        helpText="Intenta seleccionar las casillas que no hayan sido reservadas."
-                        disabled={selectedCupos.length != 0}
-                      >
-                        <Button
-                          data-testid="crear-reserva-custom"
-                          variant="contained"
-                          onClick={() => {
-                            appendSerachParams("dialog", "1");
-                            setCreateReservaDialog(true);
-                          }}
-                          endIcon={<AddIcon />}
-                        >
-                          Crear Reserva
-                        </Button>
-                      </TooltipContainer>
-                    </div>
+                          <Button
+                            variant="contained"
+                            onClick={() => setOpenCalendar(true)}
+                            endIcon={<CalendarTodayIcon />}
+                          >
+                            {startDate?.format("DD MMMM")}
+                          </Button>
 
-                    {/* <div className="pb-2">
+                          <TooltipContainer
+                            helpText="Intenta seleccionar las casillas que no hayan sido reservadas."
+                            disabled={selectedCupos.length != 0}
+                          >
+                            <Button
+                              data-testid="crear-reserva-custom"
+                              variant="contained"
+                              onClick={() => {
+                                appendSerachParams("dialog", "1");
+                                setCreateReservaDialog(true);
+                              }}
+                              endIcon={<AddIcon />}
+                            >
+                              Crear Reserva
+                            </Button>
+                          </TooltipContainer>
+                        </div>
+
+                        {/* <div className="pb-2">
                                 {startDate == null ?
                                 <span className="label ">{new Date().toLocaleDateString("es-US", options)}</span>
                                 :
                                 <span className="label">{startDate.toLocaleDateString("es-US", options)}</span>
                                 }
                             </div> */}
-                  </Paper>
-                  <div className="px-2">
-                    <Loading
-                      loading={loadingReservas}
-                      className="flex justify-center my-2"
-                    />
-                    <ReservaInstalacionCupos
-                      cupos={cuposReservas}
-                      loading={loadingReservas}
-                      getReservaDetail={(id) => getReservaDetail(id)}
-                      selecReservaCupo={(e) => selectReservaCupo(e)}
-                      selectedCupos={selectedCupos}
-                      date={startDate || moment()}
-                    />
-                  </div>
-                </>
-              )}
-            </div>
-          </Paper>
+                      </Paper>
+                      <div className="px-2">
+                        <Loading
+                          loading={loadingReservas}
+                          className="flex justify-center my-2"
+                        />
+                        <ReservaInstalacionCupos
+                          cupos={cuposReservas}
+                          loading={loadingReservas}
+                          getReservaDetail={(id) => getReservaDetail(id)}
+                          selecReservaCupo={(e) => selectReservaCupo(e)}
+                          selectedCupos={selectedCupos}
+                          date={startDate || moment()}
+                        />
+                      </div>
+                    </>
+                  )}
+              </div>
+            </Paper>
+          )}
         </div>
       </div>
       {openReservaDetailDialog && reservaDetail != null && (

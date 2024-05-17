@@ -6,6 +6,7 @@ type UiState = {
     openSidebar:boolean
     ongoingDownloadProcess:number[]
     mode:'light' | 'dark'
+    showBackButton:boolean
 }
 
 
