@@ -104,7 +104,7 @@ const Page = ({ params }: { params: { uuidUser: string,uuid:string } }) => {
                     </Typography>
                      </Link>
                 <span> {' > '} </span>
-                <Typography variant="body2" className="text-primary cursor-pointer"> {userEmpresa.name}</Typography>
+                <Typography variant="body2" className="cursor-pointer"> {userEmpresa.name}</Typography>
             </div>
             <div className="pt-10 xl:pt-2">
 
