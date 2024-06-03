@@ -1,10 +1,10 @@
 "use client";
-import ReservaList from "@/components/reservas/ReservaList";
-import CreateReservaDialog from "@/components/reservas/dialog/CreateReservaDialog";
-import DialogReservaDetail from "@/components/reservas/dialog/DialogReservaDetail";
-import RequestReporteReservaDialog from "@/components/reservas/dialog/RequestReporteReservaDialog";
-import SearchInput from "@/components/util/input/SearchInput";
-import SelectComponent from "@/components/util/input/SelectCompenent";
+import ReservaList from "@/presentation/reservas/ReservaList";
+import CreateReservaDialog from "@/presentation/reservas/dialog/CreateReservaDialog";
+import DialogReservaDetail from "@/presentation/reservas/dialog/DialogReservaDetail";
+import RequestReporteReservaDialog from "@/presentation/reservas/dialog/RequestReporteReservaDialog";
+import SearchInput from "@/presentation/util/input/SearchInput";
+import SelectComponent from "@/presentation/util/input/SelectCompenent";
 // import Pagination from "@/components/util/pagination/Pagination";
 import { downloadReporteReservasExcel } from "@/context/actions/download-actions";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
@@ -16,15 +16,15 @@ import {
   getEstablecimientoReservas,
   getEstablecimientoReservasCount,
 } from "@/core/repository/reservas";
-import { Order, OrderQueue } from "@/core/type/enums";
+import { Order, OrderQueueReserva } from "@/core/type/enums";
 import { appendSerachParams } from "@/core/util/routes";
 import { Button } from "@mui/material";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import DownloadIcon from "@mui/icons-material/Download";
-import Pagination from "@/components/util/pagination/Pagination";
-import AutocompleteMui from "@/components/util/input/AutocompleteMui";
+import Pagination from "@/presentation/shared/pagination/Pagination";
+import AutocompleteMui from "@/presentation/util/input/AutocompleteMui";
 import { ReservasViewModel } from "./ReservasViewModel";
 
 export default function Page({ params }: { params: { uuid: string } }) {

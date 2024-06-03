@@ -3,7 +3,7 @@ import './globals.css'
 import '../style/index.css'
 import { Inter } from 'next/font/google'
 import { Providers } from './provider'
-import LoaderDialog from '@/components/util/loaders/LoaderDialog';
+import LoaderDialog from '@/presentation/util/loaders/LoaderDialog';
 import { useAppDispatch, useAppSelector } from '@/context/reduxHooks';
 
 import { useEffect, useRef, useState } from 'react'

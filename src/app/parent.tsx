@@ -1,6 +1,6 @@
 'use client';
 
-import LoaderDialog from "@/components/util/loaders/LoaderDialog";
+import LoaderDialog from "@/presentation/util/loaders/LoaderDialog";
 import { handleIncomeMessages } from "@/context/actions/chat-actions";
 import { WS_URL } from "@/context/config";
 import { getMessagesChat, insertMessage } from "@/context/db";

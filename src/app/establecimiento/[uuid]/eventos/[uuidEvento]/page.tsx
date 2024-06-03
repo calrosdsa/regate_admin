@@ -1,13 +1,13 @@
 "use client";
 
-import EventoDetail from "@/components/eventos/EventoDetail";
-import Calendar from "@/components/eventos/calendar/Calendar";
-import ReservaList from "@/components/reservas/ReservaList";
-import DialogReservaDetail from "@/components/reservas/dialog/DialogReservaDetail";
-import RequestReporteReservaDialog from "@/components/reservas/dialog/RequestReporteReservaDialog";
-import SelectComponent from "@/components/util/input/SelectCompenent";
-import Loader from "@/components/util/loaders/Loader";
-import Pagination from "@/components/util/pagination/Pagination";
+import EventoDetail from "@/presentation/pages/evento/EventoDetail";
+import Calendar from "@/presentation/pages/evento/calendar/Calendar";
+import ReservaList from "@/presentation/reservas/ReservaList";
+import DialogReservaDetail from "@/presentation/reservas/dialog/DialogReservaDetail";
+import RequestReporteReservaDialog from "@/presentation/reservas/dialog/RequestReporteReservaDialog";
+import SelectComponent from "@/presentation/util/input/SelectCompenent";
+import Loader from "@/presentation/util/loaders/Loader";
+import Pagination from "@/presentation/shared/pagination/Pagination";
 import { hours } from "@/context/actions/chart-actions";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { dataActions } from "@/context/slices/dataSlice";
@@ -18,7 +18,7 @@ import {
   GetReservaDetail,
   getEstablecimientoReservas,
 } from "@/core/repository/reservas";
-import { Order, OrderQueue, ReservaType } from "@/core/type/enums";
+import { Order, OrderQueueReserva, ReservaType } from "@/core/type/enums";
 import { getRouteEstablecimiento } from "@/core/util/routes";
 import { Button, Tab, Tabs, Typography } from "@mui/material";
 import moment from "moment";
@@ -49,7 +49,7 @@ const Page = ({ params }: { params: { uuidEvento: string; uuid: string } }) => {
     uuid: params.uuid,
     query: "",
     order: Order.DESC,
-    order_queue: OrderQueue.CREATED,
+    order_queue: OrderQueueReserva.CREATED,
     instalacion_id: "",
   });
   const [paginationProps, setPaginationProps] = useState<
@@ -60,7 +60,7 @@ const Page = ({ params }: { params: { uuidEvento: string; uuid: string } }) => {
   const [openReservaDetailDialog, setOpenReservaDetailDialog] = useState(false);
   const [order, setOrder] = useState<ReservaOrder>({
     order: Order.DESC,
-    queue: OrderQueue.CREATED,
+    queue: OrderQueueReserva.CREATED,
   });
   const [loadingEvent, setLoadingEvent] = useState(false);
   const [eventoDetail, setEventoDetail] = useState<EventoDetail | null>(null);

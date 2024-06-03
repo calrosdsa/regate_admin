@@ -1,14 +1,14 @@
 "use client"
 
-import Loading from "@/components/util/loaders/Loading"
+import Loading from "@/presentation/util/loaders/Loading"
 import { LOCAL_URL } from "@/context/config"
 import { GetEstablecimientos } from "@/core/repository/establecimiento"
 import { Box, Button, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import RefreshIcon from '@mui/icons-material/Refresh';
-import LinearProgressMui from "@/components/util/loaders/LinnearProgressMui"
-import { StyledTableRow } from "@/components/util/table/StyleTableCell"
+import LinearProgressMui from "@/presentation/util/loaders/LinnearProgressMui"
+import { StyledTableRow } from "@/presentation/util/table/StyleTableCell"
     
   export default function Page(){
     const [establecimientos,setEstablecimientos] = useState<EstablecimientoData[]>([])

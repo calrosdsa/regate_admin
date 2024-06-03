@@ -1,12 +1,12 @@
 "use client"
-import ButtonSubmit from "@/components/util/button/ButtonSubmit";
+import ButtonSubmit from "@/presentation/util/button/ButtonSubmit";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
 import { ChangeEvent, FormEvent, useState } from "react";
-import InputWithMaxLength from "@/components/util/input/InputWithMaxLength";
-import TextAreaWithMaxLength from "@/components/util/input/TextAreaWithMaxLength";
-import { MapComponent } from "@/components/register/MapComponent";
-import UploadImage from "@/components/util/input/UploadImage";
+import InputWithMaxLength from "@/presentation/util/input/InputWithMaxLength";
+import TextAreaWithMaxLength from "@/presentation/util/input/TextAreaWithMaxLength";
+import { MapComponent } from "@/presentation/register/MapComponent";
+import UploadImage from "@/presentation/util/input/UploadImage";
 import { CreateEstablecimiento } from "@/core/repository/establecimiento";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify"

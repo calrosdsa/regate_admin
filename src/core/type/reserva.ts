@@ -112,6 +112,17 @@ type ConfirmReservaRequest = {
     end_date:string
 }
 
+type TimeExtraReservaRequest = {
+    minutes:number
+    establecimiento_uuid:string
+    instalacion_id:number
+    start_from:string
+}
+
+type TimeExtraReservaResponse = {
+    total_price:number
+}
+
 type ReservaEditRequest = {
     id:number
     reserva_uuid:string

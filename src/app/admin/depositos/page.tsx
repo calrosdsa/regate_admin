@@ -1,11 +1,11 @@
 "use client"
-import AccountBank from "@/components/admin/billing/AccountBank";
-import AssignBankAccountToEstablecimientos from "@/components/admin/billing/AssignBankAccounToEstablecimiento";
-import CreateBankAccountDialog from "@/components/admin/billing/CreateBankAccountDialog";
-import Depositos from "@/components/admin/billing/Depositos";
-import DepositosEmpresa from "@/components/admin/billing/DepositosEmpresa";
-import Loader from "@/components/util/loaders/Loader";
-import Pagination from "@/components/util/pagination/Pagination";
+import AccountBank from "@/presentation/admin/billing/AccountBank";
+import AssignBankAccountToEstablecimientos from "@/presentation/admin/billing/AssignBankAccounToEstablecimiento";
+import CreateBankAccountDialog from "@/presentation/admin/billing/CreateBankAccountDialog";
+import Depositos from "@/presentation/admin/billing/Depositos";
+import DepositosEmpresa from "@/presentation/admin/billing/DepositosEmpresa";
+import Loader from "@/presentation/util/loaders/Loader";
+import Pagination from "@/presentation/shared/pagination/Pagination";
 import { getEstablecimientosUser } from "@/context/actions/account-actions";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";

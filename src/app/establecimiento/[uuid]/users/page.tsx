@@ -1,8 +1,8 @@
 "use client"
-import UserListTable from "@/components/user/UserListTable"
-import EditUserEmpresaDialog from "@/components/user/dialog/EditUserEmpresaDialog"
-import SearchInput from "@/components/util/input/SearchInput"
-import Pagination from "@/components/util/pagination/Pagination"
+import UserListTable from "@/presentation/user/UserListTable"
+import EditUserEmpresaDialog from "@/presentation/user/dialog/EditUserEmpresaDialog"
+import SearchInput from "@/presentation/util/input/SearchInput"
+import Pagination from "@/presentation/shared/pagination/Pagination"
 import { GetUsersEmpresaPagination } from "@/core/repository/users"
 import { Order, OrderQueueUserEmpresa } from "@/core/type/enums"
 import useEffectOnce from "@/core/util/hooks/useEffectOnce"
@@ -58,6 +58,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             setUsers([])
             setLoading(true)
             const res:PaginationUserEmpresaResponse = await GetUsersEmpresaPagination(data,page)
+            console.log("USERS",res)
             setPaginationProps({
                 pageSize:res.page_size,
                 count:res.count > 0 ? res.count : 0,

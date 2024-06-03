@@ -1,6 +1,6 @@
 "use client"
 
-import Loading from "@/components/util/loaders/Loading";
+import Loading from "@/presentation/util/loaders/Loading";
 import { getEstablecimientosUser } from "@/context/actions/account-actions";
 import { LOCAL_URL } from "@/context/config";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";

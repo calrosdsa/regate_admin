@@ -1,6 +1,6 @@
 "use client"
-import CommonImage from "@/components/util/image/CommonImage"
-import Loading from "@/components/util/loaders/Loading"
+import CommonImage from "@/presentation/util/image/CommonImage"
+import Loading from "@/presentation/util/loaders/Loading"
 import { getInstalacionById } from "@/core/repository/instalacion"
 import { GetEstablecimientoSalas } from "@/core/repository/sala"
 import moment from "moment"

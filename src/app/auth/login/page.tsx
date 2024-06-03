@@ -1,7 +1,7 @@
 "use client"
-import ButtonSubmit from "@/components/util/button/ButtonSubmit";
-import InputWithIcon from "@/components/util/input/InputWithIcon";
-import InputPassword from "@/components/util/input/InputPassword";
+import ButtonSubmit from "@/presentation/util/button/ButtonSubmit";
+import InputWithIcon from "@/presentation/util/input/InputWithIcon";
+import InputPassword from "@/presentation/util/input/InputPassword";
 import { login } from "@/context/actions/account-actions";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import Image from "next/image";

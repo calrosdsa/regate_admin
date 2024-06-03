@@ -1,8 +1,8 @@
 "use client"
 
-import EditComponent from "@/components/util/input/EditComponent";
-import UpdatePasswordComponent from "@/components/util/input/UpdatePasswordComponent";
-import Loader from "@/components/util/loaders/Loader";
+import EditComponent from "@/presentation/util/input/EditComponent";
+import UpdatePasswordComponent from "@/presentation/util/input/UpdatePasswordComponent";
+import Loader from "@/presentation/util/loaders/Loader";
 import { GetAccount } from "@/core/repository/account";
 import { Divider, IconButton, Typography } from "@mui/material";
 import moment from "moment";

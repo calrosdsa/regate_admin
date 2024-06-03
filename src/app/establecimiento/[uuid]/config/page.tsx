@@ -2,44 +2,44 @@
 import Script from 'next/script'
 import { useEffect, useState } from 'react';
 import '../../../../style/mapbox.css'
-import { MapComponent } from '@/components/register/MapComponent';
+import { MapComponent } from '@/presentation/register/MapComponent';
 import { useAppDispatch, useAppSelector } from '@/context/reduxHooks';
 import { uiActions } from '@/context/slices/uiSlice';
 import { AddEstablecimientoPhoto, DeleteEstablecimientoPhoto, UpdateEstablecimiento, UpdateEstablecimientoAddress, UpdateEstablecimientoPhoto, getEstablecimiento } from '@/core/repository/establecimiento';
-import EditComponent from '@/components/util/input/EditComponent';
-import EditComponentImage from '@/components/util/input/EditComponentImage';
+import EditComponent from '@/presentation/util/input/EditComponent';
+import EditComponentImage from '@/presentation/util/input/EditComponentImage';
 import { DepositoEstado, EstablecimientoEstado, PaidType, TypeEntity } from '@/core/type/enums';
 import { getIntervaloString, getPaymentMethod } from '@/core/util/converter';
-import AddHorarioIntervalDialog from '@/components/establecimiento/setting/AddHorarioIntervalDialog';
-import DeleteHorarioIntervalDialog from '@/components/establecimiento/setting/DeleteHorarioIntervalDialog';
+import AddHorarioIntervalDialog from '@/presentation/establecimiento/setting/AddHorarioIntervalDialog';
+import DeleteHorarioIntervalDialog from '@/presentation/establecimiento/setting/DeleteHorarioIntervalDialog';
 import { GetAmenities, GetAmenitiesEstablecimiento, GetRules, GetRulesEstablecimiento } from '@/core/repository/labels';
 import Image from 'next/image';
-import AddAndDeleteButtons from '@/components/util/button/AddAndDeleteButtons';
-import AddAmenityDialog from '@/components/labels/amenities/AddAmenityDialog';
-import Amenity from '@/components/labels/amenities/Amenity';
-import DeleteAmenityDialog from '@/components/labels/amenities/DeleteAmenityDialog';
-import AddRuleDialog from '@/components/labels/rules/AddRuleDialog';
-import DeleteRuleDialog from '@/components/labels/rules/DeleteRuleDialog';
+import AddAndDeleteButtons from '@/presentation/util/button/AddAndDeleteButtons';
+import AddAmenityDialog from '@/presentation/labels/amenities/AddAmenityDialog';
+import Amenity from '@/presentation/labels/amenities/Amenity';
+import DeleteAmenityDialog from '@/presentation/labels/amenities/DeleteAmenityDialog';
+import AddRuleDialog from '@/presentation/labels/rules/AddRuleDialog';
+import DeleteRuleDialog from '@/presentation/labels/rules/DeleteRuleDialog';
 import { toast } from 'react-toastify';
-import UploadImage from '@/components/util/input/UploadImage';
+import UploadImage from '@/presentation/util/input/UploadImage';
 import { UpdateSettings } from '@/core/repository/setting';
-import UpdatePayMethodDialog from '@/components/establecimiento/setting/UpdatePayMethodDialog';
+import UpdatePayMethodDialog from '@/presentation/establecimiento/setting/UpdatePayMethodDialog';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { appendSerachParams } from '@/core/util/routes';
 import { successfulMessage, unexpectedError } from '@/context/config';
-import CommonImage from '@/components/util/image/CommonImage';
-import EditComponentSelect from '@/components/util/input/EditComponentSelect';
+import CommonImage from '@/presentation/util/image/CommonImage';
+import EditComponentSelect from '@/presentation/util/input/EditComponentSelect';
 import { systemActions } from '@/context/slices/systemSlice';
 import { InfoTextId } from '@/core/repository/core/system';
 import { getInfoText } from '@/context/actions/system-actions';
-import Photos from '@/components/util/image/Photos';
+import Photos from '@/presentation/util/image/Photos';
 import { days } from '@/context/actions/chart-actions';
-import AttentionScheduleComponent from '@/components/establecimiento/setting/AttentionScheduleComponent';
-import TitleWithInfo from '@/components/util/info-bar/SubtitleWithInfo';
-import Loading from '@/components/util/loaders/Loading';
+import AttentionScheduleComponent from '@/presentation/establecimiento/setting/AttentionScheduleComponent';
+import TitleWithInfo from '@/presentation/util/info-bar/SubtitleWithInfo';
+import Loading from '@/presentation/util/loaders/Loading';
 import { Box, Button, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import Item from '@/components/util/item/Item';
+import Item from '@/presentation/util/item/Item';
 
 const Page = ({ params }: { params: { uuid: string } }) =>{
     const establecimientoEstados = [{value:"true",name:"Visible"}
@@ -472,7 +472,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
                 })
             }}
             /> */}
-                <Typography fontWeight={500} fontSize={16.5}>Metodo de pago</Typography>
+                <Typography fontWeight={500} fontSize={16.5}>Método de pago</Typography>
             {/* <span className='label'>Metodo de pago</span> */}
             <div className='flex flex-wrap gap-3 '>   
             {data?.setting_establecimiento.paid_type != null &&
@@ -494,7 +494,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             {data?.setting_establecimiento.paid_type != null &&
             data?.setting_establecimiento.paid_type.includes(PaidType.DEFERRED_PAYMENT) &&
                 <EditComponent
-                label='Monto inicial para recervar una cancha'
+                label='Monto inicial para reservar una cancha'
                 content={`${data?.setting_establecimiento.payment_for_reservation}`}
                 edit={(addLoader,removeLoader,e)=>updateSettings("payment_for_reservation",e,addLoader,removeLoader)}
                 />

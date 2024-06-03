@@ -1,16 +1,16 @@
 "use client"
 
 import { Inter } from 'next/font/google'
-import SideBarEstablecimiento from '@/components/util/sidebar/SidebarEstablecimiento'
+import SideBarEstablecimiento from '@/presentation/util/sidebar/SidebarEstablecimiento'
 import { useAppDispatch, useAppSelector } from '@/context/reduxHooks';
-import LoaderDialog from '@/components/util/loaders/LoaderDialog';
-import MobileSidebar from '@/components/util/sidebar/MobileSidebar';
+import LoaderDialog from '@/presentation/util/loaders/LoaderDialog';
+import MobileSidebar from '@/presentation/util/sidebar/MobileSidebar';
 import uiSlice, { uiActions } from '@/context/slices/uiSlice';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getEstablecimientosUser, getUser } from '@/context/actions/account-actions';
 import { Dialog, Transition } from '@headlessui/react';
-import InfoBar from '@/components/util/info-bar/InfoBar';
+import InfoBar from '@/presentation/util/info-bar/InfoBar';
 import { systemActions } from '@/context/slices/systemSlice';
 import { chatActions } from '@/context/slices/chatSlice';
 import { IconButton } from '@mui/material';

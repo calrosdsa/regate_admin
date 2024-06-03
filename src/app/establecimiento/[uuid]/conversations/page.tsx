@@ -1,8 +1,8 @@
 "use client"
 
-import Conversations from "@/components/conversation/Conversations";
-import ChatConversation from "@/components/conversation/chat/ChatConversation";
-import CommonImage from "@/components/util/image/CommonImage";
+import Conversations from "@/presentation/conversation/Conversations";
+import ChatConversation from "@/presentation/conversation/chat/ChatConversation";
+import CommonImage from "@/presentation/util/image/CommonImage";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { chatActions } from "@/context/slices/chatSlice";
 import { GetConversations } from "@/core/repository/chat";

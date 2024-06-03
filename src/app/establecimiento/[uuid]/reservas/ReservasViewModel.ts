@@ -4,7 +4,7 @@ import { uiActions } from "@/context/slices/uiSlice";
 import { GetInstalaciones } from "@/core/repository/instalacion";
 import { GetReservaDetail, getEstablecimientoReservas } from "@/core/repository/reservas";
 import { SearchUsersEmpresa } from "@/core/repository/users";
-import { Order, OrderQueue } from "@/core/type/enums";
+import { Order, OrderQueueReserva } from "@/core/type/enums";
 import useDebounce from "@/core/util/hooks/useDebounce";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -31,7 +31,7 @@ export const ReservasViewModel = ({params}:{
     uuid: params.uuid,
     query: "",
     order: Order.DESC,
-    order_queue: OrderQueue.CREATED,
+    order_queue: OrderQueueReserva.CREATED,
     instalacion_id: "",
   });
   const [paginationProps, setPaginationProps] = useState<
@@ -47,7 +47,7 @@ export const ReservasViewModel = ({params}:{
   const [openReservaDetailDialog, setOpenReservaDetailDialog] = useState(false);
   const [order, setOrder] = useState<ReservaOrder>({
     order: Order.DESC,
-    queue: OrderQueue.CREATED,
+    queue: OrderQueueReserva.CREATED,
   });
 
   const [instalaciones, setInstalaciones] = useState<Instalacion[]>([]);

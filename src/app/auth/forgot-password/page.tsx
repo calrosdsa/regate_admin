@@ -1,6 +1,6 @@
 "use client"
-import ButtonSubmit from "@/components/util/button/ButtonSubmit"
-import InputWithIcon from "@/components/util/input/InputWithIcon"
+import ButtonSubmit from "@/presentation/util/button/ButtonSubmit"
+import InputWithIcon from "@/presentation/util/input/InputWithIcon"
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks"
 import { SendResetPasswordEmail } from "@/core/repository/account"
 import { Paper } from "@mui/material"

@@ -1,8 +1,8 @@
 "use client"
-import AccountBank from "@/components/admin/billing/AccountBank";
-import Depositos from "@/components/admin/billing/Depositos";
-import Loader from "@/components/util/loaders/Loader";
-import Pagination from "@/components/util/pagination/Pagination";
+import AccountBank from "@/presentation/admin/billing/AccountBank";
+import Depositos from "@/presentation/admin/billing/Depositos";
+import Loader from "@/presentation/util/loaders/Loader";
+import Pagination from "@/presentation/shared/pagination/Pagination";
 import { GetBankAccountEstablecimiento, GetBankAccounts, GetBanks, GetDepositos } from "@/core/repository/billing";
 import { Order } from "@/core/type/enums";
 import { Tab } from "@headlessui/react"

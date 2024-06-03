@@ -27,6 +27,11 @@ type EventoDetail = {
     users:UserEmpresa[]
 }
 
+type EditEventoAmountRequest = {
+    establecimiento_uuid:string
+    evento:Evento
+}
+
 type EditEventoRequest = {
     uuid:string
 	id:number

@@ -1,16 +1,16 @@
 "use client"
 
-import Deposito from "@/components/admin/billing/Deposito";
-import ReservaList from "@/components/reservas/ReservaList";
-import DialogReservaDetail from "@/components/reservas/dialog/DialogReservaDetail";
-import Pagination from "@/components/util/pagination/Pagination";
+import Deposito from "@/presentation/admin/billing/Deposito";
+import ReservaList from "@/presentation/reservas/ReservaList";
+import DialogReservaDetail from "@/presentation/reservas/dialog/DialogReservaDetail";
+import Pagination from "@/presentation/shared/pagination/Pagination";
 import { downloadReporteDeposito } from "@/context/actions/download-actions";
 import { API_URL } from "@/context/config";
 import { useAppDispatch } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
 import { GetDeposito, GetReservasPagadas } from "@/core/repository/billing";
 import { GetReservaDetail } from "@/core/repository/reservas";
-import { Order, OrderQueue, ReporteId } from "@/core/type/enums";
+import { Order, OrderQueueReserva, ReporteId } from "@/core/type/enums";
 import { adminRoutes, rootEstablecimiento } from "@/core/util/routes";
 import { Tab } from "@headlessui/react";
 import axios from "axios";
@@ -36,13 +36,13 @@ const Page = ({params}:{params:{uuid:string}}) =>{
     const [paginationProps,setPaginationProps] = useState<PaginationProps | undefined>(undefined)
     const [order,setOrder] = useState<ReservaOrder>({
         order:Order.DESC,
-        queue:OrderQueue.CREATED
+        queue:OrderQueueReserva.CREATED
     })
     const [filterData,setFilterData] = useState<ReservaDataFilter>({
         uuid:depositoUuid || "",
         query:"",
         order:Order.DESC,
-        order_queue:OrderQueue.CREATED,
+        order_queue:OrderQueueReserva.CREATED,
     })
     // const [totalAmountReservas,setTotalAmountReserva] = useState(0)
     const appendSerachParams = (key:string,value:string)=>{

@@ -1,7 +1,7 @@
 "use client"
 
-import { MapComponent } from "@/components/register/MapComponent";
-import EditComponent from "@/components/util/input/EditComponent";
+import { MapComponent } from "@/presentation/register/MapComponent";
+import EditComponent from "@/presentation/util/input/EditComponent";
 import { unexpectedError } from "@/context/config";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";

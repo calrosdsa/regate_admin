@@ -23,6 +23,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/establecimiento/[uuid]/config/page.tsx", "src/components/register/MapComponent.tsx", "public/messaging_on_backgroun_messages.js", "cypress/e2e/regate/app.cy.js", "cypress/support/commands.js", "playwright/.auth/fixtures.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/establecimiento/[uuid]/config/page.tsx", "src/presentation/register/MapComponent.tsx", "public/messaging_on_backgroun_messages.js", "cypress/e2e/regate/app.cy.js", "cypress/support/commands.js", "playwright/.auth/fixtures.ts"],
   "exclude": ["node_modules"]
 }

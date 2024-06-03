@@ -1,10 +1,10 @@
 "use client"
-import ChartDropMenu from '@/components/dashboard/chart/ChartDropMenu';
-import AgeChart from '@/components/dashboard/chart/AgeChart';
-import CommonBarChart from '@/components/dashboard/chart/CommonBarChart';
-import CommonPieChart from '@/components/dashboard/chart/CommonPieChart';
-import { GenderChart } from '@/components/dashboard/chart/GenderChart';
-import LineChartConnectNulls from '@/components/dashboard/chart/LineChartConnectNulls';
+import ChartDropMenu from '@/presentation/dashboard/chart/ChartDropMenu';
+import AgeChart from '@/presentation/dashboard/chart/AgeChart';
+import CommonBarChart from '@/presentation/dashboard/chart/CommonBarChart';
+import CommonPieChart from '@/presentation/dashboard/chart/CommonPieChart';
+import { GenderChart } from '@/presentation/dashboard/chart/GenderChart';
+import LineChartConnectNulls from '@/presentation/dashboard/chart/LineChartConnectNulls';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import { useAppDispatch, useAppSelector } from '@/context/reduxHooks';
 import { TypeOfChart, TypeOfDate } from '@/core/type/enums';
@@ -13,7 +13,7 @@ import { useEffect } from 'react';
 import { getChartData, getReservaAverageAmountBase, getReservaUserFrequency, getReservasAmountData, getReservasAverageAmount, getReservasHoursAverage, getReservasHoursData } from '@/context/actions/chart-actions';
 import { ChartTypeData, FilterChartData } from '@/core/type/chart';
 import moment from 'moment';
-import TriangleBarChart from '@/components/dashboard/chart/TriangleBarChart';
+import TriangleBarChart from '@/presentation/dashboard/chart/TriangleBarChart';
 import { PieChart } from 'recharts';
 import { appendSerachParams } from '@/core/util/routes';
 import { usePathname, useSearchParams } from 'next/navigation';

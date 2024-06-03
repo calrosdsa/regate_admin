@@ -1,16 +1,16 @@
 "use client";
-import HorarioWeek from "@/components/establecimiento/instalacion/HorarioWeek";
-import InstalacionCard from "@/components/establecimiento/instalacion/InstalacionCard";
-import InstalacionDetail from "@/components/establecimiento/instalacion/InstalacionDetail";
-import ReservaInstalacionCupos from "@/components/establecimiento/instalacion/ReservaInstalacionCupos";
-import CreateInstalacionDialog from "@/components/establecimiento/instalacion/dialog/CreateInstalacionDialog";
-import CreateReservaDialog from "@/components/reservas/dialog/CreateReservaDialog";
-import DialogReservaDetail from "@/components/reservas/dialog/DialogReservaDetail";
-import Loading from "@/components/util/loaders/Loading";
+import HorarioWeek from "@/presentation/establecimiento/instalacion/HorarioWeek";
+import InstalacionCard from "@/presentation/establecimiento/instalacion/InstalacionCard";
+import InstalacionDetail from "@/presentation/establecimiento/instalacion/InstalacionDetail";
+import ReservaInstalacionCupos from "@/presentation/establecimiento/instalacion/ReservaInstalacionCupos";
+import CreateInstalacionDialog from "@/presentation/establecimiento/instalacion/dialog/CreateInstalacionDialog";
+import CreateReservaDialog from "@/presentation/reservas/dialog/CreateReservaDialog";
+import DialogReservaDetail from "@/presentation/reservas/dialog/DialogReservaDetail";
+import Loading from "@/presentation/util/loaders/Loading";
 import {
   TooltipIcon,
   TooltipContainer,
-} from "@/components/util/tooltips/Tooltip";
+} from "@/presentation/util/tooltips/Tooltip";
 import { unexpectedError } from "@/context/config";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
@@ -50,12 +50,12 @@ import { toast } from "react-toastify";
 import SettingsIcon from "@mui/icons-material/Settings";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import AddIcon from "@mui/icons-material/Add";
-import DialogCalendar from "@/components/util/dialog/DialogCalendar";
+import DialogCalendar from "@/presentation/util/dialog/DialogCalendar";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import DialogConfigureHorarioInstalaciones from "@/components/establecimiento/instalacion/dialog/ConfigureHorarioInstalaciones";
+import DialogConfigureHorarioInstalaciones from "@/presentation/establecimiento/instalacion/dialog/ConfigureHorarioInstalaciones";
 import { dataActions } from "@/context/slices/dataSlice";
-import CommonImage from "@/components/util/image/CommonImage";
-import ListInstalaciones from "@/components/establecimiento/instalacion/ListInstalaciones";
+import CommonImage from "@/presentation/util/image/CommonImage";
+import ListInstalaciones from "@/presentation/establecimiento/instalacion/ListInstalaciones";
 // import { Tooltip } from 'react-tooltipp
 
 enum TabInstalacion {
