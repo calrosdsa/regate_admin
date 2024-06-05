@@ -1,20 +1,22 @@
 import { Box, Button, Card, CardActionArea, Container, IconButton, ListItemText, Typography } from "@mui/material";
-import EditComponent from "../../util/input/EditComponent";
 import { formatDateTime } from "@/core/util";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EditEvento } from "@/core/repository/evento";
 import { toast } from "react-toastify";
 import { successfulMessage, unexpectedError } from "@/context/config";
-import EditComponentSelect from "../../util/input/EditComponentSelect";
 import { eventoEstados } from "@/core/util/data";
-import { getEstadoEvento } from "./EventoListTable";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import EditIcon from '@mui/icons-material/Edit';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import EditUserEmpresaDialog from "../../user/dialog/EditUserEmpresaDialog";
 import { getRouteEstablecimiento } from "@/core/util/routes";
-const EventoDetail = ({
+import EditComponent from "@/presentation/util/input/EditComponent";
+import EditComponentSelect from "@/presentation/util/input/EditComponentSelect";
+import EditUserEmpresaDialog from "@/presentation/user/dialog/EditUserEmpresaDialog";
+import { getEstadoEvento } from "../../../eventos/components/EventoListTable";
+import LaunchIcon from '@mui/icons-material/Launch';
+import Link from "next/link";
+const EventoInfoTab = ({
     eventoDetail,uuid,updateEventoDetail
 }:{
     eventoDetail:EventoDetail
@@ -56,6 +58,10 @@ const EventoDetail = ({
             console.log(err)
         }
     }
+
+    useEffect(()=>{
+        setEventoData(evento)
+    },[evento])
 
     return (
         <>
@@ -159,8 +165,9 @@ const EventoDetail = ({
                                   <EditIcon />
                                 </IconButton>
                                 <IconButton edge="end" aria-label="see" size="small"
+                                LinkComponent={Link}  target="_blank"
                                  href={getRouteEstablecimiento(uuid,`users/${item.uuid}?id=${item.id}&name=${item.name}&phone=${item.phone_number}`)}>
-                                  <RemoveRedEyeIcon />
+                                  <LaunchIcon />
                                 </IconButton>
                                 </Box>
                               }>
@@ -176,4 +183,4 @@ const EventoDetail = ({
     )
 }
 
-export default EventoDetail;
+export default EventoInfoTab;

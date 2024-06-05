@@ -1,6 +1,6 @@
 import ConfirmationDialog from "@/presentation/util/dialog/ConfirmationDialog"
 import DialogLayout from "@/presentation/util/dialog/DialogLayout"
-import { UserEstado } from "@/core/type/enums"
+import { UserEstado } from "@/data/model/types/enums"
 import { Menu } from "@headlessui/react"
 import { ListItemText, MenuItem } from "@mui/material"
 import { useState } from 'react'

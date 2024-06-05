@@ -2,7 +2,7 @@ import { AnyAction, ThunkAction } from "@reduxjs/toolkit"
 import { RootState } from "../store"
 import axios, { Canceler } from "axios"
 import { uiActions } from "../slices/uiSlice"
-import { ReporteId, UserEstado, UserRol } from "@/core/type/enums"
+import { ReporteId, UserEstado, UserRol } from "@/data/model/types/enums"
 import { GetEstablecimientos } from "@/core/repository/establecimiento"
 import { accountActions } from "../slices/accountSlice"
 import { adminRoutes, rootEstablecimiento } from "@/core/util/routes"
@@ -10,7 +10,7 @@ import { Id, toast } from "react-toastify"
 import { redirectToLogin } from "."
 import { API_URL, LOCAL_URL, unexpectedError } from "../config"
 import moment from "moment"
-import { ChartExportRequest } from "@/core/type/chart"
+import { ChartExportRequest } from "@/data/model/types/chart"
 
 
 export const downloadReporteDeposito = (depositoId: number,reporteId:ReporteId) :ThunkAction<void,RootState,undefined,AnyAction> =>{

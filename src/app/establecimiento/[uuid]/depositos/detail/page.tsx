@@ -10,7 +10,7 @@ import { useAppDispatch } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
 import { GetDeposito, GetReservasPagadas } from "@/core/repository/billing";
 import { GetReservaDetail } from "@/core/repository/reservas";
-import { Order, OrderQueueReserva, ReporteId } from "@/core/type/enums";
+import { Order, OrderQueueReserva, ReporteId } from "@/data/model/types/enums";
 import { adminRoutes, rootEstablecimiento } from "@/core/util/routes";
 import { Tab } from "@headlessui/react";
 import axios from "axios";
@@ -34,7 +34,7 @@ const Page = ({params}:{params:{uuid:string}}) =>{
     const [loading,setLoading] = useState(false)
     const [openReservaDetailDialog,setOpenReservaDetailDialog] = useState(false)
     const [paginationProps,setPaginationProps] = useState<PaginationProps | undefined>(undefined)
-    const [order,setOrder] = useState<ReservaOrder>({
+    const [order,setOrder] = useState<Order>({
         order:Order.DESC,
         queue:OrderQueueReserva.CREATED
     })

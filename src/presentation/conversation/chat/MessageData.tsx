@@ -1,5 +1,5 @@
 import CommonImage from "@/presentation/util/image/CommonImage"
-import { MessageType, MessageTypeInstalacion } from "@/core/type/chat/enum"
+import { MessageType, MessageTypeInstalacion } from "@/data/model/types/chat/enum"
 import moment from "moment"
 import {useEffect} from "react"
 

@@ -5,22 +5,8 @@ import DialogReservaDetail from "@/presentation/reservas/dialog/DialogReservaDet
 import RequestReporteReservaDialog from "@/presentation/reservas/dialog/RequestReporteReservaDialog";
 import SearchInput from "@/presentation/util/input/SearchInput";
 import SelectComponent from "@/presentation/util/input/SelectCompenent";
-// import Pagination from "@/components/util/pagination/Pagination";
-import { downloadReporteReservasExcel } from "@/context/actions/download-actions";
-import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
-import { dataActions } from "@/context/slices/dataSlice";
-import { uiActions } from "@/context/slices/uiSlice";
-import { GetInstalaciones } from "@/core/repository/instalacion";
-import {
-  GetReservaDetail,
-  getEstablecimientoReservas,
-  getEstablecimientoReservasCount,
-} from "@/core/repository/reservas";
-import { Order, OrderQueueReserva } from "@/core/type/enums";
-import { appendSerachParams } from "@/core/util/routes";
+import { Order, OrderQueueReserva } from "@/data/model/types/enums";
 import { Button } from "@mui/material";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { use, useEffect, useState } from "react";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import DownloadIcon from "@mui/icons-material/Download";
 import Pagination from "@/presentation/shared/pagination/Pagination";
@@ -190,7 +176,7 @@ export default function Page({ params }: { params: { uuid: string } }) {
                 const data = {
                   ...state.filterData,
                   order: Order.ASC,
-                  order_queue: order.queue,
+                  order_queue: order.queue, 
                 };
                 action.applyChange(data);
               } else {

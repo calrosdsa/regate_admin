@@ -3,7 +3,7 @@ import { getMessagesChat, isDb } from "@/context/db";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { chatActions } from "@/context/slices/chatSlice";
 import { GetMessages, UpdateMessagesToReaded } from "@/core/repository/chat";
-import { MessageEvent, TypeChat } from "@/core/type/enums";
+import { MessageEvent, TypeChat } from "@/data/model/types/enums";
 import { formatterShorTime, getRandomInt } from "@/core/util";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";

@@ -2,7 +2,7 @@ import moment from "moment";
 import CommonImage from "../util/image/CommonImage";
 import { getFullName } from "@/core/util";
 import Loading from "../util/loaders/Loading";
-import { Order, OrderQueueReserva, OrderQueueUserEmpresa, ReservaEstado } from "@/core/type/enums";
+import { Order, OrderQueueReserva, OrderQueueUserEmpresa, ReservaEstado } from "@/data/model/types/enums";
 import Link from "next/link";
 import { getRouteEstablecimiento } from "@/core/util/routes";
 import { IconButton, Paper, Table, TableBody, TableContainer, TableHead, TableRow, TableSortLabel } from "@mui/material";

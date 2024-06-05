@@ -4,7 +4,7 @@ import Item from "@/presentation/util/item/Item";
 import { useAppDispatch } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
 import { UpdatePayMethod, addIntervalsHorario } from "@/core/repository/setting";
-import { PaidType } from "@/core/type/enums";
+import { PaidType } from "@/data/model/types/enums";
 import { getIntervaloString, getPaymentMethod } from "@/core/util/converter";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";

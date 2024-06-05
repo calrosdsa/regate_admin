@@ -4,7 +4,7 @@ import Depositos from "@/presentation/admin/billing/Depositos";
 import Loader from "@/presentation/util/loaders/Loader";
 import Pagination from "@/presentation/shared/pagination/Pagination";
 import { GetBankAccountEstablecimiento, GetBankAccounts, GetBanks, GetDepositos } from "@/core/repository/billing";
-import { Order } from "@/core/type/enums";
+import { Order } from "@/data/model/types/enums";
 import { Tab } from "@headlessui/react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";

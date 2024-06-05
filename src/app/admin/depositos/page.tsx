@@ -10,7 +10,7 @@ import { getEstablecimientosUser } from "@/context/actions/account-actions";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
 import { GetBankAccounts, GetBanks, GetDepositos, GetDepositosEmpresa, GetDepositosFromDepositoEmpresa } from "@/core/repository/billing";
-import { Order } from "@/core/type/enums";
+import { Order } from "@/data/model/types/enums";
 import { Tab } from "@headlessui/react"
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";

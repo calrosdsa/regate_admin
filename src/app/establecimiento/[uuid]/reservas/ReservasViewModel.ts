@@ -4,7 +4,7 @@ import { uiActions } from "@/context/slices/uiSlice";
 import { GetInstalaciones } from "@/core/repository/instalacion";
 import { GetReservaDetail, getEstablecimientoReservas } from "@/core/repository/reservas";
 import { SearchUsersEmpresa } from "@/core/repository/users";
-import { Order, OrderQueueReserva } from "@/core/type/enums";
+import { Order, OrderQueueReserva } from "@/data/model/types/enums";
 import useDebounce from "@/core/util/hooks/useDebounce";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -179,7 +179,7 @@ export const ReservasViewModel = ({params}:{
     getInstalaciones();
     if (pageParam != null) {
       getReservas(filterData, Number(pageParam));
-    } else {
+    } else {  
       getReservas(filterData, 1);
     }
   }, []);

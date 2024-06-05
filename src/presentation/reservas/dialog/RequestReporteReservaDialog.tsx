@@ -6,7 +6,7 @@ import MultiSelectComponent from "@/presentation/util/input/MultiSelectComponent
 import SelectComponent from "@/presentation/util/input/SelectCompenent";
 import { downloadReporteReservasExcel } from "@/context/actions/download-actions";
 import { useAppDispatch } from "@/context/reduxHooks";
-import { ReservaEstado } from "@/core/type/enums";
+import { ReservaEstado } from "@/data/model/types/enums";
 import { reservaEstados } from "@/core/util/data";
 import moment from "moment";
 import { ChangeEvent, FormEvent, useState } from "react";

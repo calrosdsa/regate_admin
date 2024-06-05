@@ -4,7 +4,7 @@ import EditUserEmpresaDialog from "@/presentation/user/dialog/EditUserEmpresaDia
 import SearchInput from "@/presentation/util/input/SearchInput"
 import Pagination from "@/presentation/shared/pagination/Pagination"
 import { GetUsersEmpresaPagination } from "@/core/repository/users"
-import { Order, OrderQueueUserEmpresa } from "@/core/type/enums"
+import { Order, OrderQueueUserEmpresa } from "@/data/model/types/enums"
 import useEffectOnce from "@/core/util/hooks/useEffectOnce"
 import { Button, Typography } from "@mui/material"
 import { useSearchParams } from "next/navigation"
@@ -22,6 +22,7 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
         query:"",
         order:Order.DESC,
         order_queue:OrderQueueUserEmpresa.CREATED,
+        establecimiento_uuid:params.uuid
     })
     const [order,setOrder] = useState<ReservaOrder>({
         order:Order.DESC,
@@ -58,7 +59,6 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             setUsers([])
             setLoading(true)
             const res:PaginationUserEmpresaResponse = await GetUsersEmpresaPagination(data,page)
-            console.log("USERS",res)
             setPaginationProps({
                 pageSize:res.page_size,
                 count:res.count > 0 ? res.count : 0,
@@ -122,27 +122,15 @@ const Page = ({ params }: { params: { uuid: string } }) =>{
             <div className="pt-2 ">
                 <Typography variant="h6">Usuarios({paginationProps?.count})</Typography>
 
-            <div className="flex space-x-3 py-2">
           
-                <Button disabled={loading} 
-                variant="contained"
+            <div className="flex flex-wrap justify-between gap-3 py-2">
+            <Button disabled={loading} 
                   onClick={()=>{
                   setQuery("")
                   getUsersEmpresa(filterData,1)
                     }}>
                         <RefreshIcon/>
                 </Button>
-                
-                {/* <button className="button-inv flex space-x-1" disabled={loading}  onClick={()=>setCreateReservaDialog(true)}>
-                        <span>Crear Reserva</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-  <path d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z" />
-                        </svg>
-                </button>
-     */}
-
-            </div>
-            <div className="pt-2 pb-4 sm:flex md:justify-between md:items-center grid gap-2 relative">
                 <div className="flex space-x-2 items-center">
                 {/* <SearchInput
                 className=" sm:w-64"

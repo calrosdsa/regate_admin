@@ -5,11 +5,11 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       fontSize: 13,
-      whiteSpace:"nowrap"
+      whiteSpace:"nowrap",
     },
     [`&.${tableCellClasses.body}`]: {
       fontSize: 12,
-      whiteSpace:"nowrap"
+      whiteSpace:"nowrap",
     },
   }));
 

@@ -6,7 +6,7 @@ import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 import CancelReservaDialog from "./CancelReservaDialog";
 import { getEstadoReserva } from "../ReservaList";
-import { ReservaEstado, ReservaType } from "@/core/type/enums";
+import { ReservaEstado, ReservaType } from "@/data/model/types/enums";
 import ConfirmReservaDialog from "./ConfirmReservaDialog";
 import EditReservaDialog from "./EditDialogReserva";
 import { useAppDispatch } from "@/context/reduxHooks";

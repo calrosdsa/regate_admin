@@ -12,7 +12,7 @@ import { useEffect } from 'react'
 import ButtonIcon from '@/presentation/util/button/ButtonIcon'
 import { ValidateUser } from '@/core/repository/account'
 import { rootEstablecimiento } from '@/core/util/routes'
-import { Http } from '@/core/type/enums'
+import { Http } from '@/data/model/types/enums'
 import { IconButton } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
 import { getUser } from '@/context/actions/account-actions'

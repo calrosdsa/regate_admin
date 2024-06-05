@@ -1,5 +1,5 @@
 import { LOCAL_URL } from "@/context/config"
-import { DepositoEstado } from "../type/enums"
+import { DepositoEstado } from "../../data/model/types/enums"
 
 export async function GetBanks(){
     const res = await fetch(`${LOCAL_URL}/api/admin/billing/banks`)

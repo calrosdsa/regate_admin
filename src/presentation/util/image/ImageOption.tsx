@@ -4,7 +4,7 @@ import CommonImage from "./CommonImage"
 import { useState } from "react"
 import Loader from "../loaders/Loader"
 import Spinner from "../loaders/Spinner"
-import { TypeEntity } from "@/core/type/enums"
+import { TypeEntity } from "@/data/model/types/enums"
 
 
 const ImageOption = ({

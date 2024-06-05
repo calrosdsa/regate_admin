@@ -126,16 +126,18 @@ test.describe(() => {
     await page.getByTestId("s-extra-time").click();
     await page.getByTestId("s-extra-time-0").click();
     await page.getByRole('button', { name: 'Guardar cambios' }).click();
+    
     await expect(page.getByTestId("reserva-fecha").getByText("de 22:00 a 23:30")).toBeVisible(); 
+    await expect(page.getByTestId("reserva-precio").getByText("300")).toBeVisible();  
     await expect(page.getByTestId("reserva-monto-pagado").getByText("0")).toBeVisible();  
-    await expect(page.getByTestId("reserva-estado").getByText("Pagada")).toBeVisible();  
+    await expect(page.getByTestId("reserva-estado").getByText("Pendiente")).toBeVisible();  
     await page.getByTestId("d-detail-reserva-close").click();
     await page.locator("#cupo-reserva-47").click();
     await expect(page.getByTestId("detail-cancha-name").getByText(instalacionName)).toBeVisible();  
     await expect(page.getByTestId("reserva-fecha").getByText("de 22:00 a 23:30")).toBeVisible(); 
     await expect(page.getByTestId("reserva-precio").getByText("300")).toBeVisible();  
     await expect(page.getByTestId("reserva-monto-pagado").getByText("0")).toBeVisible();  
-    await expect(page.getByTestId("reserva-estado").getByText("Pagada")).toBeVisible();  
+    await expect(page.getByTestId("reserva-estado").getByText("Pendiente")).toBeVisible();  
   })
 
   test("CancelarReserva", async ({page}) =>{

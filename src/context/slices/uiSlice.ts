@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { UiState } from "../models/ui";
-import { ReporteId } from "@/core/type/enums";
+import { ReporteId } from "@/data/model/types/enums";
 
 
 

@@ -1,6 +1,6 @@
 import Loader from "@/presentation/util/loaders/Loader";
 import { getDepositoEstadoName } from "@/core/repository/billing";
-import { DepositoEstado } from "@/core/type/enums";
+import { DepositoEstado } from "@/data/model/types/enums";
 import moment from "moment";
 
 

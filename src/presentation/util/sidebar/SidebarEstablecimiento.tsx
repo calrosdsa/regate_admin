@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import UserSideBar from "./UserSidebar";
 import { useRouter } from "next/navigation";
-import { UserRol } from "@/core/type/enums";
+import { UserRol } from "@/data/model/types/enums";
 import { GetMessagesCount } from "@/core/repository/chat";
 import { chatActions } from "@/context/slices/chatSlice";
 import { Box, IconButton, List, ListItemButton, ListItemIcon, ListItemText, MenuItem, Paper, Select, useTheme } from "@mui/material";

@@ -9,7 +9,7 @@ import { days } from "@/context/actions/chart-actions";
 import { successfulMessage, unexpectedError } from "@/context/config";
 import { GetInstalaciones } from "@/core/repository/instalacion";
 import { CheckRervasCuposAvailables, CreateReservaCupos, DeleteReservaCupos, GenerateReservaCupos } from "@/core/repository/reservas";
-import { EndOptions, Http, MonthDaySelectOption, Repeat, ReservaType } from "@/core/type/enums";
+import { EndOptions, Http, MonthDaySelectOption, Repeat, ReservaType } from "@/data/model/types/enums";
 import { repeatOptions } from "@/core/util/data";
 import { Box, MenuItem, Select, TextField, Typography, useTheme } from "@mui/material";
 import moment from "moment";

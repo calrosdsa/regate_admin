@@ -11,7 +11,7 @@ import { successfulMessage, unexpectedError } from "@/context/config";
 import moment from "moment";
 import { Typography } from "@mui/material";
 import ValueLabel from "@/presentation/util/text/ValueLabel";
-import { Http, ReservaEstado } from "@/core/type/enums";
+import { Http, ReservaEstado } from "@/data/model/types/enums";
 
 const EditReservaDialog = ({
   open,

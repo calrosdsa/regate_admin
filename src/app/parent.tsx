@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { chatActions } from "@/context/slices/chatSlice";
 import { uiActions } from "@/context/slices/uiSlice";
 import store from "@/context/store";
-import { PayloadType, WsAccountPayload } from "@/core/type/notification";
+import { PayloadType, WsAccountPayload } from "@/data/model/types/notification";
 import { ThemeProvider } from "@emotion/react";
 import { CssBaseline, Paper, createTheme } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";

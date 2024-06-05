@@ -3,7 +3,7 @@ import moment from "moment"
 import { useCallback, useEffect, useRef, useState } from "react"
 import CalendarDialogReserva from "../dialog/CalendarDialogReserva"
 import useEffectOnce from "@/core/util/hooks/useEffectOnce"
-import { DayWeek, ReservaType } from "@/core/type/enums"
+import { DayWeek, ReservaType } from "@/data/model/types/enums"
 import { GetReservasCupo } from "@/core/repository/reservas"
 import Spinner from "@/presentation/util/loaders/Spinner"
 import { toast } from "react-toastify"
@@ -274,23 +274,6 @@ const Calendar = ({uuid,uuidEvent,reserva_type,eventoId,eventoName,usersEvento}:
                         {countDays >1 &&  dateFilter.clone().add(countDays,"days").format("-DD")}
                     </Button>
 
-                    {/* <label htmlFor="date-calendar"  className="button-hover px-2 py-[6px] items-center flex space-x-2 ml-2 relative">
-                        <span className="text-sm">{dateFilter.format("MMMM DD")}
-                        {countDays >1 &&  dateFilter.clone().add(countDays,"days").format("-DD")}
-                        </span>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                        <path fillRule="evenodd" d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z" clipRule="evenodd" />
-                        </svg>
-                    <input type="date" 
-                    onChange={(e)=>{
-                        const d = moment(e.target.value)
-                        setDateFilter(d)
-                        generateDaysWeek(d)
-                    }}
-                     id="date-calendar" className="w-0 h-0"/>
-                    </label> */}
-
-
                     <Button 
                     variant="outlined" color="inherit"
                     onClick={()=>generateDaysWeek(dateFilter)}
@@ -426,7 +409,6 @@ const CalendarReserva = ({
             }
         }
       }, []);
-    // const count = (220/reservaCupos.length) * 2
 
    
     return(

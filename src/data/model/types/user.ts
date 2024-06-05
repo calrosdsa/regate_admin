@@ -18,4 +18,9 @@ type RequestUserEmpresaFilter = {
     query:string
     order:number
     order_queue:number
+    establecimiento_uuid:string
+}
+
+type UserEventosRequest = {
+    user_id:number
 }

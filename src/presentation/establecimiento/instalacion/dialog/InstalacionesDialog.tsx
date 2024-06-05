@@ -20,7 +20,7 @@ const InstalacionesDialog = ({openModal,closeModal,instalaciones,onAccept}:{
   
 
     return(
-       <DialogLayout title="Configurar horas disponible"
+       <DialogLayout title="Canchas"
        open={openModal} close={closeModal}>
         <div>
         <ListInstalaciones

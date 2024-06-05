@@ -20,7 +20,7 @@ import ConfirmationDialog from "@/presentation/util/dialog/ConfirmationDialog";
 import { unexpectedError } from "@/context/config";
 import AdvanceReservaOptionDialog from "./AdvanceReservaOptionDialog";
 import SeeMore from "@/presentation/util/button/SeeMore";
-import { Http, HttpStatusCode } from "@/core/type/enums";
+import { Http, HttpStatusCode } from "@/data/model/types/enums";
 import { Tab } from "@headlessui/react";
 import { GetInstalaciones } from "@/core/repository/instalacion";
 import { Button, IconButton, TextField, Typography, useTheme } from "@mui/material";

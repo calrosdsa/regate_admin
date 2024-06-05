@@ -53,7 +53,7 @@ export const EventoViewModel = ({ params }: { params: { uuid: string } }) =>{
         history.pushState(null, "", url);
       };
     
-      const getUsersEmpresa = async (page: number) => {
+      const getEventos = async (page: number) => {
         try {
           setEventos([]);
           setLoading(true);
@@ -84,7 +84,7 @@ export const EventoViewModel = ({ params }: { params: { uuid: string } }) =>{
       
     
       useEffectOnce(() => {
-        getUsersEmpresa(1);
+        getEventos(1);
       });
 
       return {
@@ -111,7 +111,7 @@ export const EventoViewModel = ({ params }: { params: { uuid: string } }) =>{
         setCreateEventoDialog,
         setEventoCreated,
         getInstalaciones,
-        getUsersEmpresa,
+        getEventos,
         setPaginationProps,
         appendSerachParams,
         updateEventoInTable,

@@ -1,7 +1,7 @@
 import moment from "moment";
 import CommonImage from "../util/image/CommonImage";
 import { getFullName } from "@/core/util";
-import { Order, OrderQueueReserva, ReservaEstado } from "@/core/type/enums";
+import { Order, OrderQueueReserva, ReservaEstado } from "@/data/model/types/enums";
 import TruncateText from "../util/text/TruncateText";
 
 import Table from '@mui/material/Table';
@@ -33,7 +33,7 @@ const ReservaList = ({reservas,loading,order,changeOrder,getReservaDetail}:{
     loading:boolean
     getReservaDetail:(id:number)=>void
     changeOrder:(order:ReservaOrder)=>void
-    order?:ReservaOrder
+    order:ReservaOrder
 }) =>{
     
 
@@ -139,7 +139,7 @@ const ReservaList = ({reservas,loading,order,changeOrder,getReservaDetail}:{
                    <StyledTableRow key={index}>
                         <StyledTableCell >{index + 1}.-</StyledTableCell>
                         <StyledTableCell align="left">
-                            <div className="flex space-x-2 items-center" >
+                            <div className="flex space-x-2 items-center mr-2" >
                         <CommonImage
                         src={item.profile_photo || "/images/profile.png"}
                         h={30}
@@ -153,7 +153,7 @@ const ReservaList = ({reservas,loading,order,changeOrder,getReservaDetail}:{
                         />
                         </div>
                         </StyledTableCell>
-                        <StyledTableCell align="left">
+                        <StyledTableCell align="left" >
                         <TruncateText
                         maxLength={30}
                         text={item.instalacion_name}

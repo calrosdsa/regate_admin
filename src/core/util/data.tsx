@@ -1,4 +1,4 @@
-import { DayMonthPosition, EstadoVisibility, EventoEstado, Repeat, ReservaEstado } from "../type/enums";
+import { DayMonthPosition, EstadoVisibility, EventoEstado, Repeat, ReservaEstado } from "../../data/model/types/enums";
 
 
 export const estadoVisibility:SelectItem[] = [

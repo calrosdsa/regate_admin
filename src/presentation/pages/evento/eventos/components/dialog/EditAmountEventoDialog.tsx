@@ -3,7 +3,7 @@ import ValueLabel from "@/presentation/util/text/ValueLabel";
 import { getEstadoEvento } from "../EventoListTable";
 import ButtonSubmit from "@/presentation/util/button/ButtonSubmit";
 import { FormEvent, useEffect, useState } from "react";
-import { EventoEstado } from "@/core/type/enums";
+import { EventoEstado } from "@/data/model/types/enums";
 import { eventoEstados } from "@/core/util/data";
 import SelectComponent from "@/presentation/util/input/SelectCompenent";
 import InputWithIcon from "@/presentation/util/input/InputWithIcon";

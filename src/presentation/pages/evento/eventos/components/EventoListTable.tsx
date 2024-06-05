@@ -1,14 +1,12 @@
 import moment from "moment";
-import CommonImage from "../../util/image/CommonImage";
 import { formatBlankorNull, formatDateTime, getFullName } from "@/core/util";
-import Loading from "../../util/loaders/Loading";
-import { EventoEstado, Order, OrderQueueReserva, ReservaEstado } from "@/core/type/enums";
+import { EventoEstado, Order, OrderQueueReserva, ReservaEstado } from "@/data/model/types/enums";
 import Link from "next/link";
 import { getRouteEstablecimiento } from "@/core/util/routes";
 import { IconButton, Paper, Table, TableBody, TableContainer, TableHead, TableRow } from "@mui/material";
-import { StyledTableCell, StyledTableRow } from "../../util/table/StyleTableCell";
-import LinearProgressMui from "../../util/loaders/LinnearProgressMui";
 import EditIcon from '@mui/icons-material/Edit';
+import { StyledTableCell, StyledTableRow } from "@/presentation/util/table/StyleTableCell";
+import LinearProgressMui from "@/presentation/util/loaders/LinnearProgressMui";
 export const getEstadoEvento = (estado:EventoEstado)=>{
     switch(estado){
         case EventoEstado.Valid:
@@ -23,12 +21,13 @@ export const getEstadoEvento = (estado:EventoEstado)=>{
 }
 
 
-const EventoListTable = ({eventos,loading,uuid,openEditAmountDialog}:{
+const EventoListTable = ({eventos,loading,uuid,openEditAmountDialog,shouldShowEditOption=true}:{
     eventos:Evento[]
+    shouldShowEditOption?:boolean
     // selectUser:(userEmpresa:UserEmpresa)=>void
     loading:boolean
     uuid:string
-    openEditAmountDialog:(r:Evento)=>void
+    openEditAmountDialog?:(r:Evento)=>void
 }) =>{
     
 
@@ -67,6 +66,12 @@ const EventoListTable = ({eventos,loading,uuid,openEditAmountDialog}:{
                             <StyledTableCell>
                             Organizador
                             </StyledTableCell>
+
+                            {shouldShowEditOption &&
+                            <StyledTableCell>
+                            </StyledTableCell>
+                            }
+
                         </TableRow>
                     
                     </TableHead>
@@ -92,12 +97,18 @@ const EventoListTable = ({eventos,loading,uuid,openEditAmountDialog}:{
                                 <StyledTableCell>{formatDateTime(item.end_date)}</StyledTableCell>
                                 <StyledTableCell>{formatBlankorNull(item.total_hours," hrs")}</StyledTableCell>
                                 <StyledTableCell>{formatBlankorNull(item.organizador)}</StyledTableCell>
+                            {shouldShowEditOption &&
                                 <StyledTableCell>
                                     <IconButton size="small"
-                                    onClick={()=>openEditAmountDialog(item)}>
+                                    onClick={()=>{
+                                        if(openEditAmountDialog != undefined){
+                                            openEditAmountDialog(item)
+                                        }
+                                    }}>
                                         <EditIcon fontSize="small"/>
                                     </IconButton>
                                 </StyledTableCell>
+                            }
 
                                 {/* <td className="rowTable">{item.name}</td> */}
                             </StyledTableRow>

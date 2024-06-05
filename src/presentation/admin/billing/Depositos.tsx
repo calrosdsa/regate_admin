@@ -1,6 +1,6 @@
 import Loading from "@/presentation/util/loaders/Loading"
 import { getDepositoEstadoName } from "@/core/repository/billing"
-import { DepositoEstado, Order, OrderQueueReserva } from "@/core/type/enums"
+import { DepositoEstado, Order, OrderQueueReserva } from "@/data/model/types/enums"
 import { downloadFile } from "@/core/util"
 import { adminRoutes, rootEstablecimiento } from "@/core/util/routes"
 import moment from "moment"

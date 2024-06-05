@@ -1,4 +1,4 @@
-import { PaidType } from "../type/enums";
+import { PaidType } from "../../data/model/types/enums";
 
 
 export const getPaymentMethod = (num:number):string =>{

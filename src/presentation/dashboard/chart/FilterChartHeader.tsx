@@ -1,6 +1,6 @@
 import Loading from "@/presentation/util/loaders/Loading";
-import { ChartTypeData, FilterChartData } from "@/core/type/chart";
-import { TypeOfChart, TypeOfDate } from "@/core/type/enums";
+import { ChartTypeData, FilterChartData } from "@/data/model/types/chart";
+import { TypeOfChart, TypeOfDate } from "@/data/model/types/enums";
 import { groupByToMap } from "@/core/util";
 import { Disclosure, Menu, Popover, Transition } from "@headlessui/react";
 import { Button, ButtonGroup, Checkbox, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Radio, Typography } from "@mui/material";

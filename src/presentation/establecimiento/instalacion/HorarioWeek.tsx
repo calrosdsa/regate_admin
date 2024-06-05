@@ -1,5 +1,5 @@
 import { DeleteCupos, ResetInstalacionHorarioDay} from "@/core/repository/instalacion";
-import { DayWeek } from "@/core/type/enums";
+import { DayWeek } from "@/data/model/types/enums";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { EditHorarioPrecio } from "./dialog/EditHorarioPrecio";

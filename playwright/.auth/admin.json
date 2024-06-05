@@ -5,17 +5,17 @@
       "value": "1",
       "domain": "localhost",
       "path": "/",
-      "expires": 1716057964.19839,
+      "expires": 1717705991.041251,
       "httpOnly": true,
       "secure": false,
       "sameSite": "Lax"
     },
     {
       "name": "access_token",
-      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiYWRtaW5faWQiOiJmYjUyMzAxZi00ZjhlLTQyNmYtOTA2ZS02YzIxZTFmZjViZTAiLCJlbWFpbCI6ImpvcmdlQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiam9yZ2UiLCJyb2wiOjEsImVtcHJlc2FfaWQiOjEsImV4cCI6MTcxNjMzMTU2NH0.5IU1rljj2sgiI7qwJO4cfP2gUwzYq2EkIdv5Me-x-3c",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiYWRtaW5faWQiOiJmYjUyMzAxZi00ZjhlLTQyNmYtOTA2ZS02YzIxZTFmZjViZTAiLCJlbWFpbCI6ImpvcmdlQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiam9yZ2UiLCJyb2wiOjEsImVtcHJlc2FfaWQiOjEsImV4cCI6MTcxNzk3OTU5MX0.W6AY4TXvu5U1ZGQD26dPgY7oOZsqz5yDl9h9qqhrE0U",
       "domain": "localhost",
       "path": "/",
-      "expires": 1716057964.198932,
+      "expires": 1717705991.042051,
       "httpOnly": true,
       "secure": false,
       "sameSite": "Lax"
@@ -31,7 +31,7 @@
         },
         {
           "name": "user",
-          "value": "{\"id\":6,\"user_id\":\"fb52301f-4f8e-426f-906e-6c21e1ff5be0\",\"username\":\"jorge\",\"rol\":1,\"last_login\":\"2024-05-17T13:46:04.140449Z\",\"created_at\":\"2023-09-11T21:03:42.646115Z\",\"email\":\"jorge@gmail.com\",\"phone\":\"741390560\",\"estado\":0,\"empresa_id\":1}"
+          "value": "{\"id\":6,\"user_id\":\"fb52301f-4f8e-426f-906e-6c21e1ff5be0\",\"username\":\"jorge\",\"rol\":1,\"last_login\":\"2024-06-05T15:33:11.011718Z\",\"created_at\":\"2023-09-11T21:03:42.646115Z\",\"email\":\"jorge@gmail.com\",\"phone\":\"741390560\",\"estado\":0,\"empresa_id\":1}"
         }
       ]
     }

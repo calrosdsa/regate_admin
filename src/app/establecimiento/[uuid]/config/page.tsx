@@ -8,7 +8,7 @@ import { uiActions } from '@/context/slices/uiSlice';
 import { AddEstablecimientoPhoto, DeleteEstablecimientoPhoto, UpdateEstablecimiento, UpdateEstablecimientoAddress, UpdateEstablecimientoPhoto, getEstablecimiento } from '@/core/repository/establecimiento';
 import EditComponent from '@/presentation/util/input/EditComponent';
 import EditComponentImage from '@/presentation/util/input/EditComponentImage';
-import { DepositoEstado, EstablecimientoEstado, PaidType, TypeEntity } from '@/core/type/enums';
+import { DepositoEstado, EstablecimientoEstado, PaidType, TypeEntity } from '@/data/model/types/enums';
 import { getIntervaloString, getPaymentMethod } from '@/core/util/converter';
 import AddHorarioIntervalDialog from '@/presentation/establecimiento/setting/AddHorarioIntervalDialog';
 import DeleteHorarioIntervalDialog from '@/presentation/establecimiento/setting/DeleteHorarioIntervalDialog';

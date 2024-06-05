@@ -1,13 +1,13 @@
 import InstalacionesDialog from "@/presentation/establecimiento/instalacion/dialog/InstalacionesDialog";
 import { EventoViewModel } from "./EventosViewModel";
-import CreateEventDialog from "./dialog/CreateEventDialog";
 import CreateReservaDialog from "@/presentation/reservas/dialog/CreateReservaDialog";
-import EditAmountEventoDialog from "./dialog/EditAmountEventoDialog";
 import { Button, Typography } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import AddIcon from "@mui/icons-material/Add";
 import Pagination from "@/presentation/shared/pagination/Pagination";
-import EventoListTable from "./EventoListTable";
+import EditAmountEventoDialog from "./components/dialog/EditAmountEventoDialog";
+import EventoListTable from "./components/EventoListTable";
+import CreateEventDialog from "./components/dialog/CreateEventDialog";
 
 const Eventos = ({ params }: { params: { uuid: string } }) => {
   const vm = EventoViewModel({ params });
@@ -48,7 +48,7 @@ const Eventos = ({ params }: { params: { uuid: string } }) => {
             close={() => vm.setOpenReservaDialog(false)}
             cupos={[]}
             onComplete={() => {
-              vm.getUsersEmpresa(1);
+              vm.getEventos(1);
               vm.setOpenInstalacionesDialog(false);
             }}
             usersEvento={
@@ -89,7 +89,7 @@ const Eventos = ({ params }: { params: { uuid: string } }) => {
               disabled={state.loading}
               onClick={() => {
                 vm.setQuery("");
-                vm.getUsersEmpresa(1);
+                vm.getEventos(1);
               }}
             >
               <RefreshIcon />
@@ -114,7 +114,7 @@ const Eventos = ({ params }: { params: { uuid: string } }) => {
                 currentPage={state.paginationProps.currentPage}
                 setPage={(page) => {
                   vm.appendSerachParams("page", page.toString());
-                  vm.getUsersEmpresa(page);
+                  vm.getEventos(page);
                   if(state.paginationProps == null) return
                   vm.setPaginationProps({
                     ...state.paginationProps,

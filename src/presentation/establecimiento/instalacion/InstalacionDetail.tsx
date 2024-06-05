@@ -11,7 +11,7 @@ import { GetCategories } from "@/core/repository/labels"
 import EditComponentSelect from "@/presentation/util/input/EditComponentSelect"
 import { Tooltip } from 'react-tooltip';
 import { estadoVisibility } from "@/core/util/data"
-import { EstadoVisibility } from "@/core/type/enums"
+import { EstadoVisibility } from "@/data/model/types/enums"
 import { successfulMessage, unexpectedError } from "@/context/config"
 import { IconButton } from "@mui/material"
 import DeleteIcon from '@mui/icons-material/Delete';
