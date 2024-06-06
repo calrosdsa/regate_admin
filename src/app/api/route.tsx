@@ -6,11 +6,12 @@ export async function POST(request:Request) {
    try{
       const nextCookies = cookies(); // Get cookies object      
       const body = await request.json();
-      const res = await fetch(`${API_URL}/account/admin/login/`,{
+      const res = await fetch(`${API_URL}/admin/account/login/`,{
             method:"post",
             body:JSON.stringify(body),
             headers:{
-                  "Content-Type":"application/json"
+                  "Content-Type":"application/json",
+                  // "Authorization":"Bearer ey1281882"
             }
       }
       )

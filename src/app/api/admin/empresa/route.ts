@@ -11,7 +11,7 @@ export async function GET(request:Request) {
   }
   try{
     //   const body:Cupo = await request.json()
-      const res = await fetch(`${API_URL}/empresa/`,
+      const res = await fetch(`${API_URL}/admin/empresa/`,
       {
          headers:{
          'Authorization':`Bearer ${token}`

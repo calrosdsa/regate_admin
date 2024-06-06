@@ -15,7 +15,7 @@ export async function POST(request:Request) {
     // console.log("TOKEN",token)
   try{
       const body = await request.json()
-      const res = await fetch(`${API_URL}/chart/count-hours/base/`,{
+      const res = await fetch(`${API_URL}/admin/chart/count-hours/base/`,{
             method:'POST',
             body:JSON.stringify(body),
             headers:{

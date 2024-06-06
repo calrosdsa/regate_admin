@@ -12,7 +12,7 @@ export async function GET(request:Request) {
   }
   try{
     //   const body:Cupo = await request.json()
-      const res = await fetch(`${API_URL}/account/admin/establecimientos-user/?uuid=${uuid}`,
+      const res = await fetch(`${API_URL}/admin/account/establecimientos-user/?uuid=${uuid}`,
       {
          headers:{
          'Authorization':`Bearer ${token}`

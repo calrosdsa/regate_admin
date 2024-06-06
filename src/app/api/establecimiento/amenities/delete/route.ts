@@ -9,7 +9,7 @@ export async function POST(request:Request) {
   }
   try{
       const body = await request.json()
-      const res = await fetch(`${API_URL}/label/establecimiento/amenities/delete/`,{
+      const res = await fetch(`${API_URL}/admin/label/establecimiento/amenities/delete/`,{
          method:"POST",
          body:JSON.stringify(body),
          headers:{

@@ -15,7 +15,7 @@ export async function POST(request:Request) {
     // console.log("TOKEN",token)
   try{
       const body = await request.json()
-      const res = await fetch(`${API_URL}/empresa/establecimiento/update-address/`,{
+      const res = await fetch(`${API_URL}/admin/establecimiento/update-address/`,{
             method:'POST',
             body:JSON.stringify(body),
             headers:{

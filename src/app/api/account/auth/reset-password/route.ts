@@ -12,7 +12,7 @@ export async function POST(request:Request) {
 //   }
   try{
       const body = await request.json()
-      const res = await fetch(`${API_URL}/account/admin/reset-password/`,
+      const res = await fetch(`${API_URL}/admin/account/reset-password/`,
       {
          method:"post",
          body:JSON.stringify(body),

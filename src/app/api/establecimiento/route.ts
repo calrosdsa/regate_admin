@@ -13,7 +13,7 @@ export async function GET(request:Request,
   }
   try{
     //   const body:Cupo = await request.json()
-      const res = await fetch(`${API_URL}/empresa/establecimientos/`,{
+      const res = await fetch(`${API_URL}/admin/establecimiento/establecimientos/`,{
          headers:{
             'Authorization':`Bearer ${token}`
          }
@@ -37,7 +37,7 @@ export async function POST(request:Request) {
  try{
      const body = await request.formData()
    //   console.log(body.get("name"))
-     const res = await fetch(`${API_URL}/empresa/establecimiento/create/`,{
+     const res = await fetch(`${API_URL}/admin/establecimiento/create/`,{
            method:'POST',
            body:body,
            headers:{

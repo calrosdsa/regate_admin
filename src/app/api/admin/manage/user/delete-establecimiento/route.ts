@@ -12,7 +12,7 @@ export async function GET(request:Request) {
     return NextResponse.json("Usuario no authorizado",{status:401})
   }
   try{
-      const res = await fetch(`${API_URL}/manage/admin/user/delete-establecimiento/${establecimientoUuid}/${adminId}/`,
+      const res = await fetch(`${API_URL}/admin/manage/user/delete-establecimiento/${establecimientoUuid}/${adminId}/`,
       {
         headers:{
          'Authorization':`Bearer ${token}`

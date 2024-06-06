@@ -13,7 +13,7 @@ export async function GET(request:Request,
   }
   try{
     //   const body:Cupo = await request.json()
-      const res = await fetch(`${API_URL}/users/admin/search-users-empresa/?query=${query}`,{
+      const res = await fetch(`${API_URL}/admin/user/search-users-empresa/?query=${query}`,{
          headers:{
             'Authorization':`Bearer ${token}`
          }

@@ -10,7 +10,7 @@ export async function POST(request:Request) {
   try{
       const body = await request.json()
       // console.log("BODYY-------",JSON.stringify(body))
-      const res = await fetch(`${API_URL}/label/establecimiento/amenities/add/`,{
+      const res = await fetch(`${API_URL}/admin/label/establecimiento/amenities/add/`,{
          method:"POST",
          body:JSON.stringify(body),
          headers:{

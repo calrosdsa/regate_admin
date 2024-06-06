@@ -12,7 +12,7 @@ export async function POST(request:Request) {
   try{
       const body = await request.json()
       // console.log("BODY",body)
-      const res = await fetch(`${API_URL}/account/admin/establecimientos-user-by-uuid/`,
+      const res = await fetch(`${API_URL}/admin/account/establecimientos-user-by-uuid/`,
       {
          method:'post',
          body:JSON.stringify(body),

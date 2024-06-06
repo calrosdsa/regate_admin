@@ -16,7 +16,7 @@ export async function POST(request:Request) {
   try{
       const body = await request.text()
     //   console.log(body.get("name"))
-      const res = await fetch(`${API_URL}/empresa/establecimiento/delete/photo/`,{
+      const res = await fetch(`${API_URL}/admin/establecimiento/delete/photo/`,{
             method:'POST',
             body:body,
             headers:{

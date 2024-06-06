@@ -13,7 +13,7 @@ export async function POST(request:Request) {
   }
   try{
       const body = await request.json()
-      const res = await fetch(`${API_URL}/chart/export/excel/`,
+      const res = await fetch(`${API_URL}/admin/chart/export/excel/`,
       {
          method:"post",
          body:JSON.stringify(body),

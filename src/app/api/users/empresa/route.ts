@@ -13,7 +13,7 @@ export async function POST(request:Request,
   }
   try{   
       const body = await request.text()
-      const res = await fetch(`${API_URL}/users/admin/users-empresa/?page=${page}`,{
+      const res = await fetch(`${API_URL}/admin/user/users-empresa/?page=${page}`,{
          method:"POST",
          body:body,
          headers:{

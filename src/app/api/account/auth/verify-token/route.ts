@@ -11,7 +11,7 @@ export async function GET(request:Request) {
 //     return NextResponse.json("Usuario no authorizado",{status:401})
 //   }
   try{
-   const res = await fetch(`${API_URL}/account/admin/verify-token/`,{
+   const res = await fetch(`${API_URL}/admin/account/verify-token/`,{
       headers:{
         'Authorization':`Bearer ${token}`
       }
