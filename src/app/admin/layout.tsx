@@ -9,13 +9,11 @@ import { useAppDispatch, useAppSelector } from '@/context/reduxHooks'
 import { uiActions } from '@/context/slices/uiSlice'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import ButtonIcon from '@/presentation/util/button/ButtonIcon'
-import { ValidateUser } from '@/core/repository/account'
-import { rootEstablecimiento } from '@/core/util/routes'
 import { Http } from '@/data/model/types/enums'
 import { IconButton } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
 import { getUser } from '@/context/actions/account-actions'
+import { accountRepository } from '@/data/repository'
 // const inter = Inter({ subsets: ['latin'] })
 
 
@@ -28,9 +26,10 @@ export default function RootLayout({
   const uiState = useAppSelector(state=>state.ui)
   const pathName = usePathname()
   const router = useRouter()
+  const accountRepo = accountRepository
 
   const validateUser = async() =>{
-      const res = await ValidateUser()
+      const res = await accountRepo.ValidateUser()
       if(res.status == Http.StatusUnauthorized){
         window.location.replace('/auth/login')  
       }

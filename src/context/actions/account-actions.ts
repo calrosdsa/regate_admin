@@ -38,59 +38,59 @@ export const logout  = () :ThunkAction<void,RootState,undefined,AnyAction> =>{
     }
 }
 
-export const login = (email:string,password:string) :ThunkAction<void,RootState,undefined,AnyAction> =>{
-    return async(dispatch)=>{
-        try{
-            const fcm_token = localStorage.getItem("_fcm")
-            dispatch(uiActions.setInnerLoading(true))
-            const res = await fetch(`../api`,{
-                 method:"POST",
-                 body:JSON.stringify({email,password,fcm_token})
-            })
-            const data =await res.json()
-            console.log(data)
-            switch(res.status){
-                case 200:
-                    localStorage.setItem("user",JSON.stringify(data.user))
-                    dispatch(uiActions.setInnerLoading(false))
-                    switch(data.user.estado){
-                        case UserEstado.DISABLED:
-                            toast.info("Le informamos que su cuenta ha sido deshabilitada. Como resultado, no podrá iniciar sesión en este momento.")
-                            return     
-                        case UserEstado.DELETED:
-                            toast.info("Le informamos que su cuenta ha sido eliminada. Como resultado, no podrá iniciar sesión.")
-                            return    
-                    }
+        export const login = (email:string,password:string) :ThunkAction<void,RootState,undefined,AnyAction> =>{
+            return async(dispatch)=>{
+                try{
+                    const fcm_token = localStorage.getItem("_fcm")
+                    dispatch(uiActions.setInnerLoading(true))
+                    const res = await fetch(`../api`,{
+                        method:"POST",
+                        body:JSON.stringify({email,password,fcm_token})
+                    })
+                    const data =await res.json()
+                    console.log(data)
+                    switch(res.status){
+                        case 200:
+                            localStorage.setItem("user",JSON.stringify(data.user))
+                            dispatch(uiActions.setInnerLoading(false))
+                            switch(data.user.estado){
+                                case UserEstado.DISABLED:
+                                    toast.info("Le informamos que su cuenta ha sido deshabilitada. Como resultado, no podrá iniciar sesión en este momento.")
+                                    return     
+                                case UserEstado.DELETED:
+                                    toast.info("Le informamos que su cuenta ha sido eliminada. Como resultado, no podrá iniciar sesión.")
+                                    return    
+                            }
 
-                    switch(data.user.rol){
-                       case UserRol.ADMIN_USER_ROL:
-                           window.location.assign(adminRoutes.manage.establecimientos)
-                           break;
-                       case UserRol.CLIENT_USER_ROL:
-                           const res = await fetch(`/api/account/establecimientos`)
-                           const data:EstablecimientoUser[] = await res.json()
-                           console.log("ESTABLECIMEINTOS",data)
-                           if(data.length == 1){
-                               window.location.assign(`${rootEstablecimiento}/${data[0].uuid}`)
-                           }
-                            window.location.replace(`/auth/establecimientos`)
-                           break;
+                            switch(data.user.rol){
+                            case UserRol.ADMIN_USER_ROL:
+                                window.location.assign(adminRoutes.manage.establecimientos)
+                                break;
+                            case UserRol.CLIENT_USER_ROL:
+                                const res = await fetch(`/api/account/establecimientos`)
+                                const data:EstablecimientoUser[] = await res.json()
+                                console.log("ESTABLECIMEINTOS",data)
+                                if(data.length == 1){
+                                    window.location.assign(`${rootEstablecimiento}/${data[0].uuid}`)
+                                }
+                                    window.location.replace(`/auth/establecimientos`)
+                                break;
+                            }
+                        dispatch(uiActions.setInnerLoading(false))
+                        break;
+                        case 400:
+                            toast.error(data.message)
+                            break;
+                        default:
+                            toast.error(unexpectedError)
                     }
-                   dispatch(uiActions.setInnerLoading(false))
-                   break;
-                case 400:
-                    toast.error(data.message)
-                    break;
-                default:
+                    dispatch(uiActions.setInnerLoading(false))
+                }catch(e){
                     toast.error(unexpectedError)
+                    dispatch(uiActions.setInnerLoading(false))
+                }
             }
-            dispatch(uiActions.setInnerLoading(false))
-        }catch(e){
-            toast.error(unexpectedError)
-            dispatch(uiActions.setInnerLoading(false))
         }
-    }
-}
 export const getEstablecimientosUser = (uuid:string="") :ThunkAction<void,RootState,undefined,AnyAction> =>{
     return async(dispatch)=>{
         try{

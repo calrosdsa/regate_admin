@@ -5,7 +5,6 @@ import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { toast } from "react-toastify";
 import DialogHeader from "@/presentation/util/dialog/DialogHeader";
 import { Http, UserRol } from "@/data/model/types/enums";
-import { getEstablecimientos } from "@/context/actions/account-actions";
 import Image from "next/image";
 import Loading from "@/presentation/util/loaders/Loading";
 import ButtonWithLoader from "@/presentation/util/button/ButtonWithLoader";

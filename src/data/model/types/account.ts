@@ -21,6 +21,12 @@ type User  = {
     last_updated_password?:string
 }
 
+type LoginRequest = {
+    email:string
+    password:string
+    fcm_token:string | null
+}
+
 type LoginResponse = {
     user:User
     access_token:string

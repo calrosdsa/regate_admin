@@ -3,17 +3,18 @@ import ButtonSubmit from "@/presentation/util/button/ButtonSubmit"
 import InputPassword from "@/presentation/util/input/InputPassword"
 import InputWithIcon from "@/presentation/util/input/InputWithIcon"
 import { API_URL } from "@/context/config"
-import { ResetPassword, VerifyToken } from "@/core/repository/account"
 import { Paper } from "@mui/material"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { toast } from "react-toastify"
+import { accountRepository } from "@/data/repository"
 
 
 export default function Page({params} : { params:{token:string}}){
     const router = useRouter()
+    const accountRepo = accountRepository
     const [loading,setLoading] = useState(false)
     const [formData,setFormData ] = useState({
       password:"",
@@ -24,8 +25,8 @@ export default function Page({params} : { params:{token:string}}){
     //   dispatch(authActions.setErrrorLogin(undefined))
       setFormData({ ...formData, [e.target.name]: e.target.value });
     }
-    const verifyEmail = async()=>{
-      const res =await VerifyToken(params.token)
+    const verifyToken = async()=>{
+      const res =await accountRepo.VerifyToken(params.token)
       if(res.status == 401){
           router.push("/auth/forgot-password")
       }
@@ -38,7 +39,7 @@ export default function Page({params} : { params:{token:string}}){
         const data = {
           password:password
         }
-        await ResetPassword(data,params.token)
+        await accountRepo.ResetPassword(data,params.token)
         toast.success("Nueva contraseña establecida correctamente.")
         router.push("/auth/login")
 
@@ -50,7 +51,7 @@ export default function Page({params} : { params:{token:string}}){
     }  
 
     useEffect(()=>{
-      verifyEmail()
+      verifyToken()
     },[])
   
 

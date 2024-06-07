@@ -1,0 +1,4 @@
+
+interface Util {
+    redirectToLoginPage:()=>void
+}
