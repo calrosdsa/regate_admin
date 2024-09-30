@@ -50,10 +50,8 @@ const UploadImage = ({setFile,src,save,id="file",width="w-36",height="h-36",clea
     return(
         <div className="grid sm:grid-cols-2  place-items-center ">
             <div className="w-full">
-            <CommonImage
-            src={source.includes("https") ? `${source}?${Date.now()}` : source}
-            w={100}
-            h={100}
+            <img
+            src={source}
             className={`${width} ${height}  object-contain p-2 bg-gray-200 rounded-lg`}
             // alt={""}
             />
