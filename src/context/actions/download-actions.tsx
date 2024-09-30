@@ -10,7 +10,7 @@ import { Id, toast } from "react-toastify"
 import { redirectToLogin } from "."
 import { API_URL, LOCAL_URL, unexpectedError } from "../config"
 import moment from "moment"
-import { ChartExportRequest } from "@/data/model/types/chart"
+import { ChartExportRequest } from "@/data/model/types/chart/chart"
 
 
 export const downloadReporteDeposito = (depositoId: number,reporteId:ReporteId) :ThunkAction<void,RootState,undefined,AnyAction> =>{

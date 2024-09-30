@@ -1,7 +1,6 @@
 import { AnyAction, ThunkAction } from "@reduxjs/toolkit"
 import { RootState } from "../store"
 import { chartActions } from "../slices/chartSlice"
-import { ChartDataResponse, FilterChartData, NameValueData } from "@/data/model/types/chart"
 import { GetChartData, GetReservaAmount, GetReservaAmountAverage, GetReservaAverageAmountBase, GetReservasHoursAverage, GetReservasHoursData, GetUserFrequency } from "@/core/repository/chart"
 import moment from "moment"
 import { TypeOfDate } from "@/data/model/types/enums"

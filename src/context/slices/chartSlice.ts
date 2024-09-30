@@ -1,6 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { UiState } from "../models/ui";
-import { ChartDataResponse, ChartState, FilterChartData, NameValueData } from "@/data/model/types/chart";
 import { TypeOfChart, TypeOfDate } from "@/data/model/types/enums";
 
 

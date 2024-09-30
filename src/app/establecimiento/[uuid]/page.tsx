@@ -11,7 +11,6 @@ import { TypeOfChart, TypeOfDate } from '@/data/model/types/enums';
 import { chartActions } from '@/context/slices/chartSlice';
 import { useEffect } from 'react';
 import { getChartData, getReservaAverageAmountBase, getReservaUserFrequency, getReservasAmountData, getReservasAverageAmount, getReservasHoursAverage, getReservasHoursData } from '@/context/actions/chart-actions';
-import { ChartTypeData, FilterChartData } from '@/data/model/types/chart';
 import moment from 'moment';
 import TriangleBarChart from '@/presentation/dashboard/chart/TriangleBarChart';
 import { PieChart } from 'recharts';
@@ -19,6 +18,7 @@ import { appendSerachParams } from '@/core/util/routes';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { Paper, Typography } from '@mui/material';
+import { ChartTypeData } from '@/data/model/types/chart';
 
 const Page= ({params}:{params:{uuid:string}})=>{
   const searchParams = useSearchParams();

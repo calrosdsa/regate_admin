@@ -1,0 +1,15 @@
+export enum TypeValueChart {
+    NONE,
+    HOURS,
+    INGRESOS,
+}
+
+export enum ChartTypeData {
+  INGRESOS_RESERVAS,
+  HORAS_RESERVAS,
+  HORAS_RESERVADAS_AVERAGE,
+  INGRESOS_AVERAGE,
+  INGRESOS_AVERAGE_DATE,
+  USUARIOS,
+  INGRESOS_HORAS
+}

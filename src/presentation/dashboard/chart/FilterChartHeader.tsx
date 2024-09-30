@@ -1,6 +1,4 @@
 import Loading from "@/presentation/util/loaders/Loading";
-import { ChartTypeData, FilterChartData } from "@/data/model/types/chart";
-import { TypeOfChart, TypeOfDate } from "@/data/model/types/enums";
 import { groupByToMap } from "@/core/util";
 import { Disclosure, Menu, Popover, Transition } from "@headlessui/react";
 import { Button, ButtonGroup, Checkbox, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Radio, Typography } from "@mui/material";
@@ -18,6 +16,8 @@ import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrow
 import DownloadIcon from '@mui/icons-material/Download';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import DialogCalendar from "@/presentation/util/dialog/DialogCalendar";
+import { TypeOfChart, TypeOfDate } from "@/data/model/types/enums";
+import { ChartTypeData } from "@/data/model/types/chart";
 type InstalacionGroup = {
   instalaciones:Instalacion[]
   category:string
@@ -328,7 +328,6 @@ chartTypeData}:{
     </Popover>
 
               </div>
-
               {chartTypeData != ChartTypeData.USUARIOS &&
               <div className="overflow-auto pb-3 space-x-3 px-2">
               <Popover className="">

@@ -15,7 +15,11 @@ export async function GET(request:Request) {
   }
   try{
       // const body = await request.json()
-      const res = await fetch(`${API_URL}/instalacion/admin/horario/${instalacionId}/${dayWeek}/`)
+      const res = await fetch(`${API_URL}/instalacion/admin/horario/${instalacionId}/${dayWeek}/`,{
+         headers:{
+            "Authorization":`Bearer ${token}`
+         }
+      })
       const data =await res.json()
       // console.log(data)
       return NextResponse.json(data,{status:res.status})

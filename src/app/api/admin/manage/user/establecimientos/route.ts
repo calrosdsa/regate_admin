@@ -17,7 +17,7 @@ export async function POST(request:Request) {
          method:'post',
          body:JSON.stringify(body),
          headers:{
-         // 'Authorization':`Bearer ${token}`,
+         'Authorization':`Bearer ${token}`,
          "Content-Type":"application/json"
       }})
       const data =await res.json()

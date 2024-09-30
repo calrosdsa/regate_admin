@@ -10,7 +10,6 @@ import Loading from "@/presentation/util/loaders/Loading"
 import { successfulMessage, unexpectedError } from "@/context/config"
 import { useAppDispatch } from "@/context/reduxHooks"
 import { uiActions } from "@/context/slices/uiSlice"
-import { GetEstablecimientosUserByUuid } from "@/core/repository/account"
 import { DeleteEstablecimientoUser, GetUsersEmpresa, UpdateUserEstado } from "@/core/repository/manage"
 import { UserEstado, UserRol } from "@/data/model/types/enums"
 import { appendSerachParams } from "@/core/util/routes"
@@ -25,6 +24,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PersonIcon from '@mui/icons-material/Person';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import { accountRepository } from "@/data/repository"
 export default function Page(){
     const dispatch = useAppDispatch()
     const searchParams = useSearchParams();
@@ -94,7 +94,7 @@ export default function Page(){
                 rol:user.rol
             }
             setLoadingEstablecimientos(true)
-            const res:EstablecimientoUser[] = await GetEstablecimientosUserByUuid(JSON.stringify(dataRequest))
+            const res:EstablecimientoUser[] = await accountRepository.GetEstablecimientosUserByUuid(JSON.stringify(dataRequest))
             setCurrentUserEstablecimientos(res)
             setLoadingEstablecimientos(false)
         }catch(err){
@@ -115,7 +115,7 @@ export default function Page(){
                 empresa_id:currentUser.empresa_id,
                 rol:UserRol.ADMIN_USER_ROL
             }
-            const res:EstablecimientoUser[] = await GetEstablecimientosUserByUuid(JSON.stringify(dataRequest))
+            const res:EstablecimientoUser[] = await accountRepository.GetEstablecimientosUserByUuid(JSON.stringify(dataRequest))
             setEstablecimientosUser(res)
             setOpenAddEstablecimientoDialog(true)
             dispatch(uiActions.setLoaderDialog(false))

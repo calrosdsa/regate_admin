@@ -2,10 +2,9 @@ import { useAppDispatch } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
 import { Order, OrderQueueReserva } from "@/data/model/types/enums";
 import useEffectOnce from "@/core/util/hooks/useEffectOnce";
-import { reservaRepository as ReservaRepository } from "@/data/repository/reserva";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { userRepository as UserRepository } from "@/data/repository/user";
+import { reservaRepository, userRepository } from "@/data/repository";
 
 const UserDetailViewModel = ({
   params,
@@ -14,8 +13,6 @@ const UserDetailViewModel = ({
 }) => {
   const reservaTab = "1";
   const eventoTab = "2";
-  const reservaRepository = ReservaRepository;
-  const userRepository = UserRepository;
 
   const dispatch = useAppDispatch();
   const searchParams = useSearchParams();

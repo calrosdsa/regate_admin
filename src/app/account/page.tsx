@@ -3,11 +3,11 @@
 import EditComponent from "@/presentation/util/input/EditComponent";
 import UpdatePasswordComponent from "@/presentation/util/input/UpdatePasswordComponent";
 import Loader from "@/presentation/util/loaders/Loader";
-import { GetAccount } from "@/core/repository/account";
 import { Divider, IconButton, Typography } from "@mui/material";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { accountRepository } from "@/data/repository";
 const Page = () =>{
     const [account,setAccount] = useState<User | undefined>(undefined)
     const [loadingAccount,setLoadingAccount] = useState(false)
@@ -15,7 +15,7 @@ const Page = () =>{
     const getAccount = async()=>{
         try{
             setLoadingAccount(true)
-            const res = await GetAccount()
+            const res = await accountRepository.GetAccount()
             setAccount(res)
             setLoadingAccount(false)
         }catch(err){

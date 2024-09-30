@@ -16,6 +16,7 @@ export async function POST(request:Request) {
       }
       )
       const data =await res.json()
+      console.log(data,res.status)
       if(res.status == 200){
             //  console.log(data)
             const oneDay = 24 * 60 * 60 * 1000

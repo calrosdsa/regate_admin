@@ -1,5 +1,5 @@
 import { LOCAL_URL } from "@/context/config"
-import { FilterChartData } from "../../data/model/types/chart"
+import { FilterChartData } from "../../data/model/types/chart/chart"
 
 export async function GetReservasHoursAverage(data:FilterChartData){
     const res = await fetch(`${LOCAL_URL}/api/establecimiento/chart/average-hours`,{

@@ -3,10 +3,10 @@ import ButtonWithLoader from "../button/ButtonWithLoader";
 import { Transition } from "@headlessui/react";
 import ButtonSubmit from "../button/ButtonSubmit";
 import moment from "moment";
-import { UpdatePassword } from "@/core/repository/account";
 import { toast } from "react-toastify";
 import { successfulMessage, unexpectedError } from "@/context/config";
 import { Button, TextField, Typography } from "@mui/material";
+import { accountRepository } from "@/data/repository";
 
 const UpdatePasswordComponent = ({
   last_updated_password,
@@ -37,7 +37,7 @@ const UpdatePasswordComponent = ({
         current_password: currentPassword,
         new_password: newPassword,
       };
-      const res: Response = await UpdatePassword(request);
+      const res: Response = await accountRepository.UpdatePassword(request);
       const data = await res.json();
       switch (res.status) {
         case 400:

@@ -11,13 +11,13 @@ import CommonBarChart from "./CommonBarChart";
 import LineChartConnectNulls from "./LineChartConnectNulls";
 import StackedBarChart from "./StackedBarChart";
 import { chartActions } from "@/context/slices/chartSlice";
-import { ChartExportRequest, ChartTypeData, FilterChartData, TypeValueChart } from "@/data/model/types/chart";
 import Loader from "@/presentation/util/loaders/Loader";
 import { exportDashboardDataExcel } from "@/context/actions/download-actions";
 import { useParams } from "next/navigation";
 import { fetchInstalaciones } from "@/context/actions/data-actions";
 import { Paper, Table, TableContainer, TableHead, TableRow } from "@mui/material";
 import { StyledTableCell, StyledTableRow } from "@/presentation/util/table/StyleTableCell";
+import { ChartTypeData, TypeValueChart } from "@/data/model/types/chart";
 
 
 const ChartDialog = ({open,close,CustomToolTip,getNewData,showLegend,legendLabels,singleColor,

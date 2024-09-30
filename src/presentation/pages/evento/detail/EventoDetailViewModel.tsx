@@ -1,14 +1,13 @@
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
 import { Order, OrderQueueReserva } from "@/data/model/types/enums";
-import { reservaRepository as ReservaRepository } from "@/data/repository/reserva";
-import { eventoRepository as EventoRepository } from "@/data/repository/evento";
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { dataActions } from "@/context/slices/dataSlice";
 import { getEstablecimientoReservas } from "@/core/repository/reservas";
 import { fetchInstalaciones } from "@/context/actions/data-actions";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import { eventoRepository, reservaRepository } from "@/data/repository";
 
 export enum TabEvento {
   INFO,
@@ -25,8 +24,6 @@ export const EventoDetailViewModel = ({
   };
   searchParams: ReadonlyURLSearchParams;
 }) => {
-  const reservaRepository = ReservaRepository;
-  const eventoRepository = EventoRepository;
   const [currentTab, setCurrentTab] = useState(TabEvento.INFO);
   const eventoId = searchParams.get("id");
   const page = searchParams.get("page");

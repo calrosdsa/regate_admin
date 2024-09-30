@@ -3,7 +3,7 @@ import MenuLayout from "../../util/button/MenuLayout";
 import { useEffect, useState } from "react";
 import ChartDialog from "./ChartDialog";
 import { TypeOfChart } from "@/data/model/types/enums";
-import { ChartTypeData, FilterChartData } from "@/data/model/types/chart";
+import { ChartTypeData, FilterChartData } from "@/data/model/types/chart/chart";
 import ButtonIcon from "@/presentation/util/button/ButtonIcon";
 import { Button, ListItemIcon, ListItemText, MenuItem, Paper, Typography } from "@mui/material";
 import AssessmentIcon from '@mui/icons-material/Assessment';

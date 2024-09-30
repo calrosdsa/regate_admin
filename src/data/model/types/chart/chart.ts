@@ -1,6 +1,5 @@
-import { TypeOfChart, TypeOfDate } from "./enums"
 
-export type NameValueData = {
+type NameValueData = {
     name:string
     nameValue?:number
     value:number
@@ -8,28 +7,13 @@ export type NameValueData = {
     date?:string
 }
 
-export type ChartExportRequest = {
+type ChartExportRequest = {
     data:NameValueData[]
     labels:string[]
     has_value_2:boolean
-    type_value_chart:TypeValueChart
+    type_value_chart:number
 }
 
-export enum TypeValueChart {
-    NONE,
-    HOURS,
-    INGRESOS,
-}
-
-export enum ChartTypeData {
-  INGRESOS_RESERVAS,
-  HORAS_RESERVAS,
-  HORAS_RESERVADAS_AVERAGE,
-  INGRESOS_AVERAGE,
-  INGRESOS_AVERAGE_DATE,
-  USUARIOS,
-  INGRESOS_HORAS
-}
 
 
 // {
@@ -38,10 +22,10 @@ export enum ChartTypeData {
 //     "end_date":"2023-09-22 23:00:00",
 //     "type_date":1
 // }
-export type FilterChartData = {
+ type FilterChartData = {
     start_date:undefined | string
     end_date:undefined | string
-    type_date:TypeOfDate
+    type_date:number
     establecimiento_id?:number
     uuid?:string
     instalaciones?:number[]
@@ -49,7 +33,7 @@ export type FilterChartData = {
     // end_week_date:string
 }
 
-export type ChartDataResponse = {
+ type ChartDataResponse = {
     // reserva_day_average:NameValueData[]
     reserva_hour_average:NameValueData[]
     reserva_count_hours:NameValueData[]
@@ -60,11 +44,11 @@ export type ChartDataResponse = {
     user_frequency:NameValueData[]
 }
 
-export type ChartState = {
+type ChartState = {
     data:NameValueData[]
     response?:ChartDataResponse
-    typeOfChart:TypeOfChart
-    allowedCharts:TypeOfDate[]
+    typeOfChart:number
+    allowedCharts:number[]
     filterData:FilterChartData
     loading:boolean
     closeDialog:boolean

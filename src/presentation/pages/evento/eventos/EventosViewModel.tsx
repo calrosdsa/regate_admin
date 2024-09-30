@@ -2,7 +2,7 @@ import { fetchInstalaciones } from "@/context/actions/data-actions";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
 import useEffectOnce from "@/core/util/hooks/useEffectOnce";
-import { eventoRepository } from "@/data/repository/evento"
+import { eventoRepository } from "@/data/repository";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 

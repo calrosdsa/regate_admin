@@ -6,6 +6,7 @@ import { useAppDispatch } from "@/context/reduxHooks";
 import { uiActions } from "@/context/slices/uiSlice";
 import { AddAmenities } from "@/core/repository/labels";
 import { toast } from "react-toastify";
+import { Button } from "@mui/material";
 
 
 const AddAmenityDialog = ({amenities,close,open,establecimientoId,setNewAmenitiesEstablecimiento}:{
@@ -72,10 +73,10 @@ const AddAmenityDialog = ({amenities,close,open,establecimientoId,setNewAmenitie
                 </div>
 
                 <div className="w-full justify-end pt-2 ">
-                <button onClick={()=>setShowDialogConfirmation(true)}
-                className="button" disabled={ids.length == 0}>
+                <Button onClick={()=>setShowDialogConfirmation(true)}
+                disabled={ids.length == 0}>
                     Añadir
-                </button>
+                </Button>
                 </div>
                 {/* {JSON.stringify(amenities)} */}
             </div>
