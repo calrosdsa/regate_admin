@@ -36,6 +36,7 @@ const nextConfig = {
       WS_URL_MESSAGE:process.env.WS_URL_MESSAGE,
   },
   images:{
+      unoptimized: true,
       remotePatterns: [
           {
             protocol: "https",
@@ -49,6 +50,7 @@ const nextConfig = {
   compiler: {
     removeConsole: false,
   },
+  
 }
   
 
