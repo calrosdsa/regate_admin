@@ -168,8 +168,8 @@ const Page= ({params}:{params:{uuid:string}})=>{
       // end_date:now.add(1,"days").toISOString(),
       // start_date:now.subtract(7,"days").toISOString(),
       uuid:params.uuid,
-      start_date:now.startOf('month').toISOString(),
-      end_date:now.endOf('month').toISOString(),
+      start_date:now.startOf('month').toISOString().slice(0,10),
+      end_date:now.endOf('month').toISOString().slice(0,10),
       // instalaciones:[1]
     }
     dispatch(chartActions.setFilterData(filterData))
@@ -193,7 +193,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
 
         
       <ChartDropMenu
-      title="Ingresos"
+      title="Ingresos Mensual"
       subtitle={`Ingresos recibidos (${startDate} - ${endDate})`}
       className='col-start-1 col-span-3'
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
@@ -239,7 +239,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
       </ChartDropMenu>
 
       <ChartDropMenu
-       title="Horas reservadas"
+       title="Horas Reservadas"
        subtitle={`Total de horas reservadas (${startDate} - ${endDate})`}
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
       // CustomToolTip={CustomTooltip}
@@ -280,7 +280,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
     </ChartDropMenu>
 
     <ChartDropMenu
-      title="Horas reservadas"
+      title="Horas Reservadas"
       subtitle={`Promedio de horas reservadas (${startDate} - ${endDate})`}
       className='col-start-1 col-span-2'
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
@@ -311,7 +311,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
 
 
     <ChartDropMenu
-      title="Horas reservadas"
+      title="Horas Reservadas"
       subtitle={`Promedio de horas reservadas (${startDate} - ${endDate})`}
       className='col-start-3 col-span-4'
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
@@ -349,7 +349,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
       </ChartDropMenu>
 
       <ChartDropMenu
-      title="Ingresos"
+      title="Ingresos Mensual"
       subtitle={`Promedio de ingresos (${startDate} - ${endDate})`}
       className='col-start-1 col-span-2'
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
@@ -380,7 +380,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
 
 
       <ChartDropMenu
-      title="Ingresos por día"
+      title="Ingresos por Día"
       subtitle={`Ingresos por día (${startDate} - ${endDate})`}
       className='col-start-3 col-span-2'
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}

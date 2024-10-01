@@ -179,8 +179,9 @@ export const getReservaAverageAmountBase  = (data:FilterChartData) :ThunkAction<
     return async(dispatch)=>{
         try{
             dispatch(chartActions.setChartLoading(true))
+            console.log("PIE FILTER CHART DATA",data)
+            
             const res:NameValueData[] = await GetReservaAverageAmountBase(data)
-            console.log("PIE CHART DATA",res)
             dispatch(chartActions.setData(res))
             dispatch(chartActions.setChartLoading(false))
         }catch(err){
@@ -208,6 +209,7 @@ export const getChartData  = (data:FilterChartData) :ThunkAction<void,RootState,
         try{
             dispatch(chartActions.setChartLoading(true))
             const res:ChartDataResponse = await GetChartData(data)
+            console.log("FILTER DATA",data)
             const newResevasCountHours = res?.reserva_count_hours.map(item=>{
                 item = {
                   name:moment(item.name).utc().format("ll"),
