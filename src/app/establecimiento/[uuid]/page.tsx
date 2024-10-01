@@ -193,7 +193,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
 
         
       <ChartDropMenu
-      title="Ingresos Mensual"
+      title="Ingresos por mes"
       subtitle={`Ingresos recibidos (${startDate} - ${endDate})`}
       className='col-start-1 col-span-3'
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
@@ -239,7 +239,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
       </ChartDropMenu>
 
       <ChartDropMenu
-       title="Horas Reservadas"
+       title="Horas reservadas"
        subtitle={`Total de horas reservadas (${startDate} - ${endDate})`}
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
       // CustomToolTip={CustomTooltip}
@@ -280,7 +280,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
     </ChartDropMenu>
 
     <ChartDropMenu
-      title="Horas Reservadas"
+      title="Horas reservadas"
       subtitle={`Promedio de horas reservadas (${startDate} - ${endDate})`}
       className='col-start-1 col-span-2'
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
@@ -311,7 +311,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
 
 
     <ChartDropMenu
-      title="Horas Reservadas"
+      title="Horas reservadas"
       subtitle={`Promedio de horas reservadas (${startDate} - ${endDate})`}
       className='col-start-3 col-span-4'
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
@@ -349,7 +349,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
       </ChartDropMenu>
 
       <ChartDropMenu
-      title="Ingresos Mensual"
+      title="Ingresos por mes"
       subtitle={`Promedio de ingresos (${startDate} - ${endDate})`}
       className='col-start-1 col-span-2'
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
@@ -380,7 +380,7 @@ const Page= ({params}:{params:{uuid:string}})=>{
 
 
       <ChartDropMenu
-      title="Ingresos por Día"
+      title="Ingresos por día"
       subtitle={`Ingresos por día (${startDate} - ${endDate})`}
       className='col-start-3 col-span-2'
       setTypeOfChart={()=>dispatch(chartActions.setTypeOfChart(TypeOfChart.bar))}
