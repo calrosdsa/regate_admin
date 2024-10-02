@@ -100,7 +100,7 @@ const DialogReservaDetail = ({
           close={() => setEditReservaDialog(false)}
           reserva={detail.reserva}
           update={(r) => {
-            const n: ReservaDetail = { ...detail, reserva: r};
+            const n: ReservaDetail = { ...detail, reserva: r };
             setDetail(n);
             dispatch(dataActions.updateReservas(n.reserva));
             update(r);
@@ -319,12 +319,22 @@ const DialogReservaDetail = ({
               </div>
             )}
             {detail.reserva.cancellation_reason != null && (
-              <div className="grid sm:grid-cols-2 items-center gap-x-4 border-b-[1px] py-2">
-                <Typography variant="subtitle2" className="label">
+              <div className="grid items-center gap-x-4 border-b-[1px] py-2">
+                <Typography variant="subtitle1" className="label">
                   Motivo de cancelación
                 </Typography>
                 <Typography variant="body2">
                   {detail.reserva.cancellation_reason}
+                </Typography>
+              </div>
+            )}
+            {(detail.reserva.note != null && detail.reserva.note != "") && (
+              <div className="grid items-center gap-x-4 border-b-[1px] py-2">
+                <Typography variant="subtitle1"  className="label">
+                  Nota de la Reserva
+                </Typography>
+                <Typography variant="body2">
+                  {detail.reserva.note}
                 </Typography>
               </div>
             )}

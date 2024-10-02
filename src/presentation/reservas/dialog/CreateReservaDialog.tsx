@@ -1,36 +1,26 @@
-import ButtonSubmit from "@/presentation/util/button/ButtonSubmit";
-import DialogHeader from "@/presentation/util/dialog/DialogHeader";
 import DialogLayout from "@/presentation/util/dialog/DialogLayout";
-import CommonImage from "@/presentation/util/image/CommonImage";
 import InputWithIcon from "@/presentation/util/input/InputWithIcon";
 import { useAppDispatch, useAppSelector } from "@/context/reduxHooks";
 import { CheckInstalacionIsAvailable, CreateReserva } from "@/core/repository/reservas";
-import { getFullName } from "@/core/util";
-import ReactCountryFlag from "react-country-flag"
 import moment from "moment";
-import Image from "next/image"
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import SearchInput from "@/presentation/util/input/SearchInput";
-import SearchUserDialog from "./SearchUserDialog";
 import { IsUserNameRepeat, SearchUsersEmpresa } from "@/core/repository/users";
 import useDebounce from "@/core/util/hooks/useDebounce";
-import Loading from "@/presentation/util/loaders/Loading";
 import ConfirmationDialog from "@/presentation/util/dialog/ConfirmationDialog";
 import { unexpectedError } from "@/context/config";
 import AdvanceReservaOptionDialog from "./AdvanceReservaOptionDialog";
 import SeeMore from "@/presentation/util/button/SeeMore";
 import { Http, HttpStatusCode } from "@/data/model/types/enums";
 import { Tab } from "@headlessui/react";
-import { GetInstalaciones } from "@/core/repository/instalacion";
 import { Button, IconButton, TextField, Typography, useTheme } from "@mui/material";
 import { fetchInstalaciones } from "@/context/actions/data-actions";
 import { LoadingButton } from "@mui/lab";
 import InstalacionesDialog from "@/presentation/establecimiento/instalacion/dialog/InstalacionesDialog";
 import CloseIcon from '@mui/icons-material/Close';
-import ListInstalaciones from "@/presentation/establecimiento/instalacion/ListInstalaciones";
 import AutocompleteMui from "@/presentation/util/input/AutocompleteMui";
 import { TooltipIcon } from "@/presentation/util/tooltips/Tooltip";
+import AddIcon from '@mui/icons-material/Add';
 
 type CreateReservaRequest = {
     intervals:CupoInterval[]
@@ -48,6 +38,7 @@ type ReservaInterval = {
     id?:number
     interval:CupoReserva[]
     paid?:string
+    note:string | null
 }
 
 
@@ -158,7 +149,7 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
                         const c:CupoR = {
                             start_date:item.time,
                             instalacion_id:item.instalacion_id,
-                            precio:item.precio
+                            precio:item.precio,
                         }
                         return  c
                     }else{
@@ -174,7 +165,8 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
                     const r:CupoInterval = {
                     interval:cupos as CupoR[],
                     paid:Number(reservaIntervals[i].paid),
-                    total:reservaIntervals[i].interval.map(t=>t.precio).reduce((prev,curr)=>prev + curr)
+                    total:reservaIntervals[i].interval.map(t=>t.precio).reduce((prev,curr)=>prev + curr),
+                    note:reservaIntervals[i].note,
                 }
                 console.log("Cupo Interval",r)
                 cupoIntervals = cupoIntervals.concat(r)
@@ -266,7 +258,8 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
                         interval = interval.concat(newCupos[i])
                         const intervalR:ReservaInterval = {
                             interval:interval,
-                            id:i
+                            id:i,
+                            note:null
                         }
                         setReservaIntervals(e=>[...e,intervalR])
                         interval = []
@@ -275,7 +268,8 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
                     interval = interval.concat(newCupos[i])
                     const intervalR:ReservaInterval = {
                         interval:interval,
-                        id:i
+                        id:i,
+                        note:null
                     }
                     setReservaIntervals(e=>[...e,intervalR])
                 }
@@ -344,7 +338,8 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
                 //    }) 
                     const nSelectedReservaInterval:ReservaInterval = {
                         ...selectReservaInterval,
-                        interval:data
+                        interval:data,
+                        note:null
                     }
                     const nReservaIntervals = reservaIntervals.map(item=>{
                         if(item.id == selectReservaInterval?.id){
@@ -571,6 +566,35 @@ const CreateReservaDialog = ({open,close,cancha,cupos,onComplete,uuid,useAdvance
                                 setReservaIntervals(n)
                             }}
                             /> 
+                            {item.note == null ?
+                            <div  className="">
+                            <Button endIcon={<AddIcon/>} onClick={()=>{
+                                 const f = reservaIntervals.filter(t=>t.id != item.id)
+                                 const n = [...f,{
+                                     ...item,
+                                     note:"",
+                                 }].sort((a,b)=>Number(a.id) - Number(b.id))
+                                 setReservaIntervals(n)
+                            }}>Agregar nota</Button>
+                            </div>
+                            :
+                            <InputWithIcon
+                            type="text"
+                            multiline={true}
+                            value={item.note || ""}
+                            label="Nota sobre la Reserva"
+                            name="note"
+                            className="mt-0"
+                            onChange={(e)=>{
+                                const f = reservaIntervals.filter(t=>t.id != item.id)
+                                const n = [...f,{
+                                    ...item,
+                                    note:e.target.value
+                                }].sort((a,b)=>Number(a.id) - Number(b.id))
+                                setReservaIntervals(n)
+                            }}
+                            />
+                        }
                             </div>
 
                             </Tab.Panel>

@@ -19,6 +19,7 @@ interface Reserva  {
     apellido?:string
     profile_photo?:string
     cancellation_reason:string | null
+    note:string | null
 }
 
 type ReservaReporteRequest = {
@@ -34,6 +35,7 @@ type CupoInterval = {
     interval:CupoR[]
     paid:number
     total:number
+    note:string | null
 }
 
 
@@ -131,6 +133,7 @@ type ReservaEditRequest = {
     extra_time:number
     start_date:string
     end_date:string
+    note:string | null
 }
 
 type DeleteReservaRequest = {

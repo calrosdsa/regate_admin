@@ -31,10 +31,13 @@ const EditReservaDialog = ({
     paid: reserva.paid.toString(),
     estado: reserva.estado.toString(),
     extra_time: "0",
+    note:reserva.note,
   });
-  const { paid, estado, extra_time } = formData;
+  const { paid, estado, extra_time,note } = formData;
   const [reservaTmp, setReservaTmp] = useState(reserva);
-  const [errorMessage,setErrorMessage] = useState<string | undefined>(undefined)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    undefined
+  );
 
   const checkTimeExtra = async (extraTime: string) => {
     try {
@@ -51,7 +54,7 @@ const EditReservaDialog = ({
       switch (res.status) {
         case Http.StatusOk:
           data = (await res.json()) as TimeExtraReservaResponse;
-          const totalPrice = reservaTmp.total_price + Number(data.total_price)
+          const totalPrice = reservaTmp.total_price + Number(data.total_price);
           setReservaTmp({
             ...reservaTmp,
             total_price: totalPrice,
@@ -62,17 +65,18 @@ const EditReservaDialog = ({
           });
           setFormData({
             ...formData,
-            estado:  Number(paid) >= totalPrice
-            ? ReservaEstado.Valid.toString()
-            : ReservaEstado.Pendiente.toString(),
+            estado:
+              Number(paid) >= totalPrice
+                ? ReservaEstado.Valid.toString()
+                : ReservaEstado.Pendiente.toString(),
             extra_time: extraTime,
-          })
+          });
           break;
         case Http.StatusNotAcceptable:
           data = (await res.json()) as ResponseMessage;
           toast.error(data.message);
           break;
-      }  
+      }
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -91,6 +95,7 @@ const EditReservaDialog = ({
         extra_time: Number(extra_time),
         start_date: reserva.start_date,
         end_date: reserva.end_date,
+        note:note,
       };
       await EditReserva(r);
       setLoading(false);
@@ -107,10 +112,11 @@ const EditReservaDialog = ({
       ...reservaTmp,
       paid: Number(formData.paid),
       estado: Number(formData.estado),
+      note:note
     });
   }, [formData]);
   return (
-    <DialogLayout open={open} close={close} title="Editar reserva">
+    <DialogLayout open={open} close={close} title="Editar reserva" className=" max-w-3xl">
       <div className="grid gap-3">
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           <ValueLabel
@@ -137,7 +143,7 @@ const EditReservaDialog = ({
           />
         </div>
 
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} className="">
           <InputWithIcon
             value={paid}
             onChange={(e) => {
@@ -150,10 +156,12 @@ const EditReservaDialog = ({
                     ? ReservaEstado.Valid.toString()
                     : ReservaEstado.Pendiente.toString(),
               });
-              if  (p > reservaTmp.total_price){
-                setErrorMessage("El monto pagado no puede exceder el monto total.")
-              }else{
-                setErrorMessage(undefined)
+              if (p > reservaTmp.total_price) {
+                setErrorMessage(
+                  "El monto pagado no puede exceder el monto total."
+                );
+              } else {
+                setErrorMessage(undefined);
               }
             }}
             label="Cantidad pagada"
@@ -192,18 +200,33 @@ const EditReservaDialog = ({
               { value: "240", name: "4 horas" },
             ]}
             onChange={(e) => {
-            //   setFormData({
-            //     ...formData,
-            //     extra_time: e.target.value,
-            //   });
+              //   setFormData({
+              //     ...formData,
+              //     extra_time: e.target.value,
+              //   });
               checkTimeExtra(e.target.value);
             }}
             name="extra_time"
             value={extra_time}
           />
 
-          <ButtonSubmit
-           loading={loading} title="Guardar cambios" />
+          <InputWithIcon
+            type="text"
+            multiline={true}
+            lines={3}
+            className="mt-2"
+            value={note || ""}
+            label="Nota sobre la Reserva"
+            name="note"
+            onChange={(e) => {
+              setFormData({
+                ...formData,
+                note: e.target.value,
+              });
+            }}
+          />
+
+          <ButtonSubmit loading={loading} title="Guardar cambios" />
         </form>
       </div>
     </DialogLayout>
