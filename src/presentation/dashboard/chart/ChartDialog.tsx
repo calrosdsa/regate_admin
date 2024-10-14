@@ -264,7 +264,7 @@ keyValue2,label,chartTypeData}:{
                 </StyledTableCell>        
                 {shouldShowSecondLabel &&
                 <StyledTableCell>
-                    App
+                    Eventos
                 </StyledTableCell>
                 }
             </TableRow>

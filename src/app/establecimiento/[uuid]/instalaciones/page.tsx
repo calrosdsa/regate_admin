@@ -116,17 +116,18 @@ const Page = ({ params }: { params: { uuid: string } }) => {
       setLoadingReservas(true);
       let filterData: CupoReservaRequest;
       if (startDate == null) {
-        const date = new Date();
+        const date = moment();
         filterData = {
-          day_week: date.getDay(),
-          date: date.toJSON().slice(0, 10),
-          end_date: moment(date).add(1, "days").format("yyyy-MM-DD"),
+          day_week: date.day(),
+          date: date.format("yyyy-MM-DD"),
+          end_date: date.add(1, "days").format("yyyy-MM-DD"),
           instalacion_id: instalacionId,
         };
       } else {
         filterData = {
           day_week: startDate.day(),
-          date: startDate.toJSON().slice(0, 10),
+          // date: startDate.toJSON().slice(0, 10),
+          date: startDate.format("yyyy-MM-DD"),
           end_date: moment(startDate).add(1, "days").format("yyyy-MM-DD"),
           instalacion_id: instalacionId,
         };
@@ -201,7 +202,6 @@ const Page = ({ params }: { params: { uuid: string } }) => {
       setLoadingInstalacion(true);
       setInstalacion(null);
       const res: Instalacion = await GetInstalacion(uuid);
-      console.log("INSTALACION", res);
       setInstalacion(res);
       appendSerachParams("id", res.uuid);
       setLoadingInstalacion(false);

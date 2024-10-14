@@ -328,16 +328,14 @@ const DialogReservaDetail = ({
                 </Typography>
               </div>
             )}
-            {(detail.reserva.note != null && detail.reserva.note != "") && (
               <div className="grid items-center gap-x-4 border-b-[1px] py-2">
                 <Typography variant="subtitle1"  className="label">
                   Nota de la Reserva
                 </Typography>
                 <Typography variant="body2">
-                  {detail.reserva.note}
+                  {detail.reserva.note ? detail.reserva.note:"-"}
                 </Typography>
               </div>
-            )}
           </div>
 
           <>
